@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app="fpm">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+  <title></title>
+
+  <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+
+  <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+
+
+
+</head>
+
+<body data-ng-controller="main-controller as vm">
+  <ion-nav-view animation="slide-left-right"></ion-nav-view>
+
+
+  <!-- ionic/angularjs js -->
+  <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+  <!-- cordova script (this will be a 404 during development) -->
+  <script src="cordova.js"></script>
+  <!-- your app's js -->
+  <script src="js/app.js"></script>
+  <script src="js/home/main-controller.js"></script>
+  <script src="js/home/login-controller.js"></script>
+  <script src="js/dashboard/dashboard-controller.js"></script>
+  <!--FACTORIES-->
+  <script src="js/shared/api-base-factory.js"></script>
+  <script src="js/dashboard/dashboard-factory.js"></script>
+</body>
+
+</html>
