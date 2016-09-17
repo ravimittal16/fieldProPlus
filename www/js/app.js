@@ -4,11 +4,12 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 
-
+// "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 var constants = {
-  fieldPromaxApi: "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
+  fieldPromaxApi: "http://localhost:51518/",
+  localStorageKeys: { authorizationDataKey: "authorizationData", initialData: "initialData", storageKeyName: "authorizationData", configKeyName: "configurations", settingsKeyName: "userSettings" }
 };
-var fpm = angular.module('fpm', ['ionic', 'ui.router'])
+var fpm = angular.module('fpm', ['ionic', 'ui.router',"LocalStorageModule"])
   .config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $urlRouterProvider) {
 
     var routes = [
