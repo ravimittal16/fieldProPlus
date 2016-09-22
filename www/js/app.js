@@ -9,12 +9,13 @@ var constants = {
   fieldPromaxApi: "http://localhost:51518/",
   localStorageKeys: { authorizationDataKey: "authorizationData", initialData: "initialData", storageKeyName: "authorizationData", configKeyName: "configurations", settingsKeyName: "userSettings" }
 };
-var fpm = angular.module('fpm', ['ionic', 'ui.router',"LocalStorageModule"])
+var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule"])
   .config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $urlRouterProvider) {
 
     var routes = [
       { state: "login", config: { url: "/", controller: "login-controller", controllerAs: "vm", templateUrl: "views/login.html" } },
-      { state: "dashboard", config: { url: "/home", controller: "dashboard-controller", controllerAs: "vm", templateUrl: "views/dashboard.html" } }
+      { state: "app", config: { abstract: true, controller: "app-main-controller", controllerAs: "vm", templateUrl: "views/app-main.html" } },
+      { state: "app.dashboard", config: { url: "/home", controller: "dashboard-controller", controllerAs: "vm", templateUrl: "views/dashboard.html" } }
     ];
 
     angular.forEach(routes, function (route) {

@@ -12,6 +12,9 @@
                 $ionicLoading.show({ template: "authenticating you..." }).then(function () {
                     authenticationFactory.login(vm.user).then(function (response) {
                         $ionicLoading.hide().then(function () {
+                            if (response && authenticationFactory.authentication.isAuth) {
+                                $state.go("app.dashboard");
+                            }
                             console.log(response);
                         });
                     });
