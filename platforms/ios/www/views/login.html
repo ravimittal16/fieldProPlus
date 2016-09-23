@@ -3,16 +3,18 @@
         <div class="center">
             <strong>FIELD <strong class="app-title-promax">PROMAX</strong></strong>
         </div>
-        <div class="list list-inset">
-            <label class="item item-input">
+        <form name="authForm">
+            <div class="list list-inset">
+                <label class="item item-input">
                 <span class="input-label">Email</span>
-                <input type="email" data-ng-model="vm.user.userName" autofocus="" />
+                <input type="email" name="email" data-ng-model="vm.user.userName" autofocus="" required="" />
             </label>
-            <label class="item item-input">
+                <label class="item item-input">
                 <span class="input-label">Password</span>
-                <input type="password" data-ng-model="vm.user.password"  />
+                <input type="password" name="password" data-ng-model="vm.user.password" required=""  />
             </label>
-        </div>
-        <button class="button button-block button-calm" ng-click="vm.events.loginClick()">Login</button>
+            </div>
+            <button class="button button-block button-calm" type="submit" ng-click="vm.events.loginClick(authForm.$valid)">Login</button>
+        </form>
     </ion-content>
 </ion-view>

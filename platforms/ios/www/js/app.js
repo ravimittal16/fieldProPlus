@@ -4,16 +4,18 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 
-
+// "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 var constants = {
-  fieldPromaxApi: "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
+  fieldPromaxApi: "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/",
+  localStorageKeys: { authorizationDataKey: "authorizationData", initialData: "initialData", storageKeyName: "authorizationData", configKeyName: "configurations", settingsKeyName: "userSettings" }
 };
-var fpm = angular.module('fpm', ['ionic', 'ui.router'])
+var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule"])
   .config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $urlRouterProvider) {
 
     var routes = [
       { state: "login", config: { url: "/", controller: "login-controller", controllerAs: "vm", templateUrl: "views/login.html" } },
-      { state: "dashboard", config: { url: "/home", controller: "dashboard-controller", controllerAs: "vm", templateUrl: "views/dashboard.html" } }
+      { state: "app", config: { abstract: true, controller: "app-main-controller", controllerAs: "vm", templateUrl: "views/app-main.html" } },
+      { state: "app.dashboard", config: { url: "/home", controller: "dashboard-controller", controllerAs: "vm", templateUrl: "views/dashboard.html" } }
     ];
 
     angular.forEach(routes, function (route) {
