@@ -26,6 +26,10 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule"])
       $urlRouterProvider.otherwise('/');
       $compileProvider.debugInfoEnabled(false);
       $httpProvider.interceptors.push("requestIntercepter");
+      $httpProvider.defaults.headers.common = {};
+      $httpProvider.defaults.headers.post = {};
+      $httpProvider.defaults.headers.put = {};
+      $httpProvider.defaults.headers.patch = {};
     }])
   .run(["$ionicPlatform", function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
