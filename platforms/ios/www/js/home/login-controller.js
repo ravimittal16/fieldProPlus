@@ -16,6 +16,9 @@
                                 $state.go("app.dashboard");
                             }
                             console.log(response);
+                        }, function () { 
+                            $ionicLoading.hide();
+                            $ionicPopup.alert({ title: "Oops", template: "ERROR WHILE TRYING TO LOGIN" });
                         });
                     });
                 });

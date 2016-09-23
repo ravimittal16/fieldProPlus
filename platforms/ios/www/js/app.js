@@ -10,20 +10,23 @@ var constants = {
   localStorageKeys: { authorizationDataKey: "authorizationData", initialData: "initialData", storageKeyName: "authorizationData", configKeyName: "configurations", settingsKeyName: "userSettings" }
 };
 var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule"])
-  .config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $urlRouterProvider) {
+  .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider",
+    function ($stateProvider, $urlRouterProvider, $compileProvider, $httpProvider) {
 
-    var routes = [
-      { state: "login", config: { url: "/", controller: "login-controller", controllerAs: "vm", templateUrl: "views/login.html" } },
-      { state: "app", config: { abstract: true, controller: "app-main-controller", controllerAs: "vm", templateUrl: "views/app-main.html" } },
-      { state: "app.dashboard", config: { url: "/home", controller: "dashboard-controller", controllerAs: "vm", templateUrl: "views/dashboard.html" } }
-    ];
+      var routes = [
+        { state: "login", config: { url: "/", controller: "login-controller", controllerAs: "vm", templateUrl: "views/login.html" } },
+        { state: "app", config: { abstract: true, controller: "app-main-controller", controllerAs: "vm", templateUrl: "views/app-main.html" } },
+        { state: "app.dashboard", config: { url: "/home", controller: "dashboard-controller", controllerAs: "vm", templateUrl: "views/dashboard.html" } }
+      ];
 
-    angular.forEach(routes, function (route) {
-      $stateProvider
-        .state(route.state, route.config);
-    });
-    $urlRouterProvider.otherwise('/');
-  }])
+      angular.forEach(routes, function (route) {
+        $stateProvider
+          .state(route.state, route.config);
+      });
+      $urlRouterProvider.otherwise('/');
+      $compileProvider.debugInfoEnabled(false);
+      $httpProvider.interceptors.push("requestIntercepter");
+    }])
   .run(["$ionicPlatform", function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
       if (window.cordova && window.cordova.plugins.Keyboard) {
