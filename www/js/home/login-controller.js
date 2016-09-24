@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    function initController($ionicScrollDelegate, $ionicPopup, $ionicLoading, authenticationFactory, $state) {
+    function initController($ionicScrollDelegate, $ionicPopup, $ionicLoading, authenticationFactory, $state, dashboardFactory) {
         var vm = this;
         vm.user = { userName: "", password: "" };
         vm.events = {
@@ -17,7 +17,7 @@
                                 $state.go("app.dashboard");
                             }
                             console.log(response);
-                        }, function () { 
+                        }, function (data) {
                             $ionicLoading.hide();
                             $ionicPopup.alert({ title: "Oops", template: "ERROR WHILE TRYING TO LOGIN" });
                         });
@@ -25,7 +25,11 @@
                 });
             }
         };
+
+        dashboardFactory.testCall().then(function (response) {
+            console.log("HEHEHE", response);
+        });
     }
-    initController.$inject = ["$ionicScrollDelegate", "$ionicPopup", "$ionicLoading", "authenticationFactory", "$state"];
+    initController.$inject = ["$ionicScrollDelegate", "$ionicPopup", "$ionicLoading", "authenticationFactory", "$state", "dashboard-factory"];
     angular.module("fpm").controller("login-controller", initController);
 })();
