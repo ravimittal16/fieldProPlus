@@ -11,6 +11,7 @@
                 }
                 $ionicLoading.show({ template: "authenticating you..." }).then(function () {
                     authenticationFactory.login(vm.user).then(function (response) {
+                          $ionicPopup.alert({ title: "Oops", template: "Please enter login information..." });
                         $ionicLoading.hide().then(function () {
                             if (response && authenticationFactory.authentication.isAuth) {
                                 $state.go("app.dashboard");
