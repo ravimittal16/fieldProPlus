@@ -14,7 +14,7 @@
             if (angular.isDefined(orders) && orders) {
                 return $q.when(orders);
             } else {
-                return apicontext.get(apibaseurl + "GetMobileDashboard").then(function (response) {
+                return apiBaseFactory.get(apibaseurl + "GetMobileDashboard").then(function (response) {
                     cache.put(dashboardDataKeyName, response);
                     return response;
                 });
