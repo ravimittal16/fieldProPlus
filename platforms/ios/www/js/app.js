@@ -5,6 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 
 // "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
+//"http://localhost/FieldPromaxApi/"
 var constants = {
   fieldPromaxApi: "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/",
   localStorageKeys: { authorizationDataKey: "authorizationData", initialData: "initialData", storageKeyName: "authorizationData", configKeyName: "configurations", settingsKeyName: "userSettings" }
@@ -26,10 +27,10 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule"])
       $urlRouterProvider.otherwise('/');
       $compileProvider.debugInfoEnabled(false);
       $httpProvider.interceptors.push("requestIntercepter");
-      $httpProvider.defaults.headers.common = {};
-      $httpProvider.defaults.headers.post = {};
-      $httpProvider.defaults.headers.put = {};
-      $httpProvider.defaults.headers.patch = {};
+      // $httpProvider.defaults.headers.common = {};
+      // $httpProvider.defaults.headers.post = {};
+      // $httpProvider.defaults.headers.put = {};
+      // $httpProvider.defaults.headers.patch = {};
     }])
   .run(["$ionicPlatform", function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
