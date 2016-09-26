@@ -3,6 +3,33 @@
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
     <ion-content class="has-header">
-        
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="vm.events.refreshOnPullDown()">
+        </ion-refresher>
+        <ion-list>
+            <div ng-repeat="group in vm.result">
+                <ion-item class="item-stable" ng-click="vm.events.onChildGroupClicked(group,'DD','mainparent')" ng-class="{active: group.isOpen}">
+                    <i class="icon" ng-class="group.isOpen ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>{{::group.heading}}</strong>
+                </ion-item>
+                <div data-ng-if="group.dataForAdministrator.length > 0 && group.isOpen">
+                    <div ng-repeat="item in group.dataForAdministrator">
+                        <ion-item class="item-stable" ng-click="vm.events.onChildGroupClicked(item,'AD','parent')" ng-class="{active: item.isOpen}">
+                            <i class="icon" ng-class="item.isOpen ? 'ion-minus' : 'ion-plus'"></i> &nbsp; {{::item.technicianName}}
+                            <span class="badge badge-dark">{{item.childCount}}</span>
+                        </ion-item>
+                        <div class="card" data-ng-if="item.isOpen" data-ng-repeat="odr in item.ordersN">
+                            <div class="item item-divider">
+                                I'm a Header in a Card!
+                            </div>
+                            <div class="item item-text-wrap">
+                                This is a basic Card with some text.
+                            </div>
+                            <div class="item item-divider">
+                                I'm a Footer in a Card!
+                            </div>
+                            </ion-card>
+                        </div>
+                    </div>
+                </div>
+        </ion-list>
     </ion-content>
 </ion-view>
