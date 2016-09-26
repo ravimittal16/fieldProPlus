@@ -18,7 +18,8 @@
                         </ion-item>
                         <div class="card" data-ng-if="item.isOpen" data-ng-repeat="odr in item.ordersN">
                             <div class="item item-divider">
-                                I'm a Header in a Card!
+                                <small style="float:left;"><i class="icon ion-calendar"></i>&nbsp;{{::odr.WorkPerformedDate | date:'EEEE dd MMM'}}</small>
+                                <small style="float:right;"><i class="icon ion-clock"></i>&nbsp;{{::odr.WorkPerformedDate | date:'hh:mm a'}}</small>
                             </div>
                             <div class="item item-text-wrap">
                                 This is a basic Card with some text.
