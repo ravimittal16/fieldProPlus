@@ -9,12 +9,13 @@
             <div ng-repeat="group in vm.result">
                 <ion-item class="item-stable" ng-click="vm.events.onChildGroupClicked(group,'DD','mainparent')" ng-class="{active: group.isOpen}">
                     <i class="icon" ng-class="group.isOpen ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>{{::group.heading}}</strong>
+                    <span class="badge" data-ng-class="{'badge-balanced':group.count > 0,'badge-dark':group.count == 0}">{{group.count}}</span>
                 </ion-item>
                 <div data-ng-if="group.dataForAdministrator.length > 0 && group.isOpen">
                     <div ng-repeat="item in group.dataForAdministrator">
                         <ion-item class="item-stable" ng-click="vm.events.onChildGroupClicked(item,'AD','parent')" ng-class="{active: item.isOpen}">
                             <i class="icon" ng-class="item.isOpen ? 'ion-minus' : 'ion-plus'"></i> &nbsp; {{::item.technicianName}}
-                            <span class="badge badge-dark">{{item.childCount}}</span>
+                            <span class="badge badge-calm">{{item.childCount}}</span>
                         </ion-item>
                         <div class="card" data-ng-if="item.isOpen" data-ng-repeat="odr in item.ordersN">
                             <div class="item item-divider">
@@ -22,10 +23,28 @@
                                 <small style="float:right;"><i class="icon ion-clock"></i>&nbsp;{{::odr.WorkPerformedDate | date:'hh:mm a'}}</small>
                             </div>
                             <div class="item item-text-wrap">
-                                This is a basic Card with some text.
+                                <span class="label label-success">{{::odr.BarcodeName}}</span>
+                                <div class="padding-top">
+                                    <h3>{{::odr.DisplayName}}</h3>
+                                    <address>
+                                        <p>
+                                            <strong>{{::odr.Company_Name}}</strong>
+                                        </p>
+                                        <p>{{::odr.Street}}</p>
+                                        <p>{{::odr.CityStateZip}}</p>
+                                    </address>
+                                </div>
                             </div>
                             <div class="item item-divider">
-                                I'm a Footer in a Card!
+                                <button class="button button-small button-calm">
+                                    Accept Job
+                                </button>
+                                <button class="button button-small button-calm">
+                                    In Route
+                                </button>
+                                <button class="button  button-small button-calm" style="float:right;">
+                                    <i class="icon ion-chevron-right"></i>
+                                </button>
                             </div>
                             </ion-card>
                         </div>

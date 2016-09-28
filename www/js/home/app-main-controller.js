@@ -15,7 +15,12 @@
             { title: "Change Password", state: "app.changePassword", icon: "" },
             { title: "Logout", state: "app.logout", icon: "power" }
         ];
-        vm.even = {
+
+
+        vm.events = {
+            onMenuItemClicked: function (item) {
+                $state.go(item.state);
+            },
             toggleLeft: function () {
 
             }
