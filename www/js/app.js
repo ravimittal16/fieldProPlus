@@ -6,12 +6,12 @@
 
 // "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 //"http://localhost/FieldPromaxApi/"  
-var isInDevMode = false;
+var isInDevMode = true;
 var constants = {
   fieldPromaxApi: isInDevMode ? "http://localhost:51518/" : "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/",
   localStorageKeys: { authorizationDataKey: "authorizationData", initialData: "initialData", storageKeyName: "authorizationData", configKeyName: "configurations", settingsKeyName: "userSettings" }
 };
-var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule"])
+var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule","ngCordova"])
   .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider",
     function ($stateProvider, $urlRouterProvider, $compileProvider, $httpProvider) {
 

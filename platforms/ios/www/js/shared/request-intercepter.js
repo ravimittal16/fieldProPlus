@@ -8,10 +8,7 @@
         var authInterceptorServiceFactory = {};
 
         var request = function (config) {
-
-            console.log("headers", config.headers);
             config.headers = config.headers || {};
-            console.log("headers", config.headers);
             var authData = localStorageService.get("authorizationData");
             if (authData) {
                 config.headers.Authorization = "Bearer " + authData.token;

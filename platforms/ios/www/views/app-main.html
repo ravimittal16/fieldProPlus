@@ -14,16 +14,14 @@
         </ion-nav-view>
     </ion-side-menu-content>
 
-    <ion-side-menu side="left">
+    <ion-side-menu side="left" enable-menu-with-back-views="false">
         <ion-header-bar class="bar-stable">
             <h1 class="title">Menu</h1>
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item menu-close  data-ui-sref="{{menu.state}}" data-ng-repeat="menu in ::vm.sideMenuItems">
-                     <!--<ion-icon data-ng-if="menu.icon" name="{{menu.icon}}"></ion-icon>-->
-                     <i data-ng-if="menu.icon" class="icon ion-{{menu.icon}}"></i>
-                    {{::menu.title}}
+                <ion-item menu-close data-ng-repeat="menu in ::vm.sideMenuItems" data-ng-click="vm.events.onMenuItemClicked(menu)">
+                    <i data-ng-if="menu.icon" class="icon ion-{{menu.icon}}"></i> {{::menu.title}}
                 </ion-item>
             </ion-list>
         </ion-content>
