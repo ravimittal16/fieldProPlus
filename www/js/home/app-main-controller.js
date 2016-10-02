@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    function initController($ionicSideMenuDelegate, $state) {
+    function initController($scope, $ionicSideMenuDelegate, $ionicNavBarDelegate, $state) {
         var vm = this;
         vm.sideMenuItems = [
             { title: "Home", state: "app.dashboard", icon: "home" },
@@ -16,7 +16,9 @@
             { title: "Logout", state: "app.logout", icon: "power" }
         ];
 
-
+        $scope.$on("$ionicView.beforeEnter", function (e, data) {
+            $ionicNavBarDelegate.showBackButton(false);
+        });
         vm.events = {
             onMenuItemClicked: function (item) {
                 $state.go(item.state);
@@ -26,6 +28,6 @@
             }
         };
     }
-    initController.$inject = ["$ionicSideMenuDelegate", "$state"];
+    initController.$inject = ["$scope", "$ionicSideMenuDelegate", "$ionicNavBarDelegate", "$state"];
     angular.module("fpm").controller("app-main-controller", initController);
 })();
