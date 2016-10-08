@@ -14,6 +14,7 @@
             { title: "Settings", state: "app.settings", icon: "settings" },
             { title: "Change Password", state: "app.changePassword", icon: "" },
             { title: "Logout", state: "app.logout", icon: "power" }
+            
         ];
 
         $scope.$on("$ionicView.beforeEnter", function (e, data) {
