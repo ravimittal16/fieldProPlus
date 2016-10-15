@@ -6,6 +6,9 @@
   },
   "dependencies": {
     "angular-local-storage": "^0.5.0",
-    "ngCordova": "^0.1.27-alpha"
+    "ngCordova": "^0.1.27-alpha",
+    "lodash": "^4.16.4",
+    "ionic-datepicker": "^1.2.1",
+    "moment": "^2.15.1"
   }
 }

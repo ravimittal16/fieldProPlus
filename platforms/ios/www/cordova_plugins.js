@@ -1,49 +1,43 @@
 cordova.define('cordova/plugin_list', function(require, exports, module) {
 module.exports = [
     {
-        "id": "cordova-plugin-console.console",
         "file": "plugins/cordova-plugin-console/www/console-via-logger.js",
-        "pluginId": "cordova-plugin-console",
+        "id": "cordova-plugin-console.console",
         "clobbers": [
             "console"
         ]
     },
     {
-        "id": "cordova-plugin-console.logger",
         "file": "plugins/cordova-plugin-console/www/logger.js",
-        "pluginId": "cordova-plugin-console",
+        "id": "cordova-plugin-console.logger",
         "clobbers": [
             "cordova.logger"
         ]
     },
     {
-        "id": "cordova-plugin-device.device",
         "file": "plugins/cordova-plugin-device/www/device.js",
-        "pluginId": "cordova-plugin-device",
+        "id": "cordova-plugin-device.device",
         "clobbers": [
             "device"
         ]
     },
     {
-        "id": "cordova-plugin-splashscreen.SplashScreen",
         "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
-        "pluginId": "cordova-plugin-splashscreen",
+        "id": "cordova-plugin-splashscreen.SplashScreen",
         "clobbers": [
             "navigator.splashscreen"
         ]
     },
     {
-        "id": "cordova-plugin-statusbar.statusbar",
         "file": "plugins/cordova-plugin-statusbar/www/statusbar.js",
-        "pluginId": "cordova-plugin-statusbar",
+        "id": "cordova-plugin-statusbar.statusbar",
         "clobbers": [
             "window.StatusBar"
         ]
     },
     {
-        "id": "ionic-plugin-keyboard.keyboard",
         "file": "plugins/ionic-plugin-keyboard/www/ios/keyboard.js",
-        "pluginId": "ionic-plugin-keyboard",
+        "id": "ionic-plugin-keyboard.keyboard",
         "clobbers": [
             "cordova.plugins.Keyboard"
         ],
@@ -52,7 +46,6 @@ module.exports = [
     {
         "file": "plugins/cordova-plugin-geolocation/www/Coordinates.js",
         "id": "cordova-plugin-geolocation.Coordinates",
-        "pluginId": "cordova-plugin-geolocation",
         "clobbers": [
             "Coordinates"
         ]
@@ -60,7 +53,6 @@ module.exports = [
     {
         "file": "plugins/cordova-plugin-geolocation/www/PositionError.js",
         "id": "cordova-plugin-geolocation.PositionError",
-        "pluginId": "cordova-plugin-geolocation",
         "clobbers": [
             "PositionError"
         ]
@@ -68,7 +60,6 @@ module.exports = [
     {
         "file": "plugins/cordova-plugin-geolocation/www/Position.js",
         "id": "cordova-plugin-geolocation.Position",
-        "pluginId": "cordova-plugin-geolocation",
         "clobbers": [
             "Position"
         ]
@@ -76,9 +67,23 @@ module.exports = [
     {
         "file": "plugins/cordova-plugin-geolocation/www/geolocation.js",
         "id": "cordova-plugin-geolocation.geolocation",
-        "pluginId": "cordova-plugin-geolocation",
         "clobbers": [
             "navigator.geolocation"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-network-information/www/network.js",
+        "id": "cordova-plugin-network-information.network",
+        "clobbers": [
+            "navigator.connection",
+            "navigator.network.connection"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-network-information/www/Connection.js",
+        "id": "cordova-plugin-network-information.Connection",
+        "clobbers": [
+            "Connection"
         ]
     }
 ];
@@ -91,8 +96,9 @@ module.exports.metadata =
     "cordova-plugin-statusbar": "2.1.3",
     "cordova-plugin-whitelist": "1.2.2",
     "ionic-plugin-keyboard": "2.2.1",
-    "cordova-plugin-compat": "1.0.0",
-    "cordova-plugin-geolocation": "2.4.0"
+    "cordova-plugin-geolocation": "2.4.0",
+    "cordova-plugin-network-information": "1.3.0",
+    "cordova-plugin-compat": "1.0.0"
 }
 // BOTTOM OF METADATA
 });

@@ -6,7 +6,7 @@
 
 // "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 //"http://localhost/FieldPromaxApi/"  
-var isInDevMode = false;
+var isInDevMode = true;
 var constants = {
   fieldPromaxApi: isInDevMode ? "http://localhost:51518/" : "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/",
   localStorageKeys: {
@@ -14,9 +14,9 @@ var constants = {
     storageKeyName: "authorizationData", configKeyName: "configurations", settingsKeyName: "userSettings"
   }
 };
-var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ngCordova"])
-  .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider",
-    function ($stateProvider, $urlRouterProvider, $compileProvider, $httpProvider) {
+var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ngCordova", "ionic-datepicker"])
+  .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider", "ionicDatePickerProvider",
+    function ($stateProvider, $urlRouterProvider, $compileProvider, $httpProvider, ionicDatePickerProvider) {
 
       var routes = [
         { state: "login", config: { url: "/", controller: "login-controller", controllerAs: "vm", templateUrl: "views/login.html" } },
@@ -42,10 +42,23 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
       $urlRouterProvider.otherwise('/');
       $compileProvider.debugInfoEnabled(false);
       $httpProvider.interceptors.push("requestIntercepter");
-      // $httpProvider.defaults.headers.common = {};
-      // $httpProvider.defaults.headers.post = {};
-      // $httpProvider.defaults.headers.put = {};
-      // $httpProvider.defaults.headers.patch = {};
+      //DATE PICKER
+      var datePickerObj = {
+        inputDate: new Date(),
+        setLabel: 'Set',
+        todayLabel: 'Today',
+        closeLabel: 'Close',
+        mondayFirst: false,
+        weeksList: ["S", "M", "T", "W", "T", "F", "S"],
+        monthsList: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"],
+        templateType: 'popup',
+        from: new Date(2012, 8, 1),
+        to: new Date(2025, 8, 1),
+        showTodayButton: true,
+        dateFormat: 'dd MMMM yyyy',
+        closeOnSelect: false,
+      };
+      ionicDatePickerProvider.configDatePicker(datePickerObj);
     }])
   .run(["$ionicPlatform", function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
