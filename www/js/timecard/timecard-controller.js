@@ -1,18 +1,8 @@
 (function () {
     "use strict";
-    function initController($scope, ionicDatePicker, $ionicPopover, $cordovaActionSheet, timecardFactory, fpmUtilitiesFactory) {
+    function initController($scope, ionicDatePicker, $ionicPopover, timecardFactory, fpmUtilitiesFactory) {
         var vm = this;
         var jobCodes = { CLOCK_IN: 5001, CLOCK_OUT: 5002 };
-
-        var options = {
-            title: 'What do you want with this image?',
-            buttonLabels: ['Share via Facebook', 'Share via Twitter'],
-            addCancelButtonWithLabel: 'Cancel',
-            androidEnableCancelButton: true,
-            winphoneEnableCancelButton: true,
-            addDestructiveButtonWithLabel: 'Delete it'
-        };
-
         var toDateString = fpmUtilitiesFactory.toStringDate;
         var statusTypes = {
             NONE: 0,
@@ -55,11 +45,7 @@
             ionicDatePicker.openDatePicker(datePickerConfig);
         }
         function showPopoverClicked($event) {
-            //vm.popover.show($event);
-            $cordovaActionSheet.show(options)
-                .then(function (btnIndex) {
-                    var index = btnIndex;
-                });
+            vm.popover.show($event);
         }
         vm.events = {
             onDatePickerClicked: onDatePickerClicked,
@@ -67,6 +53,6 @@
         }
         console.log("HELLO WORLD");
     }
-    initController.$inject = ["$scope", "ionicDatePicker", "$ionicPopover", "$cordovaActionSheet", "timecard-factory", "fpm-utilities-factory"];
+    initController.$inject = ["$scope", "ionicDatePicker", "$ionicPopover", "timecard-factory", "fpm-utilities-factory"];
     angular.module("fpm").controller("timecard-controller", initController);
 })();

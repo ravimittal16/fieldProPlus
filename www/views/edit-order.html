@@ -1,11 +1,88 @@
-<ion-view title="Create Customer">
-    <ion-nav-buttons side="left">
-        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-    </ion-nav-buttons>
+<ion-view title="{{::vm.barCodeData.barcodeDetails.barcodeName}}">
+	<ion-nav-buttons side="left">
+		<button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+	</ion-nav-buttons>
 
-    <ion-content>
-        <button class="button" data-ui-sref="app.dashboard">
-                BACK
-        </button>
-    </ion-content>
+	<ion-content>
+		<ion-tabs class="tabs-light tabs-icon-top">
+			<ion-tab title="DESC" icon-on="ion-ios-paper" icon-off="ion-ios-paper-outline">
+				<ion-content>
+					<div>
+						<div class="padding">
+							<span class="label label-success">{{::vm.barCodeData.barcodeDetails.barcodeName}}</span>
+							<div class="padding-top">
+								<h4>{{::vm.barCodeData.barcodeDetails.displayName}}</h4>
+								<address>
+									<p style="margin-bottom:0;">
+										<strong>{{::vm.barCodeData.barcodeDetails.company_Name}}</strong>
+										<a>
+											<i class="icon ion-ios-location"></i></a>
+									</p>
+									<p>{{::vm.barCodeData.barcodeDetails.shipStreet}}</p>
+									<p>{{::vm.barCodeData.barcodeDetails.shipCity}},{{::vm.barCodeData.barcodeDetails.shipState}}&nbsp;{{::vm.barCodeData.barcodeDetails.shipZIP}}
+
+									</p>
+									<p>{{::vm.barCodeData.barcodeDetails.phone}}
+
+									</p>
+									<p data-ng-if="vm.barCodeData.barcodeDetails.contactInfo">Contact Info : <span>{{::vm.barCodeData.barcodeDetails.contactInfo}}</span></p>
+								</address>
+							</div>
+						</div>
+						<div class="list">
+							<div class="item item-divider">
+								Other Information
+							</div>
+							<div class="item">
+								Order Create Date
+								<span class="item-note">
+									{{::vm.barCodeData.barcodeDetails.date | date:'MM/dd/yyyy'}}
+								</span>
+							</div>
+							<div class="item">
+								Job Type
+								<span class="item-note">
+									{{::vm.barCodeData.barcodeDetails.excptns}}
+								</span>
+							</div>
+							<div class="item">
+								Priority
+								<span class="item-note">
+									{{::vm.barCodeData.barcodeDetails.priority}}
+								</span>
+							</div>
+							<div class="item">
+								Class
+								<span class="item-note">
+									{{::vm.barCodeData.barcodeDetails.class_id}}
+								</span>
+							</div>
+							<div class="item">
+								PO Number
+								<span class="item-note">
+									{{::vm.barCodeData.barcodeDetails.poNum}}
+								</span>
+							</div>
+							<label class="item item-input item-stacked-label">
+								<span class="input-label">Work Description</span>
+								<textarea name="" id="" cols="30" rows="3"></textarea>
+							</label>
+							<label class="item item-input item-stacked-label">
+								<span class="input-label">Resolution / Work performed</span>
+								<textarea name="" id="" cols="30" rows="3"></textarea>
+							</label>
+							<label class="item item-input item-stacked-label">
+								<span class="input-label">Comments</span>
+								<textarea name="" id="" cols="30" rows="3"></textarea>
+							</label>
+						</div>
+
+					</div>
+				</ion-content>
+			</ion-tab>
+			<ion-tab title="More" icon-on="ion-navicon-round" icon-off="ion-navicon-round" data-ng-click="vm.events.showActionSheet()">
+
+			</ion-tab>
+		</ion-tabs>
+	</ion-content>
 </ion-view>

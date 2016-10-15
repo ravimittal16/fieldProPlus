@@ -3,10 +3,10 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-
+// "http://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 // "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 //"http://localhost/FieldPromaxApi/"  
-var isInDevMode = true;
+var isInDevMode = false;
 var constants = {
   fieldPromaxApi: isInDevMode ? "http://localhost:51518/" : "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/",
   localStorageKeys: {
