@@ -1,4 +1,4 @@
-<ion-view title="{{::vm.barCodeData.barcodeDetails.barcodeName}}">
+<ion-view title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
 	<ion-nav-buttons side="left">
 		<button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
 	</ion-nav-buttons>
@@ -11,9 +11,9 @@
 						<div class="padding">
 							<span class="label label-success">{{::vm.barCodeData.barcodeDetails.barcodeName}}</span>
 							<div class="padding-top">
-								<h4>{{::vm.barCodeData.barcodeDetails.displayName}}</h4>
+								<h4 class="n-m-b">{{::vm.barCodeData.barcodeDetails.displayName}}</h4>
 								<address>
-									<p style="margin-bottom:0;">
+									<p>
 										<strong>{{::vm.barCodeData.barcodeDetails.company_Name}}</strong>
 										<a>
 											<i class="icon ion-ios-location"></i></a>
@@ -80,7 +80,31 @@
 					</div>
 				</ion-content>
 			</ion-tab>
-			<ion-tab title="More" icon-on="ion-navicon-round" icon-off="ion-navicon-round" data-ng-click="vm.events.showActionSheet()">
+			<ion-tab title="SCH" icon-on="ion-ios-clock" icon-off="ion-ios-clock-outline">
+				<ion-content>
+					<div class="card">
+						<div class="item item-text-wrap">
+							<p class="n-m-b"><strong>Schedule Start</strong></p>
+							<p>{{vm.schedule.scheduledStartDateTime | date:'MM/dd/yyyy hh:mm a'}}</p>
+							<p class="n-m-b"><strong>Schedule End</strong></p>
+							<p>{{vm.schedule.scheduledFinishDateTime | date:'MM/dd/yyyy hh:mm a'}}</p>
+						</div>
+					</div>
+				</ion-content>
+			</ion-tab>
+			<ion-tab title="PROD" icon-on="ion-ios-list" icon-off="ion-ios-list-outline">
+
+			</ion-tab>
+			<ion-tab title="EXP" icon-on="ion-cash" icon-off="ion-cash">
+
+			</ion-tab>
+			<ion-tab title="JOB TYPE LIST" icon-on="ion-ios-flask" icon-off="ion-ios-flask-outline">
+
+			</ion-tab>
+			<ion-tab title="EQUIP" icon-on="ion-ios-cog" icon-off="ion-ios-cog-outline">
+
+			</ion-tab>
+			<ion-tab title="SMRY" icon-on="ion-ios-calculator" icon-off="ion-ios-calculator-outline">
 
 			</ion-tab>
 		</ion-tabs>

@@ -15,8 +15,8 @@ var constants = {
   }
 };
 var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ngCordova", "ionic-datepicker"])
-  .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider", "ionicDatePickerProvider",
-    function ($stateProvider, $urlRouterProvider, $compileProvider, $httpProvider, ionicDatePickerProvider) {
+  .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider", "$ionicConfigProvider", "ionicDatePickerProvider",
+    function ($stateProvider, $urlRouterProvider, $compileProvider, $httpProvider, $ionicConfigProvider, ionicDatePickerProvider) {
 
       var routes = [
         { state: "login", config: { url: "/", controller: "login-controller", controllerAs: "vm", templateUrl: "views/login.html" } },
@@ -59,6 +59,8 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
         closeOnSelect: false,
       };
       ionicDatePickerProvider.configDatePicker(datePickerObj);
+
+      $ionicConfigProvider.tabs.position(isInDevMode ? 'top' : 'bottom');
     }])
   .run(["$ionicPlatform", function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
