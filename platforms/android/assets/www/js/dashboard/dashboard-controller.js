@@ -1,11 +1,31 @@
 (function () {
     "use strict";
-    function initController($scope, $state, workOrderFactory, localStorageService) {
+    function initController($scope, $state, $timeout, $ionicModal, workOrderFactory, localStorageService) {
         var vm = this;
 
-        function loadDashboard(callback) {
-            workOrderFactory.getMobileDashboard().then(function (response) {
+        var orders = [];
+        function extractJsonOrdersToLocalArray() {
+            orders = [];
+            var isAdminstrator = true;
+            if (isAdminstrator === true) {
+                angular.forEach(vm.result, function (r, i) {
+                    if (r.dataForAdministrator && r.dataForAdministrator.length > 0) {
+                        _.forEach(r.dataForAdministrator, function (p) {
+                            if (p.ordersJson) {
+                                _.forEach(JSON.parse(p.ordersJson), function (o) {
+                                    orders.push(o);
+                                });
+                            }
+                        })
+                    }
+                });
+            }
+        }
+
+        function loadDashboard(forceGet, callback) {
+            workOrderFactory.getMobileDashboard(forceGet).then(function (response) {
                 vm.result = response.result;
+                extractJsonOrdersToLocalArray();
             }).finally(function () {
                 if (angular.isFunction(callback)) {
                     callback();
@@ -14,18 +34,48 @@
         }
 
         function activateController() {
-            loadDashboard();
+            loadDashboard(false);
         }
+        vm.isSearchModalOpened = false;
         vm.events = {
+            onSearchItemClick: function (order) {
+                if (order) {
+                    vm.matchedOrders = [];
+                    vm.isSearchModalOpened = false;
+                    vm.searchModal.hide();
+                    vm.searchValue = "";
+                    $timeout(function () {
+                        $state.go("app.editOrder", { barCode: order.Barcode, technicianNum: order.TechnicianScheduleNum, src: "main" });
+                    }, 300);
+                }
+            },
+            applySearch: function () {
+                var tolower = vm.searchValue.toLowerCase();
+                vm.matchedOrders = _.filter(orders, function (o) {
+                    return o.BarcodeName.toLowerCase().indexOf(tolower) > -1;
+                });
+            },
+            closeSearchModal: function () {
+                vm.matchedOrders = [];
+                vm.isSearchModalOpened = false;
+                vm.searchModal.hide();
+                vm.searchValue = "";
+            },
+            openSearchModal: function () {
+                vm.searchValue = "";
+                vm.matchedOrders = [];
+                vm.isSearchModalOpened = true;
+                vm.searchModal.show();
+                // var searchBox = document.querySelector("input[name='searchBox']");
+                // searchBox.focus();
+            },
             onOrderClicked: function (order) {
                 if (order) {
-                    console.log(order);
-                    //$state.go(states.orderEdit, { barCode: $.trim(order.Barcode), technicianNum: order.TechnicianScheduleNum, src: states.main });
                     $state.go("app.editOrder", { barCode: order.Barcode, technicianNum: order.TechnicianScheduleNum, src: "main" });
                 }
             },
             refreshOnPullDown: function () {
-                loadDashboard(function () {
+                loadDashboard(true, function () {
                     $scope.$broadcast("scroll.refreshComplete");
                 });
             },
@@ -60,7 +110,26 @@
         $scope.$on("$ionicView.loaded", function (event, data) {
             activateController();
         });
+        $scope.$on('modal.hidden', function () {
+            console.log("Execute action");
+        });
+        // Execute action on remove modal
+        $scope.$on('modal.removed', function () {
+            console.log("modal.removed");
+        });
+
+        $scope.$on('$destroy', function () {
+            vm.searchModal.remove();
+        });
+
+        $ionicModal.fromTemplateUrl("dashboardSearchModal.html", {
+            scope: $scope,
+            animation: 'slide-in-up',
+            focusFirstInput: true
+        }).then(function (modal) {
+            vm.searchModal = modal;
+        });
     }
-    initController.$inject = ["$scope", "$state", "work-orders-factory", "localStorageService"];
+    initController.$inject = ["$scope", "$state", "$timeout", "$ionicModal", "work-orders-factory", "localStorageService"];
     angular.module("fpm").controller("dashboard-controller", initController);
 })();

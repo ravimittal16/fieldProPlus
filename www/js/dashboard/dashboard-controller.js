@@ -3,9 +3,29 @@
     function initController($scope, $state, $timeout, $ionicModal, workOrderFactory, localStorageService) {
         var vm = this;
 
+        var orders = [];
+        function extractJsonOrdersToLocalArray() {
+            orders = [];
+            var isAdminstrator = true;
+            if (isAdminstrator === true) {
+                angular.forEach(vm.result, function (r, i) {
+                    if (r.dataForAdministrator && r.dataForAdministrator.length > 0) {
+                        _.forEach(r.dataForAdministrator, function (p) {
+                            if (p.ordersJson) {
+                                _.forEach(JSON.parse(p.ordersJson), function (o) {
+                                    orders.push(o);
+                                });
+                            }
+                        })
+                    }
+                });
+            }
+        }
+
         function loadDashboard(forceGet, callback) {
             workOrderFactory.getMobileDashboard(forceGet).then(function (response) {
                 vm.result = response.result;
+                extractJsonOrdersToLocalArray();
             }).finally(function () {
                 if (angular.isFunction(callback)) {
                     callback();
@@ -18,26 +38,39 @@
         }
         vm.isSearchModalOpened = false;
         vm.events = {
+            onSearchItemClick: function (order) {
+                if (order) {
+                    vm.matchedOrders = [];
+                    vm.isSearchModalOpened = false;
+                    vm.searchModal.hide();
+                    vm.searchValue = "";
+                    $timeout(function () {
+                        $state.go("app.editOrder", { barCode: order.Barcode, technicianNum: order.TechnicianScheduleNum, src: "main" });
+                    }, 300);
+                }
+            },
             applySearch: function () {
-                console.log(vm.result);
-                console.log(vm.searchValue);
+                var tolower = vm.searchValue.toLowerCase();
+                vm.matchedOrders = _.filter(orders, function (o) {
+                    return o.BarcodeName.toLowerCase().indexOf(tolower) > -1;
+                });
             },
             closeSearchModal: function () {
+                vm.matchedOrders = [];
                 vm.isSearchModalOpened = false;
                 vm.searchModal.hide();
+                vm.searchValue = "";
             },
             openSearchModal: function () {
+                vm.searchValue = "";
+                vm.matchedOrders = [];
                 vm.isSearchModalOpened = true;
                 vm.searchModal.show();
-                $timeout(function () {
-                    var searchBox = document.querySelector("#searchBox");
-                    searchBox.focus();
-                }, 200);
+                // var searchBox = document.querySelector("input[name='searchBox']");
+                // searchBox.focus();
             },
             onOrderClicked: function (order) {
                 if (order) {
-                    console.log(order);
-                    //$state.go(states.orderEdit, { barCode: $.trim(order.Barcode), technicianNum: order.TechnicianScheduleNum, src: states.main });
                     $state.go("app.editOrder", { barCode: order.Barcode, technicianNum: order.TechnicianScheduleNum, src: "main" });
                 }
             },
@@ -86,7 +119,6 @@
         });
 
         $scope.$on('$destroy', function () {
-            console.log("HELLO WORLD DESTR");
             vm.searchModal.remove();
         });
 
@@ -95,7 +127,6 @@
             animation: 'slide-in-up',
             focusFirstInput: true
         }).then(function (modal) {
-            console.log("HELLMODAL");
             vm.searchModal = modal;
         });
     }

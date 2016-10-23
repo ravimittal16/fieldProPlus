@@ -7,9 +7,6 @@
     <i class="icon ion-search placeholder-icon"></i>
     <input type="search" placeholder="Search" data-on-tap="vm.events.openSearchModal()" readonly />
   </label>
-		<button class="button" data-ng-click="vm.events.closeSearchModal()">
-    Cancel
-  </button>
 	</ion-header-bar>
 	<ion-content class="has-header">
 		<ion-refresher pulling-text="Pull to refresh..." on-refresh="vm.events.refreshOnPullDown()">
@@ -62,5 +59,5 @@
 		</ion-list>
 
 	</ion-content>
-	
+
 </ion-view>

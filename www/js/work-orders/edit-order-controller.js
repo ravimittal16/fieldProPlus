@@ -10,7 +10,7 @@
                     vm.barCodeData = response;
                     if (angular.isArray(response.schedules)) {
                         var _scheduleFromFilter = _.filter(response.schedules, function (sch) {
-                            return sch.Num === parseInt($stateParams.technicianNum, 10);
+                            return sch.num === parseInt($stateParams.technicianNum, 10);
                         });
                         vm.schedule = angular.copy(_scheduleFromFilter[0]);
                         $ionicLoading.hide();
@@ -25,6 +25,28 @@
 
         function showActionSheet() {
             console.log("HELO WORLD");
+        }
+
+        vm.tabs = {
+            sch: {
+                events: {
+                    onScheduleActionButtonClicked: function () {
+                        var hideSheet = $ionicActionSheet.show({
+                            buttons: [
+                                { text: 'Add New Schedule' }
+                            ],
+                            titleText: 'Schedule',
+                            cancelText: 'Cancel',
+                            cancel: function () {
+                                // add cancel code..
+                            },
+                            buttonClicked: function (index) {
+                                return true;
+                            }
+                        });
+                    }
+                }
+            }
         }
 
         function showActionSheet() {

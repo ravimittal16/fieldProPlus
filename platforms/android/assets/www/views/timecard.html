@@ -1,0 +1,47 @@
+<ion-view title="Timecard">
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-content>
+        <div style="border-bottom:2px solid #DDD;background-color:#f9f9f9;">
+            <div class="row">
+                <div class="col">
+                    <strong><a data-ng-click="vm.events.onDatePickerClicked()">{{vm.currentDate | date:'fullDate'}}
+                        <i class="icon ion-arrow-down-b"></i></a></strong>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col center">
+                    <button class="button icon-center ion-clock button-block button-positive button-small">&nbsp;Clock In</button>
+                </div>
+                <div class="col center">
+                    <button class="button icon-center ion-clock button-block button-positive button-small">&nbsp;Clock Out</button>
+                </div>
+                <div class="col center">
+                    <button class="button pull-right button-small button-icon icon ion-android-more-vertical" style="margin-top:15px;" data-ng-click="vm.events.showPopoverClicked($event)">
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h5>Total payable time : <strong>23:23</strong></h5>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+        </div>
+        <script id="my-popover.html" type="text/ng-template">
+            <ion-popover-view>
+                <ion-content>
+                    <div class="list">
+                        <a class="item">Add PTO</a>
+                        <a class="item">Add Time</a>
+                        <a class="item">Check Summary</a>
+                        <a class="item">Tutorial</a>
+                    </div>
+                </ion-content>
+            </ion-popover-view>
+        </script>
+    </ion-content>
+</ion-view>

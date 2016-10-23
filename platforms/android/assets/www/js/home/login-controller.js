@@ -3,8 +3,11 @@
     function initController($ionicScrollDelegate, $ionicPopup, $ionicLoading, authenticationFactory, $state, dashboardFactory) {
         var vm = this;
         vm.user = { userName: "", password: "" };
+        vm.showError = false;
         vm.events = {
             loginClick: function (isValid) {
+                vm.showError = false;
+                vm.errors = [];
                 if (!isValid) {
                     $ionicPopup.alert({ title: "Oops", template: "Please enter login information..." });
                     return false;
@@ -15,19 +18,19 @@
                             if (response && authenticationFactory.authentication.isAuth) {
                                 $state.go("app.dashboard");
                             }
-                            console.log(response);
-                        }, function (data) {
-                            $ionicLoading.hide();
-                            $ionicPopup.alert({ title: "Oops", template: "ERROR WHILE TRYING TO LOGIN" });
                         });
+                    }, function (data) {
+                        $ionicLoading.hide();
+                        vm.showError = true;
+                        if (data.error) {
+                            vm.errors = [data.error];
+                        } else {
+                            vm.errors = ["Invalid Email or Password"];
+                        }
                     });
                 });
             }
         };
-
-        dashboardFactory.testCall().then(function (response) {
-            console.log("HEHEHE", response);
-        });
     }
     initController.$inject = ["$ionicScrollDelegate", "$ionicPopup", "$ionicLoading", "authenticationFactory", "$state", "dashboard-factory"];
     angular.module("fpm").controller("login-controller", initController);

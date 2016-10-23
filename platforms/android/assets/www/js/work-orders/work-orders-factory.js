@@ -20,8 +20,14 @@
                 });
             }
         }
+
+        function getBarcodeDetails(barcode) {
+            return apiBaseFactory.get(apibaseurl + "GetBarcodeDetails?barcode=" + barcode);
+        }
+
         return {
-            getMobileDashboard: getMobileDashboard
+            getMobileDashboard: getMobileDashboard,
+            getBarcodeDetails: getBarcodeDetails
         };
     }
     initFactory.$inject = ["$q", "$cacheFactory", "api-base-factory", "shared-data-factory"];

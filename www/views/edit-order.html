@@ -90,6 +90,45 @@
 							<p>{{vm.schedule.scheduledFinishDateTime | date:'MM/dd/yyyy hh:mm a'}}</p>
 						</div>
 					</div>
+					<div class="card">
+						<div class="list">
+							<div class="item-input-inset">
+								<label class="item-input-wrapper">
+									<input type="search" placeholder="Search">
+								</label>
+								<button class="button button-assertive button-small icon ion-ios-trash">
+											
+										</button>
+								<button class="button button-small">
+											Check In
+										</button>
+							</div>
+							<div class="item-input-inset">
+								<label class="item-input-wrapper">
+									<input type="search" placeholder="Search">
+								</label>
+								<button class="button button-assertive button-small icon ion-ios-trash">
+											
+										</button>
+								<button class="button button-small">
+											Check In
+										</button>
+							</div>
+							<label class="item item-input">
+								<input type="email" placeholder="Email"/>
+							</label>
+							<label class="item item-input">
+								<textarea name="" id="" rows="5" placeholder="Trip Note"></textarea>
+							</label>
+						</div>
+					</div>
+					<div class="card">
+						<div class="row">
+							<div class="col">
+								<button class="button pull-right button-light button-small icon ion-android-more-vertical" data-ng-click="vm.tabs.sch.events.onScheduleActionButtonClicked()"></button>
+							</div>
+						</div>
+					</div>
 				</ion-content>
 			</ion-tab>
 			<ion-tab title="PROD" icon-on="ion-ios-list" icon-off="ion-ios-list-outline">

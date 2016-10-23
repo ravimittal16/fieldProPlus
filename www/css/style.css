@@ -109,3 +109,6 @@ address > p {
 .n-m-b{
     margin-bottom: 0px !important;
 }
+/*.item .row, .item .col {
+  padding: 0;
+}*/

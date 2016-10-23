@@ -5,6 +5,15 @@
 .app-title-promax{
     color:#f38c19;
 }
+.brand{
+    font-weight: 600;
+}
+.brand-margin{
+    margin-top:60px;
+}
+.login-input-font-size{
+    font-size: 20px !important;
+}
 /*ACCORDION CLASSES*/
 .list .item.item-accordion {
   line-height: 38px;
@@ -59,9 +68,11 @@ background-color:#777;
 .label-danger {
     background-color: #d9534f;
 }
-
-
-
+a
+{
+    text-decoration: none;
+    cursor: pointer;
+}
 
 .scroll {
     height: 100%;
@@ -79,4 +90,22 @@ background-color:#777;
 }
 .text-center{
     text-align: center !important;
+}
+.list-unstyled {
+    padding-left: 0;
+    list-style: none;
+}
+.error{
+    padding:10px;
+    text-align: left;
+    font-size: 11px !important;
+    vertical-align: middle;
+    background-color: #db412b;
+    color: #fff;
+}
+address > p {
+    margin-bottom: 0px;
+}
+.n-m-b{
+    margin-bottom: 0px !important;
 }
