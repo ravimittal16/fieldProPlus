@@ -37,6 +37,12 @@
 .text-xsmall{
     font-size: 9px !important;
 }
+.text-smaller{
+    font-size: smaller;
+}
+.text-right{
+    text-align: right;
+}
 .label{
   display: inline;
     padding: .2em .6em .3em;
@@ -112,3 +118,23 @@ address > p {
 /*.item .row, .item .col {
   padding: 0;
 }*/
+
+.text-muted{
+    color:#777;
+}
+/*.item.wrap, .item-content.wrap {
+white-space: normal;
+}*/
+
+.p-10 > div{
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-right:0px !important;
+    padding-left:0px !important;
+}
+.n-p-t{
+    padding-top: 0px !important;
+}
+.n-p-b{
+    padding-bottom: 0px !important;
+}

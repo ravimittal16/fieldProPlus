@@ -2,9 +2,8 @@
 	<ion-nav-buttons side="left">
 		<button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
 	</ion-nav-buttons>
-
 	<ion-content>
-		<ion-tabs class="tabs-light tabs-icon-top">
+		<ion-tabs class="tabs-positive tabs-icon-top">
 			<ion-tab title="DESC" icon-on="ion-ios-paper" icon-off="ion-ios-paper-outline">
 				<ion-content>
 					<div>
@@ -123,16 +122,71 @@
 						</div>
 					</div>
 					<div class="card">
-						<div class="row">
-							<div class="col">
-								<button class="button pull-right button-light button-small icon ion-android-more-vertical" data-ng-click="vm.tabs.sch.events.onScheduleActionButtonClicked()"></button>
-							</div>
+						<div class="item item-divider">
+							Other Schedules
+							<a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small" data-ng-click="vm.tabs.sch.events.onScheduleActionButtonClicked()"
+								style="font-size:12px !important;"></a>
 						</div>
+						<ion-list>
+							<ion-item class="item-text-wrap" data-ng-repeat="sch in vm.barCodeData.schedules" data-ng-click="vm.tabs.sch.events.onListScheduleItemTap(sch)">
+								<h4><span class="text-muted">Sch Date :</span> <strong>{{::sch.scheduledStartDateTime | date:'MM/dd/yyyy'}}</strong>&nbsp;
+									<span class="text-muted" data-ng-if="sch.actualStartDateTime">Actual Date : </span><strong data-ng-if="sch.actualStartDateTime">
+									{{::sch.actualStartDateTime | date:'MM/dd/yyyy'}}
+								</strong>
+									<strong class="text-info">{{::sch.technicianName}}</strong><span data-ng-if="sch.tripNote">: Trip Note - {{::sch.tripNote}}</span></h4>
+							</ion-item>
+						</ion-list>
 					</div>
 				</ion-content>
 			</ion-tab>
 			<ion-tab title="PROD" icon-on="ion-ios-list" icon-off="ion-ios-list-outline">
-
+				<ion-header-bar class="item-input-inset">
+					<!--<label class="item-input-wrapper">
+						<i class="icon ion-search placeholder-icon"></i>
+						<input type="search" placeholder="Search product..." data-on-tap="vm.tabs.prod.events.openProductSearchModal()" readonly />
+					</label>-->
+					<div class="buttons">
+						<button class="button button-small" style="display:none;" ng-click="doSomething()">Left Button</button>
+					</div>
+					<h1 class="title">&nbsp;</h1>
+					<div class="buttons">
+						<button class="button button-small">
+							Add Product	
+						</button>
+					</div>
+				</ion-header-bar>
+				<ion-content class="has-header">
+					<ion-list can-swipe="true">
+						<div class="item item-divider">
+							Products selected for Work Order
+						</div>
+						<ion-item class="item-text-wrap p-10" data-ng-repeat="p in vm.barCodeData.products">
+							<div class="row">
+								<div class="col col-50">
+									<h4>{{::p.productName}}</h4>
+								</div>
+								<div class="col col-25">
+									<h4 class="pull-right"><strong>{{::p.qty}}</strong></h4>
+								</div>
+								<div class="col  col-25 text-right">
+									<h3 class="pull-right"><strong>{{::p.price | currency:'$':2}}</strong></h4>
+								</div>
+							</div>
+							<div class="row n-p-t n-p-b row-top">
+								<div class="col">
+									<small class="text-muted text-small">{{::p.productDescription}}<small>
+								</div>
+							</div>
+							 <ion-option-button class="button-assertive" ng-click="vm.tabs.prod.events.onDeleteProductClicked(p)">
+								Delete
+							</ion-option-button>
+							<ion-option-button class="button-info" ng-click="vm.tabs.prod.events.onEditProductClicked(p)">
+								Edit
+							</ion-option-button>
+						</ion-item>
+						
+					</ion-list>
+				</ion-content>
 			</ion-tab>
 			<ion-tab title="EXP" icon-on="ion-cash" icon-off="ion-cash">
 
@@ -144,7 +198,26 @@
 
 			</ion-tab>
 			<ion-tab title="SMRY" icon-on="ion-ios-calculator" icon-off="ion-ios-calculator-outline">
-
+				<ion-content>
+					<ion-list>
+						<div>
+							<ion-item class="item-stable" ng-click="vm.invoiceOpen = !vm.invoiceOpen" ng-class="{active: vm.invoiceOpen}">
+								<i class="icon" ng-class="vm.invoiceOpen ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>Invoice</strong>
+							</ion-item>
+							<div data-ng-if="vm.invoiceOpen">
+								<ion-list>
+									<ion-item data-ng-repeat="inv in vm.barCodeData.invoice" class="item-text-wrap">
+										<div class="row">
+											<div class="col col-50">
+												<h4>{{::inv.productName}}</h4>
+											</div>
+										</div>
+									</ion-item>
+								</ion-list>
+							</div>
+						</div>
+					</ion-list>
+				</ion-content>
 			</ion-tab>
 		</ion-tabs>
 	</ion-content>

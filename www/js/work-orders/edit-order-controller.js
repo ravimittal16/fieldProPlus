@@ -30,6 +30,9 @@
         vm.tabs = {
             sch: {
                 events: {
+                    onListScheduleItemTap: function (sch) {
+                        console.log(sch)
+                    },
                     onScheduleActionButtonClicked: function () {
                         var hideSheet = $ionicActionSheet.show({
                             buttons: [
@@ -44,6 +47,19 @@
                                 return true;
                             }
                         });
+                    }
+                }
+            },
+            prod: {
+                events: {
+                    openProductSearchModal: function () {
+
+                    },
+                    onEditProductClicked: function (product) {
+                        console.log(product);
+                    },
+                    onDeleteProductClicked: function (product) {
+                        console.log(product);
                     }
                 }
             }
