@@ -1,9 +1,11 @@
 (function () {
     "use strict";
-    function initController($scope, $state, $stateParams, $ionicActionSheet, $ionicLoading, $ionicPopup, workOrderFactory) {
+    function initController($scope, $state, $stateParams, $ionicActionSheet, $ionicLoading,
+        $ionicPopup, workOrderFactory, fpmUtilities) {
         var vm = this;
         vm.barcode = $stateParams.barCode;
-
+        var alerts = fpmUtilities.alerts;
+        vm.invoiceOpen = false;
         function getBarcodeDetails() {
             $ionicLoading.show({ template: "getting data..." }).then(function () {
                 workOrderFactory.getBarcodeDetails(vm.barcode).then(function (response) {
@@ -52,6 +54,21 @@
             },
             prod: {
                 events: {
+                    onProdcutActionButtonClicked: function () {
+                        var productSheet = $ionicActionSheet.show({
+                            buttons: [
+                                { text: 'Add New Product' }
+                            ],
+                            titleText: 'New Product',
+                            cancelText: 'Cancel',
+                            cancel: function () {
+                                // add cancel code..
+                            },
+                            buttonClicked: function (index) {
+                                return true;
+                            }
+                        });
+                    },
                     openProductSearchModal: function () {
 
                     },
@@ -60,6 +77,14 @@
                     },
                     onDeleteProductClicked: function (product) {
                         console.log(product);
+                        alerts.confirmDelete(function () {
+                            workOrderFactory.deleteProduct(vm.barcode, product.num).then(function (response) {
+                                if (response) {
+                                    vm.barCodeData.products = response.products;
+                                    vm.barCodeData.invoice = response.invoice;
+                                }
+                            });
+                        });
                     }
                 }
             }
@@ -86,6 +111,7 @@
             showActionSheet: showActionSheet
         };
     }
-    initController.$inject = ["$scope", "$state", "$stateParams", "$ionicActionSheet", "$ionicLoading", "$ionicPopup", "work-orders-factory"];
+    initController.$inject = ["$scope", "$state", "$stateParams", "$ionicActionSheet",
+        "$ionicLoading", "$ionicPopup", "work-orders-factory", "fpm-utilities-factory"];
     angular.module("fpm").controller("edit-order-controller", initController);
 })();

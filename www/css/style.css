@@ -138,3 +138,8 @@ white-space: normal;
 .n-p-b{
     padding-bottom: 0px !important;
 }
+.item-divider-left-buttion{
+    margin-bottom: -5px !important;
+    font-size: 12px !important;
+
+}

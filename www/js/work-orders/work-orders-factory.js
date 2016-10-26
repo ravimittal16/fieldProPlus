@@ -24,10 +24,13 @@
         function getBarcodeDetails(barcode) {
             return apiBaseFactory.get(apibaseurl + "GetBarcodeDetails?barcode=" + barcode);
         }
-
+        function deleteProduct(barcode, num) {
+            return apiBaseFactory.get(apibaseurl + "DeleteProduct?barcode=" + barcode + "&productNum=" + num);
+        }
         return {
             getMobileDashboard: getMobileDashboard,
-            getBarcodeDetails: getBarcodeDetails
+            getBarcodeDetails: getBarcodeDetails,
+            deleteProduct: deleteProduct
         };
     }
     initFactory.$inject = ["$q", "$cacheFactory", "api-base-factory", "shared-data-factory"];
