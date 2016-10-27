@@ -23,7 +23,8 @@
                         userEmail: response.userEmail,
                         etOn: response.etOn === "True",
                         timeCard: response.timeCard === "True",
-                        allowPushTime: response.allowPushTime === "True"
+                        allowPushTime: response.allowPushTime === "True",
+                        showPrice: response.showPrice === "True"
                     };
                     localStorageService.set(localStorageKeys.storageKeyName, userobj);
                     if (response.hasOwnProperty(localStorageKeys.configKeyName)) {

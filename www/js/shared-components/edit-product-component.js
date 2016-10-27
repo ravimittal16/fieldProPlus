@@ -6,11 +6,13 @@
             product: "="
         },
         templateUrl: "js/shared-components/edit-product-component-template.html",
-        controller: ["$scope", "work-orders-factory", function ($scope, workOrdersFactory) {
+        controller: ["$scope", "work-orders-factory", "authenticationFactory", function ($scope, workOrdersFactory, authenticationFactory) {
             var vm = this;
+            vm.user = authenticationFactory.getLoggedInUserInfo();
+            vm.user.showPrice = false;
             vm.events = {
                 updateProductClick: function () {
-                    console.log("HELLO WORLD");
+                    console.log("HELLO WORLD FROM");
                 }
             };
         }],
