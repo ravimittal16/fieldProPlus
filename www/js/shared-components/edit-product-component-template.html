@@ -16,7 +16,8 @@
             <div class="input-label">
                 Price
             </div>
-            <input type="number" placeholder="Price" data-ng-model="vm.product.price"/>
+            <input type="number" data-ng-if="!vm.user.showPrice" placeholder="Price" data-ng-model="vm.product.price"/>
+            <input type="number" data-ng-if="vm.user.showPrice" placeholder="Price" data-ng-model="vm.product.price"/>
         </label>
 		<label class="item item-input" data-ng-if="vm.isEstimate">
             <div class="input-label">

@@ -9,7 +9,6 @@
         controller: ["$scope", "work-orders-factory", "authenticationFactory", function ($scope, workOrdersFactory, authenticationFactory) {
             var vm = this;
             vm.user = authenticationFactory.getLoggedInUserInfo();
-            vm.user.showPrice = false;
             vm.events = {
                 updateProductClick: function () {
                     console.log("HELLO WORLD FROM");
