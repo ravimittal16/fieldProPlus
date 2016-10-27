@@ -27,10 +27,15 @@
         function deleteProduct(barcode, num) {
             return apiBaseFactory.get(apibaseurl + "DeleteProduct?barcode=" + barcode + "&productNum=" + num);
         }
+        function updateProduct(model) {
+            return apiBaseFactory.post(apibaseurl + "UpdateProduct?fromMobile=true", model);
+        }
+
         return {
             getMobileDashboard: getMobileDashboard,
             getBarcodeDetails: getBarcodeDetails,
-            deleteProduct: deleteProduct
+            deleteProduct: deleteProduct,
+            updateProduct: updateProduct
         };
     }
     initFactory.$inject = ["$q", "$cacheFactory", "api-base-factory", "shared-data-factory"];

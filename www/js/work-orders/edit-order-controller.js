@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    function initController($scope, $state, $stateParams, $ionicActionSheet, $ionicLoading,
+    function initController($scope, $state, $timeout, $stateParams, $ionicActionSheet, $ionicLoading,
         $ionicPopup, $ionicModal, workOrderFactory, fpmUtilities) {
         var vm = this;
         vm.barcode = $stateParams.barCode;
@@ -71,18 +71,17 @@
                             }
                         });
                     },
-                    closeProductEditModal: function () { 
+                    closeProductEditModal: function () {
                         vm.productModal.hide();
                     },
                     openProductSearchModal: function () {
 
                     },
                     onEditProductClicked: function (product) {
-                        vm.currentProduct = product;
+                        vm.currentProduct = angular.copy(product);
                         vm.productModal.show();
                     },
                     onDeleteProductClicked: function (product) {
-                        console.log(product);
                         alerts.confirmDelete(function () {
                             workOrderFactory.deleteProduct(vm.barcode, product.num).then(function (response) {
                                 if (response) {
@@ -123,12 +122,35 @@
             vm.productModal = modal;
         });
 
-
+        $scope.$on("$fpm:operation:updateProduct", function ($event, agrs) {
+            if (agrs && vm.currentProduct) {
+                var uProduct = _.filter(vm.barCodeData.products, function (p) {
+                    return p.num === agrs.num;
+                });
+                var uInvoice = _.filter(vm.barCodeData.invoice, function (n) {
+                    return n.productName !== "Labor" && n.numFromSchedule === agrs.num;
+                })
+                $timeout(function () {
+                    if (uProduct.length > 0) {
+                        uProduct[0].qty = agrs.qty;
+                        uProduct[0].productDescription = agrs.productDescription;
+                        uProduct[0].price = agrs.price;
+                    }
+                    if (uInvoice.length > 0) {
+                        uInvoice[0].qty = agrs.qty;
+                        uInvoice[0].productDescription = agrs.productDescription;
+                        uInvoice[0].price = agrs.price;
+                        uInvoice[0].totalPrice = parseFloat(agrs.qty) * parseFloat(agrs.price);
+                    }
+                    vm.productModal.hide();
+                }, 100);
+            }
+        });
         vm.events = {
             showActionSheet: showActionSheet
         };
     }
-    initController.$inject = ["$scope", "$state", "$stateParams", "$ionicActionSheet",
+    initController.$inject = ["$scope", "$state", "$timeout", "$stateParams", "$ionicActionSheet",
         "$ionicLoading", "$ionicPopup", "$ionicModal", "work-orders-factory", "fpm-utilities-factory"];
     angular.module("fpm").controller("edit-order-controller", initController);
 })();
