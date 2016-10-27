@@ -67,11 +67,12 @@
 	<ion-modal-view>
 		<ion-header-bar>
 			<h1 class="title">Edit Product</h1>
+			<button class="button" data-ng-click="vm.tabs.prod.events.closeProductEditModal()">
+				Cancel
+			</button>
 		</ion-header-bar>
 		<ion-content>
-			<form action="" name="editProductForm">
-				
-			</form>
+			<edit-product-component is-edtimate="false" data-product="vm.currentProduct"></edit-product-component>
 		</ion-content>
 	</ion-modal-view>
 </script>

@@ -1,7 +1,7 @@
 (function () {
     "use strict";
     function initController($scope, $state, $stateParams, $ionicActionSheet, $ionicLoading,
-        $ionicPopup, workOrderFactory, fpmUtilities) {
+        $ionicPopup, $ionicModal, workOrderFactory, fpmUtilities) {
         var vm = this;
         vm.barcode = $stateParams.barCode;
         var alerts = fpmUtilities.alerts;
@@ -24,6 +24,8 @@
             });
         }
         getBarcodeDetails();
+
+
 
         function showActionSheet() {
             console.log("HELO WORLD");
@@ -69,11 +71,15 @@
                             }
                         });
                     },
+                    closeProductEditModal: function () { 
+                        vm.productModal.hide();
+                    },
                     openProductSearchModal: function () {
 
                     },
                     onEditProductClicked: function (product) {
-                        console.log(product);
+                        vm.currentProduct = product;
+                        vm.productModal.show();
                     },
                     onDeleteProductClicked: function (product) {
                         console.log(product);
@@ -107,11 +113,22 @@
                 }
             });
         }
+
+
+
+        $ionicModal.fromTemplateUrl("editProductModal.html", {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function (modal) {
+            vm.productModal = modal;
+        });
+
+
         vm.events = {
             showActionSheet: showActionSheet
         };
     }
     initController.$inject = ["$scope", "$state", "$stateParams", "$ionicActionSheet",
-        "$ionicLoading", "$ionicPopup", "work-orders-factory", "fpm-utilities-factory"];
+        "$ionicLoading", "$ionicPopup", "$ionicModal", "work-orders-factory", "fpm-utilities-factory"];
     angular.module("fpm").controller("edit-order-controller", initController);
 })();

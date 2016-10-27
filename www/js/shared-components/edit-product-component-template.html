@@ -1,0 +1,33 @@
+<form action="" name="editProductForm">
+	<div class="list">
+		<div class="padding">
+			<h4 data-ng-bind="vm.product.productName"></h4>
+		</div>
+		<label class="item item-input">
+            <textarea type="text" rows="5" data-ng-model="vm.product.productDescription" placeholder="Street"></textarea>
+        </label>
+		<label class="item item-input">
+            <div class="input-label">
+                Quantity
+            </div>
+            <input type="number" placeholder="Quantity" data-ng-model="vm.product.qty"/>
+        </label>
+		<label class="item item-input">
+            <div class="input-label">
+                Price
+            </div>
+            <input type="number" placeholder="Price" data-ng-model="vm.product.price"/>
+        </label>
+		<label class="item item-input" data-ng-if="vm.isEstimate">
+            <div class="input-label">
+                Markup
+            </div>
+            <input type="number" placeholder="Price" data-ng-model="vm.product.markUpPercent"/>
+        </label>
+		<div class="padding">
+			<button class="button button-block button-positive" data-ng-click="vm.events.updateProductClick()" type="button">
+                Update Product
+            </button>
+		</div>
+	</div>
+</form>
