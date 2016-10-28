@@ -67,6 +67,9 @@
                                 // add cancel code..
                             },
                             buttonClicked: function (index) {
+                                if (index === 0) {
+                                    vm.productSearchModal.show();
+                                }
                                 return true;
                             }
                         });
@@ -113,6 +116,12 @@
             });
         }
 
+        $ionicModal.fromTemplateUrl("productSearchModal.html", {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function (modal) {
+            vm.productSearchModal = modal;
+        });
 
 
         $ionicModal.fromTemplateUrl("editProductModal.html", {

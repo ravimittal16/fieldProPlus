@@ -30,12 +30,16 @@
         function updateProduct(model) {
             return apiBaseFactory.post(apibaseurl + "UpdateProduct?fromMobile=true", model);
         }
+        function searchProduct(searchValue, alphabet) {
+            return apiBaseFactory.get(apibaseurl + "GetProductsLists?searchPattern=" + searchValue + "&alphabet=" + alphabet);
+         }
 
         return {
             getMobileDashboard: getMobileDashboard,
             getBarcodeDetails: getBarcodeDetails,
             deleteProduct: deleteProduct,
-            updateProduct: updateProduct
+            updateProduct: updateProduct,
+            searchProduct: searchProduct
         };
     }
     initFactory.$inject = ["$q", "$cacheFactory", "api-base-factory", "shared-data-factory"];

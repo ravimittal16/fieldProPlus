@@ -1,0 +1,20 @@
+<ion-header-bar>
+	<h1 class="title">Search Product</h1>
+</ion-header-bar>
+<ion-header-bar class="bar-subheader item-input-inset">
+	<label class="item-input-wrapper">
+				<i class="icon ion-search placeholder-icon"></i>
+				<input type="search" name="searchBox" autofocus="" placeholder="Search"  
+				ng-change="vm.events.applySearch()" data-ng-model-options="{debounce:500}" ng-model="vm.searchValue" />
+			</label>
+	<button class="button" data-ng-click="vm.events.closeSearchModal()">
+				Cancel
+			</button>
+</ion-header-bar>
+<ion-content>
+	<ion-list>
+		<ion-item data-ng-repeat="p in vm.products" item="p">
+            {{::p.productName}}<strong style="float:right;">{{p.price | currency:'$':2}}</strong>
+		</ion-item>
+	</ion-list>
+</ion-content>
