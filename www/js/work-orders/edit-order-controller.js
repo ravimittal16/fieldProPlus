@@ -16,6 +16,7 @@
                         });
                         vm.schedule = angular.copy(_scheduleFromFilter[0]);
                         $ionicLoading.hide();
+                        calculateTotals();
                     }
                 }, function (data) {
                     $ionicPopup.alert({ title: "Oops", template: "ERROR WHILE GETTING BARCODE DATA.." });
@@ -26,10 +27,26 @@
         getBarcodeDetails();
 
 
-
-        function showActionSheet() {
-            console.log("HELO WORLD");
+        function calculateTotals() {
+            vm.totals = { subtotal: 0, totalqty: 0, totalcost: 0, totaltax: 0 };
+            if (vm.barCodeData.invoice && vm.barCodeData.invoice.length > 0) {
+                var taxRate = vm.barCodeData.taxRate || 0;
+                angular.forEach(vm.barCodeData.invoice, function (pro) {
+                    if (pro.price && pro.qty) {
+                        if (angular.isNumber(parseFloat(pro.price)) && angular.isNumber(parseInt(pro.qty, 10))) {
+                            var totalPrice = pro.price * pro.qty;
+                            var taxAmt = parseFloat(parseFloat(taxRate) > 0 ? parseFloat((taxRate / 100) * (totalPrice)) : 0);
+                            vm.totals.subtotal += parseFloat(totalPrice);
+                            vm.totals.totalqty += parseInt(pro.qty, 10);
+                            if ((pro.taxable || false) === true) {
+                                vm.totals.totaltax += parseFloat(taxAmt);
+                            }
+                        }
+                    }
+                });
+            }
         }
+
 
         vm.tabs = {
             sch: {
@@ -90,6 +107,7 @@
                                 if (response) {
                                     vm.barCodeData.products = response.products;
                                     vm.barCodeData.invoice = response.invoice;
+                                    calculateTotals();
                                 }
                             });
                         });
@@ -98,23 +116,7 @@
             }
         }
 
-        function showActionSheet() {
-            var hideSheet = $ionicActionSheet.show({
-                buttons: [
-                    { text: '<b>Share</b> This' },
-                    { text: 'Move' }
-                ],
-                destructiveText: 'Delete',
-                titleText: 'Modify your album',
-                cancelText: 'Cancel',
-                cancel: function () {
-                    // add cancel code..
-                },
-                buttonClicked: function (index) {
-                    return true;
-                }
-            });
-        }
+
 
         $ionicModal.fromTemplateUrl("productSearchModal.html", {
             scope: $scope,
@@ -141,9 +143,10 @@
                     workOrderFactory.getBarcodeInvoiceAndProductDetails(vm.barcode).then(function (response) {
                         vm.barCodeData.products = response.products;
                         vm.barCodeData.invoice = response.invoice;
+                        calculateTotals();
                     });
                 }
-                vm.productSearchModal.hide(); 
+                vm.productSearchModal.hide();
             }
         });
 
@@ -167,13 +170,12 @@
                         uInvoice[0].price = agrs.price;
                         uInvoice[0].totalPrice = parseFloat(agrs.qty) * parseFloat(agrs.price);
                     }
+                    calculateTotals();
                     vm.productModal.hide();
                 }, 100);
             }
         });
-        vm.events = {
-            showActionSheet: showActionSheet
-        };
+
     }
     initController.$inject = ["$scope", "$state", "$timeout", "$stateParams", "$ionicActionSheet",
         "$ionicLoading", "$ionicPopup", "$ionicModal", "work-orders-factory", "fpm-utilities-factory"];

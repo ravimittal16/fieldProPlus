@@ -143,3 +143,27 @@ white-space: normal;
     font-size: 12px !important;
 
 }
+.text-assertive{
+color:#e42112;
+}
+.text-balanced{
+color:#33cd5f;
+}
+.text-energized{
+color:#ffc900;
+}
+.text-royal{
+color:#886aea;
+}
+.text-dark{
+    color:#111;
+}
+.text-calm{
+    color:#11c1f3;
+}
+.text-positive{
+    color:#387ef5;
+}
+.text-stable{
+    color:#f8f8f8;
+}

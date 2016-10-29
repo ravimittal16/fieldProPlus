@@ -124,7 +124,8 @@
 					<div class="card">
 						<div class="item item-divider">
 							Other Schedules
-							<a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion" data-ng-click="vm.tabs.sch.events.onScheduleActionButtonClicked()"								></a>
+							<a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+								data-ng-click="vm.tabs.sch.events.onScheduleActionButtonClicked()"></a>
 						</div>
 						<ion-list>
 							<ion-item class="item-text-wrap" data-ng-repeat="sch in vm.barCodeData.schedules" data-ng-click="vm.tabs.sch.events.onListScheduleItemTap(sch)">
@@ -143,8 +144,8 @@
 					<ion-list can-swipe="true">
 						<div class="item item-divider">
 							Products selected for Work Order
-							<a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion" data-ng-click="vm.tabs.prod.events.onProdcutActionButtonClicked()"
-								></a>
+							<a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+								data-ng-click="vm.tabs.prod.events.onProdcutActionButtonClicked()"></a>
 						</div>
 						<ion-item class="item-text-wrap p-10" data-ng-repeat="p in vm.barCodeData.products">
 							<div class="row">
@@ -222,6 +223,25 @@
 							</div>
 						</div>
 					</ion-list>
+					<div class="row">
+						<div class="col">
+							<p>
+								<h5>Subtotal
+									<span class="pull-right">{{vm.totals.subtotal | currency:'$':2}}</span>
+								</h5>
+							</p>
+							<p>
+								<h5>Total Tax
+									<span class="pull-right text-muted">{{vm.totals.totaltax | currency:'$':2}}</span>
+								</h5>
+							</p>
+							<p>
+								<h5>Total Amount
+									<span class="pull-right text-energized">{{vm.totals.subtotal + vm.totals.totaltax | currency:'$':2}}</span>
+								</h5>
+							</p>
+						</div>
+					</div>
 				</ion-content>
 			</ion-tab>
 		</ion-tabs>
