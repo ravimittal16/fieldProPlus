@@ -32,14 +32,22 @@
         }
         function searchProduct(searchValue, alphabet) {
             return apiBaseFactory.get(apibaseurl + "GetProductsLists?searchPattern=" + searchValue + "&alphabet=" + alphabet);
-         }
+        }
+        function addProduct(model) {
+            return apiBaseFactory.post(apibaseurl + "AddProductsToOrder?fromMobile=true", model);
+        }
+        function getBarcodeInvoiceAndProductDetails(barcode) { 
+            return apiBaseFactory.get(apibaseurl + "GetBarcodeInvoiceAndProductDetails?barcode=" + barcode);
+        }
 
         return {
             getMobileDashboard: getMobileDashboard,
             getBarcodeDetails: getBarcodeDetails,
             deleteProduct: deleteProduct,
             updateProduct: updateProduct,
-            searchProduct: searchProduct
+            searchProduct: searchProduct,
+            addProduct: addProduct,
+            getBarcodeInvoiceAndProductDetails: getBarcodeInvoiceAndProductDetails
         };
     }
     initFactory.$inject = ["$q", "$cacheFactory", "api-base-factory", "shared-data-factory"];

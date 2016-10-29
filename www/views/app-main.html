@@ -65,15 +65,14 @@
 </script>
 <script id="editProductModal.html" type="text/ng-template">
 	<ion-modal-view>
-		<ion-header-bar>
-			<h1 class="title">Edit Product</h1>
-			<button class="button" data-ng-click="vm.tabs.prod.events.closeProductEditModal()">
-				Cancel
-			</button>
-		</ion-header-bar>
-		<ion-content>
-			<edit-product-component is-edtimate="false" data-product="vm.currentProduct"></edit-product-component>
-		</ion-content>
+		<edit-product-component is-edtimate="false" data-modal-type="0" data-product="vm.currentProduct"></edit-product-component>
+	</ion-modal-view>
+</script>
+
+<script id="addProductModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<edit-product-component is-edtimate="false" data-modal-type="1" 
+		data-product="vm.currentProduct" data-on-add-product-completed="vm.events.onAddProductCompleted(product)"></edit-product-component>
 	</ion-modal-view>
 </script>
 <script id="productSearchModal.html" type="text/ng-template">

@@ -131,6 +131,22 @@
             vm.productModal = modal;
         });
 
+        $scope.$on("$fpm:closeEditProductModal", function () {
+            vm.productModal.hide();
+        });
+
+        $scope.$on("$fpm:closeProductSearchModal", function ($event, args) {
+            if (vm.productSearchModal) {
+                if (args && args.fromProductAdd === true) {
+                    workOrderFactory.getBarcodeInvoiceAndProductDetails(vm.barcode).then(function (response) {
+                        vm.barCodeData.products = response.products;
+                        vm.barCodeData.invoice = response.invoice;
+                    });
+                }
+                vm.productSearchModal.hide(); 
+            }
+        });
+
         $scope.$on("$fpm:operation:updateProduct", function ($event, agrs) {
             if (agrs && vm.currentProduct) {
                 var uProduct = _.filter(vm.barCodeData.products, function (p) {
