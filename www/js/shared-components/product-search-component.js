@@ -14,6 +14,7 @@
                     applySearch: function () {
                         workOrderFactory.searchProduct(vm.searchValue, "").then(function (response) {
                             vm.products = response;
+                            vm.searchValue = "";
                         });
                     },
                     onProductItemClicked: function (product) {
