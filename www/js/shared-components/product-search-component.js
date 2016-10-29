@@ -14,7 +14,6 @@
                     applySearch: function () {
                         workOrderFactory.searchProduct(vm.searchValue, "").then(function (response) {
                             vm.products = response;
-                            vm.searchValue = "";
                         });
                     },
                     onProductItemClicked: function (product) {
@@ -29,7 +28,7 @@
                     },
                     onAddProductCompleted: function (product) {
                         vm.productModal.hide();
-                        $timeout(function () { 
+                        $timeout(function () {
                             $scope.$emit("$fpm:closeProductSearchModal", { fromProductAdd: true });
                         }, 100);
                     }

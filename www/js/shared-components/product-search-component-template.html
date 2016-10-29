@@ -1,14 +1,14 @@
 <ion-header-bar>
 	<h1 class="title">Search Product</h1>
-	<button class="button button-small" data-ng-click="vm.events.closeSearchModal()">Close</button>
 </ion-header-bar>
 <ion-header-bar class="bar-subheader item-input-inset">
 	<label class="item-input-wrapper">
 				<i class="icon ion-search placeholder-icon"></i>
-				<input type="search" name="searchBox" autofocus="" placeholder="Search" data-ng-model="vm.searchValue" />
+				<input type="search" name="searchBox" autofocus="" placeholder="Search"  
+				ng-change="vm.events.applySearch()" data-ng-model-options="{debounce:500}" ng-model="vm.searchValue" />
 			</label>
-	        <button class="button" data-ng-click="vm.events.applySearch()">
-				<i class="icon ion-search"></i>
+	<button class="button" data-ng-click="vm.events.closeSearchModal()">
+				Cancel
 			</button>
 </ion-header-bar>
 <ion-content>
