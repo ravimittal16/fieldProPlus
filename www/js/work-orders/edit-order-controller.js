@@ -71,6 +71,11 @@
                     }
                 }
             },
+            smry: {
+                events: {
+                    
+                }
+            },
             prod: {
                 events: {
                     onProdcutActionButtonClicked: function () {
