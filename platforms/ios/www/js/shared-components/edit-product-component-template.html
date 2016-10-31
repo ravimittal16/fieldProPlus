@@ -1,0 +1,45 @@
+<ion-header-bar>
+	<h1 class="title">
+		<span data-ng-if="vm.modalType==1">Add</span>
+		<span data-ng-if="vm.modalType==0">Edit</span> Product
+	</h1>
+	<button class="button" data-ng-click="vm.events.closeProductEditModal()">
+		Cancel
+    </button>
+</ion-header-bar>
+<ion-content>
+	<form action="" name="editProductForm">
+		<div class="list">
+			<div class="padding">
+				<h4 data-ng-bind="vm.product.productName"></h4>
+			</div>
+			<label class="item item-input">
+            <textarea type="text" rows="5" data-ng-model="vm.product.productDescription" placeholder="Street"></textarea>
+        </label>
+			<label class="item item-input">
+            <div class="input-label">
+                Quantity
+            </div>
+            <input type="number" placeholder="Quantity" data-ng-model="vm.product.qty"/>
+        </label>
+			<label class="item item-input">
+            <div class="input-label">
+                Price
+            </div>
+            <input type="number" data-ng-if="!vm.user.showPrice" placeholder="Price" value="0.0" disabled/>
+            <input type="number" data-ng-if="vm.user.showPrice" placeholder="Price" data-ng-model="vm.product.price"/>
+        </label>
+			<label class="item item-input" data-ng-if="vm.isEstimate">
+            <div class="input-label">
+                Markup
+            </div>
+            <input type="number" placeholder="Price" pattern="\d*" data-ng-model="vm.product.markUpPercent"/>
+        </label>
+			<div class="padding">
+				<button class="button button-block button-positive" data-ng-click="vm.events.updateProductClick()" type="button">
+                <span data-ng-if="vm.modalType == 0">Update</span><span data-ng-if="vm.modalType == 1">Add</span> Product
+            </button>
+			</div>
+		</div>
+	</form>
+</ion-content>

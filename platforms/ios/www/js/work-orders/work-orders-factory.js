@@ -20,8 +20,40 @@
                 });
             }
         }
+
+        function getBarcodeDetails(barcode) {
+            return apiBaseFactory.get(apibaseurl + "GetBarcodeDetails?barcode=" + barcode);
+        }
+        function deleteProduct(barcode, num) {
+            return apiBaseFactory.get(apibaseurl + "DeleteProduct?barcode=" + barcode + "&productNum=" + num);
+        }
+        function updateProduct(model) {
+            return apiBaseFactory.post(apibaseurl + "UpdateProduct?fromMobile=true", model);
+        }
+        function searchProduct(searchValue, alphabet) {
+            return apiBaseFactory.get(apibaseurl + "GetProductsLists?searchPattern=" + searchValue + "&alphabet=" + alphabet);
+        }
+        function addProduct(model) {
+            return apiBaseFactory.post(apibaseurl + "AddProductsToOrder?fromMobile=true", model);
+        }
+        function getBarcodeInvoiceAndProductDetails(barcode) {
+            return apiBaseFactory.get(apibaseurl + "GetBarcodeInvoiceAndProductDetails?barcode=" + barcode);
+        }
+
+        function saveJsonSignForBarcode(obj) {
+            console.log("SIN", obj);
+            return apiBaseFactory.post(apibaseurl + "SaveJsonSignForBarcode", obj);
+        }
+
         return {
-            getMobileDashboard: getMobileDashboard
+            getMobileDashboard: getMobileDashboard,
+            getBarcodeDetails: getBarcodeDetails,
+            deleteProduct: deleteProduct,
+            updateProduct: updateProduct,
+            searchProduct: searchProduct,
+            addProduct: addProduct,
+            getBarcodeInvoiceAndProductDetails: getBarcodeInvoiceAndProductDetails,
+            saveJsonSignForBarcode: saveJsonSignForBarcode
         };
     }
     initFactory.$inject = ["$q", "$cacheFactory", "api-base-factory", "shared-data-factory"];

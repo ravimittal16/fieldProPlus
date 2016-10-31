@@ -36,8 +36,13 @@
         function addProduct(model) {
             return apiBaseFactory.post(apibaseurl + "AddProductsToOrder?fromMobile=true", model);
         }
-        function getBarcodeInvoiceAndProductDetails(barcode) { 
+        function getBarcodeInvoiceAndProductDetails(barcode) {
             return apiBaseFactory.get(apibaseurl + "GetBarcodeInvoiceAndProductDetails?barcode=" + barcode);
+        }
+
+        function saveJsonSignForBarcode(obj) {
+            console.log("SIN", obj);
+            return apiBaseFactory.post(apibaseurl + "SaveJsonSignForBarcode", obj);
         }
 
         return {
@@ -47,7 +52,8 @@
             updateProduct: updateProduct,
             searchProduct: searchProduct,
             addProduct: addProduct,
-            getBarcodeInvoiceAndProductDetails: getBarcodeInvoiceAndProductDetails
+            getBarcodeInvoiceAndProductDetails: getBarcodeInvoiceAndProductDetails,
+            saveJsonSignForBarcode: saveJsonSignForBarcode
         };
     }
     initFactory.$inject = ["$q", "$cacheFactory", "api-base-factory", "shared-data-factory"];

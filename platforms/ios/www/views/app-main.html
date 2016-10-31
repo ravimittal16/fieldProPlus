@@ -1,29 +1,82 @@
 <ion-side-menus enable-menu-with-back-views="false">
-    <ion-side-menu-content>
-        <ion-nav-bar class="bar-stable">
-            <ion-nav-back-button>
-            </ion-nav-back-button>
+	<ion-side-menu-content>
+		<ion-nav-bar class="bar-stable">
+			<ion-nav-back-button>
+			</ion-nav-back-button>
 
-            <ion-nav-buttons side="left">
-                <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
-</button>
-            </ion-nav-buttons>
-        </ion-nav-bar>
-        <ion-nav-view>
+			<ion-nav-buttons side="left">
+				<button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+			</ion-nav-buttons>
+		</ion-nav-bar>
+		<ion-nav-view>
 
-        </ion-nav-view>
-    </ion-side-menu-content>
+		</ion-nav-view>
+	</ion-side-menu-content>
 
-    <ion-side-menu side="left" enable-menu-with-back-views="false">
-        <ion-header-bar class="bar-stable">
-            <h1 class="title">Menu</h1>
-        </ion-header-bar>
-        <ion-content>
-            <ion-list>
-                <ion-item menu-close data-ng-repeat="menu in ::vm.sideMenuItems" data-ng-click="vm.events.onMenuItemClicked(menu)">
-                    <i data-ng-if="menu.icon" class="icon ion-{{menu.icon}}"></i> {{::menu.title}}
-                </ion-item>
-            </ion-list>
-        </ion-content>
-    </ion-side-menu>
+	<ion-side-menu side="left" enable-menu-with-back-views="false">
+		<ion-header-bar class="bar-stable">
+			<h1 class="title">Menu</h1>
+		</ion-header-bar>
+		<ion-content>
+			<ion-list>
+				<ion-item menu-close data-ng-repeat="menu in ::vm.sideMenuItems" data-ng-click="vm.events.onMenuItemClicked(menu)">
+					<i data-ng-if="menu.icon" class="icon ion-{{menu.icon}}"></i> {{::menu.title}}
+				</ion-item>
+			</ion-list>
+		</ion-content>
+	</ion-side-menu>
 </ion-side-menus>
+<script id="dashboardSearchModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<ion-header-bar>
+			<h1 class="title">Search Work Order</h1>
+		</ion-header-bar>
+		<ion-header-bar class="bar-subheader item-input-inset">
+			<label class="item-input-wrapper">
+				<i class="icon ion-search placeholder-icon"></i>
+				<input type="search" name="searchBox" autofocus="" placeholder="Search"  
+				ng-change="vm.events.applySearch()" data-ng-model-options="{debounce:500}" ng-model="vm.searchValue" />
+			</label>
+			<button class="button" data-ng-click="vm.events.closeSearchModal()">
+				Cancel
+			</button>
+		</ion-header-bar>
+		<ion-content>
+				<ion-list>
+					<ion-item ng-repeat="item in vm.matchedOrders" data-ng-click="vm.events.onSearchItemClick(item)">
+						<div class="row">
+							<div class="col">
+								<p>
+									<h3>{{item.DisplayName}}</h3>
+								</p>
+								<p>
+									<h4>{{item.Company_Name}}</h4>
+								</p>
+							</div>
+							<div class="col">
+								<h3 class="pull-right">{{item.BarcodeName}}</h3>
+							</div>
+						</div>
+					</ion-item>
+				</ion-list>
+		</ion-content>
+	</ion-modal-view>
+</script>
+<script id="editProductModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<edit-product-component is-edtimate="false" data-modal-type="0" data-product="vm.currentProduct"></edit-product-component>
+	</ion-modal-view>
+</script>
+
+<script id="addProductModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<edit-product-component is-edtimate="false" data-modal-type="1" 
+		data-product="vm.currentProduct" data-on-add-product-completed="vm.events.onAddProductCompleted(product)"></edit-product-component>
+	</ion-modal-view>
+</script>
+<script id="productSearchModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<product-search-component></product-search-component>
+	</ion-modal-view>
+</script>

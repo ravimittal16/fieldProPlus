@@ -3,17 +3,20 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-
+// "http://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 // "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 //"http://localhost/FieldPromaxApi/"  
 var isInDevMode = true;
 var constants = {
   fieldPromaxApi: isInDevMode ? "http://localhost:51518/" : "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/",
-  localStorageKeys: { authorizationDataKey: "authorizationData", initialData: "initialData", storageKeyName: "authorizationData", configKeyName: "configurations", settingsKeyName: "userSettings" }
+  localStorageKeys: {
+    authorizationDataKey: "authorizationData", initialData: "initialData",
+    storageKeyName: "authorizationData", configKeyName: "configurations", settingsKeyName: "userSettings"
+  }
 };
-var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule","ngCordova"])
-  .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider",
-    function ($stateProvider, $urlRouterProvider, $compileProvider, $httpProvider) {
+var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ngCordova", "ionic-datepicker"])
+  .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider", "$ionicConfigProvider", "ionicDatePickerProvider",
+    function ($stateProvider, $urlRouterProvider, $compileProvider, $httpProvider, $ionicConfigProvider, ionicDatePickerProvider) {
 
       var routes = [
         { state: "login", config: { url: "/", controller: "login-controller", controllerAs: "vm", templateUrl: "views/login.html" } },
@@ -22,6 +25,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule","ngC
         { state: "app.calendar", config: { url: "/calendar", controller: "calendar-controller", controllerAs: "vm", templateUrl: "views/calendar.html" } },
         { state: "app.map", config: { url: "/map", controller: "map-controller", controllerAs: "vm", templateUrl: "views/map.html" } },
         { state: "app.createWorkOrder", config: { url: "/createorder", controller: "create-order-controller", controllerAs: "vm", templateUrl: "views/create-order.html" } },
+        { state: "app.editOrder", config: { url: "/editOrder?barCode&technicianNum&src", controller: "edit-order-controller", controllerAs: "vm", templateUrl: "views/edit-order.html" } },
         { state: "app.createCustomer", config: { url: "/createcustomer", controller: "create-customer-controller", controllerAs: "vm", templateUrl: "views/create-customer.html" } },
         { state: "app.createEstimate", config: { url: "/createestimate", controller: "create-estimate-controller", controllerAs: "vm", templateUrl: "views/create-estimate.html" } },
         { state: "app.expense", config: { url: "/expanses", controller: "expanses-controller", controllerAs: "vm", templateUrl: "views/expanses.html" } },
@@ -38,10 +42,25 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule","ngC
       $urlRouterProvider.otherwise('/');
       $compileProvider.debugInfoEnabled(false);
       $httpProvider.interceptors.push("requestIntercepter");
-      // $httpProvider.defaults.headers.common = {};
-      // $httpProvider.defaults.headers.post = {};
-      // $httpProvider.defaults.headers.put = {};
-      // $httpProvider.defaults.headers.patch = {};
+      //DATE PICKER
+      var datePickerObj = {
+        inputDate: new Date(),
+        setLabel: 'Set',
+        todayLabel: 'Today',
+        closeLabel: 'Close',
+        mondayFirst: false,
+        weeksList: ["S", "M", "T", "W", "T", "F", "S"],
+        monthsList: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"],
+        templateType: 'popup',
+        from: new Date(2012, 8, 1),
+        to: new Date(2025, 8, 1),
+        showTodayButton: true,
+        dateFormat: 'dd MMMM yyyy',
+        closeOnSelect: false,
+      };
+      ionicDatePickerProvider.configDatePicker(datePickerObj);
+
+      $ionicConfigProvider.tabs.position(isInDevMode ? 'top' : 'bottom');
     }])
   .run(["$ionicPlatform", function ($ionicPlatform) {
     $ionicPlatform.ready(function () {

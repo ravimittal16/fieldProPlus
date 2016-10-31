@@ -1,9 +1,18 @@
 /* Empty. Add your own CSS if you like */
 .center{
-     text-align:center;
+     text-align:center !important;
 }
 .app-title-promax{
     color:#f38c19;
+}
+.brand{
+    font-weight: 600;
+}
+.brand-margin{
+    margin-top:60px;
+}
+.login-input-font-size{
+    font-size: 20px !important;
 }
 /*ACCORDION CLASSES*/
 .list .item.item-accordion {
@@ -24,6 +33,15 @@
 }
 .text-small{
   font-size: 11px;
+}
+.text-xsmall{
+    font-size: 9px !important;
+}
+.text-smaller{
+    font-size: smaller;
+}
+.text-right{
+    text-align: right;
 }
 .label{
   display: inline;
@@ -56,6 +74,96 @@ background-color:#777;
 .label-danger {
     background-color: #d9534f;
 }
+a
+{
+    text-decoration: none;
+    cursor: pointer;
+}
 
+.scroll {
+    height: 100%;
+}
+ 
+#map {
+    width: 100%;
+    height: 100%;
+}
+.pull-right{
+    float: right !important;
+}
+.pull-left{
+    float: left !important;
+}
+.text-center{
+    text-align: center !important;
+}
+.list-unstyled {
+    padding-left: 0;
+    list-style: none;
+}
+.error{
+    padding:10px;
+    text-align: left;
+    font-size: 11px !important;
+    vertical-align: middle;
+    background-color: #db412b;
+    color: #fff;
+}
+address > p {
+    margin-bottom: 0px;
+}
+.n-m-b{
+    margin-bottom: 0px !important;
+}
+/*.item .row, .item .col {
+  padding: 0;
+}*/
 
+.text-muted{
+    color:#777;
+}
+/*.item.wrap, .item-content.wrap {
+white-space: normal;
+}*/
 
+.p-10 > div{
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-right:0px !important;
+    padding-left:0px !important;
+}
+.n-p-t{
+    padding-top: 0px !important;
+}
+.n-p-b{
+    padding-bottom: 0px !important;
+}
+.item-divider-left-buttion{
+    margin-bottom: -5px !important;
+    font-size: 12px !important;
+
+}
+.text-assertive{
+color:#e42112;
+}
+.text-balanced{
+color:#33cd5f;
+}
+.text-energized{
+color:#ffc900;
+}
+.text-royal{
+color:#886aea;
+}
+.text-dark{
+    color:#111;
+}
+.text-calm{
+    color:#11c1f3;
+}
+.text-positive{
+    color:#387ef5;
+}
+.text-stable{
+    color:#f8f8f8;
+}

@@ -1,0 +1,33 @@
+<ion-view title="Settings">
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+
+    <ion-content>
+        <div class="list">
+            <div class="item item-divider">
+                Set default calendar view
+            </div>
+            <ion-list>
+                <ion-radio ng-model="vm.userSettings.defaultCalenderViewForMobile" ng-value="'day'">Day View</ion-radio>
+                <ion-radio ng-model="vm.userSettings.defaultCalenderViewForMobile" ng-value="'workWeek'">Work Week View</ion-radio>
+                <ion-radio ng-model="vm.userSettings.defaultCalenderViewForMobile" ng-value="'month'">Month View</ion-radio>
+            </ion-list>
+            <div class="item item-divider">
+                Push Notifications
+            </div>
+            <ion-checkbox ng-model="vm.userSettings.pushNotifications">Activate Push Notifications</ion-checkbox>
+            <div class="item item-divider">
+                Location Services
+            </div>
+            <ion-checkbox ng-model="vm.userSettings.locationServices">Activate Location Services</ion-checkbox>
+        </div>
+        <div class="row">
+            <div class="col">
+                <button class="button button-block button-positive">
+                    Update Settings
+                </button>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

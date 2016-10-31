@@ -1,0 +1,70 @@
+<ion-view title="Create Order">
+	<ion-nav-buttons side="left">
+		<button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+	</ion-nav-buttons>
+	<ion-header-bar class="bar-subheader item-input-inset">
+		<label class="item-input-wrapper">
+            <i class="icon ion-search placeholder-icon"></i>
+            <input type="search" placeholder="Search customer" ng-change="search()" ng-model="data.search" />
+        </label>
+		<button class="button ">
+            Cancel
+        </button>
+	</ion-header-bar>
+	<ion-content>
+		<form action="">
+			<div class="list">
+				<label class="item item-input">
+                    <span class="input-label">Order #</span>
+                    <input type="text">
+                </label>
+				<div class="padding">
+					<h5>Customer Name</h5>
+				</div>
+				<label class="item item-input">
+                    <input type="email" placeholder="Email"/>
+                </label>
+				<div class="padding">
+					<h5>Billing Address</h5>
+				</div>
+				<label class="item item-input">
+                    <textarea type="text" rows="2" placeholder="Street"></textarea>
+                </label>
+				<label class="item item-input">
+                    <input type="text" placeholder="City"/>
+                </label>
+				<label class="item item-input">
+                    <input type="text" placeholder="State"/>
+                </label>
+				<label for="" class="item item-input">
+                    <input type="text" placeholder="Zip"/>
+                </label>
+				<div class="padding">
+					<h5>Service Address</h5>
+				</div>
+				<label class="item item-input">
+                    <textarea type="text" rows="2" placeholder="Street"></textarea>
+                </label>
+				<label class="item item-input">
+                    <input type="text" placeholder="City"/>
+                </label>
+				<label class="item item-input">
+                    <input type="text" placeholder="State"/>
+                </label>
+				<label for="" class="item item-input">
+                    <input type="text" placeholder="Zip"/>
+                </label>
+				<label class="item item-input item-select">
+                    <div class="input-label">
+                        Lightsaber
+                    </div>
+                    <select>
+                        <option>Blue</option>
+                        <option selected>Green</option>
+                        <option>Red</option>
+                    </select>
+                </label>
+			</div>
+		</form>
+	</ion-content>
+</ion-view>

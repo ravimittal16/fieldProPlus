@@ -11,7 +11,7 @@
                 vm.showingSignaturePad = false
                 var baseUrl = fieldPromaxConfig.fieldPromaxApi;
                 var user = authenticationFactory.getLoggedInUserInfo();
-                console.log("USS", user);
+                vm.signPadEvents = null;
                 vm.events = {
                     onSignaturePadActionButtonClicked: function () {
                         var signatureAction = $ionicActionSheet.show({
@@ -26,6 +26,17 @@
                             buttonClicked: function (index) {
                                 if (index === 0) {
                                     vm.showingSignaturePad = false;
+                                }
+                                if (index === 1) {
+                                    console.log("EVNT", vm.signPadEvents);
+                                    if (vm.signPadEvents) {
+                                        vm.signPadEvents.trySaveSignature().then(function (response) {
+                                            if (response === true) {
+                                                vm.showingSignaturePad = false;
+                                                vm.imageUrl = baseUrl + "Handlers/GetBarcodeSignature.ashx?barcode=" + vm.barcode + "&dateStamp=" + new Date() + "&customernumber=" + user.customerNumber;
+                                            }
+                                        });
+                                    }
                                 }
                                 return true;
                             }
@@ -52,9 +63,8 @@
                 }
 
                 vm.imageUrl = baseUrl + "Handlers/GetBarcodeSignature.ashx?barcode";
-                vm.dateStamp = new Date();
                 vm.$onInit = function () {
-                    vm.imageUrl = baseUrl + "Handlers/GetBarcodeSignature.ashx?barcode=" + vm.barcode + "&dateStamp=" + vm.dateStamp + "&customernumber=" + user.customerNumber;
+                    vm.imageUrl = baseUrl + "Handlers/GetBarcodeSignature.ashx?barcode=" + vm.barcode + "&dateStamp=" + new Date() + "&customernumber=" + user.customerNumber;
                 }
                 vm.$onChanges = function () {
 
