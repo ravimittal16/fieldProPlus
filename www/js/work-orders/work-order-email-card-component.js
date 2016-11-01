@@ -41,9 +41,11 @@
                 };
 
                 function sendEmail(sendAsInvoice) {
-                    workOrdersFactory.sendInvoiceMail({ BarCode: vm.barcode, SendAsInvoice: sendAsInvoice, emailAddresses: vm.mailConfig.mailAddresses, TaxRate: vm.taxrate }).then(function () {
-                        fpmUtilitiesFactory.alerts.alert("Email Sent", "Email Sent Successfully");
-                    });
+                    if (vm.mailConfig.mailAddresses && vm.mailConfig.mailAddresses.length > 0) {
+                        workOrdersFactory.sendInvoiceMail({ BarCode: vm.barcode, SendAsInvoice: sendAsInvoice, emailAddresses: vm.mailConfig.mailAddresses, TaxRate: vm.taxrate }).then(function () {
+                            fpmUtilitiesFactory.alerts.alert("Email Sent", "Email Sent Successfully");
+                        });
+                    }
                 }
 
                 function onOrderEmailActionClicked() {
