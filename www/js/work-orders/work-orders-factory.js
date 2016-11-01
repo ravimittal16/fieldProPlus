@@ -41,8 +41,15 @@
         }
 
         function saveJsonSignForBarcode(obj) {
-            console.log("SIN", obj);
             return apiBaseFactory.post(apibaseurl + "SaveJsonSignForBarcode", obj);
+        }
+
+        function sendInvoiceMail(model) {
+            return apiBaseFactory.post(apibaseurl + "SendInvoiceMail", model);
+        }
+
+        function getImagesList(barcode) {
+            return apiBaseFactory.get(apibaseurl + "GetImagesList?barcode=" + barcode);
         }
 
         return {
@@ -53,7 +60,9 @@
             searchProduct: searchProduct,
             addProduct: addProduct,
             getBarcodeInvoiceAndProductDetails: getBarcodeInvoiceAndProductDetails,
-            saveJsonSignForBarcode: saveJsonSignForBarcode
+            saveJsonSignForBarcode: saveJsonSignForBarcode,
+            sendInvoiceMail: sendInvoiceMail,
+            getImagesList: getImagesList
         };
     }
     initFactory.$inject = ["$q", "$cacheFactory", "api-base-factory", "shared-data-factory"];

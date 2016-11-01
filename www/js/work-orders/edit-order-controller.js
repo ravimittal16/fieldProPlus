@@ -10,6 +10,7 @@
             $ionicLoading.show({ template: "getting data..." }).then(function () {
                 workOrderFactory.getBarcodeDetails(vm.barcode).then(function (response) {
                     vm.barCodeData = response;
+                    console.log("DD", response)
                     if (angular.isArray(response.schedules)) {
                         var _scheduleFromFilter = _.filter(response.schedules, function (sch) {
                             return sch.num === parseInt($stateParams.technicianNum, 10);
@@ -73,7 +74,7 @@
             },
             smry: {
                 events: {
-                    
+
                 }
             },
             prod: {

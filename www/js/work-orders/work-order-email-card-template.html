@@ -1,0 +1,16 @@
+<div class="card">
+	<div class="item item-divider">
+		Work Order Email
+		<a class="button pull-right button-small button-icon icon ion-android-more-vertical item-divider-left-buttion" data-ng-click="vm.events.onOrderEmailActionClicked()"></a>
+	</div>
+	<div class="item item-body">
+        <form action="" name="emailForm">
+            <div class="list">
+                <label for="" class="item item-input item-stacked-label">
+                    <span class="input-label">Email(s)</span>
+                    <input type="text" placeholder="email address" data-ng-model="vm.mailConfig.mailAddresses" data-ng-list="," maxlength="100" required/>
+                </label>
+            </div>
+        </form>
+	</div>
+</div>

@@ -32,7 +32,6 @@
                         }
                     });
                     vm.padEventsRef = vm.events;
-                    console.log("APPLIED");
                 }
             }],
         controllerAs: "vm"

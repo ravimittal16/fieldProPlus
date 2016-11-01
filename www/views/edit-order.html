@@ -243,6 +243,9 @@
 						</div>
 					</div>
 					<order-signature-component data-barcode="vm.barcode"></order-signature-component>
+					<order-email-card-component data-barcode="vm.barcode" data-taxrate="vm.barCodeData.taxRate" data-default-emails="vm.barCodeData.barcodeDetails.address2_Group"></order-email-card-component>
+					<order-images-list-component data-barcode="vm.barcode"></order-images-list-component>
+					<order-documents-list-component data-barcode="vm.barcode"></order-documents-list-component>
 				</ion-content>
 			</ion-tab>
 		</ion-tabs>
