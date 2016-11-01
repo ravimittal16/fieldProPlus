@@ -5,9 +5,9 @@
 		</ion-item>
 		<div data-ng-if="vm.isExpanded">
 			<ion-list>
-				<ion-item class="item-text-wrap p-10" data-ng-repeat="p in vm.barcodeImages">
-                    {{p.imageURL | removeExt}}
-					<ion-option-button class="button-assertive" ng-click="vm.events.onDeleteImageClicked(p)">
+				<ion-item class="item-text-wrap" data-ng-repeat="p in vm.barcodeDocuments | filter:{Extension:'.pdf'}" data-ng-click="vm.events.onDocumentClicked(p)">
+                    {{p.fileName}}
+					<ion-option-button class="button-assertive" ng-click="vm.events.onDeleteDocumentClicked(p)">
 						Delete
 					</ion-option-button>
 				</ion-item>
