@@ -1,12 +1,12 @@
 <ion-list>
 	<div>
 		<ion-item class="item-stable" ng-click="vm.isExpanded = !vm.isExpanded" ng-class="{active: vm.isExpanded}">
-			<i class="icon" ng-class="vm.isExpanded ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>Uploaded Images</strong>
+			<i class="icon" ng-class="vm.isExpanded ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>Images</strong>
 		</ion-item>
 		<div data-ng-if="vm.isExpanded">
-			<ion-list  can-swipe="true">
+			<ion-list can-swipe="true">
 				<ion-item class="item-text-wrap" data-ng-repeat="p in vm.barcodeImages" data-ng-click="vm.events.onImageTap(p)">
-                    {{p.imageURL | removeExt}}
+					{{p.imageURL | removeExt}}
 					<ion-option-button class="button-assertive" ng-click="vm.events.onDeleteImageClicked(p)">
 						Delete
 					</ion-option-button>
@@ -15,3 +15,18 @@
 		</div>
 	</div>
 </ion-list>
+<script id="imageViewerModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<ion-header-bar>
+            <h1 class="title">
+
+            </h1>
+            <button class="button" data-ng-click="vm.events.closeProductEditModal()">
+                Cancel
+            </button>
+        </ion-header-bar>
+        <ion-content>
+                HELLO WORLD IMAGE
+        </ion-content>
+	</ion-modal-view>
+</script>

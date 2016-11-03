@@ -5,8 +5,8 @@
             barcode: "<"
         },
         templateUrl: "js/work-orders/order-images-list-component.template.html",
-        controller: ["$scope", "work-orders-factory", "fpm-utilities-factory",
-            function ($scope, workOrdersFactory, fpmUtilitiesFactory) {
+        controller: ["$scope", "$ionicModal", "work-orders-factory", "fpm-utilities-factory",
+            function ($scope, $ionicModal, workOrdersFactory, fpmUtilitiesFactory) {
                 var vm = this;
                 vm.isExpanded = false;
                 var alerts = fpmUtilitiesFactory.alerts;
@@ -18,7 +18,7 @@
                     },
                     onImageTap: function (p) {
 
-                     }
+                    }
                 };
                 vm.$onInit = function () {
                     if (vm.barcode) {
@@ -27,6 +27,14 @@
                         });
                     }
                 }
+
+                $ionicModal.fromTemplateUrl("imageViewerModal.html", {
+                    scope: $scope,
+                    animation: 'slide-in-up'
+                }).then(function (modal) {
+                    console.log(modal);
+                    vm.imageViewerModel = modal;
+                });
             }],
         controllerAs: "vm"
     };
