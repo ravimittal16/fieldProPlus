@@ -51,4 +51,4 @@
         controllerAs: "vm"
     };
     angular.module("fpm").component("productSearchComponent", componentConfig);
-})()
+})();

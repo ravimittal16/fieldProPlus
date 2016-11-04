@@ -9,6 +9,8 @@ var sh = require('shelljs');
 var uglify = require('gulp-uglify');
 var minify = require('gulp-minify');
 
+var iife = require("gulp-iife");
+
 var paths = {
   sass: ['./scss/**/*.scss'],
   appJs: ["!./www/js/app.js", "!./www/js/build/*.js", "./www/js/**/*.js"]
@@ -34,6 +36,7 @@ gulp.task('sass', function (done) {
 
 gulp.task('scripts', function () {
   return gulp.src(paths.appJs)
+    .pipe(iife())
     .pipe(concat('fpm-compiled.js'))
     .pipe(rename({
       suffix: '.min'

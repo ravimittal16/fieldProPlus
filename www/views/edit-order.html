@@ -1,4 +1,4 @@
-<ion-view title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
+<ion-view title="{{vm.barCodeData.barcodeDetails.barcodeName}}" cache-view="false" hide-back-button="true" view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
   <ion-nav-buttons side="left">
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
@@ -62,15 +62,15 @@
               </div>
               <label class="item item-input item-stacked-label">
 								<span class="input-label">Work Description</span>
-								<textarea name="" id="" cols="30" rows="3"></textarea>
+								<textarea cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment1"></textarea>
 							</label>
               <label class="item item-input item-stacked-label">
 								<span class="input-label">Resolution / Work performed</span>
-								<textarea name="" id="" cols="30" rows="3"></textarea>
+								<textarea  cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment2"></textarea>
 							</label>
               <label class="item item-input item-stacked-label">
 								<span class="input-label">Comments</span>
-								<textarea name="" id="" cols="30" rows="3"></textarea>
+								<textarea  cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment4"></textarea>
 							</label>
             </div>
           </div>
@@ -87,35 +87,53 @@
             </div>
           </div>
           <div class="card">
+            <div class="item item-divider">
+              Current Schedule Details
+              <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                data-ng-click="vm.tabs.sch.events.onScheduleActionButtonClicked()"></a>
+            </div>
             <div class="list">
-              <div class="item-input-inset">
-                <label class="item-input-wrapper">
-									<input type="search" placeholder="Search">
-								</label>
-                <button class="button button-assertive button-small icon ion-ios-trash">
-											
-										</button>
-                <button class="button button-small">
-											Check In
-										</button>
-              </div>
-              <div class="item-input-inset">
-                <label class="item-input-wrapper">
-									<input type="search" placeholder="Search">
-								</label>
-                <button class="button button-assertive button-small icon ion-ios-trash">
-											
-										</button>
-                <button class="button button-small">
-											Check In
-										</button>
-              </div>
               <label class="item item-input">
-								<input type="email" placeholder="Email"/>
+				  <span class="input-label">Actual Start Time</span>
+								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onStartDateTimeChaged}" data-ng-model="vm.schedule.actualStartDateTime"/>
+								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background" disabled data-ng-model="vm.schedule.actualStartDateTime"/>
 							</label>
               <label class="item item-input">
-								<textarea name="" id="" rows="5" placeholder="Trip Note"></textarea>
+				  <span class="input-label">Actual Finish Time</span>
+								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onEndDateTimeChanged}" data-ng-model="vm.schedule.actualFinishDateTime"/>
+								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background" disabled  data-ng-model="vm.schedule.actualFinishDateTime"/>
 							</label>
+              <label class="item item-input">
+				  <span class="input-label">Total Time</span>
+								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background" placeholder="Total Time" data-mobiscroll-timespan="{display: 'bottom',preset:'timespan',wheelOrder: 'hhii',onSelect:vm.scheduleTimeSpan.onTimespanSeletionChanged}" data-ng-model="vm.scheduleTimeSpan.timeSpan"/>
+								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background" disabled placeholder="Total Time" data-ng-model="vm.scheduleTimeSpan.timeSpan"/>
+							</label>
+              <label class="item item-input">
+								<textarea name="" id="" rows="6" placeholder="Trip Note"></textarea>
+							</label>
+            </div>
+          </div>
+          <div class="card" data-ng-if="vm.uiSettings.milageTrackingEnabled">
+            <div class="item item-divider">
+              Milage Information
+            </div>
+            <div class="list">
+              <label class="item item-input">
+					<span class="input-label">Vehicle Number</span>
+					<input type="text"/>
+				</label>
+              <label class="item item-input">
+					<span class="input-label">Start (Miles)</span>
+					<input type="text" class="transparent-background" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:99999.99,preset:'decimal'}" data-ng-model="vm.schedule.startMiles" data-ng-change="vm.schedule.totalMiles = vm.schedule.endMiles - vm.schedule.startMiles" />
+				</label>
+              <label class="item item-input">
+					<span class="input-label">End</span>
+					<input type="text" class="transparent-background" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:99999,preset:'decimal'}" data-ng-model="vm.schedule.endMiles" data-ng-change="vm.schedule.totalMiles = vm.schedule.endMiles - vm.schedule.startMiles"/>
+				</label>
+              <label class="item item-input">
+					<span class="input-label"><strong>Total</strong></span>
+					<input type="text" class="transparent-background" readonly=""  class="transparent-background" data-ng-model="vm.schedule.totalMiles"/>
+				</label>
             </div>
           </div>
           <div class="card">

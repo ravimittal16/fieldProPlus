@@ -13,4 +13,4 @@
     }
     initFactory.$inject = ["api-base-factory"]
     angular.module("fpm").factory("dashboard-factory", initFactory);
-})()
+})();

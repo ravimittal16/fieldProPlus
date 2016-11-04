@@ -13,6 +13,7 @@
         vm.docUrl = "";
         vm.events = {
           onDocumentClicked: function (doc) {
+              
             window.open(baseUrl + "Handlers/GetImageFromBlob.ashx?imageId=" + doc.num + "&dateStamp=" + new Date() + "&flag=viewTarget", "_system", "location=yes");
           },
           onDeleteDocumentClicked: function (doc) {

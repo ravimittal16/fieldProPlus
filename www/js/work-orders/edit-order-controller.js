@@ -2,11 +2,16 @@
   "use strict";
 
   function initController($scope, $state, $timeout, $stateParams, $ionicActionSheet, $ionicLoading,
-    $ionicPopup, $ionicModal, workOrderFactory, fpmUtilities, sharedDataFactory) {
+    $ionicPopup, $ionicModal, workOrderFactory, fpmUtilities, sharedDataFactory, authenticationFactory) {
     var vm = this;
     vm.barcode = $stateParams.barCode;
     var alerts = fpmUtilities.alerts;
+
     vm.invoiceOpen = false;
+    vm.uiSettings = {
+      isTimeCardModuleEnabled: false,
+      milageTrackingEnabled: false
+    };
 
     function getBarcodeDetails() {
       $ionicLoading.show({
@@ -19,6 +24,14 @@
               return sch.num === parseInt($stateParams.technicianNum, 10);
             });
             vm.schedule = angular.copy(_scheduleFromFilter[0]);
+            if (vm.schedule.actualStartDateTime) {
+              vm.schedule.actualStartDateTime = new Date(moment(vm.schedule.actualStartDateTime));
+            }
+
+            if (vm.schedule.actualFinishDateTime) {
+              vm.schedule.actualFinishDateTime = new Date(moment(vm.schedule.actualFinishDateTime));
+            }
+
             $ionicLoading.hide();
             calculateTotals();
           }
@@ -29,7 +42,83 @@
     }
     getBarcodeDetails();
 
-    
+    //CURRENT SCHEDULE CARD
+    //============================================================================================
+    function findTimeDiff(startDate, endDate) {
+      if (Date.parse(startDate) && Date.parse(endDate)) {
+        var diff = Math.abs(new Date(startDate) - new Date(endDate));
+        console.log("S", startDate, "E", endDate);
+        var seconds = Math.floor(diff / 1000); //ignore any left over units smaller than a second
+        var minutes = Math.floor(seconds / 60);
+        var hours = Math.floor(minutes / 60);
+        minutes = minutes % 60;
+        $timeout(function () {
+          if (hours === 0) {
+            vm.scheduleTimeSpan.timeSpan = minutes + " Minutes";
+          } else {
+            vm.scheduleTimeSpan.timeSpan = hours + " Hours " + minutes + " Minutes";
+          }
+        }, 50);
+      } else {
+        return 0;
+      }
+      return 0;
+    }
+
+    function addMinutes(date, minutes) {
+      return new Date(date.getTime() + minutes * 60000);
+    }
+    vm.scheduleTimeSpan = {
+      timeSpan: "",
+      onTimespanSeletionChanged: function (s, e) {
+        var timeSpanSelected = e.getVal();
+        var seconds = Math.floor(timeSpanSelected / 1000); //ignore any left over units smaller than a second
+        var minutesToAdd = Math.floor(seconds / 60);
+        $timeout(function () {
+          var start = angular.copy(vm.schedule.actualStartDateTime);
+          var startDate;
+          if (start == null) {
+            startDate = new Date();
+            vm.schedule.actualStartDateTime = new Date();
+          } else {
+            startDate = new Date(start);
+          }
+          var finalDate = addMinutes(startDate, minutesToAdd);
+          vm.schedule.actualFinishDateTime = kendo.parseDate(finalDate);
+        }, 50);
+      },
+      onStartDateTimeChaged: function () {
+        if (vm.schedule.actualStartDateTime && vm.schedule.actualFinishDateTime) {
+          if (new Date(vm.schedule.actualStartDateTime) > new Date(vm.schedule.actualFinishDateTime)) {
+            alerts.alert("Warning", "Start time cannot be greater than finish time.");
+          } else {
+            findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
+          }
+        }
+      },
+      onEndDateTimeChanged: function () {
+        console.log("HELLOOOO")
+        if (vm.schedule.actualStartDateTime && vm.schedule.actualFinishDateTime) {
+          if (new Date(vm.schedule.actualStartDateTime) > new Date(vm.schedule.actualFinishDateTime)) {
+            alerts.alert("Warning", "Start time cannot be greater than finish time.");
+          } else {
+            findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
+          }
+        }
+      },
+      clearAllDateTimeSelection: function () {}
+    };
+    //================================================================================================
+
+    function activateController() {
+      vm.user = authenticationFactory.getLoggedInUserInfo();
+      vm.uiSettings.isTimeCardModuleEnabled = vm.user.timeCard && vm.user.allowPushTime;
+      sharedDataFactory.getIniitialData(true).then(function (response) {
+        if (response) {}
+        vm.uiSettings.milageTrackingEnabled = response.customerNumberEntity.milageTrackingEnabled || false;
+      });
+    }
+    activateController();
 
     function calculateTotals() {
       vm.totals = {
@@ -193,7 +282,7 @@
   }
   initController.$inject = ["$scope", "$state", "$timeout", "$stateParams", "$ionicActionSheet",
     "$ionicLoading", "$ionicPopup", "$ionicModal", "work-orders-factory", "fpm-utilities-factory",
-    "shared-data-factory"
+    "shared-data-factory", "authenticationFactory"
   ];
   angular.module("fpm").controller("edit-order-controller", initController);
 })();

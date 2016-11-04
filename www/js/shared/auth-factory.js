@@ -99,6 +99,7 @@
         return factory;
     }
 
-    initFactory.$inject = ["$http", "$q", "$rootScope", "$state", "$window", "$timeout", "$ionicLoading", "localStorageService", "fieldPromaxConfig"];
+    initFactory.$inject = ["$http", "$q", "$rootScope", "$state", "$window", "$timeout", "$ionicLoading", 
+    "localStorageService", "fieldPromaxConfig"];
     angular.module("fpm").factory("authenticationFactory", initFactory);
 })();
