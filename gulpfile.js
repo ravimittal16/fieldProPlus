@@ -45,18 +45,6 @@ gulp.task('scripts', function () {
     .pipe(gulp.dest('./www/js/build'));
 });
 
-// gulp.task('compress', function () {
-//   gulp.src(paths.appJs)
-//     .pipe(minify({
-//       ext: {
-//         src: '-debug.js',
-//         min: '.js'
-//       },
-//       exclude: ['tasks'],
-//       ignoreFiles: ['app.js', '-min.js']
-//     }))
-//     .pipe(gulp.dest('./www/js/'))
-// });
 
 gulp.task('watch', function () {
   gulp.watch(paths.sass, ['sass']);

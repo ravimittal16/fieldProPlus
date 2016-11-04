@@ -261,21 +261,14 @@
 					<order-email-card-component data-barcode="vm.barcode" data-taxrate="vm.barCodeData.taxRate" data-default-emails="vm.barCodeData.barcodeDetails.address2_Group"></order-email-card-component>
 					<order-images-list-component data-barcode="vm.barcode"></order-images-list-component>
 					<order-documents-list-component data-barcode="vm.barcode"></order-documents-list-component>
-					<div class="card">
-						<div class="item item-text-wrap">
-							<p class="n-m-b"><strong>Schedule Start</strong></p>
-							<p>{{vm.schedule.scheduledStartDateTime | date:'MM/dd/yyyy hh:mm a'}}</p>
-							<p class="n-m-b"><strong>Schedule End</strong></p>
-							<p>{{vm.schedule.scheduledFinishDateTime | date:'MM/dd/yyyy hh:mm a'}}</p>
-						</div>
-					</div>
-					<div class="card">
-						<div class="item item-text-wrap">
-							<p class="n-m-b"><strong>Schedule Start</strong></p>
-							<p>{{vm.schedule.scheduledStartDateTime | date:'MM/dd/yyyy hh:mm a'}}</p>
-							<p class="n-m-b"><strong>Schedule End</strong></p>
-							<p>{{vm.schedule.scheduledFinishDateTime | date:'MM/dd/yyyy hh:mm a'}}</p>
-						</div>
+					<div class="list">
+							<label class="item item-input item-select">
+								<div class="input-label">
+									Secondary Order Status
+								</div>
+								<select data-ng-model="vm.barCodeData.barcodeDetails.secondaryOrderStatus" data-ng-options="p.statusId as p.statusName for p in vm.scheduleStatus"><select>
+							</label>				
+							 <ion-toggle ng-model="vm.schedule.workComplete" toggle-class="toggle-balanced">Work Complete</ion-toggle>				
 					</div>
 				</ion-content>
 			</ion-tab>

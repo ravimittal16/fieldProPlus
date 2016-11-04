@@ -111,11 +111,16 @@
     //================================================================================================
 
     function activateController() {
+      console.log(activateController);
       vm.user = authenticationFactory.getLoggedInUserInfo();
       vm.uiSettings.isTimeCardModuleEnabled = vm.user.timeCard && vm.user.allowPushTime;
       sharedDataFactory.getIniitialData(true).then(function (response) {
-        if (response) {}
-        vm.uiSettings.milageTrackingEnabled = response.customerNumberEntity.milageTrackingEnabled || false;
+        if (response) {
+
+          vm.uiSettings.milageTrackingEnabled = response.customerNumberEntity.milageTrackingEnabled || false;
+          vm.scheduleStatus = response.secondaryOrderStatus;
+          console.log("vm.scheduleStatus", response.secondaryOrderStatus);
+        }
       });
     }
     activateController();
