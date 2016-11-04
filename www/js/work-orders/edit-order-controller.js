@@ -47,7 +47,6 @@
     function findTimeDiff(startDate, endDate) {
       if (Date.parse(startDate) && Date.parse(endDate)) {
         var diff = Math.abs(new Date(startDate) - new Date(endDate));
-        console.log("S", startDate, "E", endDate);
         var seconds = Math.floor(diff / 1000); //ignore any left over units smaller than a second
         var minutes = Math.floor(seconds / 60);
         var hours = Math.floor(minutes / 60);
@@ -97,7 +96,6 @@
         }
       },
       onEndDateTimeChanged: function () {
-        console.log("HELLOOOO")
         if (vm.schedule.actualStartDateTime && vm.schedule.actualFinishDateTime) {
           if (new Date(vm.schedule.actualStartDateTime) > new Date(vm.schedule.actualFinishDateTime)) {
             alerts.alert("Warning", "Start time cannot be greater than finish time.");
@@ -111,14 +109,12 @@
     //================================================================================================
 
     function activateController() {
-      console.log(activateController);
       vm.user = authenticationFactory.getLoggedInUserInfo();
       vm.uiSettings.isTimeCardModuleEnabled = vm.user.timeCard && vm.user.allowPushTime;
       sharedDataFactory.getIniitialData(true).then(function (response) {
         if (response) {
           vm.uiSettings.milageTrackingEnabled = response.customerNumberEntity.milageTrackingEnabled || false;
           vm.scheduleStatus = response.secondaryOrderStatus;
-          console.log("vm.scheduleStatus", response.secondaryOrderStatus);
         }
       });
     }
