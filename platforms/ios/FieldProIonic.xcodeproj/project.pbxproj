@@ -27,6 +27,7 @@
 		1E75956B97C54B0D89947B54 /* CDVReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 47306D1285224A7D93C5F2F4 /* CDVReachability.m */; };
 		A7DF36222D484B6B98AE02C6 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3229EC4B89B64686A706EDFE /* SystemConfiguration.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		252C4346E47D429796648C10 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1BC006FEAF246BAACA03A11 /* CoreTelephony.framework */; };
+		84E0468C5D134D9CAD02A175 /* CDVInAppBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 997AB773328C4F6181F104BC /* CDVInAppBrowser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,8 @@
 		A8568945F52246C2A88D6DDF /* CDVReachability.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVReachability.h"; path = "cordova-plugin-network-information/CDVReachability.h"; sourceTree = "<group>"; fileEncoding = 4; };
 		3229EC4B89B64686A706EDFE /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "SystemConfiguration.framework"; path = "System/Library/Frameworks/SystemConfiguration.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
 		C1BC006FEAF246BAACA03A11 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "CoreTelephony.framework"; path = "System/Library/Frameworks/CoreTelephony.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		997AB773328C4F6181F104BC /* CDVInAppBrowser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVInAppBrowser.m"; path = "cordova-plugin-inappbrowser/CDVInAppBrowser.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		B3965BAF533C429BBD2BA6D4 /* CDVInAppBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVInAppBrowser.h"; path = "cordova-plugin-inappbrowser/CDVInAppBrowser.h"; sourceTree = "<group>"; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,6 +216,8 @@
 				47306D1285224A7D93C5F2F4 /* CDVReachability.m */,
 				DC6B7A3C8ED34A658F969C64 /* CDVConnection.h */,
 				A8568945F52246C2A88D6DDF /* CDVReachability.h */,
+				997AB773328C4F6181F104BC /* CDVInAppBrowser.m */,
+				B3965BAF533C429BBD2BA6D4 /* CDVInAppBrowser.h */,
 			);
 			name = Plugins;
 			path = "FieldProIonic/Plugins";
@@ -333,6 +338,7 @@
 				78F4EB51D55A470CB4046B3C /* CDVLocation.m in Sources */,
 				19D46F3AE0D046E5B6D0C982 /* CDVConnection.m in Sources */,
 				1E75956B97C54B0D89947B54 /* CDVReachability.m in Sources */,
+				84E0468C5D134D9CAD02A175 /* CDVInAppBrowser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

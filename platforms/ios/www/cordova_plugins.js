@@ -85,6 +85,14 @@ module.exports = [
         "clobbers": [
             "Connection"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
+        "id": "cordova-plugin-inappbrowser.inappbrowser",
+        "clobbers": [
+            "cordova.InAppBrowser.open",
+            "window.open"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -98,6 +106,7 @@ module.exports.metadata =
     "ionic-plugin-keyboard": "2.2.1",
     "cordova-plugin-geolocation": "2.4.0",
     "cordova-plugin-network-information": "1.3.0",
+    "cordova-plugin-inappbrowser": "1.5.0",
     "cordova-plugin-compat": "1.0.0"
 }
 // BOTTOM OF METADATA

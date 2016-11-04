@@ -56,6 +56,10 @@
             return apiBaseFactory.get(apibaseurl + "GetUploadedDocuments?barcode=" + barcode);
         }
 
+        function uploadFile(model) {
+            return apiBaseFactory.post(apibaseurl + "UploadFile", model);
+        }
+
         return {
             getMobileDashboard: getMobileDashboard,
             getBarcodeDetails: getBarcodeDetails,
@@ -67,7 +71,8 @@
             saveJsonSignForBarcode: saveJsonSignForBarcode,
             sendInvoiceMail: sendInvoiceMail,
             getImagesList: getImagesList,
-            getUploadedDocuments: getUploadedDocuments
+            getUploadedDocuments: getUploadedDocuments,
+            uploadFile: uploadFile
         };
     }
     initFactory.$inject = ["$q", "$cacheFactory", "api-base-factory", "shared-data-factory"];

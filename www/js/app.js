@@ -14,7 +14,7 @@ var constants = {
     storageKeyName: "authorizationData", configKeyName: "configurations", settingsKeyName: "userSettings"
   }
 };
-var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ngCordova", "ionic-datepicker", "kendo.directives"])
+var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ngCordova", "ionic-datepicker", "kendo.directives", "mobiscroll-datetime", "mobiscroll-timespan", "mobiscroll-numpad"])
   .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider", "$ionicConfigProvider", "ionicDatePickerProvider",
     function ($stateProvider, $urlRouterProvider, $compileProvider, $httpProvider, $ionicConfigProvider, ionicDatePickerProvider) {
 

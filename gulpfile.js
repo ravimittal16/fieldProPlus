@@ -11,10 +11,10 @@ var minify = require('gulp-minify');
 
 var paths = {
   sass: ['./scss/**/*.scss'],
-  appJs: ["./www/js/**/*.js"]
+  appJs: ["!./www/js/app.js", "!./www/js/build/*.js", "./www/js/**/*.js"]
 };
 
-gulp.task('default', ['sass', 'compress']);
+gulp.task('default', ['sass', 'scripts']);
 
 gulp.task('sass', function (done) {
   gulp.src('./scss/ionic.app.scss')
@@ -24,11 +24,23 @@ gulp.task('sass', function (done) {
     .pipe(minifyCss({
       keepSpecialComments: 0
     }))
-    .pipe(rename({ extname: '.min.css' }))
+    .pipe(rename({
+      extname: '.min.css'
+    }))
     .pipe(gulp.dest('./www/css/'))
     .on('end', done);
 });
 
+
+gulp.task('scripts', function () {
+  return gulp.src(paths.appJs)
+    .pipe(concat('fpm-compiled.js'))
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(uglify())
+    .pipe(gulp.dest('./www/js/build'));
+});
 
 // gulp.task('compress', function () {
 //   gulp.src(paths.appJs)
@@ -45,7 +57,7 @@ gulp.task('sass', function (done) {
 
 gulp.task('watch', function () {
   gulp.watch(paths.sass, ['sass']);
-  gulp.watch(paths.appJs, ['compress']);
+  gulp.watch(paths.appJs, ['scripts']);
 });
 
 gulp.task('install', ['git-check'], function () {

@@ -2,8 +2,14 @@
 	<div>
 		<ion-item class="item-stable" ng-click="vm.isExpanded = !vm.isExpanded" ng-class="{active: vm.isExpanded}">
 			<i class="icon" ng-class="vm.isExpanded ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>Images</strong>
+			<span class="badge badge-dark">{{vm.barcodeImages.length}}</span>
 		</ion-item>
 		<div data-ng-if="vm.isExpanded">
+			<div class="card">
+				<div class="item item-body">
+					<input type="file" data-kendo-upload="vm.upload.control" data-k-options="vm.upload.options" />
+				</div>
+			</div>
 			<ion-list can-swipe="true">
 				<ion-item class="item-text-wrap" data-ng-repeat="p in vm.barcodeImages" data-ng-click="vm.events.onImageTap(p)">
 					{{p.imageURL | removeExt}}
@@ -21,12 +27,16 @@
             <h1 class="title">
 
             </h1>
-            <button class="button" data-ng-click="vm.events.closeProductEditModal()">
+            <button class="button" data-ng-click="vm.events.closeImageViewModal()">
                 Cancel
             </button>
         </ion-header-bar>
         <ion-content>
-                HELLO WORLD IMAGE
+                <div class="card">
+					<div class="item item-body">
+						<img data-ng-src="{{vm.imageUrl}}" class="full-image" alt="" />	
+					</div>	
+				</div>
         </ion-content>
 	</ion-modal-view>
 </script>
