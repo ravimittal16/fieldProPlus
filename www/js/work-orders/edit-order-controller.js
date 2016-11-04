@@ -116,7 +116,6 @@
       vm.uiSettings.isTimeCardModuleEnabled = vm.user.timeCard && vm.user.allowPushTime;
       sharedDataFactory.getIniitialData(true).then(function (response) {
         if (response) {
-
           vm.uiSettings.milageTrackingEnabled = response.customerNumberEntity.milageTrackingEnabled || false;
           vm.scheduleStatus = response.secondaryOrderStatus;
           console.log("vm.scheduleStatus", response.secondaryOrderStatus);
