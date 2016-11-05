@@ -1,9 +1,14 @@
 (function () {
-    "use strict";
-    function initController($scope, $state, workOrderFactory) {
-        var vm = this;
+  "use strict";
 
+  function initController($scope, $state, workOrderFactory) {
+    var vm = this;
+
+    function activateController() {
+        
     }
-    initController.$inject = ["$scope", "$state", "work-orders-factory"];
-    angular.module("fpm").controller("create-order-controller", initController);
+    activateController();
+  }
+  initController.$inject = ["$scope", "$state", "work-orders-factory"];
+  angular.module("fpm").controller("create-order-controller", initController);
 })();
