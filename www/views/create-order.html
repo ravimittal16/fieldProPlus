@@ -1,62 +1,70 @@
 <ion-view title="Create Order">
-	<ion-nav-buttons side="left">
-		<button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-	</ion-nav-buttons>
-	<ion-header-bar class="bar-subheader item-input-inset">
-		<label class="item-input-wrapper">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-header-bar class="bar-subheader item-input-inset">
+    <label class="item-input-wrapper">
             <i class="icon ion-search placeholder-icon"></i>
             <input type="search" placeholder="Search customer" ng-change="search()" ng-model="data.search" />
         </label>
-		<button class="button ">
+    <button class="button ">
             Cancel
         </button>
-	</ion-header-bar>
-	<ion-content>
-		<form action="">
-			<div class="list">
-				<label class="item item-input">
+  </ion-header-bar>
+  <ion-content>
+    <form action="">
+      <div class="list padding-top" data-ng-if="vm.showError">
+        <div class="error">
+          <ui class="list-unstyled">
+            <li data-ng-repeat="error in vm.errors">{{::error}}</li>
+          </ui>
+        </div>
+      </div>
+      <div class="list">
+        <label class="item item-input">
                     <span class="input-label">Order #</span>
                     <input type="text">
                 </label>
-				<div class="padding">
-					<h5>Customer Name</h5>
-				</div>
-				<label class="item item-input">
+        <div class="padding">
+          <h5>Customer Name</h5>
+        </div>
+        <label class="item item-input">
+                <span class="input-label">Email</span>
                     <input type="email" placeholder="Email"/>
                 </label>
-				<div class="padding">
-					<h5>Billing Address</h5>
-				</div>
-				<label class="item item-input">
+        <div class="item item-divider">
+          Billing Address
+        </div>
+        <label class="item item-input">
                     <textarea type="text" rows="2" placeholder="Street"></textarea>
                 </label>
-				<label class="item item-input">
+        <label class="item item-input">
                     <input type="text" placeholder="City"/>
                 </label>
-				<label class="item item-input">
+        <label class="item item-input">
                     <input type="text" placeholder="State"/>
                 </label>
-				<label for="" class="item item-input">
+        <label for="" class="item item-input">
                     <input type="text" placeholder="Zip"/>
                 </label>
-				<div class="padding">
-					<h5>Service Address</h5>
-				</div>
-				<label class="item item-input">
+        <div class="item item-divider">
+          Service Address
+        </div>
+        <label class="item item-input">
                     <textarea type="text" rows="2" placeholder="Street"></textarea>
                 </label>
-				<label class="item item-input">
+        <label class="item item-input">
                     <input type="text" placeholder="City"/>
                 </label>
-				<label class="item item-input">
+        <label class="item item-input">
                     <input type="text" placeholder="State"/>
                 </label>
-				<label for="" class="item item-input">
+        <label for="" class="item item-input">
                     <input type="text" placeholder="Zip"/>
                 </label>
-				<label class="item item-input item-select">
+        <label class="item item-input item-select">
                     <div class="input-label">
-                        Lightsaber
+                        Job Type
                     </div>
                     <select>
                         <option>Blue</option>
@@ -64,7 +72,44 @@
                         <option>Red</option>
                     </select>
                 </label>
-			</div>
-		</form>
-	</ion-content>
+        <label class="item item-input item-select">
+                    <div class="input-label">
+                        Service Provider
+                    </div>
+                    <select>
+                        <option>Blue</option>
+                        <option selected>Green</option>
+                        <option>Red</option>
+                    </select>
+                </label>
+        <label class="item item-input">
+                    <span class="input-label">Schedule Start</span>
+                    <input type="text" class="transparent-background" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A',onSelect:vm.events.onStartDateTimeChaged}" data-ng-model="vm.woEntity.scheduleStart" />
+                </label>
+        <label class="item item-input">
+                    <span class="input-label">Schedule Finish</span>
+                    <input type="text" class="transparent-background" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A',onSelect:vm.events.onStartDateTimeChaged}" data-ng-model="vm.woEntity.scheduleStart" />
+                </label>
+        <label class="item item-input item-stacked-label">
+                    <span class="input-label">Work Description</span>
+                    <textarea cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment1"></textarea>
+                </label>
+      </div>
+    </form>
+  </ion-content>
+  <ion-footer-bar align-title="left" class="bar-light">
+    <div class="buttons">
+      <button class="button">
+            Go back to Dashboard
+        </button>
+    </div>
+    <h1 class="title">
+      &nbsp;
+    </h1>
+    <div class="buttons" ng-click="doSomething()">
+      <button class="button button-balanced">
+            Create Work Order  
+        </button>
+    </div>
+  </ion-footer-bar>
 </ion-view>
