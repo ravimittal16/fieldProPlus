@@ -1,0 +1,29 @@
+<label class="item-input-wrapper">
+            <i class="icon ion-search placeholder-icon"></i>
+            <input type="search" placeholder="Search customer" readonly="" data-on-tap="vm.events.onSearchBoxTapped()" />
+        </label>
+<script id="customerSearchModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<ion-header-bar>
+			<h1 class="title">Search Work Order</h1>
+		</ion-header-bar>
+		<ion-header-bar class="bar-subheader item-input-inset">
+			<label class="item-input-wrapper">
+				<i class="icon ion-search placeholder-icon"></i>
+				<input type="search" name="searchBox" autofocus="" placeholder="Search customer..." autofocus=""  
+				ng-change="vm.events.applySearch()" data-ng-model-options="{debounce:500}" ng-model="vm.searchValue" />
+			</label>
+			<button class="button" data-ng-click="vm.events.closeSearchModal()">
+				Cancel
+			</button>
+		</ion-header-bar>
+		<ion-content>
+                <div class="list">
+			<li class="item item-text-wrap" data-ng-repeat="c in vm.customers" data-on-tap="vm.events.onCustomerSelected(c)">
+				<h2>{{::c.name}}</h2>
+				<p><span data-ng-if="c.shipStreet">{{::c.shipStreet}},</span><strong data-ng-if="p.shipCity">{{::p.shipCity}},</strong><strong data-ng-if="p.shipState">{{::p.shipState}}&nbsp;</strong>{{::p.shipZIP}}</p>
+			</li>
+		</div>
+		</ion-content>
+	</ion-modal-view>
+</script>

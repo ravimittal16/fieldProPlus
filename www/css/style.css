@@ -217,3 +217,7 @@ white-space: normal;
 .transparent-background :disabled {
   background-color: transparent !important;
 }
+
+customer-search-header-component {
+  width: 100%;
+}

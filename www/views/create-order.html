@@ -3,13 +3,7 @@
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
   <ion-header-bar class="bar-subheader item-input-inset">
-    <label class="item-input-wrapper">
-            <i class="icon ion-search placeholder-icon"></i>
-            <input type="search" placeholder="Search customer" ng-change="search()" ng-model="data.search" />
-        </label>
-    <button class="button ">
-            Cancel
-        </button>
+    <customer-search-header-component data-on-customer-selected="vm.events.onCustomerSelected(customer)"></customer-search-header-component>
   </ion-header-bar>
   <ion-content>
     <form action="">
@@ -23,63 +17,56 @@
       <div class="list">
         <label class="item item-input">
                     <span class="input-label">Order #</span>
-                    <input type="text">
+                    <input type="text" data-ng-model="vm.woEntity.barCodeName" required />
                 </label>
         <div class="padding">
-          <h5>Customer Name</h5>
+          <h5>{{vm.woEntity.displayName}}</h5>
         </div>
         <label class="item item-input">
                 <span class="input-label">Email</span>
-                    <input type="email" placeholder="Email"/>
+                    <input type="email" placeholder="Email" maxlength="500" data-ng-model="vm.woEntity.email"/>
                 </label>
         <div class="item item-divider">
           Billing Address
         </div>
         <label class="item item-input">
-                    <textarea type="text" rows="2" placeholder="Street"></textarea>
+                    <textarea type="text" rows="2" placeholder="Street" class="transparent-background" data-ng-model="vm.woEntity.bStreet" readonly=""></textarea>
                 </label>
         <label class="item item-input">
-                    <input type="text" placeholder="City"/>
+                    <input type="text" placeholder="City" class="transparent-background" data-ng-model="vm.woEntity.bCity" readonly=""/>
                 </label>
         <label class="item item-input">
-                    <input type="text" placeholder="State"/>
+                    <input type="text" placeholder="State" class="transparent-background" data-ng-model="vm.woEntity.bState" readonly=""/>
                 </label>
         <label for="" class="item item-input">
-                    <input type="text" placeholder="Zip"/>
+                    <input type="text" placeholder="Zip" class="transparent-background" data-ng-model="vm.woEntity.bZip" readonly=""/>
                 </label>
         <div class="item item-divider">
           Service Address
         </div>
         <label class="item item-input">
-                    <textarea type="text" rows="2" placeholder="Street"></textarea>
+                    <textarea type="text" rows="2" placeholder="Street" maxlength="200" data-ng-model="vm.woEntity.sStreet"></textarea>
                 </label>
         <label class="item item-input">
-                    <input type="text" placeholder="City"/>
+                    <input type="text" placeholder="City" maxlength="50" data-ng-model="vm.woEntity.sCity"/>
                 </label>
         <label class="item item-input">
-                    <input type="text" placeholder="State"/>
+                    <input type="text" placeholder="State" data-ng-model="vm.woEntity.sState" maxlength="50"/>
                 </label>
         <label for="" class="item item-input">
-                    <input type="text" placeholder="Zip"/>
+                    <input type="text" placeholder="Zip" data-ng-model="vm.woEntity.sZip" maxlength="20"/>
                 </label>
         <label class="item item-input item-select">
                     <div class="input-label">
                         Job Type
                     </div>
-                    <select>
-                        <option>Blue</option>
-                        <option selected>Green</option>
-                        <option>Red</option>
-                    </select>
+                    <select data-ng-options="job.excptns as job.excptns for job in vm.jobTypes track by job.excptns" data-ng-model="vm.woEntity.jobType"></select>
                 </label>
         <label class="item item-input item-select">
                     <div class="input-label">
                         Service Provider
                     </div>
-                    <select>
-                        <option>Blue</option>
-                        <option selected>Green</option>
-                        <option>Red</option>
+                    <select data-ng-options="pro.userId as pro.last_Name for pro in vm.serviceProviders" data-ng-model="vm.woEntity.serviceProvider">
                     </select>
                 </label>
         <label class="item item-input">
