@@ -89,6 +89,10 @@
     }
     initDates();
 
+    function onBackToDashboardClicked() {
+      $state.go("app.dashboard");
+    }
+
     vm.isCustomerSelected = false;
 
     vm.events = {
@@ -115,7 +119,8 @@
         console.log("ORDERS", vm.woEntity);
       },
       onSubmitButtonClicked: onSubmitButtonClicked,
-      onServiceAddressActionClicked: onServiceAddressActionClicked
+      onServiceAddressActionClicked: onServiceAddressActionClicked,
+      onBackToDashboardClicked: onBackToDashboardClicked
     };
 
     function activateController() {

@@ -1,4 +1,4 @@
-<ion-view title="Create Order" cache-view="false" hide-back-button="true">
+<ion-view title="Create Order" cache-view="false">
   <form name="formWorkOrder" novalidate="">
     <ion-nav-buttons side="left">
       <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
@@ -98,7 +98,7 @@
     </ion-content>
     <ion-footer-bar align-title="left" class="bar-light">
       <div class="buttons">
-        <button class="button" type="button">
+        <button class="button" type="button" data-ng-click="vm.events.onBackToDashboardClicked()">
             Go back to Dashboard
         </button>
       </div>
