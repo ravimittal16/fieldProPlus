@@ -98,7 +98,6 @@
     vm.events = {
       onCustomerSelected: function (customer) {
         vm.isCustomerSelected = true;
-        console.log(customer);
         vm.woEntity.firstName = customer.firstName;
         vm.woEntity.lastName = customer.lastName;
         vm.woEntity.companyName = customer.company;
@@ -116,7 +115,6 @@
         vm.woEntity.sState = customer.shipState;
         vm.woEntity.sCity = customer.shipCity;
         vm.woEntity.sZip = customer.shipZIP;
-        console.log("ORDERS", vm.woEntity);
       },
       onSubmitButtonClicked: onSubmitButtonClicked,
       onServiceAddressActionClicked: onServiceAddressActionClicked,
