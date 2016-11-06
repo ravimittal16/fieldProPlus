@@ -3,7 +3,6 @@
     function initFactory($cordovaDialogs, $q, $ionicPopup, $ionicModal) {
         return {
             toStringDate: function (date) {
-                //return moment(date).format("MM/DD/YYYY h:mm a");
                 return moment(date).format("lll");
             },
             alerts: {

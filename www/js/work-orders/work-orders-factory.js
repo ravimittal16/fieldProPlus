@@ -78,6 +78,14 @@
       }
     }
 
+    function createWorkOrder(model) {
+      return apiBaseFactory.post(apibaseurl + "CreateWorkOrder", model);
+    }
+
+    function getBarCodeNumber() {
+      return apiBaseFactory.get(apibaseurl + "GetBarCodeNumber");
+    }
+
     return {
       getMobileDashboard: getMobileDashboard,
       getBarcodeDetails: getBarcodeDetails,
@@ -91,7 +99,9 @@
       getImagesList: getImagesList,
       getUploadedDocuments: getUploadedDocuments,
       uploadFile: uploadFile,
-      createEntity: createEntity
+      createEntity: createEntity,
+      createWorkOrder: createWorkOrder,
+      getBarCodeNumber: getBarCodeNumber
     };
   }
   initFactory.$inject = ["$q", "$cacheFactory", "api-base-factory", "shared-data-factory"];

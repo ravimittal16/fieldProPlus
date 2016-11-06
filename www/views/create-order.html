@@ -1,12 +1,12 @@
-<ion-view title="Create Order">
-  <ion-nav-buttons side="left">
-    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-  </ion-nav-buttons>
-  <ion-header-bar class="bar-subheader item-input-inset">
-    <customer-search-header-component data-on-customer-selected="vm.events.onCustomerSelected(customer)"></customer-search-header-component>
-  </ion-header-bar>
-  <ion-content>
-    <form action="">
+<ion-view title="Create Order" cache-view="false" hide-back-button="true">
+  <form name="formWorkOrder" novalidate="">
+    <ion-nav-buttons side="left">
+      <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-header-bar class="bar-subheader item-input-inset">
+      <customer-search-header-component data-on-customer-selected="vm.events.onCustomerSelected(customer)"></customer-search-header-component>
+    </ion-header-bar>
+    <ion-content>
       <div class="list padding-top" data-ng-if="vm.showError">
         <div class="error">
           <ui class="list-unstyled">
@@ -20,11 +20,23 @@
                     <input type="text" data-ng-model="vm.woEntity.barCodeName" required />
                 </label>
         <div class="padding">
-          <h5>{{vm.woEntity.displayName}}</h5>
+          <div data-ng-if="vm.isCustomerSelected">
+            <h4 data-ng-bind="vm.woEntity.displayName"></h4>
+            <p class="text-muted text-small">
+              <strong data-ng-bind="vm.woEntity.companyName"> </strong>
+            </p>
+          </div>
+          <div data-ng-if="!vm.isCustomerSelected">
+            <h5>
+              <strong class="text-assertive">
+                Please search and select customer
+              </strong>
+            </h5>
+          </div>
         </div>
         <label class="item item-input">
                 <span class="input-label">Email</span>
-                    <input type="email" placeholder="Email" maxlength="500" data-ng-model="vm.woEntity.email"/>
+                    <input type="text" placeholder="Email" maxlength="500" data-ng-model="vm.woEntity.email"/>
                 </label>
         <div class="item item-divider">
           Billing Address
@@ -43,6 +55,7 @@
                 </label>
         <div class="item item-divider">
           Service Address
+          <a class="button pull-right button-small button-icon icon ion-android-more-vertical item-divider-left-buttion" data-ng-click="vm.events.onServiceAddressActionClicked()"></a>
         </div>
         <label class="item item-input">
                     <textarea type="text" rows="2" placeholder="Street" maxlength="200" data-ng-model="vm.woEntity.sStreet"></textarea>
@@ -71,32 +84,32 @@
                 </label>
         <label class="item item-input">
                     <span class="input-label">Schedule Start</span>
-                    <input type="text" class="transparent-background" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A',onSelect:vm.events.onStartDateTimeChaged}" data-ng-model="vm.woEntity.scheduleStart" />
+                    <input type="text" class="transparent-background" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A'}" data-ng-model="vm.dates.startDate" />
                 </label>
         <label class="item item-input">
                     <span class="input-label">Schedule Finish</span>
-                    <input type="text" class="transparent-background" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A',onSelect:vm.events.onStartDateTimeChaged}" data-ng-model="vm.woEntity.scheduleStart" />
+                    <input type="text" class="transparent-background" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A'}" data-ng-model="vm.dates.endDate" />
                 </label>
         <label class="item item-input item-stacked-label">
                     <span class="input-label">Work Description</span>
                     <textarea cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment1"></textarea>
                 </label>
       </div>
-    </form>
-  </ion-content>
-  <ion-footer-bar align-title="left" class="bar-light">
-    <div class="buttons">
-      <button class="button">
+    </ion-content>
+    <ion-footer-bar align-title="left" class="bar-light">
+      <div class="buttons">
+        <button class="button" type="button">
             Go back to Dashboard
         </button>
-    </div>
-    <h1 class="title">
-      &nbsp;
-    </h1>
-    <div class="buttons" ng-click="doSomething()">
-      <button class="button button-balanced">
+      </div>
+      <h1 class="title">
+        &nbsp;
+      </h1>
+      <div class="buttons">
+        <button type="submit" class="button button-balanced" data-ng-click="vm.events.onSubmitButtonClicked(formWorkOrder.$valid)">
             Create Work Order  
         </button>
-    </div>
-  </ion-footer-bar>
+      </div>
+    </ion-footer-bar>
+  </form>
 </ion-view>
