@@ -2,7 +2,7 @@
   "use strict";
 
   function initController($scope, $state, $timeout, $stateParams, $ionicActionSheet, $ionicLoading,
-    $ionicPopup, $ionicModal, workOrderFactory, fpmUtilities, sharedDataFactory, authenticationFactory) {
+    $ionicPopup, $ionicModal, workOrderFactory, fpmUtilities, sharedDataFactory, authenticationFactory, timecardFactory) {
     var vm = this;
     vm.barcode = $stateParams.barCode;
     var alerts = fpmUtilities.alerts;
@@ -117,7 +117,7 @@
       var isBeongToCurrentUser = vm.schedule.technicianNum === vm.user.userEmail;
       if (havingGroupsAssinged === true && fromAddSchedule && fromAddSchedule === true) {
         var checkifBelongToAssinedUser = _.filter(vm.serviceProviders, function (e) {
-          e.userId === vm.schedule.technicianNum;
+          return e.userId === vm.schedule.technicianNum;
         });
         if (checkifBelongToAssinedUser.length > 0) {
           return true;
@@ -143,13 +143,13 @@
       vm.user = authenticationFactory.getLoggedInUserInfo();
       vm.uiSettings.isTimeCardModuleEnabled = vm.user.timeCard && vm.user.allowPushTime;
       vm.isServiceProvider = !vm.user.isAdminstrator;
-      sharedDataFactory.getIniitialData(true).then(function (response) {
+      sharedDataFactory.getIniitialData().then(function (response) {
         if (response) {
           vm.uiSettings.milageTrackingEnabled = response.customerNumberEntity.milageTrackingEnabled || false;
           vm.scheduleStatus = response.secondaryOrderStatus;
           vm.serviceProviders = response.serviceProviders;
         }
-      });
+      }).finally(_getTodaysTimeCardEntries);
     }
     activateController();
 
@@ -208,7 +208,10 @@
     function processCheckIn() {
 
     }
-
+    var jobCodes = {
+      CLOCK_IN: 5001,
+      CLOCK_OUT: 5002
+    };
     vm.tabs = {
       desc: {
         events: {
@@ -265,11 +268,41 @@
             if (!vm.schedule.approve || !vm.schedule.checkInStatus) {
               if (checkAuthorizationIfServiceProvider(null, null, true)) {
                 if (vm.user.timeCard === true) {
-
+                  var runningClockIn = _.where(timeCardInfo.currentDetails, {
+                    jobCode: jobCodes.CLOCK_IN,
+                    finishTime: null
+                  });
+                  var checkins = _.reject(timeCardInfo.currentDetails, {
+                    jobCode: jobCodes.CLOCK_IN
+                  });
+                  if (runningClockIn.length === 0) {
+                    alert.confirm("Confirmation!", "You have not clocked in yet. You will be clocked in automattically \n\n Are you sure?", function () {
+                      processCheckIn();
+                    }, function () {
+                      //UNBLOCKUI
+                    });
+                  } else {
+                    if (checkins.length > 0) {
+                      var runningCheckIn = _.where(checkins, {
+                        finishTime: null,
+                        jobCodeName: "On Job"
+                      });
+                      if (runningCheckIn.length > 0) {
+                        alerts.alert("Warning!", "You have not checked out for previous task.", function () {
+                          //UNBLOCKUI
+                        });
+                      } else {
+                        processCheckIn();
+                      }
+                    } else {
+                      processCheckIn();
+                    }
+                  }
                 } else {
                   processCheckIn();
                 }
               }
+              return false;
             }
           },
           onScheduleActionButtonClicked: function () {
@@ -345,8 +378,21 @@
         }
       }
     }
+    var timeCardInfo = {
+      currentDetails: []
+    };
 
-
+    function _getTodaysTimeCardEntries() {
+      if (vm.user.timeCard === true) {
+        var cdt = new Date();
+        var dt = fpmUtilities.toStringDate(new Date(cdt.getFullYear(), cdt.getMonth(), cdt.getDate(), 0, 0, 0, 0));
+        timeCardFactory.getTimeCardByDate(dt).then(function (response) {
+          if (response) {
+            timeCardInfo.currentDetails = response.timeCardDetails;
+          }
+        });
+      }
+    }
 
     $ionicModal.fromTemplateUrl("productSearchModal.html", {
       scope: $scope,
@@ -409,7 +455,7 @@
   }
   initController.$inject = ["$scope", "$state", "$timeout", "$stateParams", "$ionicActionSheet",
     "$ionicLoading", "$ionicPopup", "$ionicModal", "work-orders-factory", "fpm-utilities-factory",
-    "shared-data-factory", "authenticationFactory"
+    "shared-data-factory", "authenticationFactory", "timecard-factory"
   ];
   angular.module("fpm").controller("edit-order-controller", initController);
 })();
