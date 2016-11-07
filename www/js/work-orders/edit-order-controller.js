@@ -13,6 +13,8 @@
       milageTrackingEnabled: false
     };
 
+    vm.errors = [];
+
     function getBarcodeDetails() {
       $ionicLoading.show({
         template: "loading work order..."
@@ -106,15 +108,46 @@
       },
       clearAllDateTimeSelection: function () {}
     };
+
+    function checkAuthorizationIfServiceProvider(co, cb, fromAddSchedule) {
+      var havingGroupsAssigned = vm.user.havingGroupsAssigned;
+      if (vm.isServiceProvider === false) {
+        return true;
+      }
+      var isBeongToCurrentUser = vm.schedule.technicianNum === vm.user.userEmail;
+      if (havingGroupsAssinged === true && fromAddSchedule && fromAddSchedule === true) {
+        var checkifBelongToAssinedUser = _.filter(vm.serviceProviders, function (e) {
+          e.userId === vm.schedule.technicianNum;
+        });
+        if (checkifBelongToAssinedUser.length > 0) {
+          return true;
+        }
+      }
+      if (vm.isServiceProvider === true && isBeongToCurrentUser === false) {
+        if (showAlert) {
+          alerts.alert("Oops!", "you are not authorized to perform this action", function () {
+            if (angular.isFunction(cb)) {
+              cb(co);
+            }
+          });
+          return false;
+        } else {
+          return false;
+        }
+      }
+      return true;
+    }
     //================================================================================================
 
     function activateController() {
       vm.user = authenticationFactory.getLoggedInUserInfo();
       vm.uiSettings.isTimeCardModuleEnabled = vm.user.timeCard && vm.user.allowPushTime;
+      vm.isServiceProvider = !vm.user.isAdminstrator;
       sharedDataFactory.getIniitialData(true).then(function (response) {
         if (response) {
           vm.uiSettings.milageTrackingEnabled = response.customerNumberEntity.milageTrackingEnabled || false;
           vm.scheduleStatus = response.secondaryOrderStatus;
+          vm.serviceProviders = response.serviceProviders;
         }
       });
     }
@@ -145,24 +178,118 @@
       }
     }
 
+    function updateOrder() {
+      if (checkAuthorizationIfServiceProvider(null, null, false)) {
+        workOrderFactory.updateWorkOrderMobile({
+          barcodeAssay: vm.barCodeData.barcodeDetails,
+          fromMobile: true
+        }).then(function (response) {
+          if (response && angular.isArray(response) && response.length > 0) {
+            vm.errors = response;
+          }
+        });
+      }
+    }
+
+    function updateSchedule() {
+
+    }
+
+    var actions = [{
+      text: 'Check In'
+    }, {
+      text: 'Check Out'
+    }, {
+      text: '<span class="text-assertive">Clear Checkin Time</span>'
+    }, {
+      text: '<span class="text-assertive">Clear Checkout Time</span>'
+    }];
+
+    function processCheckIn() {
+
+    }
 
     vm.tabs = {
+      desc: {
+        events: {
+          onDescriptionOrResolutionChanged: function () {
+            updateOrder();
+          }
+        }
+      },
       sch: {
         events: {
-          onListScheduleItemTap: function (sch) {
-            console.log(sch)
-          },
-          onScheduleActionButtonClicked: function () {
-            var hideSheet = $ionicActionSheet.show({
+          onMilageInformationActionButtonClicked: function () {
+            $ionicActionSheet.show({
               buttons: [{
-                text: 'Add New Schedule'
+                text: "Save Milage Information"
               }],
-              titleText: 'Schedule',
+              titleText: 'Milage Information',
               cancelText: 'Cancel',
               cancel: function () {
                 // add cancel code..
               },
               buttonClicked: function (index) {
+                if (index === 0) {
+                  updateSchedule();
+                }
+                return true;
+              }
+            });
+          },
+          onTripnoteChanged: function () {
+            updateSchedule();
+          },
+          onListScheduleItemTap: function (sch) {
+            console.log(sch)
+          },
+          onSchedulesListButtonClicked: function () {
+            $ionicActionSheet.show({
+              buttons: [{
+                text: "Add New Schedule"
+              }],
+              titleText: 'New Schedule',
+              cancelText: 'Cancel',
+              cancel: function () {
+                // add cancel code..
+              },
+              buttonClicked: function (index) {
+                if (index === 0) {
+
+                }
+                return true;
+              }
+            });
+          },
+          checkIn: function () {
+            if (!vm.schedule.approve || !vm.schedule.checkInStatus) {
+              if (checkAuthorizationIfServiceProvider(null, null, true)) {
+                if (vm.user.timeCard === true) {
+
+                } else {
+                  processCheckIn();
+                }
+              }
+            }
+          },
+          onScheduleActionButtonClicked: function () {
+            var defaultActions = angular.copy(actions);
+            if (vm.user.allowPushTime) {
+              defaultActions.push({
+                text: '<b>Push to Timecard</b>'
+              });
+            }
+            $ionicActionSheet.show({
+              buttons: defaultActions,
+              titleText: 'Current Schedule',
+              cancelText: 'Cancel',
+              cancel: function () {
+                // add cancel code..
+              },
+              buttonClicked: function (index) {
+                if (index === 0) {
+                  vm.tabs.sch.events.checkIn();
+                }
                 return true;
               }
             });

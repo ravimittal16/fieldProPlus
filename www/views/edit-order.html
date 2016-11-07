@@ -3,6 +3,13 @@
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
   <ion-content scroll="false">
+    <div class="list padding-top" data-ng-if="vm.errors.length > 0">
+      <div class="error">
+        <ui class="list-unstyled">
+          <li data-ng-repeat="error in vm.errors">{{::error}}</li>
+        </ui>
+      </div>
+    </div>
     <ion-tabs class="tabs-dark tabs-icon-top">
       <ion-tab title="DESC" icon-on="ion-ios-paper" icon-off="ion-ios-paper-outline">
         <ion-content>
@@ -62,15 +69,15 @@
               </div>
               <label class="item item-input item-stacked-label">
 								<span class="input-label">Work Description</span>
-								<textarea cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment1"></textarea>
+								<textarea cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment_1" data-ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()" data-ng-model-options="{debounce:500}"></textarea>
 							</label>
               <label class="item item-input item-stacked-label">
 								<span class="input-label">Resolution / Work performed</span>
-								<textarea  cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment2"></textarea>
+								<textarea  cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment_2" data-ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()" data-ng-model-options="{debounce:500}"></textarea>
 							</label>
               <label class="item item-input item-stacked-label">
 								<span class="input-label">Comments</span>
-								<textarea  cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment4"></textarea>
+								<textarea  cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment_4" data-ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()" data-ng-model-options="{debounce:500}"></textarea>
 							</label>
             </div>
           </div>
@@ -109,41 +116,43 @@
 								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background" disabled placeholder="Total Time" data-ng-model="vm.scheduleTimeSpan.timeSpan"/>
 							</label>
               <label class="item item-input">
-								<textarea name="" id="" rows="6" placeholder="Trip Note"></textarea>
+								<textarea name="" id="" rows="6" placeholder="Trip Note" data-ng-model="vm.schedule.tripNote" data-ng-change="vm.tabs.sch.events.onTripnoteChanged()" data-ng-model-options="{debounce:500}"></textarea>
 							</label>
             </div>
           </div>
           <div class="card" data-ng-if="vm.uiSettings.milageTrackingEnabled">
             <div class="item item-divider">
               Milage Information
+              <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                data-ng-click="vm.tabs.sch.events.onMilageInformationActionButtonClicked()"></a>
             </div>
             <div class="list">
               <label class="item item-input">
-					<span class="input-label">Vehicle Number</span>
-					<input type="text"/>
-				</label>
+								<span class="input-label">Vehicle Number</span>
+								<input type="text"/>
+							</label>
               <label class="item item-input">
-					<span class="input-label">Start (Miles)</span>
-					<input type="text" class="transparent-background" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:99999.99,preset:'decimal'}" data-ng-model="vm.schedule.startMiles" data-ng-change="vm.schedule.totalMiles = vm.schedule.endMiles - vm.schedule.startMiles" />
-				</label>
+								<span class="input-label">Start (Miles)</span>
+								<input type="text" class="transparent-background" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:99999.99,preset:'decimal'}" data-ng-model="vm.schedule.startMiles" data-ng-change="vm.schedule.totalMiles = vm.schedule.endMiles - vm.schedule.startMiles" />
+							</label>
               <label class="item item-input">
-					<span class="input-label">End</span>
-					<input type="text" class="transparent-background" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:99999,preset:'decimal'}" data-ng-model="vm.schedule.endMiles" data-ng-change="vm.schedule.totalMiles = vm.schedule.endMiles - vm.schedule.startMiles"/>
-				</label>
+									<span class="input-label">End</span>
+									<input type="text" class="transparent-background" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:99999,preset:'decimal'}" data-ng-model="vm.schedule.endMiles" data-ng-change="vm.schedule.totalMiles = vm.schedule.endMiles - vm.schedule.startMiles"/>
+							</label>
               <label class="item item-input">
-					<span class="input-label"><strong>Total</strong></span>
-					<input type="text" class="transparent-background" readonly=""  class="transparent-background" data-ng-model="vm.schedule.totalMiles"/>
-				</label>
+									<span class="input-label"><strong>Total</strong></span>
+									<input type="text" class="transparent-background" readonly=""  class="transparent-background" data-ng-model="vm.schedule.totalMiles"/>
+							</label>
             </div>
           </div>
           <div class="card">
             <div class="item item-divider">
               Other Schedules
               <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
-                data-ng-click="vm.tabs.sch.events.onScheduleActionButtonClicked()"></a>
+                data-ng-click="vm.tabs.sch.events.onSchedulesListButtonClicked()"></a>
             </div>
             <ion-list>
-              <ion-item class="item-text-wrap" data-ng-repeat="sch in vm.barCodeData.schedules" data-ng-click="vm.tabs.sch.events.onListScheduleItemTap(sch)">
+              <ion-item class="item-text-wrap"  data-ng-repeat="sch in vm.barCodeData.schedules" data-ng-click="vm.tabs.sch.events.onListScheduleItemTap(sch)" data-ng-class="{'active':vm.schedule.num === sch.num}">
                 <h4><span class="text-muted">Sch Date :</span> <strong>{{::sch.scheduledStartDateTime | date:'MM/dd/yyyy'}}</strong>&nbsp;
                   <span class="text-muted" data-ng-if="sch.actualStartDateTime">Actual Date : </span><strong data-ng-if="sch.actualStartDateTime">
 									{{::sch.actualStartDateTime | date:'MM/dd/yyyy'}}

@@ -86,6 +86,10 @@
       return apiBaseFactory.get(apibaseurl + "GetBarCodeNumber");
     }
 
+    function updateWorkOrderMobile(model) {
+      return apiBaseFactory.post(apibaseurl + "UpdateWorkOrderMobile", model);
+    }
+
     return {
       getMobileDashboard: getMobileDashboard,
       getBarcodeDetails: getBarcodeDetails,
@@ -101,7 +105,8 @@
       uploadFile: uploadFile,
       createEntity: createEntity,
       createWorkOrder: createWorkOrder,
-      getBarCodeNumber: getBarCodeNumber
+      getBarCodeNumber: getBarCodeNumber,
+      updateWorkOrderMobile: updateWorkOrderMobile
     };
   }
   initFactory.$inject = ["$q", "$cacheFactory", "api-base-factory", "shared-data-factory"];

@@ -122,13 +122,12 @@
     };
 
     function activateController() {
-      sharedDataFactory.getIniitialData(true).then(function (response) {
+      sharedDataFactory.getIniitialData().then(function (response) {
         if (response) {
           vm.jobTypes = response.jobTypes;
           vm.serviceProviders = response.serviceProviders;
         }
       }).finally(createEntity);
-
     }
     activateController();
   }
