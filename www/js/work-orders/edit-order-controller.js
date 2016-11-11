@@ -289,7 +289,6 @@
         events: {
           onAddScheduleCompleted: function (o) {
             if (o) {
-              console.log(o, "DDD");
               vm.barCodeData.schedules = o.schedules;
               vm.barCodeData.invoice = o.invoice;
               vm.scheduleAddModal.hide();
