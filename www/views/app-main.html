@@ -80,3 +80,9 @@
 		<product-search-component></product-search-component>
 	</ion-modal-view>
 </script>
+<script id="addScheduleModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<add-schedule-modal-component data-barcode="vm.barcode" on-cancel-clicked="vm.tabs.sch.events.onModalCancelClicked()"
+		service-providers="vm.serviceProviders" on-add-completed="vm.tabs.sch.events.onAddScheduleCompleted(o)"></add-schedule-modal-component>
+	</ion-modal-view>
+</script>

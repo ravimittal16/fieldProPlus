@@ -95,7 +95,6 @@
         factory.certifyUser = certifyUser;
         factory.getCertifieldUser = getCertifieldUser;
         factory.pushCheckInOutTimes = pushCheckInOutTimes;
-        factory.pushCheckInOutTimes = pushCheckInOutTimes;
         factory.data = data;
         factory.getPendingClockIns = getPendingClockIns;
         factory.getJobCodes = getJobCodes;

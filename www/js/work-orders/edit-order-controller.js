@@ -6,11 +6,17 @@
     var vm = this;
     vm.barcode = $stateParams.barCode;
     var alerts = fpmUtilities.alerts;
-
+    var jobStatus = {
+      AcceptJob: 0, InRoute: 1, CheckIn: 2, CheckOut: 3
+    };
+    var jobCodes = {
+      CLOCK_IN: 5001, CLOCK_OUT: 5002
+    };
     vm.invoiceOpen = false;
     vm.uiSettings = {
       isTimeCardModuleEnabled: false,
-      milageTrackingEnabled: false
+      milageTrackingEnabled: false,
+      orderBelongToCurrentUser: false
     };
 
     vm.errors = [];
@@ -22,10 +28,7 @@
         workOrderFactory.getBarcodeDetails(vm.barcode).then(function (response) {
           vm.barCodeData = response;
           if (angular.isArray(response.schedules)) {
-            var _scheduleFromFilter = _.filter(response.schedules, function (sch) {
-              return sch.num === parseInt($stateParams.technicianNum, 10);
-            });
-            vm.schedule = angular.copy(_scheduleFromFilter[0]);
+            vm.schedule = angular.copy(angular.copy(_.findWhere(response.schedules, { num: parseInt($stateParams.technicianNum, 10) })));
             if (vm.schedule.actualStartDateTime) {
               vm.schedule.actualStartDateTime = new Date(moment(vm.schedule.actualStartDateTime));
             }
@@ -33,7 +36,8 @@
             if (vm.schedule.actualFinishDateTime) {
               vm.schedule.actualFinishDateTime = new Date(moment(vm.schedule.actualFinishDateTime));
             }
-
+            findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
+            vm.uiSettings.orderBelongToCurrentUser = vm.schedule.technicianNum === vm.userId;
             $ionicLoading.hide();
             calculateTotals();
           }
@@ -106,7 +110,7 @@
           }
         }
       },
-      clearAllDateTimeSelection: function () {}
+      clearAllDateTimeSelection: function () { }
     };
 
     function checkAuthorizationIfServiceProvider(co, cb, fromAddSchedule) {
@@ -116,10 +120,10 @@
       }
       var isBeongToCurrentUser = vm.schedule.technicianNum === vm.user.userEmail;
       if (havingGroupsAssinged === true && fromAddSchedule && fromAddSchedule === true) {
-        var checkifBelongToAssinedUser = _.filter(vm.serviceProviders, function (e) {
-          return e.userId === vm.schedule.technicianNum;
+        var checkifBelongToAssinedUser = _.findWhere(vm.serviceProviders, {
+          UserId: vm.schedule.TechnicianNum
         });
-        if (checkifBelongToAssinedUser.length > 0) {
+        if (angular.isDefined(checkifBelongToAssinedUser)) {
           return true;
         }
       }
@@ -137,17 +141,54 @@
       }
       return true;
     }
+
+    function clearAllDateTimeSelection(clearAll) {
+      if (checkAuthorizationIfServiceProvider(null, null, false)) {
+        if (clearAll === true) {
+          vm.schedule.actualStartDateTime = null;
+        }
+        vm.schedule.actualFinishDateTime = null;
+        vm.scheduleTimeSpan.timeSpan = "";
+      }
+    }
+
+    function pushToTimecard() {
+      var model = {
+        num: 0,
+        numFromSummary: 0,
+        timeCardDate: fpmUtilities.toStringDate(vm.schedule.actualStartDateTime),
+        startTime: fpmUtilities.toStringDate(vm.schedule.actualStartDateTime),
+        finishTime: fpmUtilities.toStringDate(vm.schedule.actualFinishDateTime),
+        jobCode: 0,
+        notes: "",
+        barcode: vm.barcode,
+        isUserDefined: true,
+        scheduleId: vm.schedule.num
+      };
+      if (vm.schedule.actualStartDateTime) {
+        timecardFactory.pushCheckInOutTimes(model).then(function (response) {
+          if (angular.isArray(response) && response.length > 0) {
+            alerts.alert("Warning", response[0]);
+          } else {
+            alerts.alert("Success", "Details successfully pushed to timecard");
+          }
+        });
+      } else {
+        alerts.alert("Warning", "Please select Check In date and time");
+      }
+    }
     //================================================================================================
 
     function activateController() {
       vm.user = authenticationFactory.getLoggedInUserInfo();
       vm.uiSettings.isTimeCardModuleEnabled = vm.user.timeCard && vm.user.allowPushTime;
       vm.isServiceProvider = !vm.user.isAdminstrator;
-      sharedDataFactory.getIniitialData().then(function (response) {
+      sharedDataFactory.getIniitialData(true).then(function (response) {
         if (response) {
           vm.uiSettings.milageTrackingEnabled = response.customerNumberEntity.milageTrackingEnabled || false;
           vm.scheduleStatus = response.secondaryOrderStatus;
           vm.serviceProviders = response.serviceProviders;
+          vm.vehicles = response.vehicles;
         }
       }).finally(_getTodaysTimeCardEntries);
     }
@@ -191,8 +232,22 @@
       }
     }
 
-    function updateSchedule() {
-
+    function updateSchedule(showSuccessAlert, showLoading) {
+      if (showLoading === true) {
+        fpmUtilities.showLoading().then(function () {
+          workOrderFactory.updateSchedule(vm.schedule).then(function () {
+            if (showSuccessAlert) {
+              alerts.alert("Success", "Schedule information updated successfully");
+            }
+          }).then(fpmUtilities.hideLoading);
+        });
+      } else {
+        workOrderFactory.updateSchedule(vm.schedule).then(function () {
+          if (showSuccessAlert) {
+            alerts.alert("Success", "Schedule information updated successfully");
+          }
+        });
+      }
     }
 
     var actions = [{
@@ -200,18 +255,28 @@
     }, {
       text: 'Check Out'
     }, {
-      text: '<span class="text-assertive">Clear Checkin Time</span>'
+      text: '<span class="text-assertive">Clear All</span>'
     }, {
       text: '<span class="text-assertive">Clear Checkout Time</span>'
+    }, {
+      text: 'Update Schedule'
     }];
 
     function processCheckIn() {
-
+      fpmUtilities.showLoading().then(function () {
+        vm.schedule.actualStartDateTime = new Date();
+        vm.schedule.actualFinishDateTime = null;
+        vm.scheduleTimeSpan.onStartDateTimeChaged();
+        workOrderFactory.updateJobStatus({
+          scheduleButton: jobStatus.CheckIn, scheduleNum: vm.schedule.num,
+          actualStartTime: fpmUtilities.toStringDate(vm.schedule.actualStartDateTime), barcode: vm.barcode,
+          timerStartAt: fpmUtilities.toStringDate(new Date())
+        }).then(function () {
+          vm.schedule.checkInStatus = true;
+        }).finally(fpmUtilities.hideLoading);
+      });
     }
-    var jobCodes = {
-      CLOCK_IN: 5001,
-      CLOCK_OUT: 5002
-    };
+    vm.scheduleAddModal = null;
     vm.tabs = {
       desc: {
         events: {
@@ -222,6 +287,18 @@
       },
       sch: {
         events: {
+          onAddScheduleCompleted: function (o) {
+            if (o) {
+              console.log(o, "DDD");
+              vm.barCodeData.schedules = o.schedules;
+              vm.barCodeData.invoice = o.invoice;
+              vm.scheduleAddModal.hide();
+              alerts.alert("Success", "Schedule added successfully");
+            }
+          },
+          onModalCancelClicked: function () {
+            vm.scheduleAddModal.hide();
+          },
           onMilageInformationActionButtonClicked: function () {
             $ionicActionSheet.show({
               buttons: [{
@@ -234,14 +311,14 @@
               },
               buttonClicked: function (index) {
                 if (index === 0) {
-                  updateSchedule();
+                  updateSchedule(true, true);
                 }
                 return true;
               }
             });
           },
           onTripnoteChanged: function () {
-            updateSchedule();
+            updateSchedule(false, false);
           },
           onListScheduleItemTap: function (sch) {
             console.log(sch)
@@ -258,14 +335,26 @@
               },
               buttonClicked: function (index) {
                 if (index === 0) {
-
+                  if (vm.scheduleAddModal === null) {
+                    $ionicModal.fromTemplateUrl("addScheduleModal.html", {
+                      scope: $scope,
+                      animation: 'slide-in-up'
+                    }).then(function (modal) {
+                      vm.scheduleAddModal = modal;
+                      vm.scheduleAddModal.show();
+                    });
+                  } else {
+                    vm.scheduleAddModal.show();
+                  }
                 }
                 return true;
               }
             });
           },
           checkIn: function () {
-            if (!vm.schedule.approve || !vm.schedule.checkInStatus) {
+            if (vm.schedule.approve === true || vm.schedule.checkInStatus === true) {
+              alerts.alert("Alert", "Not allowed to checkin");
+            } else {
               if (checkAuthorizationIfServiceProvider(null, null, true)) {
                 if (vm.user.timeCard === true) {
                   var runningClockIn = _.where(timeCardInfo.currentDetails, {
@@ -276,7 +365,7 @@
                     jobCode: jobCodes.CLOCK_IN
                   });
                   if (runningClockIn.length === 0) {
-                    alert.confirm("Confirmation!", "You have not clocked in yet. You will be clocked in automattically \n\n Are you sure?", function () {
+                    alerts.confirm("Confirmation!", "You have not clocked in yet. You will be clocked in automattically \n\n Are you sure?", function () {
                       processCheckIn();
                     }, function () {
                       //UNBLOCKUI
@@ -305,6 +394,26 @@
               return false;
             }
           },
+          checkOut: function () {
+            if (vm.schedule.approve === true || vm.schedule.checkOutStatus === true) {
+              alerts.alert("Alert", "Not allowed to checkout");
+            } else {
+              if (checkAuthorizationIfServiceProvider(null, null, false)) {
+                if (vm.schedule.actualStartDateTime === null) {
+                  alerts.alert("Warning", "Please check in first");
+                  return false;
+                }
+                vm.schedule.actualFinishDateTime = new Date();
+                vm.scheduleTimeSpan.onEndDateTimeChanged();
+                workOrderFactory.updateJobStatus({
+                  scheduleButton: jobStatus.CheckOut, scheduleNum: vm.schedule.num,
+                  actualEndTime: fpmUtilities.toStringDate(vm.schedule.actualFinishDateTime), Barcode: vm.barcode
+                }).then(function () {
+                  vm.schedule.checkOutStatus = true;
+                });
+              }
+            }
+          },
           onScheduleActionButtonClicked: function () {
             var defaultActions = angular.copy(actions);
             if (vm.user.allowPushTime) {
@@ -322,6 +431,21 @@
               buttonClicked: function (index) {
                 if (index === 0) {
                   vm.tabs.sch.events.checkIn();
+                }
+                if (index === 1) {
+                  vm.tabs.sch.events.checkOut();
+                }
+                if (index === 2) {
+                  clearAllDateTimeSelection(true);
+                }
+                if (index === 3) {
+                  clearAllDateTimeSelection(false);
+                }
+                if (index === 4) {
+                  updateSchedule(true, true);
+                }
+                if (index === 5) {
+                  pushToTimecard();
                 }
                 return true;
               }
@@ -408,6 +532,8 @@
     }).then(function (modal) {
       vm.productModal = modal;
     });
+
+
 
     $scope.$on("$fpm:closeEditProductModal", function () {
       vm.productModal.hide();

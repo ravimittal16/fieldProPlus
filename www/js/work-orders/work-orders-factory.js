@@ -90,6 +90,19 @@
       return apiBaseFactory.post(apibaseurl + "UpdateWorkOrderMobile", model);
     }
 
+    function updateJobStatus(sch) {
+      sch.clientTime = new Date();
+      return apiBaseFactory.post(apibaseurl + "UpdateJobStatus", sch);
+    }
+
+    function updateSchedule(schedule) {
+      return apiBaseFactory.post(apibaseurl + "UpdateSchedule?fromMobile=true", schedule);
+    }
+
+    function addWorkOrderSchedule(schedule) {
+      return apiBaseFactory.post(apibaseurl + "AddWorkOrderSchedule", schedule);
+    }
+
     return {
       getMobileDashboard: getMobileDashboard,
       getBarcodeDetails: getBarcodeDetails,
@@ -106,7 +119,10 @@
       createEntity: createEntity,
       createWorkOrder: createWorkOrder,
       getBarCodeNumber: getBarCodeNumber,
-      updateWorkOrderMobile: updateWorkOrderMobile
+      updateWorkOrderMobile: updateWorkOrderMobile,
+      updateJobStatus: updateJobStatus,
+      updateSchedule: updateSchedule,
+      addWorkOrderSchedule: addWorkOrderSchedule
     };
   }
   initFactory.$inject = ["$q", "$cacheFactory", "api-base-factory", "shared-data-factory"];

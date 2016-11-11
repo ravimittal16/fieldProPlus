@@ -1,10 +1,19 @@
 (function () {
   "use strict";
 
-  function initFactory($cordovaDialogs, $q, $ionicPopup, $ionicModal) {
+  function initFactory($cordovaDialogs, $q, $ionicPopup, $ionicModal, $ionicLoading) {
     return {
       toStringDate: function (date) {
         return moment(date).format("lll");
+      },
+      showLoading: function (title) {
+        var template = title || "please wait...";
+        return $ionicLoading.show({
+          template: template
+        });
+      },
+      hideLoading: function () {
+        return $ionicLoading.hide();
       },
       alerts: {
         alert: function (title, template, callback) {
@@ -25,7 +34,7 @@
           });
           confirmPopup.then(function (res) {
             if (res) {
-              if (angular.isFunction(okCallback)) {
+              if (angular.isFunction(okayCallback)) {
                 okayCallback();
               }
             } else {
@@ -51,7 +60,7 @@
       }
     };
   }
-  initFactory.$inject = ["$cordovaDialogs", "$q", "$ionicPopup", "$ionicModal"];
+  initFactory.$inject = ["$cordovaDialogs", "$q", "$ionicPopup", "$ionicModal", "$ionicLoading"];
   angular.module("fpm").factory("fpm-utilities-factory", initFactory);
 
 

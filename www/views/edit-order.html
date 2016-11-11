@@ -101,19 +101,19 @@
             </div>
             <div class="list">
               <label class="item item-input">
-				  <span class="input-label">Actual Start Time</span>
-								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onStartDateTimeChaged}" data-ng-model="vm.schedule.actualStartDateTime"/>
-								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background" disabled data-ng-model="vm.schedule.actualStartDateTime"/>
+				        <span class="input-label">Actual Start Time</span>
+								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onStartDateTimeChaged}" data-ng-model="vm.schedule.actualStartDateTime"/>
+								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled data-ng-model="vm.schedule.actualStartDateTime"/>
 							</label>
               <label class="item item-input">
-				  <span class="input-label">Actual Finish Time</span>
-								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onEndDateTimeChanged}" data-ng-model="vm.schedule.actualFinishDateTime"/>
-								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background" disabled  data-ng-model="vm.schedule.actualFinishDateTime"/>
+				        <span class="input-label">Actual Finish Time</span>
+								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onEndDateTimeChanged}" data-ng-model="vm.schedule.actualFinishDateTime"/>
+								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled  data-ng-model="vm.schedule.actualFinishDateTime"/>
 							</label>
               <label class="item item-input">
 				  <span class="input-label">Total Time</span>
-								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background" placeholder="Total Time" data-mobiscroll-timespan="{display: 'bottom',preset:'timespan',wheelOrder: 'hhii',onSelect:vm.scheduleTimeSpan.onTimespanSeletionChanged}" data-ng-model="vm.scheduleTimeSpan.timeSpan"/>
-								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background" disabled placeholder="Total Time" data-ng-model="vm.scheduleTimeSpan.timeSpan"/>
+								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" placeholder="Total Time" data-mobiscroll-timespan="{display: 'bottom',preset:'timespan',wheelOrder: 'hhii',onSelect:vm.scheduleTimeSpan.onTimespanSeletionChanged}" data-ng-model="vm.scheduleTimeSpan.timeSpan"/>
+								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled placeholder="Total Time" data-ng-model="vm.scheduleTimeSpan.timeSpan"/>
 							</label>
               <label class="item item-input">
 								<textarea name="" id="" rows="6" placeholder="Trip Note" data-ng-model="vm.schedule.tripNote" data-ng-change="vm.tabs.sch.events.onTripnoteChanged()" data-ng-model-options="{debounce:500}"></textarea>
@@ -127,9 +127,11 @@
                 data-ng-click="vm.tabs.sch.events.onMilageInformationActionButtonClicked()"></a>
             </div>
             <div class="list">
-              <label class="item item-input">
-								<span class="input-label">Vehicle Number</span>
-								<input type="text"/>
+              <label class="item item-input item-select">
+								<div class="input-label">
+									Vehicle Number
+								</div>
+								<select data-ng-model="vm.schedule.numFromVehicles"  data-ng-options="p.num as p.vehicleNumber for p in vm.vehicles"><select>
 							</label>
               <label class="item item-input">
 								<span class="input-label">Start (Miles)</span>
@@ -152,7 +154,8 @@
                 data-ng-click="vm.tabs.sch.events.onSchedulesListButtonClicked()"></a>
             </div>
             <ion-list>
-              <ion-item class="item-text-wrap"  data-ng-repeat="sch in vm.barCodeData.schedules" data-ng-click="vm.tabs.sch.events.onListScheduleItemTap(sch)" data-ng-class="{'active':vm.schedule.num === sch.num}">
+              <ion-item class="item-text-wrap" data-ng-repeat="sch in vm.barCodeData.schedules" data-ng-click="vm.tabs.sch.events.onListScheduleItemTap(sch)"
+                data-ng-class="{'active':vm.schedule.num === sch.num}">
                 <h4><span class="text-muted">Sch Date :</span> <strong>{{::sch.scheduledStartDateTime | date:'MM/dd/yyyy'}}</strong>&nbsp;
                   <span class="text-muted" data-ng-if="sch.actualStartDateTime">Actual Date : </span><strong data-ng-if="sch.actualStartDateTime">
 									{{::sch.actualStartDateTime | date:'MM/dd/yyyy'}}
