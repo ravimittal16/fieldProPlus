@@ -1,0 +1,13 @@
+<div class="row" data-ng-if="model.currentTime.showControl">
+    <div class="col" data-on-tap="model.events.refreshTimer()">
+        <div class="text-center" class="timer" data-ng-class="{'timer-red':model.currentTime.isOnInterval}">
+            <h2 style="font-family: sans-serif;margin-bottom:0px !important;padding-bottom:0px !important;" data-ng-class="{'timer-red-h4':model.currentTime.isOnInterval}">
+                <span data-ng-bind="model.currentTime.hrs"></span><span>:</span><span data-ng-bind="model.currentTime.mins"></span>
+            </h2>
+            <span class="text-muted text-small">
+                <i>tap to refresh</i>
+            </span>
+        </div>
+
+    </div>
+</div>

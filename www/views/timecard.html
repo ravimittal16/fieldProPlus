@@ -3,6 +3,13 @@
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
     <ion-content>
+        <div class="list padding-top" data-ng-if="vm.errors.length > 0">
+            <div class="error">
+                <ui class="list-unstyled">
+                    <li data-ng-repeat="error in vm.errors">{{::error}}</li>
+                </ui>
+            </div>
+        </div>
         <div style="border-bottom:2px solid #DDD;background-color:#f9f9f9;">
             <div class="row">
                 <div class="col">
@@ -12,10 +19,13 @@
             </div>
             <div class="row">
                 <div class="col center">
-                    <button class="button icon-center ion-clock button-block button-positive button-small">&nbsp;Clock In</button>
+                    <button class="button icon-center ion-clock button-block button-positive button-small" data-ng-click="vm.ui.events.clockInClick()"
+                        data-ng-if="!vm.ui.data.isClockedIn" data-ng-disabled="vm.ui.data.disableClockInButton || (vm.ui.data.approvalStatus != 0 && vm.ui.data.approvalStatus != 2)">&nbsp;Clock In</button>
                 </div>
                 <div class="col center">
-                    <button class="button icon-center ion-clock button-block button-positive button-small">&nbsp;Clock Out</button>
+                    <button class="button icon-center ion-clock button-block button-positive button-small" data-ng-if="!vm.ui.data.isClockedOut"
+                        data-ng-disabled="!vm.ui.data.isClockedIn || vm.ui.data.disableClockOutButton || (vm.ui.data.approvalStatus != 0 && vm.ui.data.approvalStatus != 2)"
+                        data-ng-click="vm.ui.events.clockOutClick()">&nbsp;Clock Out</button>
                 </div>
                 <div class="col center">
                     <button class="button pull-right button-small button-icon icon ion-android-more-vertical" style="margin-top:15px;" data-ng-click="vm.events.showPopoverClicked($event)">
@@ -24,12 +34,25 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <h5>Total payable time : <strong>23:23</strong></h5>
+                    <h5>Total payable time : <strong data-ng-bind="vm.ui.data.totalTime"></strong></h5>
                 </div>
             </div>
         </div>
         <div class="row">
-
+            <div class="col" data-ng-if="vm.ui.data.allowSendForApproval && vm.ui.data.approvalStatus == 0 && vm.ui.data.timeCards.length > 0">
+                <button class="button button-positive button-small button-block" data-ng-click="vm.ui.events.sendForApproval(1)">Send for Approval</button>
+            </div>
+        </div>
+        <div class="list">
+            <div class="card" data-ng-repeat="(key,t) in vm.ui.data.timeCards">
+                <div class="item item-divider">
+                    <span data-ng-if="!t.isPtoType">Section - {{t.section}}</span>
+                    <span data-ng-if="t.isPtoType" class="text-danger">PTO - {{t.pto}}</span>
+                    <small class="pull-right">
+                        <span data-ng-bind="t.jobCodeName"></span><span data-ng-if="t.barcode != 0">&nbsp;&nbsp;&nbsp;<span class="badge badge-success" data-ng-if="!t.isPtoType" data-ng-bind="t.barcodeName"></span></span>
+                    </small>
+                </div>
+            </div>
         </div>
         <script id="my-popover.html" type="text/ng-template">
             <ion-popover-view>

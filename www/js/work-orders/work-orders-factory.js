@@ -103,6 +103,10 @@
       return apiBaseFactory.post(apibaseurl + "AddWorkOrderSchedule", schedule);
     }
 
+    function updateOrderProduct(product) {
+      return apiBaseFactory.post(apibaseurl + "UpdateOrderProduct", product);
+    }
+
     return {
       getMobileDashboard: getMobileDashboard,
       getBarcodeDetails: getBarcodeDetails,
@@ -122,7 +126,8 @@
       updateWorkOrderMobile: updateWorkOrderMobile,
       updateJobStatus: updateJobStatus,
       updateSchedule: updateSchedule,
-      addWorkOrderSchedule: addWorkOrderSchedule
+      addWorkOrderSchedule: addWorkOrderSchedule,
+      updateOrderProduct: updateOrderProduct
     };
   }
   initFactory.$inject = ["$q", "$cacheFactory", "api-base-factory", "shared-data-factory"];

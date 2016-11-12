@@ -5,6 +5,7 @@
     $ionicPopup, $ionicModal, workOrderFactory, fpmUtilities, sharedDataFactory, authenticationFactory, timecardFactory) {
     var vm = this;
     vm.barcode = $stateParams.barCode;
+    vm.taxCheckboxVisibility = true;
     var alerts = fpmUtilities.alerts;
     var jobStatus = {
       AcceptJob: 0, InRoute: 1, CheckIn: 2, CheckOut: 3
@@ -16,7 +17,9 @@
     vm.uiSettings = {
       isTimeCardModuleEnabled: false,
       milageTrackingEnabled: false,
-      orderBelongToCurrentUser: false
+      orderBelongToCurrentUser: false,
+      timerEnabled: false,
+      woData: null
     };
 
     vm.errors = [];
@@ -27,6 +30,8 @@
       }).then(function () {
         workOrderFactory.getBarcodeDetails(vm.barcode).then(function (response) {
           vm.barCodeData = response;
+          vm.uiSettings.woData = angular.copy(response);
+          vm.taxCheckboxVisibility = (vm.barCodeData.taxRate || 0) > 0;
           if (angular.isArray(response.schedules)) {
             vm.schedule = angular.copy(angular.copy(_.findWhere(response.schedules, { num: parseInt($stateParams.technicianNum, 10) })));
             if (vm.schedule.actualStartDateTime) {
@@ -128,16 +133,12 @@
         }
       }
       if (vm.isServiceProvider === true && isBeongToCurrentUser === false) {
-        if (showAlert) {
-          alerts.alert("Oops!", "you are not authorized to perform this action", function () {
-            if (angular.isFunction(cb)) {
-              cb(co);
-            }
-          });
-          return false;
-        } else {
-          return false;
-        }
+        alerts.alert("Oops!", "you are not authorized to perform this action", function () {
+          if (angular.isFunction(cb)) {
+            cb(co);
+          }
+        });
+        return false;
       }
       return true;
     }
@@ -186,6 +187,7 @@
       sharedDataFactory.getIniitialData(true).then(function (response) {
         if (response) {
           vm.uiSettings.milageTrackingEnabled = response.customerNumberEntity.milageTrackingEnabled || false;
+          vm.uiSettings.timerEnabled = response.customerNumberEntity.workOrderTimerEnabled || false;
           vm.scheduleStatus = response.secondaryOrderStatus;
           vm.serviceProviders = response.serviceProviders;
           vm.vehicles = response.vehicles;
@@ -262,6 +264,19 @@
       text: 'Update Schedule'
     }];
 
+    function restoreInvoice(o) {
+      if (vm.uiSettings.woData) {
+        var s = _.findWhere(vm.uiSettings.woData.invoice, { num: o.num });
+        if (angular.isDefined(s)) {
+          for (var prop in s) {
+            if (o.hasOwnProperty(prop)) {
+              o[prop] = s[prop];
+            }
+          }
+        }
+      }
+    }
+
     function processCheckIn() {
       fpmUtilities.showLoading().then(function () {
         vm.schedule.actualStartDateTime = new Date();
@@ -319,8 +334,15 @@
           onTripnoteChanged: function () {
             updateSchedule(false, false);
           },
+          updateSchedule: function () { 
+            updateSchedule(true, true);
+          },
           onListScheduleItemTap: function (sch) {
-            console.log(sch)
+            if (sch.num !== vm.schedule.num) {
+              alerts.confirm("Confirmation", "Are you sure to load this schedule", function () {
+                $state.go("app.editOrder", { barCode: vm.barcode, technicianNum: sch.num, src: "main" });
+              });
+            }
           },
           onSchedulesListButtonClicked: function () {
             $ionicActionSheet.show({
@@ -454,7 +476,12 @@
       },
       smry: {
         events: {
-
+          onTaxCheckboaxChanged: function (i) {
+            if (checkAuthorizationIfServiceProvider(i, restoreInvoice)) {
+              calculateTotals();
+              workOrderFactory.updateOrderProduct(i);
+            }
+          }
         }
       },
       prod: {
