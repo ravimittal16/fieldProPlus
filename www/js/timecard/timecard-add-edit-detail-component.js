@@ -1,4 +1,4 @@
-(function () {
+(function() {
     "use strict";
     var componentConfig = {
         bindings: {
@@ -9,9 +9,10 @@
             editMode: "<"
         },
         controller: ["$scope", "$timeout", "$ionicActionSheet", "timecard-factory", "fpm-utilities-factory", "authenticationFactory",
-            function ($scope, $timeout, $ionicActionSheet, timecardFactory, fpmUtilitiesFactory, authenticationFactory) {
+            function($scope, $timeout, $ionicActionSheet, timecardFactory, fpmUtilitiesFactory, authenticationFactory) {
                 var vm = this;
                 var alerts = fpmUtilitiesFactory.alerts;
+                var isConfirmedBefore = false;
                 vm.ui = { summary: angular.copy(timecardFactory.summary), jobCodes: [], workOrders: [], errors: [], isInvalidSave: false, ptoJobCodes: [] };
                 vm.dateTimeMode = { timeSpan: "", startTime: new Date(), finishTime: null, isCheckedIn: false, isCheckedOut: false };
                 var schema = {
@@ -31,18 +32,57 @@
                     isFromAddingPto: false
                 };
                 vm.entity = null;
+                function _addOrUpdateToDatabase() {
+                    vm.ui.errors = [];
+                    if (vm.entity.finishTime !== null) {
+                        var f = kendo.parseDate(vm.entity.finishTime);
+                        var dt = kendo.parseDate(vm.entity.timeCardDate);
+                        var tcd = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0);
+                        var ft = moment(new Date(f.getFullYear(), f.getMonth(), f.getDate(), f.getHours(), f.getMinutes(), 0, 0));
+                        var totalMinutes = moment(ft).diff(kendo.parseDate(vm.entity.startTime), "minutes");
+                        if (totalMinutes < 0) {
+                            vm.ui.errors.push("Invalid Time");
+                            return false;
+                        }
+                        if (!vm.isFromPto) {
+                            if (!vm.editMode && ft.isAfter(tcd)) {
+                                vm.ui.errors.push("Cannot be a future time");
+                                return false;
+                            }
+                        }
+                    }
+                    if (vm.entity.jobCode === null || vm.entity.jobCode === 0) {
+                        vm.ui.errors.push("Please select Job code before save");
+                        return false;
+                    }
+                    fpmUtilitiesFactory.showLoading().then(function() {
+                        var action = vm.isFromPto ? timecardFactory.addPtoDetails : timecardFactory.addNewDetails;
+                        action(vm.entity).then(function(response) {
+                            isConfirmedBefore = false;
+                            if (angular.isArray(response.errors) && response.errors.length > 0) {
+                                vm.ui.errors = response.errors;
+                            } else {
+                                alerts.alert("Time Added", "Time has been " + (vm.editMode ? "updated" : "added"), function() {
+                                    if (angular.isFunction(vm.onAddCompleted)) {
+                                        vm.onAddCompleted({ o: response });
+                                    }
+                                });
+                            }
+                        }).finally(fpmUtilitiesFactory.hideLoading);
+                    });
+                }
                 vm.events = {
-                    onCardActionClicked: function () {
+                    onCardActionClicked: function() {
                         $ionicActionSheet.show({
                             buttons: [
                                 { text: 'Check In' }, { text: "Check Out" }
                             ],
                             titleText: 'Time card',
                             cancelText: 'Cancel',
-                            cancel: function () {
+                            cancel: function() {
 
                             },
-                            buttonClicked: function (index) {
+                            buttonClicked: function(index) {
                                 if (index === 0) {
                                     if (vm.entity.startTime === null) {
                                         vm.dateTimeMode.startTime = new Date();
@@ -65,56 +105,39 @@
                             }
                         });
                     },
-                    updateButtonClicked: function () {
+                    updateButtonClicked: function() {
                         vm.ui.errors = [];
-                        if (vm.entity.finishTime !== null) {
-                            var f = kendo.parseDate(vm.entity.finishTime);
-                            var dt = kendo.parseDate(vm.entity.timeCardDate);
-                            var tcd = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0);
-                            var ft = moment(new Date(f.getFullYear(), f.getMonth(), f.getDate(), f.getHours(), f.getMinutes(), 0, 0));
-                            var totalMinutes = moment(ft).diff(kendo.parseDate(vm.entity.startTime), "minutes");
-                            if (totalMinutes < 0) {
-                                vm.ui.errors.push("Invalid Time");
-                                return false;
-                            }
-                            if (!vm.isFromPto) {
-                                if (!vm.editMode && ft.isAfter(tcd)) {
-                                    vm.ui.errors.push("Cannot be a future time");
-                                    return false;
-                                }
-                            }
+                        vm.ui.isInvalidSave = false;
+                        if (vm.entity.startTime === null) {
+                            vm.entity.startTime = new Date();
                         }
-                        if (vm.entity.jobCode === null || vm.entity.jobCode === 0) {
-                            vm.ui.errors.push("Please select Job code before save");
+                        vm.entity.startTime = kendo.toString(vm.entity.startTime, "g");
+                        vm.entity.finishTime = kendo.toString(vm.entity.finishTime, "g");
+                        if (!vm.editMode) {
+                            var allDetails = angular.copy(timecardFactory.details);
+                            var notCheckInDetails = _.where(allDetails, { finishTime: null });
+                            if (notCheckInDetails.length > 0 && !isConfirmedBefore) {
+                                alerts.confirm("Confirmation!", "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?", function(isConfirm) {
+                                    isConfirmedBefore = true;
+                                    _addOrUpdateToDatabase();
+                                });
+                            } else {
+                                _addOrUpdateToDatabase();
+                            }
                             return false;
+                        } else {
+                            _addOrUpdateToDatabase();
                         }
-                        console.log(vm.entity);
-                        //return false;
-                        fpmUtilitiesFactory.showLoading().then(function () {
-                            var action = vm.isFromPto ? timecardFactory.addPtoDetails : timecardFactory.addNewDetails;
-                            action(vm.entity).then(function (response) {
-                                if (angular.isArray(response.errors) && response.errors.length > 0) {
-                                    vm.ui.errors = response.errors;
-                                } else {
-                                    alerts.alert("Time Added", "Time has been " + (vm.editMode ? "updated" : "added"), function () {
-                                        if (angular.isFunction(vm.onAddCompleted)) {
-                                            vm.onAddCompleted({ o: response });
-                                        }
-                                    });
-                                }
-                            }).finally(fpmUtilitiesFactory.hideLoading);
-                        });
+
+                        return false;
                     },
-                    closeProductEditModal: function () {
+                    closeProductEditModal: function() {
                         if (angular.isFunction(vm.onCancelClicked)) {
                             vm.onCancelClicked();
                         }
                     },
                     onDateTimeChaged: onDateTimeChaged,
-                    onFinishDateTimeChaged: onFinishDateTimeChaged,
-                    initController: function () {
-                        console.log("INIT CONTROLLER");
-                    }
+                    onFinishDateTimeChaged: onFinishDateTimeChaged
                 };
                 function onDateTimeChaged() {
                     var summary = timecardFactory.summary;
@@ -150,12 +173,13 @@
                         vm.entity = angular.copy(vm.details);
                         vm.entity.startTime = kendo.parseDate(vm.details.startTime);
                         vm.entity.finishTime = kendo.parseDate(vm.details.finishTime);
+                        vm.isFromPto = vm.details.isPtoType;
                         if (vm.entity.startTime) {
-                            vm.dateTimeMode.startTime = kendo.parseDate(vm.entity.startTime);
+                            vm.dateTimeMode.startTime = vm.entity.startTime;
                             vm.dateTimeMode.isCheckedIn = true;
                         }
                         if (vm.entity.finishTime) {
-                            vm.dateTimeMode.finishTime = kendo.parseDate(vm.entity.finishTime);
+                            vm.dateTimeMode.finishTime = vm.entity.finishTime;
                             vm.dateTimeMode.isCheckedOut = true;
                         }
                         vm.dateTimeMode.isCheckedOut = vm.entity.finishTime !== null;
@@ -188,7 +212,7 @@
                         var totalMintues = moment(ft).diff(moment(st), "minutes");
                         var hours = Math.floor(totalMintues / 60);
                         var mintues = totalMintues % 60;
-                        var t = $timeout(function () {
+                        var t = $timeout(function() {
                             if (totalMintues > 0) {
                                 if (hours > 0) {
                                     vm.dateTimeMode.timeSpan = hours + (hours > 1 ? " Hours " : " Hour ") + mintues + (mintues > 1 ? " Minutes" : " Minute");;
@@ -208,28 +232,29 @@
                     return "";
                 }
 
-                vm.$onChanges = function () {
+                vm.$onChanges = function() {
                     initController();
-                    console.log("INIT CONTROLLER");
                 }
                 initController();
 
                 function _getOrders() {
-                    timecardFactory.getWorkOrdersList().then(function (response) {
-                        vm.ui.workOrders = response;
-                    }).finally(_getJobCodes);
-                }
-
-                function _getJobCodes() {
-                    fpmUtilitiesFactory.showLoading().then(function () {
-                        timecardFactory.getJobCodes().then(function (response) {
-                            vm.ui.jobCodes = _.where(response, { isPtoType: false });;
-                            vm.ui.ptoJobCodes = _.where(response, { isPtoType: true });
-                        }).finally(fpmUtilitiesFactory.hideLoading);
+                    fpmUtilitiesFactory.showLoading().then(function() {
+                        timecardFactory.getWorkOrdersList().then(function(response) {
+                            vm.ui.workOrders = response;
+                        }).finally(_getJobCodes);
                     });
                 }
 
-                vm.$onInit = function () {
+                function _getJobCodes() {
+                    fpmUtilitiesFactory.showLoading().then(function() {
+                        timecardFactory.getJobCodes().then(function(response) {
+                            vm.ui.jobCodes = _.where(response, { isPtoType: false });;
+                            vm.ui.ptoJobCodes = _.where(response, { isPtoType: true });
+                        }).finally(fpmUtilitiesFactory.hideLoading);
+                    }).finally(fpmUtilitiesFactory.hideLoading);
+                }
+
+                vm.$onInit = function() {
                     vm.userInfo = authenticationFactory.getLoggedInUserInfo();
                     if (vm.userInfo) {
                         vm.timecardPermissions.allowPushTime = vm.userInfo.allowPushTime;
@@ -241,6 +266,11 @@
                     }
                     _getOrders();
                 }
+                $scope.$on("timecard:addEditDetailsModal:open", function() {
+                    vm.entity = angular.copy(schema);
+                    vm.dateTimeMode.startTime = null;
+                    vm.dateTimeMode.finishTime = null;
+                })
             }],
         controllerAs: "vm",
         templateUrl: "js/timecard/timecard-add-edit-detail-component.template.html"

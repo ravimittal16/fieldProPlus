@@ -19,22 +19,25 @@
             </div>
         </div>
         <div class="list">
-            <div class="item item-divider">
+            <div class="item item-divider bg-white">
                 <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
-                    data-ng-click="vm.ui.events.onCardActionClicked(t)" data-ng-if="vm.entity.isUserDefined && vm.entity.num == 0"></a>
+                    data-ng-click="vm.events.onCardActionClicked(t)" data-ng-if="vm.entity.isUserDefined && !vm.timecardPermissions.timePickerVisibility"></a>
             </div>
             <!--<label class="item item-input" data-ng-if="!vm.entity.isUserDefined">
                 <span class="input-label">Start Time</span>
                     <input type="text" placeholder="Start Time" class="transparent-background text-right" data-ng-model="vm.entity.startTime" readonly=""/>
                 </label>-->
-            <label class="item item-input" data-ng-if="vm.entity.isUserDefined && !vm.timecardPermissions.timePickerVisibility">
+            <label class="item" data-ng-if="vm.entity.isUserDefined && !vm.timecardPermissions.timePickerVisibility">
                 <span class="input-label">Start Time</span>
-                    <input type="text" placeholder="Start Time" class="transparent-background text-right" data-ng-model="vm.entity.startTime" readonly=""/>
+                    <span class="item-note">
+                        {{vm.dateTimeMode.startTime | date:'h:mm a'}}
+                    </span>
                 </label>
             <label class="item item-input" data-ng-if="!vm.timecardPermissions.timePickerVisibility">
                 <span class="input-label">Finish Time</span>
-                    <input type="text" placeholder="Finish Time" class="transparent-background text-right" 
-                    data-ng-model="vm.entity.finishTime" readonly=""/>
+                    <span class="item-note">
+                        {{vm.dateTimeMode.finishTime | date:'h:mm a'}}
+                    </span>
                 </label>
             <label for="" class="item item-input" data-ng-if="vm.timecardPermissions.timePickerVisibility">
                     <span class="input-label">Start Time</span>

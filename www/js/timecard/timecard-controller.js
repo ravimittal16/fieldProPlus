@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    function initController($scope, $state, ionicDatePicker, $ionicPopover, $ionicModal, $ionicActionSheet, timecardFactory,
+    function initController($scope, $rootScope, $state, ionicDatePicker, $ionicPopover, $ionicModal, $ionicActionSheet, timecardFactory,
         fpmUtilitiesFactory, authenticationFactory) {
         var vm = this;
         var jobCodes = { CLOCK_IN: 5001, CLOCK_OUT: 5002 };
@@ -219,14 +219,29 @@
                     animation: 'slide-in-up'
                 }).then(function (modal) {
                     vm.ui.data.addEditDetailsModal = modal;
+                    $scope.$broadcast("timecard:addEditDetailsModal:open");
                     vm.ui.data.addEditDetailsModal.show();
                 });
             } else {
+                $scope.$broadcast("timecard:addEditDetailsModal:open");
                 vm.ui.data.addEditDetailsModal.show();
             }
-            console.log("vm.ui.data.componentEvents", vm.ui.data.componentEvents);
         }
-
+        function showSummaryModal() {
+            if (vm.ui.data.timeCardSummaryModal === null) {
+                $ionicModal.fromTemplateUrl("timecardSummaryModal.html", {
+                    scope: $scope,
+                    animation: 'slide-in-up'
+                }).then(function (modal) {
+                    vm.ui.data.timeCardSummaryModal = modal;
+                    $scope.$broadcast("timecard:timeCardSummaryModal:open");
+                    vm.ui.data.timeCardSummaryModal.show();
+                });
+            } else {
+                $scope.$broadcast("timecard:timeCardSummaryModal:open");
+                vm.ui.data.timeCardSummaryModal.show();
+            }
+        }
         vm.ui = {
             errors: [],
             calendar: {
@@ -258,11 +273,28 @@
                 isFromPto: false,
                 isInEditMode: false,
                 addEditDetailsModal: null,
+                timeCardSummaryModal: null,
                 currentDetails: null
             },
             events: {
+                onSummaryModalCancel: function () {
+                    vm.ui.data.timeCardSummaryModal.hide();
+                },
+                checkSummaryClick: function () {
+                    showSummaryModal();
+                    vm.popover.hide();
+                    return true;
+                },
+                showTimeCardTutorialWindow: function () {
+                    vm.popover.hide();
+                    return true;
+                },
                 onAddScheduleCompleted: function (o) {
-
+                    if (vm.ui.data.timeCards.length !== o.timeCardDetails.length) {
+                        vm.ui.data.approvalStatus = o.timeCardSummary.approveStatus || 0;
+                    }
+                    _updateTimeCardsArray(o.timeCardDetails);
+                    vm.ui.data.addEditDetailsModal.hide();
                 },
                 onModalCancelClicked: function () {
                     vm.ui.data.isInEditMode = false;
@@ -379,7 +411,7 @@
 
         activateController();
     }
-    initController.$inject = ["$scope", "$state", "ionicDatePicker", "$ionicPopover", "$ionicModal",
+    initController.$inject = ["$scope", "$rootScope", "$state", "ionicDatePicker", "$ionicPopover", "$ionicModal",
         "$ionicActionSheet", "timecard-factory", "fpm-utilities-factory", "authenticationFactory"];
     angular.module("fpm").controller("timecard-controller", initController);
 })();
