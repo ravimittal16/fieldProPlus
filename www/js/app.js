@@ -14,10 +14,11 @@ var constants = {
     storageKeyName: "authorizationData", configKeyName: "configurations", settingsKeyName: "userSettings"
   }
 };
-var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ngCordova", "ionic-datepicker", "kendo.directives", "mobiscroll-datetime", "mobiscroll-timespan", "mobiscroll-numpad"])
-  .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider", "$ionicConfigProvider", "ionicDatePickerProvider",
-    function ($stateProvider, $urlRouterProvider, $compileProvider, $httpProvider, $ionicConfigProvider, ionicDatePickerProvider) {
-
+var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ngCordova", "ionic-datepicker",
+  "kendo.directives", "mobiscroll-datetime", "mobiscroll-timespan", "mobiscroll-numpad"])
+  .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider", "$ionicConfigProvider",
+    "ionicDatePickerProvider", function ($stateProvider, $urlRouterProvider, $compileProvider, $httpProvider, $ionicConfigProvider,
+      ionicDatePickerProvider) {
       var routes = [
         { state: "login", config: { url: "/", controller: "login-controller", controllerAs: "vm", templateUrl: "views/login.html" } },
         { state: "app", config: { abstract: true, controller: "app-main-controller", controllerAs: "vm", templateUrl: "views/app-main.html" } },

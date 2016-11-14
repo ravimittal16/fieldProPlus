@@ -5,7 +5,6 @@
         var baseUrl = "api/timecard/";
         var cache = $cacheFactory("timeCardCache");
         function getTimeCardByDate(date) {
-            console.log(date);
             return apicontext.get(baseUrl + "GetTimeCardByDate?date=" + date);
         }
 
@@ -89,7 +88,7 @@
             return apicontext.post(baseUrl + "AddPtoDetails", details);
         }
 
-        var data = { details: [], jobCodes: { CLOCK_IN: 5001, CLOCK_OUT: 5002 } };
+        var data = { details: [], jobCodes: { CLOCK_IN: 5001, CLOCK_OUT: 5002 }, summary: null };
         var factory = {};
         factory.addPtoDetails = addPtoDetails;
         factory.certifyUser = certifyUser;

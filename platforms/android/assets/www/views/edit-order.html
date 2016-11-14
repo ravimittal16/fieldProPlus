@@ -1,111 +1,290 @@
-<ion-view title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
-	<ion-nav-buttons side="left">
-		<button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-	</ion-nav-buttons>
-
-	<ion-content>
-		<ion-tabs class="tabs-light tabs-icon-top">
-			<ion-tab title="DESC" icon-on="ion-ios-paper" icon-off="ion-ios-paper-outline">
-				<ion-content>
-					<div>
-						<div class="padding">
-							<span class="label label-success">{{::vm.barCodeData.barcodeDetails.barcodeName}}</span>
-							<div class="padding-top">
-								<h4 class="n-m-b">{{::vm.barCodeData.barcodeDetails.displayName}}</h4>
-								<address>
-									<p>
-										<strong>{{::vm.barCodeData.barcodeDetails.company_Name}}</strong>
-										<a>
-											<i class="icon ion-ios-location"></i></a>
-									</p>
-									<p>{{::vm.barCodeData.barcodeDetails.shipStreet}}</p>
-									<p>{{::vm.barCodeData.barcodeDetails.shipCity}},{{::vm.barCodeData.barcodeDetails.shipState}}&nbsp;{{::vm.barCodeData.barcodeDetails.shipZIP}}
-
-									</p>
-									<p>{{::vm.barCodeData.barcodeDetails.phone}}
-
-									</p>
-									<p data-ng-if="vm.barCodeData.barcodeDetails.contactInfo">Contact Info : <span>{{::vm.barCodeData.barcodeDetails.contactInfo}}</span></p>
-								</address>
-							</div>
-						</div>
-						<div class="list">
-							<div class="item item-divider">
-								Other Information
-							</div>
-							<div class="item">
-								Order Create Date
-								<span class="item-note">
+<ion-view title="{{vm.barCodeData.barcodeDetails.barcodeName}}" cache-view="false" hide-back-button="true" view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content scroll="false">
+    <div class="list padding-top" data-ng-if="vm.errors.length > 0">
+      <div class="error">
+        <ui class="list-unstyled">
+          <li data-ng-repeat="error in vm.errors">{{::error}}</li>
+        </ui>
+      </div>
+    </div>
+    <ion-tabs class="tabs-dark tabs-icon-top">
+      <ion-tab title="DESCRIPTION" icon-on="ion-ios-paper" icon-off="ion-ios-paper-outline">
+        <ion-content>
+          <div>
+            <div class="padding">
+              <span class="label label-success">{{::vm.barCodeData.barcodeDetails.barcodeName}}</span>
+              <div class="padding-top">
+                <h4 class="n-m-b">{{::vm.barCodeData.barcodeDetails.displayName}}</h4>
+                <address>
+                  <p>
+                    <strong>{{::vm.barCodeData.barcodeDetails.company_Name}}</strong>
+                    <a>
+                      <i class="icon ion-ios-location"></i></a>
+                  </p>
+                  <p>{{::vm.barCodeData.barcodeDetails.shipStreet}}</p>
+                  <p>{{::vm.barCodeData.barcodeDetails.shipCity}},{{::vm.barCodeData.barcodeDetails.shipState}}&nbsp;{{::vm.barCodeData.barcodeDetails.shipZIP}}
+                  </p>
+                  <p>{{::vm.barCodeData.barcodeDetails.phone}}
+                  </p>
+                  <p data-ng-if="vm.barCodeData.barcodeDetails.contactInfo">Contact Info : <span>{{::vm.barCodeData.barcodeDetails.contactInfo}}</span></p>
+                </address>
+              </div>
+            </div>
+            <div class="list">
+              <div class="item item-divider">
+                Other Information
+              </div>
+              <div class="item">
+                Order Create Date
+                <span class="item-note">
 									{{::vm.barCodeData.barcodeDetails.date | date:'MM/dd/yyyy'}}
 								</span>
-							</div>
-							<div class="item">
-								Job Type
-								<span class="item-note">
+              </div>
+              <div class="item">
+                Job Type
+                <span class="item-note">
 									{{::vm.barCodeData.barcodeDetails.excptns}}
 								</span>
-							</div>
-							<div class="item">
-								Priority
-								<span class="item-note">
+              </div>
+              <div class="item">
+                Priority
+                <span class="item-note">
 									{{::vm.barCodeData.barcodeDetails.priority}}
 								</span>
-							</div>
-							<div class="item">
-								Class
-								<span class="item-note">
+              </div>
+              <div class="item">
+                Class
+                <span class="item-note">
 									{{::vm.barCodeData.barcodeDetails.class_id}}
 								</span>
-							</div>
-							<div class="item">
-								PO Number
-								<span class="item-note">
+              </div>
+              <div class="item">
+                PO Number
+                <span class="item-note">
 									{{::vm.barCodeData.barcodeDetails.poNum}}
 								</span>
-							</div>
-							<label class="item item-input item-stacked-label">
+              </div>
+              <label class="item item-input item-stacked-label">
 								<span class="input-label">Work Description</span>
-								<textarea name="" id="" cols="30" rows="3"></textarea>
+								<textarea cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment_1" data-ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()" data-ng-model-options="{debounce:500}"></textarea>
 							</label>
-							<label class="item item-input item-stacked-label">
+              <label class="item item-input item-stacked-label">
 								<span class="input-label">Resolution / Work performed</span>
-								<textarea name="" id="" cols="30" rows="3"></textarea>
+								<textarea  cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment_2" data-ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()" data-ng-model-options="{debounce:500}"></textarea>
 							</label>
-							<label class="item item-input item-stacked-label">
+              <label class="item item-input item-stacked-label">
 								<span class="input-label">Comments</span>
-								<textarea name="" id="" cols="30" rows="3"></textarea>
+								<textarea  cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment_4" data-ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()" data-ng-model-options="{debounce:500}"></textarea>
 							</label>
-						</div>
-
-					</div>
+            </div>
+          </div>
+        </ion-content>
+      </ion-tab>
+      <ion-tab title="SCHEDULE" icon-on="ion-ios-clock" icon-off="ion-ios-clock-outline">
+        <ion-content>
+          <div class="card">
+            <div class="item item-text-wrap">
+              <p class="n-m-b"><strong>Schedule Start</strong></p>
+              <p>{{vm.schedule.scheduledStartDateTime | date:'MM/dd/yyyy hh:mm a'}}</p>
+              <p class="n-m-b"><strong>Schedule End</strong></p>
+              <p>{{vm.schedule.scheduledFinishDateTime | date:'MM/dd/yyyy hh:mm a'}}</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="item item-divider">
+              Current Schedule Details
+              <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                data-ng-click="vm.tabs.sch.events.onScheduleActionButtonClicked()"></a>
+            </div>
+            <div class="row" data-ng-if="vm.schedule.approve">
+              <div class="alert alert-info">
+                <span>This schedule has been approved and cannot be edited.</span>
+              </div>
+            </div>
+            <div class="col-xs-12" data-ng-if="vm.uiSettings.timerEnabled">
+              <work-order-timer-component data-is-checked-in="vm.schedule.checkInStatus" data-is-checked-out="vm.schedule.checkOutStatus" data-schedule="vm.schedule"></work-order-timer-component>
+            </div>
+            <div class="list">
+              <label class="item item-input">
+				        <span class="input-label">Actual Start Time</span>
+								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onStartDateTimeChaged}" data-ng-model="vm.schedule.actualStartDateTime"/>
+								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled data-ng-model="vm.schedule.actualStartDateTime"/>
+							</label>
+              <label class="item item-input">
+				        <span class="input-label">Actual Finish Time</span>
+								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onEndDateTimeChanged}" data-ng-model="vm.schedule.actualFinishDateTime"/>
+								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled  data-ng-model="vm.schedule.actualFinishDateTime"/>
+							</label>
+              <label class="item item-input">
+				  <span class="input-label">Total Time</span>
+								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" placeholder="Total Time" data-mobiscroll-timespan="{display: 'bottom',preset:'timespan',wheelOrder: 'hhii',onSelect:vm.scheduleTimeSpan.onTimespanSeletionChanged}" data-ng-model="vm.scheduleTimeSpan.timeSpan"/>
+								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled placeholder="Total Time" data-ng-model="vm.scheduleTimeSpan.timeSpan"/>
+							</label>
+              <label class="item item-input">
+								<textarea name="" id="" rows="6" placeholder="Trip Note" data-ng-model="vm.schedule.tripNote" data-ng-change="vm.tabs.sch.events.onTripnoteChanged()" data-ng-model-options="{debounce:500}"></textarea>
+							</label>
+            </div>
+          </div>
+          <div class="card" data-ng-if="vm.uiSettings.milageTrackingEnabled">
+            <div class="item item-divider">
+              Milage Information
+              <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                data-ng-click="vm.tabs.sch.events.onMilageInformationActionButtonClicked()"></a>
+            </div>
+            <div class="list">
+              <label class="item item-input item-select">
+								<div class="input-label">
+									Vehicle Number
+								</div>
+								<select data-ng-model="vm.schedule.numFromVehicles" data-ng-options="p.num as p.vehicleNumber for p in vm.vehicles"><select>
+							</label>
+              <label class="item item-input">
+								<span class="input-label">Start (Miles)</span>
+								<input type="text" class="transparent-background" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:99999.99,preset:'decimal'}" data-ng-model="vm.schedule.startMiles" data-ng-change="vm.schedule.totalMiles = vm.schedule.endMiles - vm.schedule.startMiles" />
+							</label>
+              <label class="item item-input">
+									<span class="input-label">End</span>
+									<input type="text" class="transparent-background" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:99999,preset:'decimal'}" data-ng-model="vm.schedule.endMiles" data-ng-change="vm.schedule.totalMiles = vm.schedule.endMiles - vm.schedule.startMiles"/>
+							</label>
+              <label class="item item-input">
+									<span class="input-label"><strong>Total</strong></span>
+									<input type="text" class="transparent-background" readonly="" class="transparent-background" data-ng-model="vm.schedule.totalMiles"/>
+							</label>
+            </div>
+          </div>
+          <div class="card">
+            <div class="item item-divider">
+              Other Schedules
+              <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                data-ng-click="vm.tabs.sch.events.onSchedulesListButtonClicked()"></a>
+            </div>
+            <ion-list>
+              <ion-item class="item-text-wrap" data-ng-repeat="sch in vm.barCodeData.schedules" data-ng-click="vm.tabs.sch.events.onListScheduleItemTap(sch)"
+                data-ng-class="{'active':vm.schedule.num === sch.num}">
+                <h4><span class="text-muted">Sch Date :</span> <strong>{{::sch.scheduledStartDateTime | date:'MM/dd/yyyy'}}</strong>&nbsp;
+                  <span class="text-muted" data-ng-if="sch.actualStartDateTime">Actual Date : </span><strong data-ng-if="sch.actualStartDateTime">
+									{{::sch.actualStartDateTime | date:'MM/dd/yyyy'}}
+								</strong>
+                  <strong class="text-info">{{::sch.technicianName}}</strong><span data-ng-if="sch.tripNote">: Trip Note - {{::sch.tripNote}}</span></h4>
+              </ion-item>
+            </ion-list>
+          </div>
+        </ion-content>
+      </ion-tab>
+      <ion-tab title="PRODUCTS" icon-on="ion-ios-list" icon-off="ion-ios-list-outline">
+        <ion-content>
+          <ion-list can-swipe="true">
+            <div class="item item-divider">
+              Products selected for Work Order
+              <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                data-ng-click="vm.tabs.prod.events.onProdcutActionButtonClicked()"></a>
+            </div>
+            <ion-item class="item-text-wrap p-10" data-ng-repeat="p in vm.barCodeData.products">
+              <div class="row">
+                <div class="col col-50">
+                  <h3>{{::p.productName}}</h3>
+                </div>
+                <div class="col col-25">
+                  <h4 class="pull-right"><strong>{{p.qty}}</strong></h4>
+                </div>
+                <div class="col  col-25 text-right">
+                  <h3 class="pull-right"><strong>{{p.price | currency:'$':2}}</strong></h4>
+                </div>
+              </div>
+              <div class="row n-p-t n-p-b row-top">
+                <div class="col">
+                  <small class="text-muted text-small">{{p.productDescription}}<small>
+								</div>
+							</div>
+							 <ion-option-button class="button-assertive" ng-click="vm.tabs.prod.events.onDeleteProductClicked(p)">
+								Delete
+							</ion-option-button>
+							<ion-option-button class="button-info" data-ng-if="!vm.isServiceProvider || sch.technicianNum == vm.userId" ng-click="vm.tabs.prod.events.onEditProductClicked(p)">
+								Edit
+							</ion-option-button>
+						</ion-item>
+						
+					</ion-list>
 				</ion-content>
 			</ion-tab>
-			<ion-tab title="SCH" icon-on="ion-ios-clock" icon-off="ion-ios-clock-outline">
+			<ion-tab title="COMPONENTS" icon-on="ion-ios-cog" icon-off="ion-ios-cog-outline">
+
+			</ion-tab>
+			<ion-tab title="SUMMARY" icon-on="ion-ios-calculator" icon-off="ion-ios-calculator-outline">
 				<ion-content>
-					<div class="card">
-						<div class="item item-text-wrap">
-							<p class="n-m-b"><strong>Schedule Start</strong></p>
-							<p>{{vm.schedule.scheduledStartDateTime | date:'MM/dd/yyyy hh:mm a'}}</p>
-							<p class="n-m-b"><strong>Schedule End</strong></p>
-							<p>{{vm.schedule.scheduledFinishDateTime | date:'MM/dd/yyyy hh:mm a'}}</p>
+					<ion-list>
+						<div>
+							<ion-item class="item-stable" ng-click="vm.invoiceOpen = !vm.invoiceOpen" ng-class="{active: vm.invoiceOpen}">
+								<i class="icon" ng-class="vm.invoiceOpen ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>Invoice Details</strong>
+							</ion-item>
+							<div data-ng-if="vm.invoiceOpen">
+								<ion-list>
+										<div class="item item-divider">
+											<div class="row">
+												<div class="col col-50">Name</div>
+												<div class="col col-10" data-ng-if="vm.taxCheckboxVisibility">Tax</div>
+												<div class="col col-20 text-center">Qty</div>
+												<div class="col col-20">
+													<span class="pull-right">Total</span>
+												</div>
+											</div>
+										</div>
+									<ion-item data-ng-repeat="inv in vm.barCodeData.invoice" class="item-text-wrap">
+										<div class="row">
+											<div class="col col-50">
+												<h3>{{::inv.productName}}</h3>
+											</div>
+											<div class="col col-10" data-ng-if="vm.taxCheckboxVisibility">
+												<input type="checkbox" data-ng-model="inv.taxable" data-ng-change="vm.tabs.smry.events.onTaxCheckboaxChanged(inv)"/>
+											</div>
+											<div class="col col-20 text-center">
+												<h3>{{inv.qty || 0}}</h3>
+											</div>
+											<div class="col col-20">
+												<h3 class="pull-right">{{inv.totalPrice | currency:'$':2}}</h3>
+											</div>
+										</div>
+									</ion-item>
+								</ion-list>
+							</div>
+						</div>
+					</ion-list>
+					<div class="row">
+						<div class="col">
+							<p>
+								<h5>Subtotal
+									<span class="pull-right">{{vm.totals.subtotal | currency:'$':2}}</span>
+								</h5>
+							</p>
+							<p>
+								<h5>Total Tax
+									<span class="pull-right text-muted">{{vm.totals.totaltax | currency:'$':2}}</span>
+								</h5>
+							</p>
+							<p>
+								<h5>Total Amount
+									<span class="pull-right text-energized">{{vm.totals.subtotal + vm.totals.totaltax | currency:'$':2}}</span>
+								</h5>
+							</p>
 						</div>
 					</div>
+					<order-signature-component data-barcode="vm.barcode"></order-signature-component>
+					<order-email-card-component data-barcode="vm.barcode" data-taxrate="vm.barCodeData.taxRate" data-default-emails="vm.barCodeData.barcodeDetails.address2_Group"></order-email-card-component>
+					<order-images-list-component data-barcode="vm.barcode"></order-images-list-component>
+					<order-documents-list-component data-barcode="vm.barcode"></order-documents-list-component>
+					<div class="list">
+							<label class="item item-input item-select">
+								<div class="input-label">
+									Secondary Order Status
+								</div>
+								<select data-ng-model="vm.barCodeData.barcodeDetails.secondaryOrderStatus" data-ng-options="p.statusId as p.statusName for p in vm.scheduleStatus" data-ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()"><select>
+							</label>				
+							 <ion-toggle ng-model="vm.schedule.workComplete" toggle-class="toggle-balanced" data-ng-change="vm.tabs.sch.events.updateSchedule()">Work Complete</ion-toggle>				
+					</div>
 				</ion-content>
-			</ion-tab>
-			<ion-tab title="PROD" icon-on="ion-ios-list" icon-off="ion-ios-list-outline">
-
-			</ion-tab>
-			<ion-tab title="EXP" icon-on="ion-cash" icon-off="ion-cash">
-
-			</ion-tab>
-			<ion-tab title="JOB TYPE LIST" icon-on="ion-ios-flask" icon-off="ion-ios-flask-outline">
-
-			</ion-tab>
-			<ion-tab title="EQUIP" icon-on="ion-ios-cog" icon-off="ion-ios-cog-outline">
-
-			</ion-tab>
-			<ion-tab title="SMRY" icon-on="ion-ios-calculator" icon-off="ion-ios-calculator-outline">
-
 			</ion-tab>
 		</ion-tabs>
 	</ion-content>

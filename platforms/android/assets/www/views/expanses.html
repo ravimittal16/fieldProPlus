@@ -13,6 +13,7 @@
             <ion-item ng-repeat="(key,value) in vm.unpaid">
                 <div class="row">
                     <div class="col col-60">
+                        <expense-item-component data-expense="value"></expense-item-component>
                         <h3>{{value.title}} <br><small class="text-small">
                     {{value.description}}</small><br>
                             <small class="text-small"><strong>added on :</strong> {{value.addedOn | date}}</small></h3>
@@ -53,6 +54,7 @@
             <ion-item ng-repeat="(key,value) in vm.paid">
                 <div class="row">
                     <div class="col col-60">
+                        <expense-item-component data-expense="value"></expense-item-component>
                         <h3>{{value.title}} <br><small class="text-small">
                     {{value.description}}</small><br>
                             <small class="text-small"><strong>added on :</strong> {{value.addedOn | date}}</small></h3>

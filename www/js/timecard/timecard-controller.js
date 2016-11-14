@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    function initController($scope, $state, ionicDatePicker, $ionicPopover, timecardFactory,
+    function initController($scope, $state, ionicDatePicker, $ionicPopover, $ionicModal, $ionicActionSheet, timecardFactory,
         fpmUtilitiesFactory, authenticationFactory) {
         var vm = this;
         var jobCodes = { CLOCK_IN: 5001, CLOCK_OUT: 5002 };
@@ -63,6 +63,7 @@
             vm.ui.data.timeCards = [];
             if (details.length > 0) {
                 angular.forEach(details, function (s, i) {
+                    console.log(s);
                     if (s.jobCode !== jobCodes.CLOCK_IN) {
                         if (!s.isPtoType) {
                             s.section = sectionCounter;
@@ -85,6 +86,7 @@
             console.log("details", details);
             vm.ui.data.timeCards = [];
             vm.ui.data.summary = details.timeCardSummary;
+            vm.factory.summary = details.timeCardSummary;
             vm.ui.data.approvalStatus = details.timeCardSummary.approveStatus || 0;
             pendingClockIns = details.pendingClockIns;
             vm.ui.data.currentClockedIn = _.findWhere(details.timeCardDetails, { jobCode: jobCodes.CLOCK_IN, finishTime: null });
@@ -195,6 +197,7 @@
                     vm.ui.data.addTimeVisibility = false;
                     vm.ui.data.ptoButtonVisibility = true;
                     vm.ui.data.summary = response.timeCardSummary;
+                    vm.factory.summary = details.timeCardSummary;
                     var dt = new Date();
                     var cDate = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 0, 0, 0, 0);
                     var tcd = new Date(moment(vm.ui.data.summary.timeCardDate));
@@ -209,6 +212,20 @@
             });
         }
 
+        function showModal() {
+            if (vm.ui.data.addEditDetailsModal === null) {
+                $ionicModal.fromTemplateUrl("timecardDetailsModal.html", {
+                    scope: $scope,
+                    animation: 'slide-in-up'
+                }).then(function (modal) {
+                    vm.ui.data.addEditDetailsModal = modal;
+                    vm.ui.data.addEditDetailsModal.show();
+                });
+            } else {
+                vm.ui.data.addEditDetailsModal.show();
+            }
+            console.log("vm.ui.data.componentEvents", vm.ui.data.componentEvents);
+        }
 
         vm.ui = {
             errors: [],
@@ -220,6 +237,7 @@
                 }
             },
             data: {
+                componentEvents: null,
                 summary: null,
                 currentDate: new Date(),
                 isClockedIn: false,
@@ -236,11 +254,71 @@
                 allowSendForApproval: false,
                 totalTime: "",
                 enableForCustomer: false,
-                ptoButtonVisibility: false
+                ptoButtonVisibility: false,
+                isFromPto: false,
+                isInEditMode: false,
+                addEditDetailsModal: null,
+                currentDetails: null
             },
             events: {
-                sendForApproval: function () { 
-                    
+                onAddScheduleCompleted: function (o) {
+
+                },
+                onModalCancelClicked: function () {
+                    vm.ui.data.isInEditMode = false;
+                    vm.ui.data.isFromPto = false;
+                    vm.ui.data.currentDetails = null;
+                    vm.ui.data.addEditDetailsModal.hide();
+                },
+                addTimeClick: function (isFromPto) {
+                    vm.ui.data.isFromPto = isFromPto;
+                    vm.ui.data.isInEditMode = false;
+                    showModal();
+                    vm.popover.hide();
+                    return true;
+                },
+                onCardActionClicked: function (t) {
+                    $ionicActionSheet.show({
+                        buttons: [
+                            { text: 'Edit' }
+                        ],
+                        destructiveText: 'Delete',
+                        titleText: 'Time Card Options',
+                        cancelText: 'Cancel',
+                        cancel: function () {
+                        },
+                        destructiveButtonClicked: function () {
+                            if (!t.isUserDefined) {
+                                alerts.alert("Invalid Action", "You are not allowed to perform delete");
+                            } else {
+                                alerts.confirmDelete(function () {
+                                    fpmUtilitiesFactory.showLoading().then(function () {
+                                        timecardFactory.deleteTimeCardDetails(t.num, t.numFromSummary)
+                                            .then(function (response) {
+                                                if (response) {
+                                                    alerts.alert("Success", "Time Details cleared successfully", function () {
+                                                        _updateTimeCardsArray(response.timeCardDetails);
+                                                    });
+                                                }
+                                            }).finally(fpmUtilitiesFactory.hideLoading);
+                                    });
+                                });
+                            }
+                            return true;
+                        },
+                        buttonClicked: function (index) {
+                            if (index === 0) {
+                                vm.ui.data.currentDetails = t;
+                                vm.ui.data.isInEditMode = true;
+                                vm.ui.data.isFromPto = false;
+                                showModal();
+                            }
+                            return true;
+                        }
+                    });
+                },
+                sendForApproval: function () {
+
                 },
                 clockOutClick: function () {
                     var notCheckInDetails = _.where(vm.ui.data.timeCards, { finishTime: null });
@@ -301,6 +379,7 @@
 
         activateController();
     }
-    initController.$inject = ["$scope", "$state", "ionicDatePicker", "$ionicPopover", "timecard-factory", "fpm-utilities-factory", "authenticationFactory"];
+    initController.$inject = ["$scope", "$state", "ionicDatePicker", "$ionicPopover", "$ionicModal",
+        "$ionicActionSheet", "timecard-factory", "fpm-utilities-factory", "authenticationFactory"];
     angular.module("fpm").controller("timecard-controller", initController);
 })();

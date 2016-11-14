@@ -38,4 +38,4 @@
     }
     initFactory.$inject = ["$http", "$q", "fieldPromaxConfig"];
     angular.module("fpm").factory("api-base-factory", initFactory);
-})()
+})();

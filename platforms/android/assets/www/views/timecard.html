@@ -3,6 +3,13 @@
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
     <ion-content>
+        <div class="list padding-top" data-ng-if="vm.errors.length > 0">
+            <div class="error">
+                <ui class="list-unstyled">
+                    <li data-ng-repeat="error in vm.errors">{{::error}}</li>
+                </ui>
+            </div>
+        </div>
         <div style="border-bottom:2px solid #DDD;background-color:#f9f9f9;">
             <div class="row">
                 <div class="col">
@@ -12,10 +19,13 @@
             </div>
             <div class="row">
                 <div class="col center">
-                    <button class="button icon-center ion-clock button-block button-positive button-small">&nbsp;Clock In</button>
+                    <button class="button icon-center ion-clock button-block button-positive button-small" data-ng-click="vm.ui.events.clockInClick()"
+                        data-ng-if="!vm.ui.data.isClockedIn" data-ng-disabled="vm.ui.data.disableClockInButton || (vm.ui.data.approvalStatus != 0 && vm.ui.data.approvalStatus != 2)">&nbsp;Clock In</button>
                 </div>
                 <div class="col center">
-                    <button class="button icon-center ion-clock button-block button-positive button-small">&nbsp;Clock Out</button>
+                    <button class="button icon-center ion-clock button-block button-positive button-small" data-ng-if="!vm.ui.data.isClockedOut"
+                        data-ng-disabled="!vm.ui.data.isClockedIn || vm.ui.data.disableClockOutButton || (vm.ui.data.approvalStatus != 0 && vm.ui.data.approvalStatus != 2)"
+                        data-ng-click="vm.ui.events.clockOutClick()">&nbsp;Clock Out</button>
                 </div>
                 <div class="col center">
                     <button class="button pull-right button-small button-icon icon ion-android-more-vertical" style="margin-top:15px;" data-ng-click="vm.events.showPopoverClicked($event)">
@@ -24,19 +34,77 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <h5>Total payable time : <strong>23:23</strong></h5>
+                    <h5>Total payable time : <strong data-ng-bind="vm.ui.data.totalTime"></strong></h5>
                 </div>
             </div>
         </div>
         <div class="row">
-
+            <div class="col" data-ng-if="vm.ui.data.allowSendForApproval && vm.ui.data.approvalStatus == 0 && vm.ui.data.timeCards.length > 0">
+                <button class="button button-positive button-small button-block" data-ng-click="vm.ui.events.sendForApproval(1)">Send for Approval</button>
+            </div>
+        </div>
+        <div class="list">
+            <div class="card" data-ng-repeat="(key,t) in vm.ui.data.timeCards">
+                <div class="item item-divider" data-ng-if="t.jobCode != 5001">
+                    <span data-ng-if="!t.isPtoType">Section - {{t.section}}</span>
+                    <span data-ng-if="t.isPtoType" class="text-danger">PTO - {{t.pto}}</span>
+                    <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                        data-ng-click="vm.ui.events.onCardActionClicked(t)" data-ng-if="vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2"></a>
+                </div>
+                <div class="item item-text-wrap">
+                    <div class="row" data-ng-if="t.jobCode != 5001 && t.barcode != 0">
+                        <div class="col col-50">
+                            <h4 class="text-muted">
+                                #<strong data-ng-bind="t.barcodeName"></strong></h4>
+                        </div>
+                        <div class="col col-50">
+                            <h4 class="text-muted text-right">
+                                <strong data-ng-bind="t.jobCodeName"></strong></h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-33 col-center">
+                            <h5><i class="icon ion-clock"></i>
+                                <span data-ng-if="t.jobCode == 5001">Clock In</span>
+                                <span data-ng-if="t.jobCode != 5001">Check In</span>
+                            </h5>
+                        </div>
+                        <div class="col col-33">
+                            <h5><i class="icon ion-clock"></i>
+                                <span data-ng-if="t.jobCode == 5001">Clock Out</span>
+                                <span data-ng-if="t.jobCode != 5001">Check Out</span>
+                            </h5>
+                        </div>
+                        <div class="col col-33">
+                            <h5><i class="icon ion-clock"></i> <span>Total Time</span>
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-33 col-center">
+                            <h3 data-ng-bind="t.startTime | date :'shortTime'"></h3>
+                        </div>
+                        <div class="col col-33">
+                            <h3 data-ng-bind="t.finishTime | date :'shortTime'"></h3>
+                        </div>
+                        <div class="col col-33">
+                            <h3 data-ng-bind="t.startTime | timeSpan:t.finishTime:'sm'"></h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <h5 class="text-muted" data-ng-if="t.notes">
+                            <strong>NOTE</strong> <span data-ng-bind="t.notes"></span>
+                        </h5>
+                    </div>
+                </div>
+            </div>
         </div>
         <script id="my-popover.html" type="text/ng-template">
             <ion-popover-view>
                 <ion-content>
                     <div class="list">
-                        <a class="item">Add PTO</a>
-                        <a class="item">Add Time</a>
+                        <a data-ng-if="vm.ui.data.ptoButtonVisibility  && (vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2)"><a data-ng-click="vm.ui.events.addTimeClick(true)" class="item">Add PTO</a>
+                        <a data-ng-if="vm.ui.data.addTimeVisibility && (vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2)" data-ng-click="vm.ui.events.addTimeClick(false)" class="item">Add Time</a>
                         <a class="item">Check Summary</a>
                         <a class="item">Tutorial</a>
                     </div>
@@ -45,3 +113,9 @@
         </script>
     </ion-content>
 </ion-view>
+<script id="timecardDetailsModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<add-edit-details-component data-details="vm.ui.data.currentDetails" on-cancel-clicked="vm.ui.events.onModalCancelClicked()"
+        is-from-pto="vm.ui.data.isFromPto" data-edit-mode="vm.ui.data.isInEditMode" on-add-completed="vm.ui.events.onAddScheduleCompleted(o)"></add-edit-details-component>
+	</ion-modal-view>
+</script>
