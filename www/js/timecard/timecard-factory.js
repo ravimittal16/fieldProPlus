@@ -88,9 +88,14 @@
             return apicontext.post(baseUrl + "AddPtoDetails", details);
         }
 
+        function getSummaryPayableHours(filters) {
+            return apicontext.post(baseUrl + "GetPayableHoursSummaryView", filters);
+        }
+
         var data = { details: [], jobCodes: { CLOCK_IN: 5001, CLOCK_OUT: 5002 }, summary: null };
         var factory = {};
         factory.addPtoDetails = addPtoDetails;
+        factory.getSummaryPayableHours = getSummaryPayableHours;
         factory.certifyUser = certifyUser;
         factory.getCertifieldUser = getCertifieldUser;
         factory.pushCheckInOutTimes = pushCheckInOutTimes;

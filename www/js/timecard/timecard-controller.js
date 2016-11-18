@@ -242,6 +242,20 @@
                 vm.ui.data.timeCardSummaryModal.show();
             }
         }
+        function showTutorialModal() {
+            if (vm.ui.data.timecardTutorialModal === null) {
+                $ionicModal.fromTemplateUrl("timecardTutorialModal.html", {
+                    scope: $scope,
+                    animation: 'slide-in-up'
+                }).then(function (modal) {
+                    vm.ui.data.timecardTutorialModal = modal;
+                    vm.ui.data.timecardTutorialModal.show();
+                });
+            } else {
+                vm.ui.data.timecardTutorialModal.show();
+            }
+        }
+
         vm.ui = {
             errors: [],
             calendar: {
@@ -274,9 +288,15 @@
                 isInEditMode: false,
                 addEditDetailsModal: null,
                 timeCardSummaryModal: null,
-                currentDetails: null
+                currentDetails: null,
+                timecardTutorialModal: null
             },
             events: {
+                onTutorialModalCancel: function () {
+                    if (vm.ui.data.timecardTutorialModal) {
+                        vm.ui.data.timecardTutorialModal.hide();
+                    }
+                },
                 onSummaryModalCancel: function () {
                     vm.ui.data.timeCardSummaryModal.hide();
                 },
@@ -287,6 +307,7 @@
                 },
                 showTimeCardTutorialWindow: function () {
                     vm.popover.hide();
+                    showTutorialModal();
                     return true;
                 },
                 onAddScheduleCompleted: function (o) {
@@ -349,8 +370,27 @@
                         }
                     });
                 },
-                sendForApproval: function () {
-
+                sendForApproval: function (status) {
+                    if (angular.isArray(vm.ui.data.timeCards) && vm.ui.data.timeCards.length === 0) {
+                        alerts.alert("No Timecard!", "No Timecard information found to process this request.");
+                        return false;
+                    }
+                    alerts.confirm("Confirmation!", "Are you sure?", function () {
+                        fpmUtilitiesFactory.showLoading().then(function () {
+                            timeCardFactory.sendForApproval(vm.ui.data.summary.Num, status).then(function (response) {
+                                if (response) {
+                                    vm.ui.data.summary = response.timeCardSummary;
+                                    $timeout(function () {
+                                        alerts.alert("Success", "Time card sent for approval successfully", function () {
+                                            vm.ui.data.addTimeVisibility = false;
+                                            vm.ui.data.ptoButtonVisibility = false;
+                                            vm.ui.data.approvalStatus = vm.ui.data.summary.ApproveStatus || 0;
+                                        });
+                                    }, 100);
+                                }
+                            }).finally(fpmUtilitiesFactory.hideLoading);
+                        });
+                    });
                 },
                 clockOutClick: function () {
                     var notCheckInDetails = _.where(vm.ui.data.timeCards, { finishTime: null });

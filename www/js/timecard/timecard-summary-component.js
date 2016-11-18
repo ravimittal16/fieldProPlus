@@ -9,17 +9,18 @@
                 var vm = this;
                 var codes = timecardFactory.data.jobCodes;
                 vm.lists = { clockInOuts: [], payables: [], nonPayables: [] };
-                vm.modal = { startDate: null, endDate: null };
+                vm.modal = { startDate: new Date(), endDate: null };
                 function closeProductEditModal() {
                     if (angular.isFunction(vm.onCancelClicked)) {
                         vm.onCancelClicked();
                     }
                 }
-                function showReport(showCurrent) {
-                    vm.showCurrentSummary = showCurrent;
-                    if (!showCurrent) {
-                        vm.payableReport = [];
-                        var report = [];
+                vm.payableReport = [];
+                vm.totalPayables = { p: 0, np: 0, t: 0 };
+                function showReport() {
+                    vm.payableReport = [];
+                    var report = [];
+                    fpmUtilitiesFactory.showLoading().then(function () {
                         timecardFactory.getSummaryPayableHours({ startDate: vm.modal.startDate, finishDate: vm.modal.endDate }).then(function (response) {
                             if (response && response.length > 0) {
                                 angular.forEach(response, function (r, i) {
@@ -50,8 +51,8 @@
                                     }
                                 });
                             }
-                        });
-                    }
+                        }).finally(fpmUtilitiesFactory.hideLoading);
+                    });
                 }
                 function onCardActionClicked() {
                     $ionicActionSheet.show({
@@ -65,11 +66,10 @@
                         },
                         buttonClicked: function (index) {
                             if (index === 0) {
-                                if (vm.showCurrentSummary === false) {
-                                    processCurrent();
-                                } else {
-                                    vm.showCurrentSummary = false;
-                                }
+                                processCurrent();
+                            }
+                            if (index === 1) {
+                                vm.showCurrentSummary = false;
                             }
                             return true;
                         }

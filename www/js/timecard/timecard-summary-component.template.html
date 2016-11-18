@@ -186,71 +186,98 @@
         </div>
     </div>
 
-    <div class="row" data-ng-if="!vm.showCurrentSummary">
-        <div class="col">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th class="text-center">
-                            <span class="h6 m-t-b-2">Date</span>
-                        </th>
-                        <th class="text-center">
-                            <span class="h6 m-t-b-2">Payable</span>
-                        </th>
-                        <th class="text-center">
-                            <span class="h6 m-t-b-2">Non Payable</span>
-                        </th>
-                        <th class="text-center">
-                            <span class="h6 m-t-b-2">Total</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr data-ng-repeat="(key,r) in vm.payableReport">
-                        <td class="text-center">
-                            <h6 class="h6">
-                                <i class="icon ion-clock"></i>&nbsp;<span data-ng-bind="r.timeCardDate | date :'shortDate'"></span>
-                            </h6>
-                        </td>
-                        <td class="text-center">
-                            <h6 class="h6">
-                                <span class="text-success" data-ng-bind="r.payableHours"></span>
-                            </h6>
-                        </td>
-                        <td class="text-center">
-                            <h6 class="h6">
-                                <span class="text-danger" data-ng-bind="r.nonPayable"></span>
-                            </h6>
-                        </td>
-                        <td class="text-center">
-                            <h6 class="h6">
-                                <strong data-ng-bind="r.total"></strong>
-                            </h6>
-                        </td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr class="warning">
-                        <td>
-                            <h6>
-                                <strong>Total Time</strong>
-                            </h6>
-                        </td>
-                        <td class="text-center">
-                            <h6><strong>{{vm.totalPayables.p | number:2}}</strong>
-                            </h6>
-                        </td>
-                        <td class="text-center">
-                            <h6><strong>{{vm.totalPayables.np | number:2}}</strong>
-                            </h6>
-                        </td>
-                        <td class="text-center">
-                            <h6><strong>{{vm.totalPayables.t | number:2}}</strong>
-                            </h6>
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
+    <div data-ng-if="!vm.showCurrentSummary">
+        <div class="row">
+            <div class="col">
+                <div class="list">
+                    <label for="" class="item item-input">
+                    <span class="input-label">Start Date</span>
+                    <input type="text" placeholder="Start Date" class="transparent-background text-right" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A'}" 
+                    readonly="" data-ng-model="vm.modal.startDate"
+                     />
+                </label>
+                    <label for="" class="item item-input">
+                    <span class="input-label">End Date</span>
+                    <input type="text" placeholder="End Date" class="transparent-background text-right" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A'}" 
+                    readonly="" data-ng-model="vm.modal.endDate"
+                     />
+                </label>
+                    <button type="button" class="button button-block button-positive button-small" data-ng-click="vm.events.showReport()">
+                    Generate Report
+                </button>
+                </div>
+            </div>
         </div>
+        <div class="row">
+            <div class="col">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">
+                                <span class="h6 m-t-b-2">Date</span>
+                            </th>
+                            <th class="text-center">
+                                <span class="h6 m-t-b-2">Payable</span>
+                            </th>
+                            <th class="text-center">
+                                <span class="h6 m-t-b-2">Non Payable</span>
+                            </th>
+                            <th class="text-center">
+                                <span class="h6 m-t-b-2">Total</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="(key,r) in vm.payableReport">
+                            <td class="text-center">
+                                <h6 class="h6">
+                                    <i class="icon ion-clock"></i>&nbsp;<span data-ng-bind="r.timeCardDate | date :'shortDate'"></span>
+                                </h6>
+                            </td>
+                            <td class="text-center">
+                                <h6 class="h6">
+                                    <span class="text-success" data-ng-bind="r.payableHours"></span>
+                                </h6>
+                            </td>
+                            <td class="text-center">
+                                <h6 class="h6">
+                                    <span class="text-danger" data-ng-bind="r.nonPayable"></span>
+                                </h6>
+                            </td>
+                            <td class="text-center">
+                                <h6 class="h6">
+                                    <strong data-ng-bind="r.total"></strong>
+                                </h6>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="warning">
+                            <td>
+                                <h6>
+                                    <strong>Total Time</strong>
+                                </h6>
+                            </td>
+                            <td class="text-center">
+                                <h6><strong>{{vm.totalPayables.p | number:2}}</strong>
+                                </h6>
+                            </td>
+                            <td class="text-center">
+                                <h6><strong>{{vm.totalPayables.np | number:2}}</strong>
+                                </h6>
+                            </td>
+                            <td class="text-center">
+                                <h6><strong>{{vm.totalPayables.t | number:2}}</strong>
+                                </h6>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+
+
+
     </div>
 </ion-content>

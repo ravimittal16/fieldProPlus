@@ -1,0 +1,142 @@
+<ion-header-bar>
+    <h1 class="title">
+        <span data-ng-if="!vm.isFromPto">Details</span>
+    </h1>
+    <button class="button" data-ng-click="vm.events.closeProductEditModal()">
+		Cancel
+    </button>
+</ion-header-bar>
+<ion-content>
+    <div class="list">
+        <div class="row">
+            <div class="col">
+                <p>This tutorial will cover the 3 main topics in the time card module.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" data-toggle="collapse" data-target="#demo1" style="cursor: pointer;">
+                <p>
+                    <b>1.  ‘Clock In’ and ‘Clock Out’.</b>
+                </p>
+                <p style="text-align: justify;"></p>
+                <ol>
+                    This is the mechanism used to indicate the time you start your work day to the time you finish your work day.
+                    <p></p>
+                    <font color="blue">
+                        At the beginning of each day select today’s date and click on the ‘Clock In’ button
+                    </font>
+                    <p></p>
+                    <font color="blue">
+                        At the end of each day click on the ‘Clock Out’ button
+                    </font>
+                    <p></p>
+                    <!--<img src="../../../images/Tutorial_1.png" alt="" width="250">-->
+                    <p></p>
+                    <font color="red">Note: If you forgot to ‘Clock Out’ for the previous day, notify your administrator so the time may be
+                        manually corrected. Clicking on the 'Clock Out' button after the actual 'Clock Out' time, would result
+                        in the incorrect time being reported.
+                    </font>
+                </ol>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col" data-toggle="collapse" data-target="#demo2" style="cursor: pointer;">
+                <p>
+                    <b>2.  ‘Check In’ and ‘Check Out’.</b>
+                </p>
+
+                <p style="text-align: justify;"></p>
+                <ol>
+                    This is the mechanism used to record the details of the work that was performed during the work day.
+                    <p></p>
+                    <font color="blue">
+                        Each job or tasks that is performed is indicated by ‘Check In’ and ‘Check Out’.
+                    </font>
+                    <p></p>
+                    <font color="blue">
+                        ‘Check In’ and ‘Check Out’ is placed within the ‘Clock In’ and ‘Clock Out’.
+                    </font>
+                    <p></p>
+                    <!--<font color="blue">
+                    ‘Check In’ and ‘Check Out’ can be added automatically from a work order to the time card.  You may also add it manually from within the time card.
+                    </font>
+                    <p></p>-->
+
+                    <u>From a work order, there are 2 places from where time can be automatically added to the timecard</u>
+                    <p></p>
+                    <font color="blue">
+                        By clicking on the ‘In Route’ button in a work order ... a ‘Check In’ and ‘Check Out’ is automatically added to the Time
+                        card. (view image below)
+                    </font>
+                    <p></p>
+                    <!--<img src="../../../images/Tutorial_2.png" alt="" width="250" />-->
+                    <p></p>
+                    <font color="blue">
+                        Time may also be automatically added to the time card by clicking on the ‘Check In’ and ‘Check Out’ button in a work order
+                    </font>
+                    <p></p>
+
+
+
+                    <p></p>
+                    <!--<img src="../../../images/Tutorial_3.png" alt="" width="250" />-->
+                    <p></p>
+                    </br>
+                    <u>
+
+                        Adding time manually to a time card: This is an important feature that needs to be followed in order to maintain time card
+                        integrity. Often you are asked to do work that is not in your work orders. This work maybe verbally
+                        assigned to you from your office. The best way to capture this work in the time card is to use the
+                        'Add Time' button as shown below.
+
+                    </u>
+                    <p></p>
+                    <!--<img src="../../../images/Tutorial_4.png" alt="" width="250" />-->
+
+                    <p></p>
+                    <font color="red">
+                        Note: It is important that all fields need to be filled in the 'Add Time' window. You may need to ask your office administrator
+                        what job code and Work Order number needs to be selected. Additionally 'Add Time' should also be
+                        used to record any non work related task that you performed... like taking lunch, or going to a doctor's
+                        visit etc.
+                    </font>
+                    <p></p>
+                </ol>
+            </div>
+
+            <div id="demo2" class="collapse">
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col" data-toggle="collapse" data-target="#demo3" style="cursor: pointer;">
+                <p>
+                    <b>3.  Approving time card.</b>
+                </p>
+                <p style="text-align: justify;"></p>
+                <ol>
+                    Each day’s time card needs to be submitted for Approval.
+                    <p></p>
+                    The administrator may Approve or Reject a time card. If the time card is rejected by the administrator, the time card will
+                    be given a status of 'Rejected' with a note for why it was rejected. You can then update the time card
+                    note and submit again for Approval.
+
+                    <p></p>
+                    <!--<img src="../../../images/Tutorial_5.png" alt="" width="250" />-->
+                </ol>
+            </div>
+        </div>
+        <div class="row">
+            <button type="button" class="button button-block  button-small" data-ng-disabled="vm.isCertifield" data-ng-class="{'button-positive':!vm.isCertifield,'button-light':vm.isCertifield}"
+                data-ng-click="vm.events.onCertifyClicked()">
+                    <span data-ng-if="!vm.isCertifield">I Certify</span>
+                    <span data-ng-if="vm.isCertifield">You certified on {{::vm.info.CertifiedOn | date}}</span>
+                </button>
+        </div>
+    </div>
+
+</ion-content>

@@ -54,24 +54,24 @@
                 <span class="input-label">Total Time</span>
                 <input type="text" class="transparent-background text-right" readonly="" data-ng-model="vm.dateTimeMode.timeSpan" />
                 </label>
-            <label class="item item-input item-select" data-ng-if="!vm.timecardPermissions.isFromAddingPto">
+            <div class="item item-input item-select" data-ng-if="!vm.timecardPermissions.isFromAddingPto">
                     <div class="input-label">
                         Job Code
                     </div>
                     <select data-ng-disabled="!vm.entity.isUserDefined" data-ng-options="pro.num as pro.jobCode1 for pro in vm.ui.jobCodes" data-ng-change="vm.ui.isInvalidSave = false" data-ng-model="vm.entity.jobCode"></select>
-                </label>
-            <label class="item item-input item-select" data-ng-if="!vm.timecardPermissions.isFromAddingPto">
+                </div>
+            <div class="item item-input item-select" data-ng-if="!vm.timecardPermissions.isFromAddingPto">
                     <div class="input-label">
                         Work Order
                     </div>
                     <select data-ng-disabled="!vm.entity.isUserDefined" data-ng-options="pro.barcode as pro.barcodeName for pro in vm.ui.workOrders" data-ng-model="vm.entity.barcode"></select>
-                </label>
-            <label class="item item-input item-select" data-ng-if="vm.timecardPermissions.isFromAddingPto">
+                </div>
+            <div class="item item-input item-select" data-ng-if="vm.timecardPermissions.isFromAddingPto">
                     <div class="input-label">
                         Job Code
                     </div>
                     <select data-ng-disabled="!vm.entity.isUserDefined" data-ng-options="pro.num as pro.jobCode1 for pro in vm.ui.ptoJobCodes" data-ng-change="vm.ui.isInvalidSave = false" data-ng-model="vm.entity.jobCode"></select>
-                </label>
+                </div>
             <label class="item item-input item-stacked-label">
                     <span class="input-label">Notes</span>
                     <textarea cols="30" rows="3" data-ng-model="vm.entity.notes"></textarea>
