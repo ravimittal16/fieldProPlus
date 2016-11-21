@@ -1,4 +1,4 @@
-(function() {
+(function () {
     "use strict";
     var componentConfig = {
         bindings: {
@@ -9,7 +9,7 @@
             editMode: "<"
         },
         controller: ["$scope", "$timeout", "$ionicActionSheet", "timecard-factory", "fpm-utilities-factory", "authenticationFactory",
-            function($scope, $timeout, $ionicActionSheet, timecardFactory, fpmUtilitiesFactory, authenticationFactory) {
+            function ($scope, $timeout, $ionicActionSheet, timecardFactory, fpmUtilitiesFactory, authenticationFactory) {
                 var vm = this;
                 var alerts = fpmUtilitiesFactory.alerts;
                 var isConfirmedBefore = false;
@@ -31,7 +31,7 @@
                     timePickerVisibility: true,
                     isFromAddingPto: false
                 };
-                vm.entity = null;
+                vm.entity = null;   
                 function _addOrUpdateToDatabase() {
                     vm.ui.errors = [];
                     if (vm.entity.finishTime !== null) {
@@ -55,14 +55,14 @@
                         vm.ui.errors.push("Please select Job code before save");
                         return false;
                     }
-                    fpmUtilitiesFactory.showLoading().then(function() {
+                    fpmUtilitiesFactory.showLoading().then(function () {
                         var action = vm.isFromPto ? timecardFactory.addPtoDetails : timecardFactory.addNewDetails;
-                        action(vm.entity).then(function(response) {
+                        action(vm.entity).then(function (response) {
                             isConfirmedBefore = false;
                             if (angular.isArray(response.errors) && response.errors.length > 0) {
                                 vm.ui.errors = response.errors;
                             } else {
-                                alerts.alert("Time Added", "Time has been " + (vm.editMode ? "updated" : "added"), function() {
+                                alerts.alert("Time Added", "Time has been " + (vm.editMode ? "updated" : "added"), function () {
                                     if (angular.isFunction(vm.onAddCompleted)) {
                                         vm.onAddCompleted({ o: response });
                                     }
@@ -72,32 +72,29 @@
                     });
                 }
                 vm.events = {
-                    onCardActionClicked: function() {
+                    onCardActionClicked: function () {
                         $ionicActionSheet.show({
                             buttons: [
                                 { text: 'Check In' }, { text: "Check Out" }
                             ],
                             titleText: 'Time card',
                             cancelText: 'Cancel',
-                            cancel: function() {
+                            cancel: function () {
 
                             },
-                            buttonClicked: function(index) {
+                            buttonClicked: function (index) {
                                 if (index === 0) {
-                                    if (vm.entity.startTime === null) {
-                                        vm.dateTimeMode.startTime = new Date();
-                                        vm.entity.startTime = new Date();
-                                        vm.entity.finishTime = null;
-                                        vm.dateTimeMode.finishTime = null;
-                                    }
+                                    vm.dateTimeMode.startTime = new Date();
+                                    vm.entity.startTime = new Date();
+                                    vm.entity.finishTime = null;
+                                    vm.dateTimeMode.finishTime = null;
+
                                     vm.dateTimeMode.isCheckedIn = true;
                                     _findTimeDiff();
                                 }
                                 if (index === 1) {
-                                    if (vm.entity.finishTime === null) {
-                                        vm.dateTimeMode.finishTime = new Date();
-                                        vm.entity.finishTime = new Date();
-                                    }
+                                    vm.dateTimeMode.finishTime = new Date();
+                                    vm.entity.finishTime = new Date();
                                     vm.dateTimeMode.isCheckedOut = true;
                                     _findTimeDiff();
                                 }
@@ -105,7 +102,7 @@
                             }
                         });
                     },
-                    updateButtonClicked: function() {
+                    updateButtonClicked: function () {
                         vm.ui.errors = [];
                         vm.ui.isInvalidSave = false;
                         if (vm.entity.startTime === null) {
@@ -117,7 +114,7 @@
                             var allDetails = angular.copy(timecardFactory.details);
                             var notCheckInDetails = _.where(allDetails, { finishTime: null });
                             if (notCheckInDetails.length > 0 && !isConfirmedBefore) {
-                                alerts.confirm("Confirmation!", "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?", function(isConfirm) {
+                                alerts.confirm("Confirmation!", "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?", function (isConfirm) {
                                     isConfirmedBefore = true;
                                     _addOrUpdateToDatabase();
                                 });
@@ -128,10 +125,9 @@
                         } else {
                             _addOrUpdateToDatabase();
                         }
-
                         return false;
                     },
-                    closeProductEditModal: function() {
+                    closeProductEditModal: function () {
                         if (angular.isFunction(vm.onCancelClicked)) {
                             vm.onCancelClicked();
                         }
@@ -212,7 +208,7 @@
                         var totalMintues = moment(ft).diff(moment(st), "minutes");
                         var hours = Math.floor(totalMintues / 60);
                         var mintues = totalMintues % 60;
-                        var t = $timeout(function() {
+                        var t = $timeout(function () {
                             if (totalMintues > 0) {
                                 if (hours > 0) {
                                     vm.dateTimeMode.timeSpan = hours + (hours > 1 ? " Hours " : " Hour ") + mintues + (mintues > 1 ? " Minutes" : " Minute");;
@@ -232,33 +228,34 @@
                     return "";
                 }
 
-                vm.$onChanges = function() {
+                vm.$onChanges = function () {
                     initController();
                 }
                 initController();
 
                 function _getOrders() {
-                    fpmUtilitiesFactory.showLoading().then(function() {
-                        timecardFactory.getWorkOrdersList().then(function(response) {
+                    fpmUtilitiesFactory.showLoading().then(function () {
+                        timecardFactory.getWorkOrdersList().then(function (response) {
                             vm.ui.workOrders = response;
                         }).finally(_getJobCodes);
                     });
                 }
 
                 function _getJobCodes() {
-                    fpmUtilitiesFactory.showLoading().then(function() {
-                        timecardFactory.getJobCodes().then(function(response) {
+                    fpmUtilitiesFactory.showLoading().then(function () {
+                        timecardFactory.getJobCodes().then(function (response) {
                             vm.ui.jobCodes = _.where(response, { isPtoType: false });;
                             vm.ui.ptoJobCodes = _.where(response, { isPtoType: true });
                         }).finally(fpmUtilitiesFactory.hideLoading);
                     }).finally(fpmUtilitiesFactory.hideLoading);
                 }
 
-                vm.$onInit = function() {
+                vm.$onInit = function () {
                     vm.userInfo = authenticationFactory.getLoggedInUserInfo();
                     if (vm.userInfo) {
                         vm.timecardPermissions.allowPushTime = vm.userInfo.allowPushTime;
-                        vm.timecardPermissions.timePickerVisibility = vm.userInfo.allowPushTime;
+                        //vm.timecardPermissions.timePickerVisibility = vm.userInfo.allowPushTime;
+                        vm.timecardPermissions.timePickerVisibility = false;
                     }
                     vm.timecardPermissions.isFromAddingPto = vm.isFromPto;
                     if (vm.timecardPermissions.isFromAddingPto === true) {
@@ -266,10 +263,11 @@
                     }
                     _getOrders();
                 }
-                $scope.$on("timecard:addEditDetailsModal:open", function() {
+                $scope.$on("timecard:addEditDetailsModal:open", function () {
                     vm.entity = angular.copy(schema);
                     vm.dateTimeMode.startTime = null;
                     vm.dateTimeMode.finishTime = null;
+                    vm.dateTimeMode.timeSpan = "";
                 })
             }],
         controllerAs: "vm",

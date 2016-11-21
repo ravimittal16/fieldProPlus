@@ -25,7 +25,7 @@
             vm.$onInit = function () {
                 timecardFactory.getCertifieldUser().then(function (response) {
                     if (response) {
-                        vm.isCertifield = response.IsCertified || false;
+                        vm.isCertifield = response.isCertified || false;
                         vm.info = response;
                     }
                 });

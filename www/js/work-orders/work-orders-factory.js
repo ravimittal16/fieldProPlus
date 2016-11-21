@@ -106,6 +106,22 @@
     function updateOrderProduct(product) {
       return apiBaseFactory.post(apibaseurl + "UpdateOrderProduct", product);
     }
+    var workOrderCalendarKeyName = "workorder:calendar";
+    function getDatewiseEvents(forceGet) {
+      forceGet = forceGet === null ? false : forceGet;
+      if (forceGet === true) {
+        cache.remove(workOrderCalendarKeyName);
+      }
+      var calenderSchedules = cache.get(workOrderCalendarKeyName);
+      if (angular.isDefined(calenderSchedules) && calenderSchedules) {
+        return $q.when(calenderSchedules);
+      } else {
+        return apiBaseFactory.get("api/Scheduler/GetMyCalender?fromMobile=true").then(function (response) {
+          cache.put(workOrderCalendarKeyName, response);
+          return response;
+        });
+      }
+    }
 
     return {
       getMobileDashboard: getMobileDashboard,
@@ -127,7 +143,8 @@
       updateJobStatus: updateJobStatus,
       updateSchedule: updateSchedule,
       addWorkOrderSchedule: addWorkOrderSchedule,
-      updateOrderProduct: updateOrderProduct
+      updateOrderProduct: updateOrderProduct,
+      getDatewiseEvents: getDatewiseEvents
     };
   }
   initFactory.$inject = ["$q", "$cacheFactory", "api-base-factory", "shared-data-factory"];

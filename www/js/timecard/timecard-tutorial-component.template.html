@@ -134,7 +134,7 @@
             <button type="button" class="button button-block  button-small" data-ng-disabled="vm.isCertifield" data-ng-class="{'button-positive':!vm.isCertifield,'button-light':vm.isCertifield}"
                 data-ng-click="vm.events.onCertifyClicked()">
                     <span data-ng-if="!vm.isCertifield">I Certify</span>
-                    <span data-ng-if="vm.isCertifield">You certified on {{::vm.info.CertifiedOn | date}}</span>
+                    <span data-ng-if="vm.isCertifield">You certified on {{::vm.info.certifiedOn | date}}</span>
                 </button>
         </div>
     </div>
