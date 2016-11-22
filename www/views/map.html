@@ -1,12 +1,6 @@
 <ion-view title="Map">
     <ion-nav-buttons side="left">
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-        <button class="button" data-ng-click="vm.events.onFiltersClicked()">
-                <i class="icon ion-funnel"></i>
-            </button>
-        <button class="button" ng-click="vm.events.refreshMapClicked()">
-                <i class="icon ion-refresh"></i>
-            </button>
     </ion-nav-buttons>
     <ion-content>
         <div id="map" style="height:100%;width:100%;" data-tap-disabled="true"></div>
@@ -41,7 +35,18 @@
             <ion-content>
                 <div class="list">
                     <div class="item item-divider">
+                        Date Filter
+                        <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                            data-ng-click="vm.events.onDateFilterDotsClicked()"></a>
+                    </div>
+                    <label class="item item-input">
+				        <span class="input-label">Work order Date</span>
+                        <input type="text" class="transparent-background text-right" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yyyy'}" data-ng-model="vm.filterDate"/>
+                    </label>
+                    <div class="item item-divider">
                         Service Provider
+                        <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                            data-ng-click="vm.events.onServiceProviderDotsClicked()"></a>
                     </div>
                     <ion-list>
                         <ion-checkbox data-ng-repeat="user in vm.mapData.users" data-ng-model="user.isChecked"
