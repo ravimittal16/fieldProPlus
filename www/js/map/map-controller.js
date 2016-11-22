@@ -144,7 +144,6 @@
                     if (index === 1) {
                         invertUserSelection();
                     }
-
                     return true;
                 }
             });
