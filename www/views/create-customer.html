@@ -2,70 +2,80 @@
     <ion-nav-buttons side="left">
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
-
-    <ion-content>
-        <form action="">
-            <div class="list">
-                <label class="item item-input item-floating-label">
+    <form name="formCustomer" novalidate="">
+        <ion-content>
+            <form action="">
+                <div class="list">
+                    <label class="item item-input item-floating-label">
                     <span class="input-label">Display Name</span>
-                    <input type="text" placeholder="Display Name" />
+                    <input type="text" name="displayName" placeholder="Display Name" required="" type="text" maxlength="50" data-ng-model="vm.customerModel.displayName"  />
                 </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="First Name"/>
+                    <label class="item item-input">
+                    <input type="text" placeholder="First Name" maxlength="50" data-ng-model="vm.customerModel.firstName"/>
                 </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="Last Name"/>
+                    <label class="item item-input">
+                    <input type="text" placeholder="Last Name" maxlength="50" data-ng-model="vm.customerModel.lastName"/>
                 </label>
 
-                <label class="item item-input">
-                    <input type="text" placeholder="Company Name"/>
+                    <label class="item item-input">
+                    <input type="text" placeholder="Company Name" maxlength="100" data-ng-model="vm.customerModel.companyName"/>
                 </label>
-                <div class="padding-top padding-bottom">
-                    <span class="padding-left">Billing Address</span>
-                </div>
-                <label class="item item-input">
-                        <textarea type="text" rows="2" placeholder="Street"></textarea>
+                    <div class="item item-divider">
+                        Billing Address
+                    </div>
+                    <label class="item item-input">
+                        <textarea type="text" rows="3" placeholder="Street" maxlength="200" data-ng-model="vm.customerModel.bStreet"></textarea>
                     </label>
-                <label class="item item-input">
-                        <input type="text" placeholder="City"/>
+                    <label class="item item-input">
+                        <input type="text" placeholder="City" maxlength="50" data-ng-model="vm.customerModel.bCity" />
                     </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="State"/>
+                    <label class="item item-input">
+                    <input type="text" placeholder="State" maxlength="50" data-ng-model="vm.customerModel.bState"/>
                     
                 </label>
-                <label for="" class="item item-input">
-                    <input type="text" placeholder="Zip"/>
+                    <label for="" class="item item-input">
+                    <input type="text" placeholder="Zip" maxlength="20" data-ng-model="vm.customerModel.bZip"/>
                 </label>
-                <div class="padding-top padding-bottom">
-                    <span class="padding-left">Service Address</span>
-                </div>
-                <label class="item item-input">
-                    <textarea type="text" rows="2" placeholder="Street"></textarea>
+                    <div class="item item-divider">
+                        Service Address
+                        <a class="button pull-right button-small button-icon icon ion-android-more-vertical item-divider-left-buttion" data-ng-click="vm.events.onServiceAddressActionClicked()"></a>
+                    </div>
+                    <label class="item item-input">
+                    <textarea type="text" rows="3" placeholder="Street" maxlength="200" data-ng-model="vm.customerModel.sStreet"></textarea>
                 </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="City"/>
+                    <label class="item item-input">
+                    <input type="text" placeholder="City" maxlength="50" data-ng-model="vm.customerModel.sCity"/>
                 </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="State"/>
+                    <label class="item item-input">
+                    <input type="text" placeholder="State" maxlength="50" data-ng-model="vm.customerModel.sState"/>
                     
                 </label>
-                <label for="" class="item item-input">
-                    <input type="text" placeholder="Zip"/>
+
+                    <label for="" class="item item-input">
+                    <input type="text" placeholder="Zip" maxlength="20" data-ng-model="vm.customerModel.sZip"/>
                 </label>
-                <label class="item item-input">
-                    <input type="email" placeholder="Email"/>
+                    <label class="item item-input">
+                    <input type="email" name="customerEmail" placeholder="Email" maxlength="200" data-ng-model="vm.customerModel.email"/>
                 </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="Phone"/>
+                    <label class="item item-input">
+                    <input type="text" placeholder="Phone" maxlength="200" data-ng-model="vm.customerModel.phone"/>
                 </label>
+                </div>
+        </ion-content>
+        <ion-footer-bar align-title="left" class="bar-light">
+            <div class="buttons">
+                <button class="button" type="button" data-ng-click="vm.events.onBackToDashboardClicked(formCustomer.$dirty)">
+            Go back to Dashboard
+        </button>
             </div>
-            <div class="button-bar">
-                <button type="button" class="button">Cancel</button>
-                <button type="button" class="button button-balanced">Save</button>
+            <h1 class="title">
+                &nbsp;
+            </h1>
+            <div class="buttons">
+                <button type="submit" class="button button-balanced" data-ng-click="vm.events.onSubmitButtonClicked(formCustomer.$valid)">
+            Create Customer 
+        </button>
             </div>
+        </ion-footer-bar>
         </form>
-    </ion-content>
-
-
-
 </ion-view>

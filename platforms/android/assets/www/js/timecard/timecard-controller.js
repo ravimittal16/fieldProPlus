@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    function initController($scope, $state, ionicDatePicker, $ionicPopover, $ionicModal, $ionicActionSheet, timecardFactory,
+    function initController($scope, $rootScope, $state, ionicDatePicker, $ionicPopover, $ionicModal, $ionicActionSheet, timecardFactory,
         fpmUtilitiesFactory, authenticationFactory) {
         var vm = this;
         var jobCodes = { CLOCK_IN: 5001, CLOCK_OUT: 5002 };
@@ -219,12 +219,41 @@
                     animation: 'slide-in-up'
                 }).then(function (modal) {
                     vm.ui.data.addEditDetailsModal = modal;
+                    $scope.$broadcast("timecard:addEditDetailsModal:open");
                     vm.ui.data.addEditDetailsModal.show();
                 });
             } else {
+                $scope.$broadcast("timecard:addEditDetailsModal:open");
                 vm.ui.data.addEditDetailsModal.show();
             }
-            console.log("vm.ui.data.componentEvents", vm.ui.data.componentEvents);
+        }
+        function showSummaryModal() {
+            if (vm.ui.data.timeCardSummaryModal === null) {
+                $ionicModal.fromTemplateUrl("timecardSummaryModal.html", {
+                    scope: $scope,
+                    animation: 'slide-in-up'
+                }).then(function (modal) {
+                    vm.ui.data.timeCardSummaryModal = modal;
+                    $scope.$broadcast("timecard:timeCardSummaryModal:open");
+                    vm.ui.data.timeCardSummaryModal.show();
+                });
+            } else {
+                $scope.$broadcast("timecard:timeCardSummaryModal:open");
+                vm.ui.data.timeCardSummaryModal.show();
+            }
+        }
+        function showTutorialModal() {
+            if (vm.ui.data.timecardTutorialModal === null) {
+                $ionicModal.fromTemplateUrl("timecardTutorialModal.html", {
+                    scope: $scope,
+                    animation: 'slide-in-up'
+                }).then(function (modal) {
+                    vm.ui.data.timecardTutorialModal = modal;
+                    vm.ui.data.timecardTutorialModal.show();
+                });
+            } else {
+                vm.ui.data.timecardTutorialModal.show();
+            }
         }
 
         vm.ui = {
@@ -258,11 +287,35 @@
                 isFromPto: false,
                 isInEditMode: false,
                 addEditDetailsModal: null,
-                currentDetails: null
+                timeCardSummaryModal: null,
+                currentDetails: null,
+                timecardTutorialModal: null
             },
             events: {
+                onTutorialModalCancel: function () {
+                    if (vm.ui.data.timecardTutorialModal) {
+                        vm.ui.data.timecardTutorialModal.hide();
+                    }
+                },
+                onSummaryModalCancel: function () {
+                    vm.ui.data.timeCardSummaryModal.hide();
+                },
+                checkSummaryClick: function () {
+                    showSummaryModal();
+                    vm.popover.hide();
+                    return true;
+                },
+                showTimeCardTutorialWindow: function () {
+                    vm.popover.hide();
+                    showTutorialModal();
+                    return true;
+                },
                 onAddScheduleCompleted: function (o) {
-
+                    if (vm.ui.data.timeCards.length !== o.timeCardDetails.length) {
+                        vm.ui.data.approvalStatus = o.timeCardSummary.approveStatus || 0;
+                    }
+                    _updateTimeCardsArray(o.timeCardDetails);
+                    vm.ui.data.addEditDetailsModal.hide();
                 },
                 onModalCancelClicked: function () {
                     vm.ui.data.isInEditMode = false;
@@ -317,8 +370,27 @@
                         }
                     });
                 },
-                sendForApproval: function () {
-
+                sendForApproval: function (status) {
+                    if (angular.isArray(vm.ui.data.timeCards) && vm.ui.data.timeCards.length === 0) {
+                        alerts.alert("No Timecard!", "No Timecard information found to process this request.");
+                        return false;
+                    }
+                    alerts.confirm("Confirmation!", "Are you sure?", function () {
+                        fpmUtilitiesFactory.showLoading().then(function () {
+                            timeCardFactory.sendForApproval(vm.ui.data.summary.Num, status).then(function (response) {
+                                if (response) {
+                                    vm.ui.data.summary = response.timeCardSummary;
+                                    $timeout(function () {
+                                        alerts.alert("Success", "Time card sent for approval successfully", function () {
+                                            vm.ui.data.addTimeVisibility = false;
+                                            vm.ui.data.ptoButtonVisibility = false;
+                                            vm.ui.data.approvalStatus = vm.ui.data.summary.ApproveStatus || 0;
+                                        });
+                                    }, 100);
+                                }
+                            }).finally(fpmUtilitiesFactory.hideLoading);
+                        });
+                    });
                 },
                 clockOutClick: function () {
                     var notCheckInDetails = _.where(vm.ui.data.timeCards, { finishTime: null });
@@ -379,7 +451,7 @@
 
         activateController();
     }
-    initController.$inject = ["$scope", "$state", "ionicDatePicker", "$ionicPopover", "$ionicModal",
+    initController.$inject = ["$scope", "$rootScope", "$state", "ionicDatePicker", "$ionicPopover", "$ionicModal",
         "$ionicActionSheet", "timecard-factory", "fpm-utilities-factory", "authenticationFactory"];
     angular.module("fpm").controller("timecard-controller", initController);
 })();

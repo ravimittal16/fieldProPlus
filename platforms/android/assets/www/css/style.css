@@ -252,3 +252,47 @@ customer-search-header-component {
 .timer-red-h4 {
     color: #a94442 !important;
 }
+.bg-white{
+  background-color: #ffffff;
+}
+
+.timecard-table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+
+.timecard-table {
+    background-color: transparent;
+}
+.timecard-table {
+    display: table;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.timecard-table tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+.timecard-table {
+    display: table;
+    border-collapse: separate;
+    border-spacing: 2px;
+    border-color: grey;
+}
+.timecard-table>thead>tr>th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #ddd;
+}
+.timecard-table>tbody>tr>td, .timecard-table>tbody>tr>th, .timecard-table>tfoot>tr>td, .timecard-table>tfoot>tr>th, .timecard-table>thead>tr>td, .timecard-table>thead>tr>th {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+.timecard-table th {
+    text-align: left;
+}

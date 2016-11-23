@@ -37,6 +37,7 @@
             loadDashboard(false);
         }
         vm.isSearchModalOpened = false;
+        var timerForonSearchItemClick = null;
         vm.events = {
             onSearchItemClick: function (order) {
                 if (order) {
@@ -44,7 +45,7 @@
                     vm.isSearchModalOpened = false;
                     vm.searchModal.hide();
                     vm.searchValue = "";
-                    $timeout(function () {
+                    timerForonSearchItemClick = $timeout(function () {
                         $state.go("app.editOrder", { barCode: order.Barcode, technicianNum: order.TechnicianScheduleNum, src: "main" });
                     }, 300);
                 }
@@ -128,6 +129,12 @@
             focusFirstInput: true
         }).then(function (modal) {
             vm.searchModal = modal;
+        });
+        
+        $scope.$on("$destroy", function () {
+            if (timerForonSearchItemClick) {
+                $timeout.cancel(timerForonSearchItemClick);
+            }
         });
     }
     initController.$inject = ["$scope", "$state", "$timeout", "$ionicModal", "work-orders-factory", "localStorageService"];

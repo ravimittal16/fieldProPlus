@@ -1,11 +1,12 @@
 <ion-view title="Create Order" cache-view="false">
+
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-header-bar class="bar-subheader item-input-inset">
+    <customer-search-header-component data-on-customer-selected="vm.events.onCustomerSelected(customer)"></customer-search-header-component>
+  </ion-header-bar>
   <form name="formWorkOrder" novalidate="">
-    <ion-nav-buttons side="left">
-      <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-    </ion-nav-buttons>
-    <ion-header-bar class="bar-subheader item-input-inset">
-      <customer-search-header-component data-on-customer-selected="vm.events.onCustomerSelected(customer)"></customer-search-header-component>
-    </ion-header-bar>
     <ion-content>
       <div class="list padding-top" data-ng-if="vm.showError">
         <div class="error">
@@ -69,19 +70,19 @@
         <label for="" class="item item-input">
                     <input type="text" placeholder="Zip" data-ng-model="vm.woEntity.sZip" maxlength="20"/>
                 </label>
-        <label class="item item-input item-select">
-                    <div class="input-label">
-                        Job Type
-                    </div>
-                    <select data-ng-options="job.excptns as job.excptns for job in vm.jobTypes track by job.excptns" data-ng-model="vm.woEntity.jobType"></select>
-                </label>
-        <label class="item item-input item-select">
-                    <div class="input-label">
-                        Service Provider
-                    </div>
-                    <select data-ng-options="pro.userId as pro.last_Name for pro in vm.serviceProviders" data-ng-model="vm.woEntity.serviceProvider">
+        <div class="item item-input item-select">
+          <div class="input-label">
+            Job Type
+          </div>
+          <select data-ng-options="job.excptns as job.excptns for job in vm.jobTypes track by job.excptns" data-ng-model="vm.woEntity.jobType"></select>
+        </div>
+        <div class="item item-input item-select">
+          <div class="input-label">
+            Service Provider
+          </div>
+          <select data-ng-options="pro.userId as pro.last_Name for pro in vm.serviceProviders" data-ng-model="vm.woEntity.serviceProvider">
                     </select>
-                </label>
+        </div>
         <label class="item item-input">
                     <span class="input-label">Schedule Start</span>
                     <input type="text" class="transparent-background" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A'}" data-ng-model="vm.dates.startDate" />

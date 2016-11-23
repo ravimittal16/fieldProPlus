@@ -1,4 +1,4 @@
-<ion-view title="Timecard">
+<ion-view title="TimeCard" view-title="Time card">
     <ion-nav-buttons side="left">
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
@@ -105,17 +105,27 @@
                     <div class="list">
                         <a data-ng-if="vm.ui.data.ptoButtonVisibility  && (vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2)"><a data-ng-click="vm.ui.events.addTimeClick(true)" class="item">Add PTO</a>
                         <a data-ng-if="vm.ui.data.addTimeVisibility && (vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2)" data-ng-click="vm.ui.events.addTimeClick(false)" class="item">Add Time</a>
-                        <a class="item">Check Summary</a>
-                        <a class="item">Tutorial</a>
+                        <a class="item" ng-click="vm.ui.events.checkSummaryClick()">Check Summary</a>
+                        <a class="item" ng-click="vm.ui.events.showTimeCardTutorialWindow()">Tutorial</a>
                     </div>
                 </ion-content>
             </ion-popover-view>
         </script>
     </ion-content>
-</ion-view>
-<script id="timecardDetailsModal.html" type="text/ng-template">
+    <script id="timecardDetailsModal.html" type="text/ng-template">
 	<ion-modal-view>
 		<add-edit-details-component data-details="vm.ui.data.currentDetails" on-cancel-clicked="vm.ui.events.onModalCancelClicked()"
         is-from-pto="vm.ui.data.isFromPto" data-edit-mode="vm.ui.data.isInEditMode" on-add-completed="vm.ui.events.onAddScheduleCompleted(o)"></add-edit-details-component>
 	</ion-modal-view>
 </script>
+    <script id="timecardSummaryModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<timecard-summary-component on-cancel-clicked="vm.ui.events.onSummaryModalCancel()"></timecard-summary-component>
+	</ion-modal-view>
+</script>
+    <script id="timecardTutorialModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<timecard-tutorial-view-component on-cancel-clicked="vm.ui.events.onTutorialModalCancel()"></timecard-tutorial-view-component>
+	</ion-modal-view>
+</script>
+</ion-view>
