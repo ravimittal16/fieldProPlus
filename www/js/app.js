@@ -61,7 +61,8 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
       };
       ionicDatePickerProvider.configDatePicker(datePickerObj);
 
-      $ionicConfigProvider.tabs.position(isInDevMode ? 'top' : 'bottom');
+      //$ionicConfigProvider.tabs.position(isInDevMode ? 'top' : 'bottom');
+      $ionicConfigProvider.tabs.position('bottom');
     }])
   .run(["$ionicPlatform", function ($ionicPlatform) {
     $ionicPlatform.ready(function () {

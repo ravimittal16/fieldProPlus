@@ -105,7 +105,8 @@
               </div>
             </div>
             <div class="col-xs-12" data-ng-if="vm.uiSettings.timerEnabled">
-              <work-order-timer-component data-is-checked-in="vm.schedule.checkInStatus" data-is-checked-out="vm.schedule.checkOutStatus" data-schedule="vm.schedule"></work-order-timer-component>
+              <work-order-timer-component data-is-checked-in="vm.schedule.checkInStatus" data-is-checked-out="vm.schedule.checkOutStatus"
+                data-schedule="vm.schedule"></work-order-timer-component>
             </div>
             <div class="list">
               <label class="item item-input">
@@ -151,7 +152,7 @@
 							</label>
               <label class="item item-input">
 									<span class="input-label"><strong>Total</strong></span>
-									<input type="text" class="transparent-background" readonly="" class="transparent-background" data-ng-model="vm.schedule.totalMiles"/>
+									<input type="text" readonly="" class="transparent-background" data-ng-model="vm.schedule.totalMiles"/>
 							</label>
             </div>
           </div>
@@ -211,7 +212,10 @@
 				</ion-content>
 			</ion-tab>
 			<ion-tab title="COMPONENTS" icon-on="ion-ios-cog" icon-off="ion-ios-cog-outline">
-
+        <ion-content>
+          <jobtype-list-component data-barcode="vm.barcode" data-jobtype="vm.barCodeData.barcodeDetails.excptns"></jobtype-list-component>
+          <equipments-list-component data-barcode="vm.barcode"></equipments-list-component>
+        </ion-content>
 			</ion-tab>
 			<ion-tab title="SUMMARY" icon-on="ion-ios-calculator" icon-off="ion-ios-calculator-outline">
 				<ion-content>

@@ -7,7 +7,11 @@
     function searchCustomers(searchPattern) {
       return apiBaseFactory.get(apibaseurl + "SearchCustomers?searchPattern=" + searchPattern);
     }
+    function createCustomer(customerModel) {
+      return apiBaseFactory.post(apibaseurl + "CreateCustomer?fromMobile=true", customerModel);
+    }
     return {
+      createCustomer: createCustomer,
       searchCustomers: searchCustomers
     };
   }

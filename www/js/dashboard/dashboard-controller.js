@@ -67,13 +67,6 @@
                 vm.matchedOrders = [];
                 vm.isSearchModalOpened = true;
                 vm.searchModal.show();
-                // var searchBox = document.querySelector("input[name='searchBox']");
-                // searchBox.focus();
-            },
-            onOrderClicked: function (order) {
-                if (order) {
-                    $state.go("app.editOrder", { barCode: order.Barcode, technicianNum: order.TechnicianScheduleNum, src: "main" });
-                }
             },
             refreshOnPullDown: function () {
                 loadDashboard(true, function () {
@@ -121,6 +114,9 @@
 
         $scope.$on('$destroy', function () {
             vm.searchModal.remove();
+            if (timerForonSearchItemClick) {
+                $timeout.cancel(timerForonSearchItemClick);
+            }
         });
 
         $ionicModal.fromTemplateUrl("dashboardSearchModal.html", {
@@ -129,12 +125,6 @@
             focusFirstInput: true
         }).then(function (modal) {
             vm.searchModal = modal;
-        });
-        
-        $scope.$on("$destroy", function () {
-            if (timerForonSearchItemClick) {
-                $timeout.cancel(timerForonSearchItemClick);
-            }
         });
     }
     initController.$inject = ["$scope", "$state", "$timeout", "$ionicModal", "work-orders-factory", "localStorageService"];

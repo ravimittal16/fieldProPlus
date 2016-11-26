@@ -1,0 +1,41 @@
+<ion-list>
+    <div>
+        <ion-item class="item-stable" ng-click="vm.isExpanded = !vm.isExpanded" ng-class="{active: vm.isExpanded}">
+            <i class="icon" ng-class="vm.isExpanded ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>Job Type List</strong>
+        </ion-item>
+        <div data-ng-if="vm.isExpanded">
+            <div class="list">
+                <div data-ng-repeat="ct in vm.customTypes.data" data-ng-switch="ct.type">
+                    <label class="item item-input" data-ng-switch-when="1">
+                        <span class="input-label" data-ng-bind="ct.title"></span>
+                        <input type="text" data-ng-model="ct.value" maxlength="100" placeholder="enter text here"
+                        data-ng-change="vm.events.onValueChanged(ct)" data-ng-model-options="{debounce:500}" />
+                    </label>
+                    <ion-list data-ng-switch-when="2">
+                        <div class="item item-divider">
+                            <span data-ng-bind="ct.title"></span>
+                        </div>
+                        <ion-radio name="{{ct.title}}" ng-model="ct.value" data-ng-change="vm.events.onValueChanged(ct)" ng-value="'Yes'">Yes</ion-radio>
+                        <ion-radio name="{{ct.title}}" ng-model="ct.value" data-ng-change="vm.events.onValueChanged(ct)" ng-value="'No'">No</ion-radio>
+                    </ion-list>
+                    <span data-ng-switch-when="3">
+                        <ion-checkbox data-ng-model="ct.value" data-ng-change="vm.events.onValueChanged(ct)">
+                            {{::ct.title}}</ion-checkbox>
+                    </span>
+                    <label class="item item-input" data-ng-switch-when="4">
+					    <span class="input-label" data-ng-bind="ct.title"></span>
+						<input type="text"  readonly="" class="transparent-background text-right" data-ng-change="vm.events.onValueChanged(ct,true)"
+                         data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}" data-ng-model="ct.value"/>
+                    </label>
+                    <span data-ng-switch-when="5">
+                        <jobtype-upload-component data-ct-entity="ct"></jobtype-upload-component>
+                    </span>
+                    <label class="item item-input" data-ng-switch-when="6">
+                        <textarea data-ng-model="ct.value" maxlength="100" placeholder="{{ct.title}}" rows="3"
+                        data-ng-change="vm.events.onValueChanged(ct)" data-ng-model-options="{debounce:500}"></textarea> 
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</ion-list>
