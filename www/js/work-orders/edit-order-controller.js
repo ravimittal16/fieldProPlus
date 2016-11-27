@@ -19,7 +19,8 @@
       milageTrackingEnabled: false,
       orderBelongToCurrentUser: false,
       timerEnabled: false,
-      woData: null
+      woData: null,
+      showEquipmentTabControl: false
     };
 
     vm.errors = [];
@@ -188,6 +189,7 @@
         if (response) {
           vm.uiSettings.milageTrackingEnabled = response.customerNumberEntity.milageTrackingEnabled || false;
           vm.uiSettings.timerEnabled = response.customerNumberEntity.workOrderTimerEnabled || false;
+          vm.uiSettings.showEquipmentTabControl = response.customerNumberEntity.equipmentTrackingOn || false;
           vm.scheduleStatus = response.secondaryOrderStatus;
           vm.serviceProviders = response.serviceProviders;
           vm.vehicles = response.vehicles;
@@ -334,7 +336,7 @@
           onTripnoteChanged: function () {
             updateSchedule(false, false);
           },
-          updateSchedule: function () { 
+          updateSchedule: function () {
             updateSchedule(true, true);
           },
           onListScheduleItemTap: function (sch) {
@@ -611,3 +613,4 @@
   ];
   angular.module("fpm").controller("edit-order-controller", initController);
 })();
+//vm.showEquipmentTabControl = response.customerNumberEntity.EquipmentTrackingOn || false;  

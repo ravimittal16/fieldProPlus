@@ -20,14 +20,14 @@
                 if (dateType && o.value) {
                     o.value = kendo.toString(kendo.parseDate(type.value), "g");
                 }
-                if (type.entityType === 3) {
+                if (type.type === 3) {
                     cbox = type.value;
                 }
                 customTypesFactory.updateData(o, cbox);
             }
             vm.events = {
-                onValueChanged: function (type, isFromDataChanged) {
-                    if (isFromDataChanged) {
+                onValueChanged: function (type) {
+                    if (type.type === 4) {
                         if (counter === 0) {
                             updateToDatabase(type, true);
                             counter++;
@@ -62,7 +62,7 @@
             }
         }],
         controllerAs: "vm",
-        templateUrl: "js/shared-components/jobtype-list-component-template.html"
+        templateUrl: "js/jobtype-list/jobtype-list-component-template.html"
     };
     angular.module("fpm").component("jobtypeListComponent", componentConfig);
 })();

@@ -17,12 +17,30 @@
                 vm.factory.viewDataForEquipment = [];
                 if (angular.isDefined(vm.entityId) && angular.isDefined(vm.barcode)) {
                     equipmentFactory.getEquipmentFields(vm.entityId, vm.barcode).then(function (response) {
-                        console.log("RES", response);
+                        if (response && response.length > 0) {
+                            var checkBoxes = _.where(response, { type: 3 });
+                            angular.forEach(checkBoxes, function (e) {
+                                e.value = (e.value === "true" || e.value === "True" || e.value === "1");
+                            });
+                            vm.customTypes.data = response;
+                            vm.factory.viewDataForEquipment = vm.customTypes.data;
+                        }
                     });
                 }
             }
 
+            vm.events = {
+                onValueChanged: function (ct) {
+                    
+                }
+            }
+
             vm.$onChanges = function () {
+                if (vm.entityId) {
+                    getCustomTypesDataByEquipment();
+                }
+            }
+            vm.$onInit = function () {
                 if (vm.entityId) {
                     getCustomTypesDataByEquipment();
                 }

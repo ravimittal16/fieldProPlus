@@ -65,7 +65,7 @@
                 };
             }],
         controllerAs: "vm",
-        templateUrl: "js/shared-components/jobtype-upload-component-template.html"
+        templateUrl: "js/jobtype-list/jobtype-upload-component-template.html"
     };
     angular.module("fpm").component("jobtypeUploadComponent", componentConfig);
 })();

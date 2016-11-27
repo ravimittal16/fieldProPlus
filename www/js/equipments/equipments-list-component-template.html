@@ -5,15 +5,28 @@
         </ion-item>
         <div data-ng-if="vm.isExpanded">
             <div class="card">
-                <div class="item item-text-wrap">
-                    <h4>
-                        <strong>Equipment Name/Number :</strong><span data-ng-bind="vm.view.currentEquip.equipmentNumber"></span>
+                <div class="button-bar" data-ng-if="vm.view.barcodeEquipments.length > 0">
+                    <a class="button button-small icon-left ion-chevron-left button-clear button-dark" data-ng-click="vm.events.onEquimentNextPreButtonClicked(false)">Previous Equipment</a>
+                    <a class="button button-small icon-right ion-chevron-right button-clear button-dark" data-ng-click="vm.events.onEquimentNextPreButtonClicked(true)">Next Equipment</a>
+                </div>
+                <div class="item item-text-wrap" data-ng-if="!vm.view.gettingEquipements && vm.view.currentEquip">
+                    <h4 class="text-muted">
+                        <strong>Equipment Name/Number&nbsp;:&nbsp;</strong>
                     </h4>
+                    <h3>
+                        <span data-ng-bind="vm.view.currentEquip.equipmentNumber"></span>
+                    </h3>
                     <h6 class="text-muted">
-                        <strong>Description :</strong><span data-ng-bind="vm.view.currentEquip.description"></span>
+                        <span data-ng-bind="vm.view.currentEquip.description"></span>
                     </h6>
                 </div>
-                <equipment-custom-type-list-component barcode="vm.barcode" entity-id="vm.view.currentEquip.num"></equipment-custom-type-list-component>
+                <div class="item item-text-wrap text-center" data-ng-if="!vm.view.gettingEquipements && vm.view.barcodeEquipments.length == 0">
+                    <h3 class="text-muted">
+                        <strong>No Equipments attached</strong>
+                    </h3>
+                </div>
+                
+                <equipment-custom-type-list-component data-ng-if="vm.view.currentEquip" barcode="vm.barcode" entity-id="vm.view.currentEquip.num"></equipment-custom-type-list-component>
             </div>
         </div>
     </div>

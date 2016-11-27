@@ -24,7 +24,7 @@
                     </span>
                     <label class="item item-input" data-ng-switch-when="4">
 					    <span class="input-label" data-ng-bind="ct.title"></span>
-						<input type="text"  readonly="" class="transparent-background text-right" data-ng-change="vm.events.onValueChanged(ct,true)"
+						<input type="text"  readonly="" placeholder="select date" class="transparent-background text-right" data-ng-change="vm.events.onValueChanged(ct)"
                          data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}" data-ng-model="ct.value"/>
                     </label>
                     <span data-ng-switch-when="5">
