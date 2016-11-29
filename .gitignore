@@ -25,7 +25,8 @@ coverage
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
-platforms/**
+platforms/android
+platforms/ios
 
 # Dependency directories
 node_modules
