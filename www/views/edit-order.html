@@ -43,25 +43,25 @@
 									{{::vm.barCodeData.barcodeDetails.date | date:'MM/dd/yyyy'}}
 								</span>
               </div>
-              <div class="item">
+              <div class="item" data-ng-if="vm.barCodeData.barcodeDetails.excptns">
                 Job Type
                 <span class="item-note">
 									{{::vm.barCodeData.barcodeDetails.excptns}}
 								</span>
               </div>
-              <div class="item">
+              <div class="item" data-ng-if="vm.barCodeData.barcodeDetails.priority">
                 Priority
                 <span class="item-note">
 									{{::vm.barCodeData.barcodeDetails.priority}}
 								</span>
               </div>
-              <div class="item">
+              <div class="item" data-ng-if="vm.barCodeData.barcodeDetails.class_id">
                 Class
                 <span class="item-note">
 									{{::vm.barCodeData.barcodeDetails.class_id}}
 								</span>
               </div>
-              <div class="item">
+              <div class="item" data-ng-if="vm.barCodeData.barcodeDetails.poNum">
                 PO Number
                 <span class="item-note">
 									{{::vm.barCodeData.barcodeDetails.poNum}}
