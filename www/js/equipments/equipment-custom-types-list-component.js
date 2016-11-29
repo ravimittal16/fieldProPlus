@@ -11,7 +11,7 @@
             vm.customTypes = {
                 data: []
             };
-
+            var counter = 0;
             function getCustomTypesDataByEquipment() {
                 vm.customTypes.data = [];
                 vm.factory.viewDataForEquipment = [];
@@ -28,10 +28,29 @@
                     });
                 }
             }
-
+            function updateToDatabase(type) {
+                var chbx = false;
+                if (type.type === 3) {
+                    chbx = type.value === true;
+                }
+                if (type.type === 4) {
+                    type.value = kendo.toString(kendo.parseDate(type.value), "g");
+                }
+                //customTypesFactory.updateData(type, chbx);
+                equipmentFactory.saveDataCustomTypes({ num: vm.entityId, barcode: vm.barcode, customTypesJson: JSON.stringify(vm.customTypes.data) });
+            }
             vm.events = {
                 onValueChanged: function (ct) {
-                    
+                    if (ct.type === 4) {
+                        if (counter === 0) {
+                            updateToDatabase(ct);
+                            counter++;
+                        } else {
+                            counter = 0;
+                        }
+                    } else {
+                        updateToDatabase(ct);
+                    }
                 }
             }
 

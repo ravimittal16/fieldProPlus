@@ -32,8 +32,8 @@
                                 moveToDashboard();
                             });
                         }
-                    });
-                }).finally(fpmUtilitiesFactory.hideLoading);
+                    }).finally(fpmUtilitiesFactory.hideLoading);
+                });
             } else {
                 vm.errors.push("Please check all values before save");
             }

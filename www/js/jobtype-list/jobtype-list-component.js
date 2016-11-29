@@ -23,7 +23,13 @@
                 if (type.type === 3) {
                     cbox = type.value;
                 }
-                customTypesFactory.updateData(o, cbox);
+                o.dataEntityType = 1;
+                o.entityKey = vm.barcode;
+                customTypesFactory.updateData(o, cbox).then(function (response) {
+                    if (response) {
+                        type.id = response.id;
+                     }
+                });
             }
             vm.events = {
                 onValueChanged: function (type) {

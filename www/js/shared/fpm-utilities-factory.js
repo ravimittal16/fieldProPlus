@@ -12,6 +12,17 @@
           template: template
         });
       },
+      getModal: function (name, scope) {
+        var defer = $q.defer();
+        $ionicModal.fromTemplateUrl(name, {
+          scope: scope,
+          animation: 'slide-in-up',
+          focusFirstInput: true
+        }).then(function (modal) {
+          defer.resolve(modal);
+        });
+        return defer.promise;
+      },
       hideLoading: function () {
         return $ionicLoading.hide();
       },

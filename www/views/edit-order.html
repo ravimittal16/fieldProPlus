@@ -214,7 +214,8 @@
 			<ion-tab title="COMPONENTS" icon-on="ion-ios-cog" icon-off="ion-ios-cog-outline">
         <ion-content>
           <jobtype-list-component data-barcode="vm.barcode" data-jobtype="vm.barCodeData.barcodeDetails.excptns"></jobtype-list-component>
-          <equipments-list-component data-ng-if="vm.uiSettings.showEquipmentTabControl" data-barcode="vm.barcode"></equipments-list-component>
+          <equipments-list-component data-ng-if="vm.uiSettings.showEquipmentTabControl" 
+          data-barcode="vm.barcode" uin="vm.barCodeData.barcodeDetails.uin" display-name="vm.barCodeData.barcodeDetails.displayName"></equipments-list-component>
         </ion-content>
 			</ion-tab>
 			<ion-tab title="SUMMARY" icon-on="ion-ios-calculator" icon-off="ion-ios-calculator-outline">

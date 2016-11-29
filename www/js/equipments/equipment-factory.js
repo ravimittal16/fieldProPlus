@@ -1,4 +1,4 @@
-(function () {
+(function() {
     "use strict";
 
     function initFactory(apicontext) {
@@ -57,6 +57,7 @@
 
         }
 
+        factory.createNewEquipment = createNewEquipment;
         factory.getEquipments = getEquipments;
         factory.addMaintenanceNote = addMaintenanceNote;
         factory.deleteEquipment = deleteEquipment;

@@ -5,9 +5,13 @@
         </ion-item>
         <div data-ng-if="vm.isExpanded">
             <div class="card">
-                <div class="button-bar" data-ng-if="vm.view.barcodeEquipments.length > 0">
+                <div class="button-bar" data-ng-if="vm.view.barcodeEquipments.length > 1">
                     <a class="button button-small icon-left ion-chevron-left button-clear button-dark" data-ng-click="vm.events.onEquimentNextPreButtonClicked(false)">Previous Equipment</a>
                     <a class="button button-small icon-right ion-chevron-right button-clear button-dark" data-ng-click="vm.events.onEquimentNextPreButtonClicked(true)">Next Equipment</a>
+                </div>
+                <div class="item item-divider bg-white">
+                    <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                        data-ng-click="vm.events.onActionDotsClicked()"></a>
                 </div>
                 <div class="item item-text-wrap" data-ng-if="!vm.view.gettingEquipements && vm.view.currentEquip">
                     <h4 class="text-muted">
@@ -25,9 +29,91 @@
                         <strong>No Equipments attached</strong>
                     </h3>
                 </div>
-                
+
                 <equipment-custom-type-list-component data-ng-if="vm.view.currentEquip" barcode="vm.barcode" entity-id="vm.view.currentEquip.num"></equipment-custom-type-list-component>
             </div>
         </div>
     </div>
 </ion-list>
+<script id="attachEquipmentModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<ion-header-bar>
+			<h1 class="title">Attach Equipment</h1>
+            <button class="button" data-ng-click="vm.events.closeEquipmentAttachModal()">
+				Cancel
+			</button>
+		</ion-header-bar>
+		<ion-content>
+            <div class="list" data-ng-if="vm.view.errors.length > 0">
+                <div class="error">
+                    <ui class="list-unstyled">
+                        <li data-ng-repeat="error in vm.view.errors">{{::error}}</li>
+                    </ui>
+                </div>
+            </div>
+            <ion-list>
+                <ion-item ng-repeat="item in vm.view.equipments" data-ng-click="vm.events.onAttachEquipmentItemClicked(item)">
+                    <h4>{{::item.equipmentNumber}}</h4>
+                    <h6 class="text-muted">{{::item.description}}</h6>
+                </ion-item>
+            </ion-list>
+		</ion-content>
+	</ion-modal-view>
+</script>
+
+<script id="newEquipmentModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<ion-header-bar>
+			<h1 class="title">New Equipment</h1>
+            <button class="button" data-ng-click="vm.events.closeNewEquipmentModal()">
+				Cancel
+			</button>
+		</ion-header-bar>
+		<ion-content>
+            <form Name="newEquipmentForm">
+                <div class="list">
+                    <label class="item item-input item-floating-label">
+                        <span class="input-label">Display Name</span>
+                        <input type="text" name="displayName" class="transparent-background" placeholder="Display Name" readonly="" required="" type="text" maxlength="100" data-ng-model="vm.view.newEquipmentEntity.displayName"  />
+                    </label>
+                    <label class="item item-input item-floating-label">
+                        <span class="input-label">Equipment Name/Number</span>
+                        <input type="text" name="equipmentNumber" placeholder="Equipment Name/Number" required="" type="text" maxlength="100" data-ng-model="vm.view.newEquipmentEntity.equipmentNumber"  />
+                    </label>
+                    <label class="item item-input  item-floating-label">
+                        <span class="input-label">Description</span>
+                        <textarea name="description" rows="4" spellcheck="false" maxlength="500"  data-ng-model="vm.view.newEquipmentEntity.description" placeholder="Description"></textarea>
+                    </label>
+                    <div class="row">
+                        <div class="button-bar padding-top">
+                            <a class="button button-small button-positive" data-ng-click="vm.events.createEquipmentSubmit(newEquipmentForm.$valid,false)">Create Equipment</a>
+                            <a class="button button-small button-positive" data-ng-click="vm.events.createEquipmentSubmit(newEquipmentForm.$valid,true)">Create & Attach Equipment</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+		</ion-content>
+	</ion-modal-view>
+</script>
+
+<script id="equipmentHistoryModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<ion-header-bar>
+			<h1 class="title">Equipment History</h1>
+            <button class="button" data-ng-click="vm.events.closeHistoryModal()">
+				Cancel
+			</button>
+		</ion-header-bar>
+		<ion-content>
+            <div class="card" data-ng-repeat="d in vm.uiResult">
+                <div class="item item-divider">
+                    <small>Work Order # {{::d.barcodeView.barcodeName}}</small>
+                </div>
+                <div class="item item-text-wrap" data-ng-repeat="f in d.fields">
+                    <h6 class="text-muted">{{::f.title}}</h6>
+                    <h4><strong>{{::f.value}}</strong></h4>
+                </div>
+            </div>
+		</ion-content>
+	</ion-modal-view>
+</script>
