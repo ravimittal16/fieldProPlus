@@ -1,0 +1,105 @@
+<ion-refresher data-ng-if="vm.refresher" pulling-text="Pull to refresh..." on-refresh="vm.events.refreshOnPullDown()">
+</ion-refresher>
+
+<div class="item item-divider bg-white" data-ng-if="vm.barcode">
+    <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+        data-ng-click="vm.events.onActionDotsClicked()"></a>
+</div>
+<div class="card" data-ng-if="vm.requestCompleted && vm.expanses.length == 0">
+    <div class="item item-text-wrap text-center">
+        <h3 class="text-muted">
+            <strong>No Expanses found</strong>
+        </h3>
+    </div>
+</div>
+<div data-ng-if="vm.expanses.length > 0 && vm.requestCompleted">
+    <ion-list can-swipe="true" data-ng-if="vm.unpaid.length > 0 && vm.requestCompleted">
+        <div class="item item-divider">
+            Unpaid Expenses
+        </div>
+        <ion-item ng-repeat="(key,value) in vm.expanses | filter:{expenseStatus : 0}">
+            <expanse-item data-item="value"></expanse-item>
+            <ion-option-button class="button-assertive" type="button" ng-click="vm.events.onDeleteClicked(value,$index,false)">
+                Delete
+            </ion-option-button>
+            <ion-option-button class="button-info" type="button" ng-click="vm.events.onEditClicked(value)">
+                Edit
+            </ion-option-button>
+        </ion-item>
+    </ion-list>
+    <ion-list can-swipe="true" data-ng-if="vm.paid.length > 0 && vm.requestCompleted">
+        <div class="item item-divider">
+            Paid Expenses
+        </div>
+        <ion-item ng-repeat="(key,value) in vm.expanses | filter:{expenseStatus : 1}">
+            <expanse-item data-item="value"></expanse-item>
+            <ion-option-button class="button-assertive" type="button" ng-click="vm.events.onDeleteClicked(value,$index,true)">
+                Delete
+            </ion-option-button>
+            <ion-option-button class="button-info" type="button" ng-click="vm.events.onEditClicked(value)">
+                Edit
+            </ion-option-button>
+        </ion-item>
+    </ion-list>
+
+</div>
+
+
+<script id="expenseModal.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar>
+        <h1 class="title"><span data-ng-if="vm.entity.expenseId == 0">Add</span><span data-ng-if="vm.entity.expenseId != 0">Edit</span> Expense</h1>
+        	<button class="button" data-ng-click="vm.events.closeModal()">
+                Cancel
+            </button>
+        </ion-header-bar>
+        <ion-content>
+            <form  name="expenseEditForm">
+                <div class="list padding-top" data-ng-if="vm.showError">
+                    <div class="error">
+                        <ui class="list-unstyled">
+                            <li data-ng-repeat="error in vm.errors">{{::error}}</li>
+                        </ui>
+                    </div>
+                </div>
+                <div class="list">
+                    <label class="item item-input item-stacked-label">
+                        <span class="input-label">Date</span>
+                        <input type="text" class="transparent-background" placeholder="Date" readonly="" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}" data-ng-model="vm.entity.expenseDate" />
+                    </label>
+                     <label class="item item-input item-stacked-label">
+                        <span class="input-label">Title</span>
+                        <input type="text" name="title" placeholder="Title" data-ng-model="vm.entity.title" required="" />
+                    </label>
+                    <label class="item item-input">
+                        <textarea placeholder="description" data-ng-model="vm.entity.description" rows="3"></textarea>
+                    </label>
+                    <label class="item item-input item-stacked-label">
+                        <span class="input-label">Quantity</span>
+                        <input type="number" class="form-control input-sm" placeholder="Quantity" required="" data-ng-model="vm.entity.quantity" />
+                    </label>
+                    <label class="item item-input item-stacked-label">
+                        <span class="input-label">Total Cost</span>
+                        <input type="number" class="form-control input-sm" placeholder="Total Cost" required="" data-ng-model="vm.entity.totalCost" />
+                    </label>
+                    <ion-toggle ng-model="vm.entity.isReimbursable" toggle-class="toggle-balanced">Reimbursable</ion-toggle>
+                    <div class="item" data-ng-if="!vm.entity.havingImage">
+                        <input type="file" class="btn  btn-block btn-default btn-sm" data-kendo-upload="vm.upload.control" data-k-options="vm.upload.config" data-k-enable="false"/>
+                    </div>
+                    <div class="item" data-ng-if="vm.image.visible">
+                        You selected : <strong data-ng-bind="vm.image.name"></strong>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="button button-small button-positive button-block" data-ng-click="vm.events.onSubmitClicked(expenseEditForm.$valid)">
+                                <span data-ng-if="vm.entity.expenseId == 0">Add</span>
+                                <span data-ng-if="vm.entity.expenseId != 0">Update</span> 
+                                Expanse
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </ion-content>
+    </ion-modal-view>
+</script>

@@ -2,11 +2,8 @@
     "use strict";
 
     function initFactory(apiContext) {
-        var factory = {};
+
         var apibase = "api/expense/";
-
-        factory.schema = { expenseId: 0, Title: "", Description: "", ExpenseType: 0, ExpenseStatus: 0, TotalCost: 0, Barcode: "", ExpenseDate: new Date(), Quantity: 1, ImageChanged: false, havingImage: false };
-
 
         function getExpense(barcode, isFromMain) {
             return apiContext.get(apibase + "GetExpense?barcode=" + barcode + "&isFromMain=" + isFromMain);
@@ -17,7 +14,7 @@
         }
 
         function deleteExpense(id) {
-            return apiContext.deleteApiCall(apibase + "DeleteExpense?id=" + id);
+            return apiContext.deleteReq(apibase + "DeleteExpense?id=" + id);
         }
 
         function markAsPaidUnPaid(id) {
@@ -25,14 +22,14 @@
         }
 
         function deleteImage(id) {
-            return apiContext.deleteApiCall(apibase + "DeleteImage?expenseId=" + id);
+            return apiContext.deleteReq(apibase + "DeleteImage?expenseId=" + id);
         }
 
+        var factory = {};
         factory.markAsPaidUnPaid = markAsPaidUnPaid;
         factory.deleteExpense = deleteExpense;
         factory.addExpense = addExpense;
         factory.getExpense = getExpense;
-        // factory.openModal = openModal;
         factory.deleteImage = deleteImage;
         return factory;
     }
