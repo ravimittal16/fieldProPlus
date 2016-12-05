@@ -40,20 +40,29 @@
 			</button>
 		</ion-header-bar>
 		<ion-content>
-				<ion-list>
+				<ion-list data-ng-if="!vm.isServiceProvider">
 					<ion-item ng-repeat="item in vm.matchedOrders" data-ng-click="vm.events.onSearchItemClick(item)">
-						<div class="row">
-							<div class="col">
+						<span class="label label-success">{{::item.BarcodeName}}</span>
+						<div class="padding-top">
+							<h3>{{::item.DisplayName}}</h3>
+							<address>
 								<p>
-									<h3>{{item.DisplayName}}</h3>
+									<strong>{{::item.Company_Name}}</strong>
 								</p>
+							</address>
+						</div>
+					</ion-item>
+				</ion-list>
+				<ion-list data-ng-if="vm.isServiceProvider">
+					<ion-item ng-repeat="item in vm.matchedOrders" data-ng-click="vm.events.onSearchItemClick(item)">
+						<span class="label label-success">{{::item.barcodeName}}</span>
+						<div class="padding-top">
+							<h3>{{::item.displayName}}</h3>
+							<address>
 								<p>
-									<h4>{{item.Company_Name}}</h4>
+									<strong>{{::item.company_Name}}</strong>
 								</p>
-							</div>
-							<div class="col">
-								<h3 class="pull-right">{{item.BarcodeName}}</h3>
-							</div>
+							</address>
 						</div>
 					</ion-item>
 				</ion-list>

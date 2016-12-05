@@ -44,6 +44,24 @@
             </div>
         </div>
         <div class="list">
+            <div class="alert" data-ng-class="{'alert-info': vm.ui.data.approvalStatus == 1 || vm.ui.data.approvalStatus == 5,'alert-success': vm.ui.data.approvalStatus == 3,'alert-danger': vm.ui.data.approvalStatus == 4 || vm.ui.data.approvalStatus == 2}">
+                <span data-ng-switch="vm.ui.data.approvalStatus">
+                    <span data-ng-switch-when="1" class="">
+                        <i class="fa fa-info-circle"></i>&nbsp;Waiting for approval
+                    </span>
+                    <span data-ng-switch-when="2">Time card has been rejected due to following reason : {{::vm.ui.data.summary.MessageText}}
+                        <button class="button button-block button-small button-positive" data-ng-click="vm.ui.events.sendForApproval(5)">Re-submit for Approval</button>
+                    </span>
+                    <span data-ng-switch-when="3">
+                        <i class="fa fa-check"></i>&nbsp;Time card has been approved
+                    </span>
+                    <span data-ng-switch-when="4">Time card has been unapproved due to following reason : {{::vm.ui.data.summary.MessageText}}
+                        <button class="button button-block button-small button-positive" data-ng-click="vm.ui.events.sendForApproval(5)">Re-submit for Approval</button>
+                    </span>
+                    <span data-ng-switch-when="5">Time card has been resent for approval
+                    </span>
+                </span>
+            </div>
             <div class="card" data-ng-repeat="(key,t) in vm.ui.data.timeCards">
                 <div class="item item-divider" data-ng-if="t.jobCode != 5001">
                     <span data-ng-if="!t.isPtoType">Section - {{t.section}}</span>
