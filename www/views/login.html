@@ -26,10 +26,22 @@
             <div class="padding">
                 <button class="button button-block button-positive" data-ng-disabled="authForm.$invalid" type="submit" ng-click="vm.events.loginClick(authForm.$valid)">Login</button>
                 <div class="pull-right">
-                    <a href="">Forgot password</a>
+                    <a href="" data-ng-click="vm.events.onForgotPasswordClicked()">Forgot password</a>
                 </div>
             </div>
 
         </form>
     </ion-content>
 </ion-view>
+<script id="forgotPasswordModal.html" type="text/ng-template">
+    <div class="list" data-ng-if="vm.errors.length > 0">
+        <div class="error">
+            <ui class="list-unstyled">
+            <li data-ng-repeat="error in vm.errors">{{::error}}</li>
+            </ui>
+        </div>
+    </div>
+    <div class="list">  
+        <input type="email" max-length="100" data-ng-model="vm.data.model" />
+    </div>
+</script>

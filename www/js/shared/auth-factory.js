@@ -1,7 +1,8 @@
 (function () {
   "use strict";
 
-  function initFactory($http, $q, $rootScope, $state, $window, $timeout, $ionicLoading, localStorageService, fieldPromaxConfig) {
+  function initFactory($http, $q, $rootScope, $state, $window, $timeout, $ionicLoading,
+    localStorageService, fieldPromaxConfig, apiContext) {
     var serviceBase = fieldPromaxConfig.fieldPromaxApi;
     var localStorageKeys = fieldPromaxConfig.localStorageKeys;
     var authentication = {
@@ -87,11 +88,11 @@
     }
 
     function sendPassword(uid) {
-      return apiContext.get("/api/public/SendPassword?email=" + uid);
+      return apiContext.get("api/public/SendPassword?email=" + uid);
     }
 
     function changePassword(m) {
-      return apiContext.post("/api/changepassword/changepassword", m);
+      return apiContext.post("api/user/changepassword", m);
     }
 
     var factory = {
@@ -107,7 +108,7 @@
   }
 
   initFactory.$inject = ["$http", "$q", "$rootScope", "$state", "$window", "$timeout", "$ionicLoading",
-    "localStorageService", "fieldPromaxConfig"
+    "localStorageService", "fieldPromaxConfig", "api-base-factory"
   ];
   angular.module("fpm").factory("authenticationFactory", initFactory);
 })();
