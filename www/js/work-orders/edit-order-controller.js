@@ -180,9 +180,8 @@
       }
     }
     //================================================================================================
-
+    vm.user = authenticationFactory.getLoggedInUserInfo();
     function activateController() {
-      vm.user = authenticationFactory.getLoggedInUserInfo();
       vm.uiSettings.isTimeCardModuleEnabled = vm.user.timeCard && vm.user.allowPushTime;
       vm.isServiceProvider = !vm.user.isAdminstrator;
       sharedDataFactory.getIniitialData(true).then(function (response) {

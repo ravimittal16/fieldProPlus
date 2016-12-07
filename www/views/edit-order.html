@@ -39,32 +39,32 @@
               </div>
               <div class="item">
                 Order Create Date
-                <span class="item-note">
-									{{::vm.barCodeData.barcodeDetails.date | date:'MM/dd/yyyy'}}
+                <span class="item-note text-dark f-z-15">
+									<strong>{{::vm.barCodeData.barcodeDetails.date | date:'MM/dd/yyyy'}}</strong>
 								</span>
               </div>
               <div class="item" data-ng-if="vm.barCodeData.barcodeDetails.excptns">
                 Job Type
-                <span class="item-note">
-									{{::vm.barCodeData.barcodeDetails.excptns}}
+                <span class="item-note text-dark f-z-15">
+									<strong>{{::vm.barCodeData.barcodeDetails.excptns}}</strong>
 								</span>
               </div>
               <div class="item" data-ng-if="vm.barCodeData.barcodeDetails.priority">
                 Priority
-                <span class="item-note">
-									{{::vm.barCodeData.barcodeDetails.priority}}
+                <span class="item-note text-dark f-z-15">
+									<strong>{{::vm.barCodeData.barcodeDetails.priority}}</strong>
 								</span>
               </div>
               <div class="item" data-ng-if="vm.barCodeData.barcodeDetails.class_id">
                 Class
-                <span class="item-note">
-									{{::vm.barCodeData.barcodeDetails.class_id}}
+                <span class="item-note text-dark f-z-15">
+									<strong>{{::vm.barCodeData.barcodeDetails.class_id}}</strong>
 								</span>
               </div>
               <div class="item" data-ng-if="vm.barCodeData.barcodeDetails.poNum">
                 PO Number
-                <span class="item-note">
-									{{::vm.barCodeData.barcodeDetails.poNum}}
+                <span class="item-note text-dark f-z-15">
+									<strong>{{::vm.barCodeData.barcodeDetails.poNum}}</strong>
 								</span>
               </div>
               <label class="item item-input item-stacked-label">
@@ -192,7 +192,7 @@
                   <h4 class="pull-right"><strong>{{p.qty}}</strong></h4>
                 </div>
                 <div class="col  col-25 text-right">
-                  <h3 class="pull-right"><strong>{{p.price | currency:'$':2}}</strong></h4>
+                  <h3 class="pull-right" data-ng-if="vm.user.showPrice"><strong>{{p.price | currency:'$':2}}</strong></h4>
                 </div>
               </div>
               <div class="row n-p-t n-p-b row-top">

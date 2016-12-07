@@ -2,11 +2,12 @@
     "use strict";
     var componentConfig = {
         templateUrl: "js/shared-components/product-search-component-template.html",
-        controller: ["$scope", "$timeout", "$ionicModal", "work-orders-factory",
-            function ($scope, $timeout, $ionicModal, workOrderFactory) {
+        controller: ["$scope", "$timeout", "$ionicModal", "work-orders-factory", "authenticationFactory",
+            function ($scope, $timeout, $ionicModal, workOrderFactory, authenticationFactory) {
                 var vm = this;
                 vm.searchValue = "";
                 vm.products = [];
+                vm.user = authenticationFactory.getLoggedInUserInfo();
                 vm.events = {
                     closeProductEditModal: function () {
                         vm.productModal.hide();

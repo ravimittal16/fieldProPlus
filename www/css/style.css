@@ -154,6 +154,7 @@ address>p {
 }
 
 
+
 /*.item.wrap, .item-content.wrap {
 white-space: normal;
 }*/
@@ -295,4 +296,7 @@ customer-search-header-component {
 }
 .timecard-table th {
     text-align: left;
+}
+.f-z-15{
+  font-size: 15px;
 }
