@@ -1,12 +1,13 @@
-(function () {
+(function() {
     "use strict";
     var defaultColor = "#000000";
     var defCordinates = { x: 44.31127, y: -92.67851, xcom: -92.67851, ycom: 44.3112679 };
     var mapMarkers = [];
     var markers = [];
-    function initController($scope, $state, $cordovaGeolocation, $ionicActionSheet, $timeout, $ionicModal, mapFactory,
-        sharedDataFactory, fpmUtilitiesFactory) {
+    function initController($scope, $state, $cordovaGeolocation, $ionicActionSheet, $timeout, $ionicPopup, $cordovaNetwork, $rootScope,
+        mapFactory, sharedDataFactory, fpmUtilitiesFactory, authenticationFactory) {
         var vm = this;
+        vm.user = authenticationFactory.getLoggedInUserInfo();
         var options = { timeout: 10000, enableHighAccuracy: true };
         var mapOptions = {
             center: null,
@@ -24,28 +25,31 @@
         //     vm.map = new google.maps.Map(document.getElementById("map"), mapOptions);
         // });
 
-        $ionicModal.fromTemplateUrl("mapFilters.html", {
-            scope: $scope,
-            animation: 'slide-in-up'
-        }).then(function (modal) {
-            vm.filtersModal = modal;
-        });
 
         vm.filtersApplied = false;
         function onFiltersClicked() {
-            if (vm.filtersModal) {
-                vm.filtersModal.show();
-            }
+            showFilterModal();
         }
         function clearFilters() {
             if (vm.filtersModal) {
                 vm.filterDate = null;
                 var uncheckedUsers = _.where(vm.mapData.users, { isChecked: false });
-                _.forEach(uncheckedUsers, function (u) {
+                _.forEach(uncheckedUsers, function(u) {
                     u.isChecked = true;
                 });
                 updateMapMarkersView();
                 vm.filtersModal.hide();
+            }
+        }
+
+        function showFilterModal() {
+            if (!vm.filtersModal) {
+                fpmUtilitiesFactory.getModal("mapFilters.html", $scope).then(function(modal) {
+                    vm.filtersModal = modal;
+                    vm.filtersModal.show();
+                });
+            } else {
+                vm.filtersModal.show();
             }
         }
         vm.filterDate = null;
@@ -64,21 +68,21 @@
             if (markers) {
                 dateFilterApplied = true;
                 var isHavingOrders = false;
-                var markersWithDate = _.filter(markers, function (mar) {
+                var markersWithDate = _.filter(markers, function(mar) {
                     return mar.start != null && mar.havingMap === true;
                 });
-                angular.forEach(markersWithDate, function (m) {
+                angular.forEach(markersWithDate, function(m) {
                     setMapToMarker(m, null);
                 });
                 if (vm.filterDate) {
                     var sDate = kendo.parseDate(vm.filterDate);
-                    var filterMarkers = _.filter(markersWithDate, function (item) {
+                    var filterMarkers = _.filter(markersWithDate, function(item) {
                         return item.start.getDate() === parseInt(sDate.getDate())
                             && item.start.getMonth() === parseInt(sDate.getMonth())
                             && item.start.getFullYear() === parseInt(sDate.getFullYear())
                     });
                     if (filterMarkers.length > 0) {
-                        _.forEach(filterMarkers, function (fmar) {
+                        _.forEach(filterMarkers, function(fmar) {
                             setMapToMarker(fmar, vm.map);
                         });
                     }
@@ -88,15 +92,15 @@
 
         function updateMarkersMap(users, map, hideUnassignedMarkers) {
             hideUnassignedMarkers = hideUnassignedMarkers || false;
-            angular.forEach(users, function (u) {
+            angular.forEach(users, function(u) {
                 var userMarkers = _.where(markers, { technician: u.userId });
-                angular.forEach(userMarkers, function (m) {
+                angular.forEach(userMarkers, function(m) {
                     setMapToMarker(m, map);
                 });
             });
             if (hideUnassignedMarkers === true) {
                 var unassigned = _.where(markers, { isassigned: false });
-                _.forEach(unassigned, function (un) {
+                _.forEach(unassigned, function(un) {
                     setMapToMarker(un, null);
                 });
             }
@@ -114,13 +118,13 @@
             getMapData(true);
         }
         function invertUserSelection() {
-            angular.forEach(vm.mapData.users, function (u) {
+            angular.forEach(vm.mapData.users, function(u) {
                 u.isChecked = !u.isChecked;
             });
         }
 
         function toggleUserSelection() {
-            angular.forEach(vm.mapData.users, function (u) {
+            angular.forEach(vm.mapData.users, function(u) {
                 u.isChecked = true;
             });
         }
@@ -134,10 +138,10 @@
                 }],
                 titleText: 'Service Provider Filter Options',
                 cancelText: 'Cancel',
-                cancel: function () {
+                cancel: function() {
                     // add cancel code..
                 },
-                buttonClicked: function (index) {
+                buttonClicked: function(index) {
                     if (index === 0) {
                         toggleUserSelection();
                     }
@@ -157,15 +161,15 @@
                 titleText: 'Date Filter Options',
                 destructiveText: 'Clear Date Filter',
                 cancelText: 'Cancel',
-                destructiveButtonClicked: function () {
+                destructiveButtonClicked: function() {
                     vm.filterDate = null;
                     updateMapMarkersView();
                     return true;
                 },
-                cancel: function () {
+                cancel: function() {
                     // add cancel code..
                 },
-                buttonClicked: function (index) {
+                buttonClicked: function(index) {
                     if (index === 0) {
                         vm.filterDate = new Date();
                     }
@@ -186,10 +190,25 @@
             orders: []
         };
         function addHandler(m, o) {
-            window.google.maps.event.addListener(m, "click", function () {
-                if (!o.isHome && o.numFromTechnician) {
-                    fpmUtilitiesFactory.alerts.confirm("Confirmation", "Are you sure to edit this work order?", function () {
-                        $state.go("app.editOrder", { barCode: o.barCode, technicianNum: o.numFromTechnician, src: "map" });
+            vm.currentMarker = o.o;
+            window.google.maps.event.addListener(m, "click", function() {
+                if (!o.isHome) {
+                    var myPopup = $ionicPopup.show({
+                        templateUrl: "mapInfoWindow.html",
+                        title: vm.currentMarker.barcodeName,
+                        scope: $scope,
+                        buttons:
+                        [
+                            { text: "Close" },
+                            {
+                                text: 'Edit Order',
+                                type: 'button-positive',
+                                onTap: function(e) {
+                                    if (o.numFromTechnician) {
+                                        $state.go("app.editOrder", { barCode: o.barCode, technicianNum: o.numFromTechnician, src: "map" });
+                                    }
+                                }
+                            }]
                     });
                 }
             });
@@ -198,7 +217,7 @@
         function buildMap() {
             var mapdata = vm.mapData;
             if (mapMarkers && mapMarkers.length > 0) {
-                $.each(mapMarkers, function (i, l) {
+                $.each(mapMarkers, function(i, l) {
                     var marker = null;
                     var myLatLng = new window.google.maps.LatLng(l.y, l.x);
                     if (l.isHome === true) {
@@ -256,9 +275,10 @@
                 });
             }
         }
+
         function updateMapMarkersArray() {
             mapMarkers = [];
-            $.each(vm.mapData.orders, function (i, e) {
+            $.each(vm.mapData.orders, function(i, e) {
                 var color = defaultColor;
                 if (vm.mapData.users && e.technicianNum != null) {
                     var cRecd = _.findWhere(vm.mapData.users, { userId: e.technicianNum });
@@ -272,7 +292,7 @@
                         x: e.coordinateX, y: e.coordinateY, barCode: e.barcode, isHome: false, color: color,
                         scale: color === defaultColor ? 4 : 6, isAssigned: isWorkAssigned,
                         technician: e.technicianNum, start: e.scheduledStartDateTime,
-                        numFromTechnician: e.numFromTechnicianSchedule
+                        numFromTechnician: e.numFromTechnicianSchedule, o: e
                     });
                 }
                 if (i === vm.mapData.orders.length - 1) {
@@ -280,10 +300,11 @@
                 }
             });
         }
+
         function getMapData(forceGet) {
 
-            fpmUtilitiesFactory.showLoading().then(function () {
-                mapFactory.getMapData(forceGet).then(function (response) {
+            fpmUtilitiesFactory.showLoading().then(function() {
+                mapFactory.getMapData(forceGet).then(function(response) {
                     if (response) {
                         vm.mapData.users = response.users;
                         vm.mapData.orders = response.orders;
@@ -294,34 +315,43 @@
                 }).finally(fpmUtilitiesFactory.hideLoading);
             });
         }
+
+
+        function mapLoadedEvent() {
+            if (angular.isDefined(google)) {
+                google.maps.event.addListenerOnce(vm.map, "idle", function() {
+                    getMapData(false);
+                });
+            }
+        }
+
         function getIniitialData() {
             markers = [];
             mapOptions.center = new window.google.maps.LatLng(defCordinates.y, defCordinates.x);
-            sharedDataFactory.getIniitialData().then(function (response) {
+            sharedDataFactory.getIniitialData().then(function(response) {
                 vm.iniitialData = response;
                 if (response) {
                     var cn = response.customerNumberEntity;
                     mapOptions.center = new window.google.maps.LatLng(cn.coordinateY || defCordinates.y, cn.coordinateX || defCordinates.x);
                     mapOptions.zoom = cn.zoomDepth || 8;
                     vm.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+                    mapLoadedEvent();
                     mapMarkers.push({ x: cn.coordinateX || defCordinates.x, y: cn.coordinateY || defCordinates.y, imageurl: "../images/markers/home.png", barCode: "[HOME]", isHome: true, color: defaultColor, technician: '', isAssigned: true, start: null, numFromTechnician: 0 });
                 } else {
                     mapOptions.center = new window.google.maps.LatLng(defCordinates.y, defCordinates.x);
                     vm.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+                    mapLoadedEvent();
                 }
-
-            }).finally(function () {
-                getMapData(false);
             });
         }
         function activateController() {
             getIniitialData();
         }
 
-        $scope.$on("$ionicView.afterEnter", function (e, data) {
+        $scope.$on("$ionicView.afterEnter", function(e, data) {
             activateController();
         });
-        $scope.$on("$destroy", function (event) {
+        $scope.$on("$destroy", function(event) {
             vm.map = null;
             mapMarkers = [];
             markers = [];
@@ -329,9 +359,17 @@
                 $timeout.cancel(dateFilterTimer);
             }
         });
+
+        $rootScope.$on('$cordovaNetwork:online', function(event, networkState) {
+            fpmUtilitiesFactory.hideLoading();
+        })
+
+        $rootScope.$on('$cordovaNetwork:offline', function(event, networkState) {
+            fpmUtilitiesFactory.showLoading("You must connected to the internet to view this map");
+        })
     }
 
     initController.$inject = ["$scope", "$state", "$cordovaGeolocation", "$ionicActionSheet", "$timeout",
-        "$ionicModal", "map-factory", "shared-data-factory", "fpm-utilities-factory"];
+        "$ionicPopup", "$cordovaNetwork", "$rootScope", "map-factory", "shared-data-factory", "fpm-utilities-factory", "authenticationFactory"];
     angular.module("fpm").controller("map-controller", initController);
 })();

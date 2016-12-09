@@ -18,7 +18,7 @@
               <span class="label label-success">{{::vm.barCodeData.barcodeDetails.barcodeName}}</span>
               <div class="padding-top">
                 <h4 class="n-m-b">{{::vm.barCodeData.barcodeDetails.displayName}}</h4>
-                <address>
+                <address data-on-tap="vm.tabs.desc.events.onAddressTapped()">
                   <p>
                     <strong>{{::vm.barCodeData.barcodeDetails.company_Name}}</strong>
                     <a>
@@ -250,7 +250,7 @@
 												<h3>{{inv.qty || 0}}</h3>
 											</div>
 											<div class="col col-20">
-												<h3 class="pull-right">{{inv.totalPrice | currency:'$':2}}</h3>
+												<h3 class="pull-right" data-ng-if="vm.user.showPrice">{{inv.totalPrice | currency:'$':2}}</h3>
 											</div>
 										</div>
 									</ion-item>
@@ -258,7 +258,7 @@
 							</div>
 						</div>
 					</ion-list>
-					<div class="row">
+					<div class="row" data-ng-if="vm.user.showPrice">
 						<div class="col">
 							<p>
 								<h5>Subtotal
@@ -295,3 +295,18 @@
 		</ion-tabs>
 	</ion-content>
 </ion-view>
+<script id="workOrderMap.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar>
+            <h1 class="title">
+                {{::vm.barCodeData.barcodeDetails.barcodeName}} 
+            </h1>
+            <button type="button" class="button button-small button-light" data-ng-click="vm.tabs.desc.events.closeWorkOrderMapModal()">
+                Close
+            </button>
+        </ion-header-bar>
+        <ion-content>
+          <div id="map" style="height:100%;width:100%;" data-tap-disabled="true"></div>
+        </ion-content>
+    </ion-modal-view>  
+</script>

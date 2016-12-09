@@ -1,4 +1,4 @@
-<ion-list can-swipe="true">
+<ion-list>
 	<div>
 		<ion-item class="item-stable" ng-click="vm.isExpanded = !vm.isExpanded" ng-class="{active: vm.isExpanded}">
 			<i class="icon" ng-class="vm.isExpanded ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>Documents</strong>
@@ -7,10 +7,7 @@
 		<div data-ng-if="vm.isExpanded">
 			<ion-list>
 				<ion-item class="item-text-wrap" data-ng-repeat="p in vm.barcodeDocuments | filter:{extension:'.pdf'}" data-ng-click="vm.events.onDocumentClicked(p)">
-                    {{::p.fleName}}
-					<ion-option-button class="button-assertive" ng-click="vm.events.onDeleteDocumentClicked(p)">
-						Delete
-					</ion-option-button>
+                    <a>{{::p.fleName}}</a>
 				</ion-item>
 			</ion-list>
 		</div>

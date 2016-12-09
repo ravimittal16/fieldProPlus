@@ -34,10 +34,10 @@
     </ion-content>
 </ion-view>
 <script id="forgotPasswordModal.html" type="text/ng-template">
-    <div class="list" data-ng-if="vm.errors.length > 0">
+    <div class="list" data-ng-if="vm.forgotPasswordModalErrors.length > 0">
         <div class="error">
             <ui class="list-unstyled">
-            <li data-ng-repeat="error in vm.errors">{{::error}}</li>
+            <li data-ng-repeat="error in vm.forgotPasswordModalErrors">{{::error}}</li>
             </ui>
         </div>
     </div>

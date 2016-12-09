@@ -10,7 +10,7 @@
         var alerts = fpmUtilitiesFactory.alerts;
         vm.events = {
             onForgotPasswordClicked: function () {
-                vm.errors = [];
+                vm.forgotPasswordModalErrors = [];
                 var myPopup = $ionicPopup.show({
                     templateUrl: "forgotPasswordModal.html",
                     title: 'Forgot Password',
@@ -24,7 +24,7 @@
                             type: 'button-positive',
                             onTap: function (e) {
                                 if (!vm.data.model) {
-                                    vm.errors.push("please check the entered email");
+                                    vm.forgotPasswordModalErrors.push("please check the entered email");
                                     e.preventDefault();
                                 } else {
                                     return vm.data.model;
@@ -33,10 +33,10 @@
                         }]
                 });
                 myPopup.then(function (res) {
-                    vm.errors = []; vm.showError = false;
+                    vm.forgotPasswordModalErrors = []; vm.showError = false;
                     authenticationFactory.sendPassword(res).then(function (res) {
                         if (angular.isArray(res) && res.length > 0) {
-                            vm.errors = res;
+                            vm.forgotPasswordModalErrors = res;
                             vm.showError = true;
                         }
                     })

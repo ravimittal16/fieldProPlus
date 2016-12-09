@@ -13,20 +13,13 @@
         vm.docUrl = "";
         vm.events = {
           onDocumentClicked: function (doc) {
-              
-            window.open(baseUrl + "Handlers/GetImageFromBlob.ashx?imageId=" + doc.num + "&dateStamp=" + new Date() + "&flag=viewTarget", "_system", "location=yes");
-          },
-          onDeleteDocumentClicked: function (doc) {
-            alerts.confirmDelete(function () {
-
-            });
+            window.open(baseUrl + "Handlers/GetImageFromBlob.ashx?imageId=" + doc.num + "&dateStamp=" + new Date() + "&flag=viewTarget&cust=" + doc.customerNumber, "_system", "location=yes");
           }
         };
         vm.$onInit = function () {
           if (vm.barcode) {
             workOrdersFactory.getUploadedDocuments(vm.barcode).then(function (response) {
               vm.barcodeDocuments = response;
-              console.log(vm.barcodeDocuments);
             });
           }
         }
