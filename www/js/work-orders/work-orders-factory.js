@@ -1,4 +1,4 @@
-(function() {
+(function () {
     "use strict";
 
     function initFactory($q, $cacheFactory, apiBaseFactory, sharedDataFactory) {
@@ -6,6 +6,9 @@
         var cache = $cacheFactory("orderCache");
         var dashboardDataKeyName = "dashboardData";
 
+        function clearAllCache() {
+            cache.removeAll();
+        }
         function getMobileDashboard(forceGet, initialData) {
             forceGet = forceGet === null ? false : forceGet;
             if (forceGet === true) {
@@ -15,7 +18,7 @@
             if (angular.isDefined(orders) && orders) {
                 return $q.when(orders);
             } else {
-                return apiBaseFactory.get(apibaseurl + "GetMobileDashboard").then(function(response) {
+                return apiBaseFactory.get(apibaseurl + "GetMobileDashboard").then(function (response) {
                     cache.put(dashboardDataKeyName, response);
                     return response;
                 });
@@ -71,7 +74,7 @@
             if (angular.isDefined(entity) && entity) {
                 return $q.when(entity);
             } else {
-                return apiBaseFactory.get(apibaseurl + "CreateEntity").then(function(response) {
+                return apiBaseFactory.get(apibaseurl + "CreateEntity").then(function (response) {
                     cache.put("workOrderEntity", response);
                     return response;
                 });
@@ -116,7 +119,7 @@
             if (angular.isDefined(calenderSchedules) && calenderSchedules) {
                 return $q.when(calenderSchedules);
             } else {
-                return apiBaseFactory.get("api/Scheduler/GetMyCalender?fromMobile=true").then(function(response) {
+                return apiBaseFactory.get("api/Scheduler/GetMyCalender?fromMobile=true").then(function (response) {
                     cache.put(workOrderCalendarKeyName, response);
                     return response;
                 });
@@ -144,7 +147,8 @@
             updateSchedule: updateSchedule,
             addWorkOrderSchedule: addWorkOrderSchedule,
             updateOrderProduct: updateOrderProduct,
-            getDatewiseEvents: getDatewiseEvents
+            getDatewiseEvents: getDatewiseEvents,
+            clearAllCache: clearAllCache
         };
     }
     initFactory.$inject = ["$q", "$cacheFactory", "api-base-factory", "shared-data-factory"];

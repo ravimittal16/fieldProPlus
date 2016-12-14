@@ -8,9 +8,12 @@
 			<input type="search" placeholder="Search" data-on-tap="vm.events.openSearchModal()" readonly />
 		</label>
 	</ion-header-bar>
-	<ion-content class="has-header">
-		<ion-refresher pulling-text="Pull to refresh..." on-refresh="vm.events.refreshOnPullDown()">
+	<ion-content class="has-header"> 
+		<ion-refresher pulling-text="Pull to refresh..." on-refresh="vm.events.refreshOnPullDown()" spinner="none">
 		</ion-refresher>
+		<div class="text-center padding-top" data-ng-if="vm.showingLoading">
+			<ion-spinner icon="ripple"></ion-spinner>
+		</div>
 		<ion-list>
 			<div data-ng-if="!vm.isServiceProvider || vm.havingGroupsAssinged">
 				<div ng-repeat="group in vm.result">

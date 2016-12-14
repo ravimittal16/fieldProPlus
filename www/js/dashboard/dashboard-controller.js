@@ -31,12 +31,14 @@
                 });
             }
         }
-
+        vm.showingLoading = true;
         function loadDashboard(forceGet, callback) {
+            vm.showingLoading = true;
             workOrderFactory.getMobileDashboard(forceGet).then(function(response) {
                 vm.result = response.result;
                 extractJsonOrdersToLocalArray();
             }).finally(function() {
+                vm.showingLoading = false;
                 if (angular.isFunction(callback)) {
                     callback();
                 }

@@ -17,8 +17,9 @@ var constants = {
 var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ngCordova", "ionic-datepicker",
   "kendo.directives", "mobiscroll-datetime", "mobiscroll-timespan", "mobiscroll-numpad", "ui.rCalendar"])
   .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider", "$ionicConfigProvider",
-    "ionicDatePickerProvider", function ($stateProvider, $urlRouterProvider, $compileProvider, $httpProvider, $ionicConfigProvider,
-      ionicDatePickerProvider) {
+    "ionicDatePickerProvider", "fpm-utilities-factoryProvider", function ($stateProvider, $urlRouterProvider, $compileProvider, $httpProvider, $ionicConfigProvider,
+      ionicDatePickerProvider, fpmUtilitiesFactoryProvider) {
+      fpmUtilitiesFactoryProvider.setApplicationModel(isInDevMode);
       var routes = [
         { state: "login", config: { url: "/", controller: "login-controller", controllerAs: "vm", templateUrl: "views/login.html" } },
         { state: "app", config: { abstract: true, controller: "app-main-controller", controllerAs: "vm", templateUrl: "views/app-main.html" } },

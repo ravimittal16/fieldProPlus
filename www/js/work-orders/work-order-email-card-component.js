@@ -67,8 +67,21 @@
                     });
                 }
                 vm.events = { onOrderEmailActionClicked: onOrderEmailActionClicked };
+                vm.$onChanges = function () {
+
+                }
                 vm.$onInit = function () {
-                    console.log("DF", vm.defaultEmails);
+                    if (vm.defaultEmails != null && vm.defaultEmails.includes(",")) {
+                        var emailArray = [];
+                        var emailAddresses = vm.defaultEmails.split(",");
+                        angular.forEach(emailAddresses, function (email) {
+                            emailArray.push(email);
+                        });
+                        vm.mailConfig.mailAddresses = emailArray;
+                    }
+                    if (vm.defaultEmails != null && !vm.defaultEmails.includes(",")) {
+                        vm.mailConfig.mailAddresses = [vm.defaultEmails];
+                    }
                 }
             }],
         controllerAs: "vm"

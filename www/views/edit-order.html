@@ -109,6 +109,14 @@
                 data-schedule="vm.schedule"></work-order-timer-component>
             </div>
             <div class="list">
+              <div class="button-bar padding">
+                <a class="button button-small button-positive" data-ng-disabled="vm.schedule.approve || vm.schedule.checkInStatus" data-ng-click="vm.tabs.sch.events.checkIn()">
+                  <i class="ion ion-clock"></i>&nbsp;Check In
+                </a>
+                <a class="button button-small button-positive" data-ng-disabled="vm.schedule.approve || vm.schedule.checkOutStatus" data-ng-click="vm.tabs.sch.events.checkOut()">
+                  <i class="ion ion-clock"></i>&nbsp;Check Out
+                </a>
+              </div>
               <label class="item item-input">
 				        <span class="input-label">Actual Start Time</span>
 								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onStartDateTimeChaged}" data-ng-model="vm.schedule.actualStartDateTime"/>
@@ -120,10 +128,15 @@
 								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled  data-ng-model="vm.schedule.actualFinishDateTime"/>
 							</label>
               <label class="item item-input">
-				  <span class="input-label">Total Time</span>
+				      <span class="input-label">Total Time</span>
 								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" placeholder="Total Time" data-mobiscroll-timespan="{display: 'bottom',preset:'timespan',wheelOrder: 'hhii',onSelect:vm.scheduleTimeSpan.onTimespanSeletionChanged}" data-ng-model="vm.scheduleTimeSpan.timeSpan"/>
 								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled placeholder="Total Time" data-ng-model="vm.scheduleTimeSpan.timeSpan"/>
 							</label>
+              <div class="padding" data-ng-if="vm.uiSettings.isTimeCardModuleEnabled">
+                <button class="button button-block button-small button-dark" data-ng-click="vm.tabs.sch.events.pushToTimecard()">
+                  <i class="ion ion-clock"></i>&nbsp;Push to Timecard
+                </button>
+              </div>
               <label class="item item-input">
 								<textarea name="" id="" rows="6" placeholder="Trip Note" data-ng-model="vm.schedule.tripNote" data-ng-change="vm.tabs.sch.events.onTripnoteChanged()" data-ng-model-options="{debounce:500}"></textarea>
 							</label>
@@ -132,23 +145,23 @@
           <div class="card" data-ng-if="vm.uiSettings.milageTrackingEnabled">
             <div class="item item-divider">
               Milage Information
-              <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
-                data-ng-click="vm.tabs.sch.events.onMilageInformationActionButtonClicked()"></a>
+              <!--<a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                data-ng-click="vm.tabs.sch.events.onMilageInformationActionButtonClicked()"></a>-->
             </div>
             <div class="list">
               <label class="item item-input item-select">
 								<div class="input-label">
 									Vehicle Number
 								</div>
-								<select data-ng-model="vm.schedule.numFromVehicles" data-ng-options="p.num as p.vehicleNumber for p in vm.vehicles"><select>
+								<select data-ng-model="vm.schedule.numFromVehicles" data-ng-change="vm.tabs.sch.events.updateMilage()" data-ng-options="p.num as p.vehicleNumber for p in vm.vehicles"><select>
 							</label>
               <label class="item item-input">
 								<span class="input-label">Start (Miles)</span>
-								<input type="text" class="transparent-background" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:99999.99,preset:'decimal'}" data-ng-model="vm.schedule.startMiles" data-ng-change="vm.schedule.totalMiles = vm.schedule.endMiles - vm.schedule.startMiles" />
+								<input type="text" class="transparent-background" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:99999.99,preset:'decimal',onSelect:vm.tabs.sch.events.updateMilage}" data-ng-model="vm.schedule.startMiles" data-ng-change="vm.schedule.totalMiles = vm.schedule.endMiles - vm.schedule.startMiles" />
 							</label>
               <label class="item item-input">
 									<span class="input-label">End</span>
-									<input type="text" class="transparent-background" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:99999,preset:'decimal'}" data-ng-model="vm.schedule.endMiles" data-ng-change="vm.schedule.totalMiles = vm.schedule.endMiles - vm.schedule.startMiles"/>
+									<input type="text" class="transparent-background" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:99999,preset:'decimal',onSelect:vm.tabs.sch.events.updateMilage}" data-ng-model="vm.schedule.endMiles" data-ng-change="vm.schedule.totalMiles = vm.schedule.endMiles - vm.schedule.startMiles"/>
 							</label>
               <label class="item item-input">
 									<span class="input-label"><strong>Total</strong></span>
@@ -159,8 +172,13 @@
           <div class="card">
             <div class="item item-divider">
               Other Schedules
-              <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
-                data-ng-click="vm.tabs.sch.events.onSchedulesListButtonClicked()"></a>
+              <!--<a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                data-ng-click="vm.tabs.sch.events.onSchedulesListButtonClicked()"></a>-->
+            </div>
+            <div class="padding-left padding-right">
+              <button class="button button-block button-small button-positive" data-ng-click="vm.tabs.sch.events.onSchedulesListButtonClicked()">
+                  <i class="ion ion-plus"></i>&nbsp;Add New Schedule
+                </button>
             </div>
             <ion-list>
               <ion-item class="item-text-wrap" data-ng-repeat="sch in vm.barCodeData.schedules" data-ng-click="vm.tabs.sch.events.onListScheduleItemTap(sch)"

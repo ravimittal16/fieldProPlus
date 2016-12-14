@@ -7,7 +7,7 @@
 		<div data-ng-if="vm.isExpanded">
 			<ion-list>
 				<ion-item class="item-text-wrap" data-ng-repeat="p in vm.barcodeDocuments | filter:{extension:'.pdf'}" data-ng-click="vm.events.onDocumentClicked(p)">
-                    <a>{{::p.fleName}}</a>
+                    {{::p.fleName}}
 				</ion-item>
 			</ion-list>
 		</div>

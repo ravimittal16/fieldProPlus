@@ -15,9 +15,7 @@
         vm.upload = {
           control: null,
           uploadImage: function (rawImage, imageName) {
-            $ionicLoading.show({
-              template: "Please wait..."
-            }).then(function () {
+            fpmUtilitiesFactory.showLoading().then(function () {
               workOrdersFactory.uploadFile({
                 Barcode: vm.barcode,
                 Image: rawImage,
@@ -31,7 +29,7 @@
                 });
 
                 alerts.alert("Uploaded", "File Uploaded successfully");
-              }).finally($ionicLoading.hide);
+              }).finally($fpmUtilitiesFactory.hideLoading);
             });
           },
           options: {
@@ -65,9 +63,16 @@
 
         vm.currentImage = null;
         vm.events = {
+          takePictureClicked: function () {
+            fpmUtilitiesFactory.device.getPicture().then(function (imageData) {
+              if (imageData !== null) {
+                uploadImage(imageData, "Picture" + vm.barcode + Math.random().toString());
+              }
+            });
+          },
           onDeleteImageClicked: function (img) {
             alerts.confirmDelete(function () {
-              console.log("HELLO WORLDF");
+              //console.log("HELLO WORLDF");
             });
           },
           onImageTap: function (p) {

@@ -5,6 +5,8 @@
         $ionicPopup, $ionicModal, workOrderFactory, fpmUtilities, sharedDataFactory, authenticationFactory, timecardFactory) {
         var vm = this;
         vm.barcode = $stateParams.barCode;
+        var platforms = fpmUtilities.device.platforms;
+        var platform = fpmUtilities.device.getPlatformInfo();
         vm.taxCheckboxVisibility = true;
         var alerts = fpmUtilities.alerts;
         var jobStatus = {
@@ -256,10 +258,6 @@
         }
 
         var actions = [{
-            text: 'Check In'
-        }, {
-            text: 'Check Out'
-        }, {
             text: '<span class="text-assertive">Clear All</span>'
         }, {
             text: '<span class="text-assertive">Clear Checkout Time</span>'
@@ -384,7 +382,9 @@
             },
             sch: {
                 events: {
-
+                    pushToTimecard: function () {
+                        pushToTimecard();
+                    },
                     onAddScheduleCompleted: function (o) {
                         if (o) {
                             vm.barCodeData.schedules = o.schedules;
@@ -396,23 +396,8 @@
                     onModalCancelClicked: function () {
                         vm.scheduleAddModal.hide();
                     },
-                    onMilageInformationActionButtonClicked: function () {
-                        $ionicActionSheet.show({
-                            buttons: [{
-                                text: "Save Milage Information"
-                            }],
-                            titleText: 'Milage Information',
-                            cancelText: 'Cancel',
-                            cancel: function () {
-                                // add cancel code..
-                            },
-                            buttonClicked: function (index) {
-                                if (index === 0) {
-                                    updateSchedule(true, true);
-                                }
-                                return true;
-                            }
-                        });
+                    updateMilage: function () {
+                        updateSchedule(false, false);
                     },
                     onTripnoteChanged: function () {
                         updateSchedule(false, false);
@@ -428,32 +413,14 @@
                         }
                     },
                     onSchedulesListButtonClicked: function () {
-                        $ionicActionSheet.show({
-                            buttons: [{
-                                text: "Add New Schedule"
-                            }],
-                            titleText: 'New Schedule',
-                            cancelText: 'Cancel',
-                            cancel: function () {
-                                // add cancel code..
-                            },
-                            buttonClicked: function (index) {
-                                if (index === 0) {
-                                    if (vm.scheduleAddModal === null) {
-                                        $ionicModal.fromTemplateUrl("addScheduleModal.html", {
-                                            scope: $scope,
-                                            animation: 'slide-in-up'
-                                        }).then(function (modal) {
-                                            vm.scheduleAddModal = modal;
-                                            vm.scheduleAddModal.show();
-                                        });
-                                    } else {
-                                        vm.scheduleAddModal.show();
-                                    }
-                                }
-                                return true;
-                            }
-                        });
+                        if (vm.scheduleAddModal === null) {
+                            fpmUtilities.getModal("addScheduleModal.html", $scope).then(function (modal) {
+                                vm.scheduleAddModal = modal;
+                                vm.scheduleAddModal.show();
+                            });
+                        } else {
+                            vm.scheduleAddModal.show();
+                        }
                     },
                     checkIn: function () {
                         if (vm.schedule.approve === true || vm.schedule.checkInStatus === true) {
@@ -520,11 +487,11 @@
                     },
                     onScheduleActionButtonClicked: function () {
                         var defaultActions = angular.copy(actions);
-                        if (vm.user.allowPushTime) {
-                            defaultActions.push({
-                                text: '<b>Push to Timecard</b>'
-                            });
-                        }
+                        // if (vm.user.allowPushTime) {
+                        //     defaultActions.push({
+                        //         text: '<b>Push to Timecard</b>'
+                        //     });
+                        // }
                         $ionicActionSheet.show({
                             buttons: defaultActions,
                             titleText: 'Current Schedule',
@@ -534,21 +501,15 @@
                             },
                             buttonClicked: function (index) {
                                 if (index === 0) {
-                                    vm.tabs.sch.events.checkIn();
-                                }
-                                if (index === 1) {
-                                    vm.tabs.sch.events.checkOut();
-                                }
-                                if (index === 2) {
                                     clearAllDateTimeSelection(true);
                                 }
-                                if (index === 3) {
+                                if (index === 1) {
                                     clearAllDateTimeSelection(false);
                                 }
-                                if (index === 4) {
+                                if (index === 2) {
                                     updateSchedule(true, true);
                                 }
-                                if (index === 5) {
+                                if (index === 3) {
                                     pushToTimecard();
                                 }
                                 return true;
@@ -678,6 +639,7 @@
             if (onTimespanSeletionChangedTimer) $timeout.cancel(onTimespanSeletionChangedTimer);
             if (workOrderMapTimer) $timeout.cancel(workOrderMapTimer);
             vm.map = null;
+            isMapLoaded = false;
         });
     }
     initController.$inject = ["$scope", "$state", "$timeout", "$stateParams", "$ionicActionSheet",

@@ -1,8 +1,8 @@
 (function () {
   "use strict";
 
-  function initFactory($http, $q, $rootScope, $state, $window, $timeout, $ionicLoading,
-    localStorageService, fieldPromaxConfig, apiContext) {
+  function initFactory($http, $q, $rootScope, $state, $window, $timeout, fpmUtilitiesFactory,
+    localStorageService, fieldPromaxConfig, apiContext, workOrdersFactory) {
     var serviceBase = fieldPromaxConfig.fieldPromaxApi;
     var localStorageKeys = fieldPromaxConfig.localStorageKeys;
     var authentication = {
@@ -48,7 +48,7 @@
       }
 
       function onLoginError(data) {
-        $ionicLoading.hide();
+        fpmUtilitiesFactory.hideLoading();
         defered.reject(data);
       }
       var data = "grant_type=password&username=" + loginModel.userName + "&password=" + loginModel.password + "&client_id=fieldPromaxMob";
@@ -79,12 +79,13 @@
     }
 
     function logout() {
-      // workOrdersFactory.clearAllCache();
+      workOrdersFactory.clearAllCache();
       localStorageService.remove(localStorageKeys.initialData);
       localStorageService.remove(localStorageKeys.storageKeyName);
       localStorageService.remove(localStorageKeys.configKeyName);
       localStorageService.remove(localStorageKeys.settingsKeyName);
       localStorageService.remove("orderState");
+      fpmUtilitiesFactory.clearHistory();
     }
 
     function sendPassword(uid) {
@@ -107,8 +108,8 @@
     return factory;
   }
 
-  initFactory.$inject = ["$http", "$q", "$rootScope", "$state", "$window", "$timeout", "$ionicLoading",
-    "localStorageService", "fieldPromaxConfig", "api-base-factory"
+  initFactory.$inject = ["$http", "$q", "$rootScope", "$state", "$window", "$timeout", "fpm-utilities-factory",
+    "localStorageService", "fieldPromaxConfig", "api-base-factory", "work-orders-factory"
   ];
   angular.module("fpm").factory("authenticationFactory", initFactory);
 })();
