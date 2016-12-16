@@ -29,7 +29,7 @@
                 });
 
                 alerts.alert("Uploaded", "File Uploaded successfully");
-              }).finally($fpmUtilitiesFactory.hideLoading);
+              }).finally(fpmUtilitiesFactory.hideLoading);
             });
           },
           options: {

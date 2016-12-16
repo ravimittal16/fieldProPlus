@@ -19,10 +19,16 @@
             </div>
         </div>
         <div class="list">
-            <div class="item item-divider bg-white">
+            <div class="padding">
+                <div class="button-bar button-bar-with-margin" data-ng-if="vm.entity.isUserDefined && !vm.timecardPermissions.timePickerVisibility">
+                    <button class="button button-small button-dark" data-ng-disabled="vm.dateTimeMode.isCheckedIn" type="button" data-ng-click="vm.events.checkInClick()">Check In</button>
+                    <button class="button button-small button-dark" data-ng-disabled="vm.dateTimeMode.isCheckedOut" type="button" data-ng-click="vm.events.checkOutClick()">Check Out</button>
+                </div>
+            </div>
+            <!--<div class="item item-divider bg-white">
                 <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
                     data-ng-click="vm.events.onCardActionClicked(t)" data-ng-if="vm.entity.isUserDefined && !vm.timecardPermissions.timePickerVisibility"></a>
-            </div>
+            </div>-->
             <!--<label class="item item-input" data-ng-if="!vm.entity.isUserDefined">
                 <span class="input-label">Start Time</span>
                     <input type="text" placeholder="Start Time" class="transparent-background text-right" data-ng-model="vm.entity.startTime" readonly=""/>

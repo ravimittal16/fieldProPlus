@@ -31,7 +31,7 @@
                     timePickerVisibility: true,
                     isFromAddingPto: false
                 };
-                vm.entity = null;   
+                vm.entity = null;
                 function _addOrUpdateToDatabase() {
                     vm.ui.errors = [];
                     if (vm.entity.finishTime !== null) {
@@ -72,35 +72,23 @@
                     });
                 }
                 vm.events = {
-                    onCardActionClicked: function () {
-                        $ionicActionSheet.show({
-                            buttons: [
-                                { text: 'Check In' }, { text: "Check Out" }
-                            ],
-                            titleText: 'Time card',
-                            cancelText: 'Cancel',
-                            cancel: function () {
-
-                            },
-                            buttonClicked: function (index) {
-                                if (index === 0) {
-                                    vm.dateTimeMode.startTime = new Date();
-                                    vm.entity.startTime = new Date();
-                                    vm.entity.finishTime = null;
-                                    vm.dateTimeMode.finishTime = null;
-
-                                    vm.dateTimeMode.isCheckedIn = true;
-                                    _findTimeDiff();
-                                }
-                                if (index === 1) {
-                                    vm.dateTimeMode.finishTime = new Date();
-                                    vm.entity.finishTime = new Date();
-                                    vm.dateTimeMode.isCheckedOut = true;
-                                    _findTimeDiff();
-                                }
-                                return true;
-                            }
-                        });
+                    checkInClick: function () {
+                        if (vm.entity.startTime === null) {
+                            vm.dateTimeMode.startTime = new Date();
+                            vm.entity.startTime = new Date();
+                            vm.entity.finishTime = null;
+                            vm.dateTimeMode.finishTime = null;
+                            vm.dateTimeMode.isCheckedIn = true;
+                            _findTimeDiff();
+                        }
+                    },
+                    checkOutClick: function () {
+                        if (vm.entity.finishTime === null) {
+                            vm.dateTimeMode.finishTime = new Date();
+                            vm.entity.finishTime = new Date();
+                        }
+                        vm.dateTimeMode.isCheckedOut = true;
+                        _findTimeDiff();
                     },
                     updateButtonClicked: function () {
                         vm.ui.errors = [];
@@ -254,8 +242,8 @@
                     vm.userInfo = authenticationFactory.getLoggedInUserInfo();
                     if (vm.userInfo) {
                         vm.timecardPermissions.allowPushTime = vm.userInfo.allowPushTime;
-                        //vm.timecardPermissions.timePickerVisibility = vm.userInfo.allowPushTime;
-                        vm.timecardPermissions.timePickerVisibility = false;
+                        vm.timecardPermissions.timePickerVisibility = vm.userInfo.allowPushTime;
+                        //vm.timecardPermissions.timePickerVisibility = false;
                     }
                     vm.timecardPermissions.isFromAddingPto = vm.isFromPto;
                     if (vm.timecardPermissions.isFromAddingPto === true) {
@@ -268,6 +256,9 @@
                     vm.dateTimeMode.startTime = null;
                     vm.dateTimeMode.finishTime = null;
                     vm.dateTimeMode.timeSpan = "";
+                    vm.dateTimeMode.isCheckedIn = false;
+                    vm.dateTimeMode.isCheckedOut = false;
+                    vm.ui.errors = [];
                 })
             }],
         controllerAs: "vm",

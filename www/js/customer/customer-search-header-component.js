@@ -7,7 +7,8 @@
     controller: ["$scope", "$ionicModal", "customers-file-factory", function ($scope, $ionicModal, customerFileFactory) {
       var vm = this;
       vm.searchValue = "";
-
+      vm.searchApplied = false;
+      vm.runningSearch = false;
       function onSearchBoxTapped() {
         vm.searchValue = "";
         vm.customers = [];
@@ -15,8 +16,15 @@
       }
 
       function applySearch() {
+        vm.customers = [];
+        vm.searchApplied = false;
+        vm.runningSearch = true;
         customerFileFactory.searchCustomers(vm.searchValue).then(function (response) {
-          vm.customers = response;
+          vm.searchApplied = true;
+          vm.runningSearch = false;
+          if (angular.isArray(response)) {
+            vm.customers = response;
+          }
         });
       }
 

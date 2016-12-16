@@ -7,14 +7,24 @@
                 var vm = this;
                 vm.searchValue = "";
                 vm.products = [];
+                var timer = null;
                 vm.user = authenticationFactory.getLoggedInUserInfo();
                 vm.events = {
                     closeProductEditModal: function () {
-                        vm.productModal.hide();
+                        if (vm.productModal) {
+                            vm.productModal.hide();
+                        }
                     },
                     applySearch: function () {
+                        vm.products = [];
+                        vm.searchApplied = false;
+                        vm.runningSearch = true;
                         workOrderFactory.searchProduct(vm.searchValue, "").then(function (response) {
-                            vm.products = response;
+                            vm.searchApplied = true;
+                            vm.runningSearch = false;
+                            if (angular.isArray(response)) {
+                                vm.products = response;
+                            }
                         });
                     },
                     onProductItemClicked: function (product) {
@@ -29,15 +39,21 @@
                     },
                     onAddProductCompleted: function (product) {
                         vm.productModal.hide();
-                        $timeout(function () {
+                        timer = $timeout(function () {
                             $scope.$emit("$fpm:closeProductSearchModal", { fromProductAdd: true });
                         }, 100);
                     }
                 };
 
                 $scope.$on("$fpm:closeEditProductModal", function () {
-                    vm.productModal.hide();
+                    console.log("HEEEE");
+                    if (vm.productModal) {
+                        vm.productModal.hide();
+                    }
+                    if (timer) $timeout.cancel(timer);
                 });
+
+
 
                 $ionicModal.fromTemplateUrl("addProductModal.html", {
                     scope: $scope,

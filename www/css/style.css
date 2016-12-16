@@ -334,3 +334,17 @@ customer-search-header-component {
         border: 0px;
         width: 100%;
     }
+    .button-bar-with-margin{
+      
+      background: transparent;
+    }
+    .button-bar-with-margin button{
+      border-radius: 5px !important;  
+    }
+    .button-bar-with-margin button:not(:first-child){
+        margin-left: 5px;
+    }
+    .input-label{
+      font-size: 13px;
+      font-weight: 600;
+    }

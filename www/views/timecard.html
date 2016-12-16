@@ -44,7 +44,8 @@
             </div>
         </div>
         <div class="list">
-            <div class="alert" data-ng-class="{'alert-info': vm.ui.data.approvalStatus == 1 || vm.ui.data.approvalStatus == 5,'alert-success': vm.ui.data.approvalStatus == 3,'alert-danger': vm.ui.data.approvalStatus == 4 || vm.ui.data.approvalStatus == 2}">
+            <div class="alert" data-ng-if="vm.ui.data.approvalStatus != 0" 
+            data-ng-class="{'alert-info': vm.ui.data.approvalStatus == 1 || vm.ui.data.approvalStatus == 5,'alert-success': vm.ui.data.approvalStatus == 3,'alert-danger': vm.ui.data.approvalStatus == 4 || vm.ui.data.approvalStatus == 2}">
                 <span data-ng-switch="vm.ui.data.approvalStatus">
                     <span data-ng-switch-when="1" class="">
                         <i class="fa fa-info-circle"></i>&nbsp;Waiting for approval

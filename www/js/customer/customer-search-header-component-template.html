@@ -5,7 +5,7 @@
 <script id="customerSearchModal.html" type="text/ng-template">
 	<ion-modal-view>
 		<ion-header-bar>
-			<h1 class="title">Search Work Order</h1>
+			<h1 class="title">Search Customer</h1>
 		</ion-header-bar>
 		<ion-header-bar class="bar-subheader item-input-inset">
 			<label class="item-input-wrapper">
@@ -17,13 +17,21 @@
 				Cancel
 			</button>
 		</ion-header-bar>
-		<ion-content>
-                <div class="list">
-			<li class="item item-text-wrap" data-ng-repeat="c in vm.customers" data-on-tap="vm.events.onCustomerSelected(c)">
-				<h2>{{::c.name}}</h2>
-				<p><span data-ng-if="c.shipStreet">{{::c.shipStreet}},</span><strong data-ng-if="p.shipCity">{{::p.shipCity}},</strong><strong data-ng-if="p.shipState">{{::p.shipState}}&nbsp;</strong>{{::p.shipZIP}}</p>
-			</li>
-		</div>
+		<ion-content>	
+			<div class="text-center padding-top" data-ng-if="vm.runningSearch">
+				<ion-spinner icon="ripple"></ion-spinner>
+			</div>
+			<div class="list" data-ng-if="vm.customers.length > 0">
+				<li class="item item-text-wrap" data-ng-repeat="c in vm.customers" data-on-tap="vm.events.onCustomerSelected(c)">
+					<h2>{{::c.name}}</h2>
+					<p><span data-ng-if="c.shipStreet">{{::c.shipStreet}},</span><strong data-ng-if="p.shipCity">{{::p.shipCity}},</strong><strong data-ng-if="p.shipState">{{::p.shipState}}&nbsp;</strong>{{::p.shipZIP}}</p>
+				</li>
+			</div>
+			<div class="list" data-ng-if="vm.customers.length == 0 && vm.searchApplied && vm.searchValue != ''">
+				<li class="item item-text-wrap text-center">
+					<small class="text-muted">no customer found with <strong data-ng-bind="vm.searchValue"></strong></small>
+				</li>
+			</div>
 		</ion-content>
 	</ion-modal-view>
 </script>

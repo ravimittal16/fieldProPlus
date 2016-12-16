@@ -8,12 +8,7 @@
 			<div class="card">
 				<div class="item item-body">
 					<input type="file" data-kendo-upload="vm.upload.control" data-k-options="vm.upload.options" />
-					<div>
-						<button class="button button-block button-small button-dark" type="button" data-ng-click="vm.events.takePictureClicked()">
-							<span class="icon ion-camera"></span>&nbsp;Take Picture</button>
-					</div>
 				</div>
-
 			</div>
 			<ion-list can-swipe="true">
 				<ion-item class="item-text-wrap" data-ng-repeat="p in vm.barcodeImages" data-ng-click="vm.events.onImageTap(p)">
