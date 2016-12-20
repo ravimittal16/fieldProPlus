@@ -8,7 +8,7 @@
 <div class="card" data-ng-if="vm.requestCompleted && vm.expanses.length == 0">
     <div class="item item-text-wrap text-center">
         <h3 class="text-muted">
-            <strong>No Expanses found</strong>
+            <strong>No Expenses found</strong>
         </h3>
     </div>
 </div>
@@ -94,7 +94,7 @@
                             <button type="button" class="button button-small button-positive button-block" data-ng-click="vm.events.onSubmitClicked(expenseEditForm.$valid)">
                                 <span data-ng-if="vm.entity.expenseId == 0">Add</span>
                                 <span data-ng-if="vm.entity.expenseId != 0">Update</span> 
-                                Expanse
+                                Expense
                             </button>
                         </div>
                     </div>

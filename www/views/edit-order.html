@@ -104,41 +104,65 @@
                 <span>This schedule has been approved and cannot be edited.</span>
               </div>
             </div>
-            <div class="col-xs-12" data-ng-if="vm.uiSettings.timerEnabled">
+            <div class="col-xs-12" data-ng-if="vm.uiSettings.timerEnabled && vm.uiSettings.billingOption == 0">
               <work-order-timer-component data-is-checked-in="vm.schedule.checkInStatus" data-is-checked-out="vm.schedule.checkOutStatus"
                 data-schedule="vm.schedule"></work-order-timer-component>
             </div>
             <div class="list">
-              <div class="button-bar padding button-bar-with-margin">
-                <a class="button button-small button-positive" data-ng-disabled="vm.schedule.approve || vm.schedule.checkInStatus" data-ng-click="vm.tabs.sch.events.checkIn()">
+              <div ng-if="vm.uiSettings.billingOption == 0">
+                <div class="button-bar padding button-bar-with-margin">
+                  <button type="button" class="button button-small button-positive" data-ng-disabled="vm.schedule.approve || vm.schedule.checkInStatus"
+                    data-ng-click="vm.tabs.sch.events.checkIn()">
                   <i class="ion ion-clock"></i>&nbsp;Check In
-                </a>
-                <a class="button button-small button-positive" data-ng-disabled="vm.schedule.approve || vm.schedule.checkOutStatus" data-ng-click="vm.tabs.sch.events.checkOut()">
+                </button>
+                  <button type="button" class="button button-small button-positive" data-ng-disabled="vm.schedule.approve || vm.schedule.checkOutStatus"
+                    data-ng-click="vm.tabs.sch.events.checkOut()">
                   <i class="ion ion-clock"></i>&nbsp;Check Out
-                </a>
-              </div>
-              <label class="item item-input">
+                </button>
+                </div>
+                <label class="item item-input">
 				        <span class="input-label">Actual Start Time</span>
 								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onStartDateTimeChaged}" data-ng-model="vm.schedule.actualStartDateTime"/>
 								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled data-ng-model="vm.schedule.actualStartDateTime"/>
 							</label>
-              <label class="item item-input">
+                <label class="item item-input">
 				        <span class="input-label">Actual Finish Time</span>
 								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onEndDateTimeChanged}" data-ng-model="vm.schedule.actualFinishDateTime"/>
 								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled  data-ng-model="vm.schedule.actualFinishDateTime"/>
 							</label>
-              <label class="item item-input">
+                <label class="item item-input">
 				      <span class="input-label">Total Time</span>
 								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" placeholder="Total Time" data-mobiscroll-timespan="{display: 'bottom',preset:'timespan',wheelOrder: 'hhii',onSelect:vm.scheduleTimeSpan.onTimespanSeletionChanged}" data-ng-model="vm.scheduleTimeSpan.timeSpan"/>
 								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled placeholder="Total Time" data-ng-model="vm.scheduleTimeSpan.timeSpan"/>
 							</label>
-              <div class="padding" data-ng-if="vm.uiSettings.isTimeCardModuleEnabled">
-                <button class="button button-block button-small button-dark" data-ng-click="vm.tabs.sch.events.pushToTimecard()">
+                <div class="padding" data-ng-if="vm.uiSettings.isTimeCardModuleEnabled">
+                  <button class="button button-block button-small button-dark" data-ng-click="vm.tabs.sch.events.pushToTimecard()">
                   <i class="ion ion-clock"></i>&nbsp;Push to Timecard
                 </button>
+                </div>
+              </div>
+              <div ng-if="vm.uiSettings.billingOption == 0 && vm.uiSettings.isRouteTimeOptionChecked">
+                <div class="item item-divider">
+                  In Route Details
+                </div>
+                <label class="item item-input">
+                  <span class="input-label">In Route Start</span>
+                  <input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onInRouteTImeChanged}" data-ng-model="vm.schedule.inRouteStartTime"/>
+                  <input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled data-ng-model="vm.schedule.inRouteStartTime"/>
+							</label>
+                <label class="item item-input">
+                  <span class="input-label">In Route End</span>
+                  <input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onInRouteTImeChanged}" data-ng-model="vm.schedule.inRouteEndTime"/>
+                  <input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled  data-ng-model="vm.schedule.inRouteEndTime"/>
+							</label>
+                <label class="item item-input">
+                    <span class="input-label">Total Time</span>
+                    <input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" placeholder="Total Time" data-mobiscroll-timespan="{display: 'bottom',preset:'timespan',wheelOrder: 'hhii',onSelect:vm.scheduleTimeSpan.onInRouteTimespanChanged}" data-ng-model="vm.scheduleTimeSpan.inRouteTimeSpan"/>
+                    <input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled placeholder="Total Time" data-ng-model="vm.scheduleTimeSpan.inRouteTimeSpan"/>
+                  </label>
               </div>
               <label class="item item-input">
-								<textarea name="" id="" rows="6" placeholder="Trip Note" data-ng-model="vm.schedule.tripNote" data-ng-change="vm.tabs.sch.events.onTripnoteChanged()" data-ng-model-options="{debounce:500}"></textarea>
+								<textarea name="" id="" rows="6" placeholder="enter trip note here..." data-ng-model="vm.schedule.tripNote" data-ng-change="vm.tabs.sch.events.onTripnoteChanged()" data-ng-model-options="{debounce:500}"></textarea>
 							</label>
             </div>
           </div>
@@ -313,6 +337,20 @@
 		</ion-tabs>
 	</ion-content>
 </ion-view>
+<script id="editProductModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<edit-product-component is-estimate="false" data-modal-type="0" data-product="vm.currentProduct" 
+    data-enable-markup-orders="vm.enableMarkup"></edit-product-component>
+	</ion-modal-view>
+</script>
+
+<script id="addProductModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<edit-product-component is-estimate="false" data-modal-type="1" 
+		data-product="vm.currentProduct" data-on-add-product-completed="vm.events.onAddProductCompleted(product)" 
+    data-enable-markup-orders="vm.enableMarkup"></edit-product-component>
+	</ion-modal-view>
+</script>
 <script id="workOrderMap.html" type="text/ng-template">
     <ion-modal-view>
       <ion-header-bar>

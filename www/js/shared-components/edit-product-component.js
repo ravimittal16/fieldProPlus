@@ -9,11 +9,14 @@
         },
         templateUrl: "js/shared-components/edit-product-component-template.html",
         controller: ["$scope", "$stateParams", "$rootScope", "work-orders-factory", "authenticationFactory", "fpm-utilities-factory",
-            function ($scope, $stateParams, $rootScope, workOrdersFactory, authenticationFactory, fpmUtilitiesFactory) {
+            "shared-data-factory", function ($scope, $stateParams, $rootScope, workOrdersFactory, authenticationFactory, fpmUtilitiesFactory,
+                sharedDataFactory) {
                 var vm = this;
                 vm.user = authenticationFactory.getLoggedInUserInfo();
+
                 vm.events = {
                     closeProductEditModal: function () {
+                        console.log("vm.enableMarkupOrders", vm.enableMarkupOrders);
                         $rootScope.$broadcast("$fpm:closeEditProductModal");
                     },
                     updateProductClick: function () {
@@ -25,8 +28,9 @@
                                 }).finally(fpmUtilitiesFactory.hideLoading);
                             });
                         } else {
-                            vm.product.BarCode = $stateParams.barCode;
-                            vm.product.Quantity = vm.product.qty;
+                            vm.product.barCode = $stateParams.barCode;
+                            vm.product.quantity = vm.product.qty;
+                            vm.product.markup = vm.product.markup;
                             vm.product.FromListWindow = true;
                             fpmUtilitiesFactory.showLoading().then(function () {
                                 workOrdersFactory.addProduct(vm.product).then(function (response) {
@@ -40,6 +44,13 @@
                         }
                     }
                 };
+
+
+                vm.$onInit = function () {
+                    sharedDataFactory.getIniitialData().then(function (response) {
+                        vm.enableMarkupOrders = response.customerNumberEntity.enableMarkupForWorkOrders || false;
+                    });
+                }
             }],
         controllerAs: "vm"
     };

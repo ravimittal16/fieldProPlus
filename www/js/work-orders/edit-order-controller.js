@@ -22,7 +22,10 @@
             orderBelongToCurrentUser: false,
             timerEnabled: false,
             woData: null,
-            showEquipmentTabControl: false
+            showEquipmentTabControl: false,
+            billingOption: 0,
+            isRouteTimeOptionChecked: false,
+            enableMarkup: false
         };
 
         vm.errors = [];
@@ -45,6 +48,13 @@
                             vm.schedule.actualFinishDateTime = new Date(moment(vm.schedule.actualFinishDateTime));
                         }
                         findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
+                        if (vm.uiSettings.billingOption === 0) {
+                            vm.schedule.inRouteStartTime = kendo.parseDate(vm.schedule.inRouteStartTime);
+                            vm.schedule.inRouteEndTime = kendo.parseDate(vm.schedule.inRouteEndTime);
+                        }
+                        if (vm.uiSettings.billingOption === 0 && vm.uiSettings.isRouteTimeOptionChecked) {
+                            findTimeDiff(vm.schedule.inRouteStartTime, vm.schedule.inRouteEndTime, true);
+                        }
                         vm.uiSettings.orderBelongToCurrentUser = vm.schedule.technicianNum === vm.userId;
                         $ionicLoading.hide();
                         calculateTotals();
@@ -59,7 +69,7 @@
         //CURRENT SCHEDULE CARD
         //============================================================================================
         var findTimeDiffTimer = null;
-        function findTimeDiff(startDate, endDate) {
+        function findTimeDiff(startDate, endDate, forInRoute) {
             if (Date.parse(startDate) && Date.parse(endDate)) {
                 var diff = Math.abs(new Date(startDate) - new Date(endDate));
                 var seconds = Math.floor(diff / 1000); //ignore any left over units smaller than a second
@@ -67,10 +77,18 @@
                 var hours = Math.floor(minutes / 60);
                 minutes = minutes % 60;
                 findTimeDiffTimer = $timeout(function () {
-                    if (hours === 0) {
-                        vm.scheduleTimeSpan.timeSpan = minutes + " Minutes";
+                    if (forInRoute) {
+                        if (hours === 0) {
+                            vm.scheduleTimeSpan.inRouteTimeSpan = minutes + " Minutes";
+                        } else {
+                            vm.scheduleTimeSpan.inRouteTimeSpan = hours + " Hours " + minutes + " Minutes";
+                        }
                     } else {
-                        vm.scheduleTimeSpan.timeSpan = hours + " Hours " + minutes + " Minutes";
+                        if (hours === 0) {
+                            vm.scheduleTimeSpan.timeSpan = minutes + " Minutes";
+                        } else {
+                            vm.scheduleTimeSpan.timeSpan = hours + " Hours " + minutes + " Minutes";
+                        }
                     }
                 }, 50);
             } else {
@@ -82,9 +100,41 @@
         function addMinutes(date, minutes) {
             return new Date(date.getTime() + minutes * 60000);
         }
+
+        var onInRouteTimespanChangedTimer = null;
+
+        function onInRouteTimespanChanged(s, e) {
+            var timeSpanSelected = e.getVal();
+            var seconds = Math.floor(timeSpanSelected / 1000);
+            var minutesToAdd = Math.floor(seconds / 60);
+            onInRouteTimespanChangedTimer = $timeout(function () {
+                var start = angular.copy(vm.schedule.inRouteStartTime);
+                var startDate;
+                if (start == null) {
+                    startDate = new Date();
+                    vm.schedule.inRouteStartTime = new Date();
+                } else {
+                    startDate = new Date(start);
+                }
+                var finalDate = addMinutes(startDate, minutesToAdd);
+                vm.schedule.inRouteEndTime = kendo.parseDate(finalDate);
+                updateSchedule(false, false);
+            }, 50);
+        }
+
+        function onInRouteTImeChanged() {
+            findTimeDiff(vm.schedule.inRouteStartTime, vm.schedule.inRouteEndTime, true);
+            updateSchedule(false, false);
+        }
+
         var onTimespanSeletionChangedTimer = null;
+
+
         vm.scheduleTimeSpan = {
             timeSpan: "",
+            inRouteTimeSpan: "",
+            onInRouteTimespanChanged: onInRouteTimespanChanged,
+            onInRouteTImeChanged: onInRouteTImeChanged,
             onTimespanSeletionChanged: function (s, e) {
                 var timeSpanSelected = e.getVal();
                 var seconds = Math.floor(timeSpanSelected / 1000); //ignore any left over units smaller than a second
@@ -188,11 +238,19 @@
         function activateController() {
             vm.uiSettings.isTimeCardModuleEnabled = vm.user.timeCard && vm.user.allowPushTime;
             vm.isServiceProvider = !vm.user.isAdminstrator;
-            sharedDataFactory.getIniitialData(true).then(function (response) {
+            sharedDataFactory.getIniitialData().then(function (response) {
                 if (response) {
                     vm.uiSettings.milageTrackingEnabled = response.customerNumberEntity.milageTrackingEnabled || false;
                     vm.uiSettings.timerEnabled = response.customerNumberEntity.workOrderTimerEnabled || false;
                     vm.uiSettings.showEquipmentTabControl = response.customerNumberEntity.equipmentTrackingOn || false;
+                    vm.uiSettings.enableMarkup = response.customerNumberEntity.enableMarkupForWorkOrders || false;
+                    vm.enableMarkup = vm.uiSettings.enableMarkup;
+                    if (response.customerNumberEntity.billingOption) {
+                        vm.uiSettings.billingOption = response.customerNumberEntity.billingOption;
+                    }
+                    if (vm.uiSettings.billingOption === 0) {
+                        vm.uiSettings.isRouteTimeOptionChecked = response.customerNumberEntity.isRouteTimeOptionChecked;
+                    }
                     vm.scheduleStatus = response.secondaryOrderStatus;
                     vm.serviceProviders = response.serviceProviders;
                     vm.vehicles = response.vehicles;
@@ -212,8 +270,20 @@
                 var taxRate = vm.barCodeData.taxRate || 0;
                 angular.forEach(vm.barCodeData.invoice, function (pro) {
                     if (pro.price && pro.qty) {
+                        var totalPrice = 0;
+                        if (!angular.isDefined(pro.newPriceCalculated)) {
+                            pro.newPriceCalculated = false;
+                        }
                         if (angular.isNumber(parseFloat(pro.price)) && angular.isNumber(parseInt(pro.qty, 10))) {
-                            var totalPrice = pro.price * pro.qty;
+                            if (pro.markup > 0) {
+                                var newPrice = pro.newPriceCalculated ? pro.price : (parseFloat(pro.price) + (parseFloat(((pro.markup || 0) / 100) * (pro.price))));
+                                pro.price = newPrice;
+                                pro.newPriceCalculated = true;
+                                totalPrice = newPrice * pro.qty;
+                            } else {
+                                totalPrice = pro.price * pro.qty;
+                            }
+                            pro.totalPrice = totalPrice;
                             var taxAmt = parseFloat(parseFloat(taxRate) > 0 ? parseFloat((taxRate / 100) * (totalPrice)) : 0);
                             vm.totals.subtotal += parseFloat(totalPrice);
                             vm.totals.totalqty += parseInt(pro.qty, 10);
@@ -240,16 +310,25 @@
         }
 
         function updateSchedule(showSuccessAlert, showLoading) {
+            var sch = angular.copy(vm.schedule);
+            sch.actualStartDateTime = kendo.toString(kendo.parseDate(vm.schedule.actualStartDateTime), "g");
+            sch.actualFinishDateTime = kendo.toString(kendo.parseDate(vm.schedule.actualFinishDateTime), "g");
+            if (vm.schedule.inRouteStartTime) {
+                sch.inRouteStartTime = kendo.toString(vm.schedule.inRouteStartTime, "g");
+            }
+            if (vm.schedule.inRouteEndTime) {
+                sch.inRouteEndTime = kendo.toString(vm.schedule.inRouteEndTime, "g");
+            }
             if (showLoading === true) {
                 fpmUtilities.showLoading().then(function () {
-                    workOrderFactory.updateSchedule(vm.schedule).then(function () {
+                    workOrderFactory.updateSchedule(sch).then(function () {
                         if (showSuccessAlert) {
                             alerts.alert("Success", "Schedule information updated successfully");
                         }
                     }).then(fpmUtilities.hideLoading);
                 });
             } else {
-                workOrderFactory.updateSchedule(vm.schedule).then(function () {
+                workOrderFactory.updateSchedule(sch).then(function () {
                     if (showSuccessAlert) {
                         alerts.alert("Success", "Schedule information updated successfully");
                     }
@@ -590,7 +669,9 @@
 
 
         $scope.$on("$fpm:closeEditProductModal", function () {
-            vm.productModal.hide();
+            if (vm.productModal) {
+                vm.productModal.hide();
+            }
         });
 
         $scope.$on("$fpm:closeProductSearchModal", function ($event, args) {
@@ -605,31 +686,22 @@
                 vm.productSearchModal.hide();
             }
         });
+
         var uProductTimer = null;
+
         $scope.$on("$fpm:operation:updateProduct", function ($event, agrs) {
-            if (agrs && vm.currentProduct) {
-                var uProduct = _.filter(vm.barCodeData.products, function (p) {
-                    return p.num === agrs.num;
+            uProductTimer = $timeout(function () {
+                fpmUtilities.showLoading().then(function () {
+                    workOrderFactory.getBarcodeInvoiceAndProductDetails(vm.barcode).then(function (response) {
+                        vm.barCodeData.products = response.products;
+                        vm.barCodeData.invoice = response.invoice;
+                        calculateTotals();
+                    }).finally(function () {
+                        vm.productModal.hide();
+                        fpmUtilities.hideLoading();
+                    });
                 });
-                var uInvoice = _.filter(vm.barCodeData.invoice, function (n) {
-                    return n.productName !== "Labor" && n.numFromSchedule === agrs.num;
-                })
-                uProductTimer = $timeout(function () {
-                    if (uProduct.length > 0) {
-                        uProduct[0].qty = agrs.qty;
-                        uProduct[0].productDescription = agrs.productDescription;
-                        uProduct[0].price = agrs.price;
-                    }
-                    if (uInvoice.length > 0) {
-                        uInvoice[0].qty = agrs.qty;
-                        uInvoice[0].productDescription = agrs.productDescription;
-                        uInvoice[0].price = agrs.price;
-                        uInvoice[0].totalPrice = parseFloat(agrs.qty) * parseFloat(agrs.price);
-                    }
-                    calculateTotals();
-                    vm.productModal.hide();
-                }, 100);
-            }
+            }, 300);
         });
 
 
@@ -638,6 +710,7 @@
             if (findTimeDiffTimer) $timeout.cancel(findTimeDiffTimer);
             if (onTimespanSeletionChangedTimer) $timeout.cancel(onTimespanSeletionChangedTimer);
             if (workOrderMapTimer) $timeout.cancel(workOrderMapTimer);
+            if (onInRouteTimespanChangedTimer) $timeout.cancel(onInRouteTimespanChangedTimer);
             vm.map = null;
             isMapLoaded = false;
         });

@@ -30,6 +30,7 @@
                     onProductItemClicked: function (product) {
                         vm.currentProduct = angular.copy(product);
                         vm.currentProduct.qty = 1;
+                        vm.currentProduct.markup = 0;
                         if (vm.productModal) {
                             vm.productModal.show();
                         }
@@ -46,7 +47,6 @@
                 };
 
                 $scope.$on("$fpm:closeEditProductModal", function () {
-                    console.log("HEEEE");
                     if (vm.productModal) {
                         vm.productModal.hide();
                     }

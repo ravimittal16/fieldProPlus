@@ -90,9 +90,9 @@
                 function onActionDotsClicked() {
                     $ionicActionSheet.show({
                         buttons: [{
-                            text: "Add New Expanse"
+                            text: "Add New Expense"
                         }],
-                        titleText: 'Expanse',
+                        titleText: 'Expense',
                         cancelText: 'Cancel',
                         cancel: function () {
                             // add cancel code..

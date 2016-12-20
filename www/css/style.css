@@ -312,8 +312,8 @@ customer-search-header-component {
         margin-left: 0px !important;
         width: 100% !important;
         font-size:78%;
-        background-color: #387ef5;
-        border: 1px solid #387ef5;
+        background-color: #f0ad4e;
+        border: 1px solid #f0ad4e;
         background-image: none;
         color:#FFF;
         font-weight: normal;
@@ -321,8 +321,8 @@ customer-search-header-component {
     }
 
     .k-upload-button:hover {
-        background-color: #387ef5;
-        border: 1px solid #387ef5;
+        background-color: #f0ad4e;
+        border: 1px solid #f0ad4e;
         background-image: none;
         color:#FFF;
         font-weight: normal;
@@ -347,4 +347,7 @@ customer-search-header-component {
     .input-label{
       font-size: 13px;
       font-weight: 600;
+    }
+    .text-italic{
+      font-style: italic;
     }

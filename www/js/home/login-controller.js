@@ -37,7 +37,6 @@
                     authenticationFactory.sendPassword(res).then(function (res) {
                         if (angular.isArray(res) && res.length > 0) {
                             vm.forgotPasswordModalErrors = res;
-                            vm.showError = true;
                         }
                     })
                 });
