@@ -153,12 +153,16 @@
                 }, 50);
             },
             onStartDateTimeChaged: function () {
-                if (vm.schedule.actualStartDateTime && vm.schedule.actualFinishDateTime) {
-                    if (new Date(vm.schedule.actualStartDateTime) > new Date(vm.schedule.actualFinishDateTime)) {
-                        alerts.alert("Warning", "Start time cannot be greater than finish time.");
-                    } else {
-                        findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
+                if (vm.uiSettings.billingOption === 0) {
+                    if (vm.schedule.actualStartDateTime && vm.schedule.actualFinishDateTime) {
+                        if (new Date(vm.schedule.actualStartDateTime) > new Date(vm.schedule.actualFinishDateTime)) {
+                            alerts.alert("Warning", "Start time cannot be greater than finish time.");
+                        } else {
+                            findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
+                        }
                     }
+                } else { 
+                    updateSchedule(false, false);
                 }
             },
             onEndDateTimeChanged: function () {
@@ -461,6 +465,11 @@
             },
             sch: {
                 events: {
+                    onCustomScheduleChanged: function (e) {
+                        if (!vm.schedule.approve) {
+                            workOrderFactory.updateCustomScheduleData(e);
+                        }
+                    },
                     pushToTimecard: function () {
                         pushToTimecard();
                     },

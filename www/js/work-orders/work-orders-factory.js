@@ -126,7 +126,12 @@
             }
         }
 
+        function updateCustomScheduleData(o) {
+            return apiBaseFactory.post(apibaseurl + "UpdateCustomScheduleData", o);
+        }
+
         return {
+            updateCustomScheduleData: updateCustomScheduleData,
             getMobileDashboard: getMobileDashboard,
             getBarcodeDetails: getBarcodeDetails,
             deleteProduct: deleteProduct,
