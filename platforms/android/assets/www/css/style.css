@@ -154,6 +154,7 @@ address>p {
 }
 
 
+
 /*.item.wrap, .item-content.wrap {
 white-space: normal;
 }*/
@@ -296,3 +297,57 @@ customer-search-header-component {
 .timecard-table th {
     text-align: left;
 }
+.f-z-15{
+  font-size: 15px;
+}
+.spinner svg {
+  width: 40px;
+  height: 40px;
+  stroke: #444;
+  fill: #444;
+}
+
+.k-upload-button {
+        width: 150px !important;
+        margin-left: 0px !important;
+        width: 100% !important;
+        font-size:78%;
+        background-color: #f0ad4e;
+        border: 1px solid #f0ad4e;
+        background-image: none;
+        color:#FFF;
+        font-weight: normal;
+        padding: 3px;
+    }
+
+    .k-upload-button:hover {
+        background-color: #f0ad4e;
+        border: 1px solid #f0ad4e;
+        background-image: none;
+        color:#FFF;
+        font-weight: normal;
+    }
+    
+
+    .k-upload {
+        background-color: transparent;
+        border: 0px;
+        width: 100%;
+    }
+    .button-bar-with-margin{
+      
+      background: transparent;
+    }
+    .button-bar-with-margin button{
+      border-radius: 5px !important;  
+    }
+    .button-bar-with-margin button:not(:first-child){
+        margin-left: 5px;
+    }
+    .input-label{
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .text-italic{
+      font-style: italic;
+    }

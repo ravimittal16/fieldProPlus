@@ -1,7 +1,7 @@
 (function () {
     "use strict";
-    function initController($scope, $rootScope, $state, ionicDatePicker, $ionicPopover, $ionicModal, $ionicActionSheet, timecardFactory,
-        fpmUtilitiesFactory, authenticationFactory) {
+    function initController($scope, $timeout, $rootScope, $state, ionicDatePicker, $ionicPopover,
+        $ionicModal, $ionicActionSheet, timecardFactory, fpmUtilitiesFactory, authenticationFactory) {
         var vm = this;
         var jobCodes = { CLOCK_IN: 5001, CLOCK_OUT: 5002 };
         var toDateString = fpmUtilitiesFactory.toStringDate;
@@ -63,7 +63,6 @@
             vm.ui.data.timeCards = [];
             if (details.length > 0) {
                 angular.forEach(details, function (s, i) {
-                    console.log(s);
                     if (s.jobCode !== jobCodes.CLOCK_IN) {
                         if (!s.isPtoType) {
                             s.section = sectionCounter;
@@ -83,7 +82,6 @@
         }
 
         function _updateTimeCardBindings(details) {
-            console.log("details", details);
             vm.ui.data.timeCards = [];
             vm.ui.data.summary = details.timeCardSummary;
             vm.factory.summary = details.timeCardSummary;
@@ -140,10 +138,7 @@
 
         function _getTimeCardByDate() {
             fpmUtilitiesFactory.showLoading().then(function () {
-
-                //_clearClockInData();
                 timecardFactory.getTimeCardByDate(toDateString(vm.currentDate)).then(function (response) {
-                    console.log("getTimeCardByDate", response);
                     if (response) {
                         _updateTimeCardBindings(response);
                     } else {
@@ -180,12 +175,11 @@
         function _processClockOutUser() {
             var smDt = new Date();
             var clockOutTime = new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), smDt.getHours(), smDt.getMinutes(), 0, 0);
-            console.log(kendo.toString(clockOutTime, "g"));
             var details = {
                 startTime: kendo.toString(clockOutTime, "g"),
                 jobCode: jobCodes.CLOCK_OUT,
                 numFromSummary: vm.ui.data.summary.Num,
-                timeCardDate: moment(vm.ui.data.summary.timeCardDate),
+                timeCardDate: kendo.parseDate(vm.ui.data.summary.timeCardDate),
                 uniqueIdentifier: vm.ui.data.currentClockedIn.uniqueIdentifier
             };
             timecardFactory.clockInOutUser(details).then(function (response) {
@@ -197,7 +191,7 @@
                     vm.ui.data.addTimeVisibility = false;
                     vm.ui.data.ptoButtonVisibility = true;
                     vm.ui.data.summary = response.timeCardSummary;
-                    vm.factory.summary = details.timeCardSummary;
+                    vm.factory.summary = response.timeCardSummary;
                     var dt = new Date();
                     var cDate = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 0, 0, 0, 0);
                     var tcd = new Date(moment(vm.ui.data.summary.timeCardDate));
@@ -255,7 +249,7 @@
                 vm.ui.data.timecardTutorialModal.show();
             }
         }
-
+        var timeoutvar = null;
         vm.ui = {
             errors: [],
             calendar: {
@@ -377,14 +371,14 @@
                     }
                     alerts.confirm("Confirmation!", "Are you sure?", function () {
                         fpmUtilitiesFactory.showLoading().then(function () {
-                            timeCardFactory.sendForApproval(vm.ui.data.summary.Num, status).then(function (response) {
+                            timecardFactory.sendForApproval(vm.ui.data.summary.num, status).then(function (response) {
                                 if (response) {
                                     vm.ui.data.summary = response.timeCardSummary;
-                                    $timeout(function () {
+                                    timeoutvar = $timeout(function () {
                                         alerts.alert("Success", "Time card sent for approval successfully", function () {
                                             vm.ui.data.addTimeVisibility = false;
                                             vm.ui.data.ptoButtonVisibility = false;
-                                            vm.ui.data.approvalStatus = vm.ui.data.summary.ApproveStatus || 0;
+                                            vm.ui.data.approvalStatus = vm.ui.data.summary.approveStatus || 0;
                                         });
                                     }, 100);
                                 }
@@ -448,10 +442,14 @@
                 _calculateTotalPayableTime();
             }
         }, true);
-
+        $scope.$on("$destroy", function () {
+            if (timeoutvar) {
+                $timeout.cancel(timeoutvar)
+            }
+        });
         activateController();
     }
-    initController.$inject = ["$scope", "$rootScope", "$state", "ionicDatePicker", "$ionicPopover", "$ionicModal",
+    initController.$inject = ["$scope", "$timeout", "$rootScope", "$state", "ionicDatePicker", "$ionicPopover", "$ionicModal",
         "$ionicActionSheet", "timecard-factory", "fpm-utilities-factory", "authenticationFactory"];
     angular.module("fpm").controller("timecard-controller", initController);
 })();

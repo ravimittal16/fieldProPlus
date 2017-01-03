@@ -8,7 +8,7 @@
   </ion-header-bar>
   <form name="formWorkOrder" novalidate="">
     <ion-content>
-      <div class="list padding-top" data-ng-if="vm.showError">
+      <div class="list padding-top" data-ng-if="vm.errors.length > 0">
         <div class="error">
           <ui class="list-unstyled">
             <li data-ng-repeat="error in vm.errors">{{::error}}</li>
@@ -62,8 +62,8 @@
                     <textarea type="text" rows="2" placeholder="Street" maxlength="200" data-ng-model="vm.woEntity.sStreet"></textarea>
                 </label>
         <label class="item item-input">
-                    <input type="text" placeholder="City" maxlength="50" data-ng-model="vm.woEntity.sCity"/>
-                </label>
+            <input type="text" placeholder="City" maxlength="50" data-ng-model="vm.woEntity.sCity"/>
+          </label>
         <label class="item item-input">
                     <input type="text" placeholder="State" data-ng-model="vm.woEntity.sState" maxlength="50"/>
                 </label>
@@ -92,8 +92,7 @@
                     <input type="text" class="transparent-background" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A'}" data-ng-model="vm.dates.endDate" />
                 </label>
         <label class="item item-input item-stacked-label">
-                    <span class="input-label">Work Description</span>
-                    <textarea cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment1"></textarea>
+                    <textarea cols="30" rows="6" placeholder="please add work description here..." data-ng-model="vm.barCodeData.barcodeDetails.comment1"></textarea>
                 </label>
       </div>
     </ion-content>

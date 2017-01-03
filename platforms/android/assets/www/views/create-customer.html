@@ -6,7 +6,14 @@
         <ion-content>
             <form action="">
                 <div class="list">
-                    <label class="item item-input item-floating-label">
+                    <div class="list padding-top" data-ng-if="vm.errors.length > 0">
+                        <div class="error">
+                            <ui class="list-unstyled">
+                                <li data-ng-repeat="error in vm.errors">{{::error}}</li>
+                            </ui>
+                        </div>
+                    </div>
+                <label class="item item-input item-floating-label">
                     <span class="input-label">Display Name</span>
                     <input type="text" name="displayName" placeholder="Display Name" required="" type="text" maxlength="50" data-ng-model="vm.customerModel.displayName"  />
                 </label>

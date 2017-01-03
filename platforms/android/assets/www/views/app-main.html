@@ -13,11 +13,11 @@
 
 	<ion-side-menu side="left" enable-menu-with-back-views="false">
 		<ion-header-bar class="bar-stable">
-			<h1 class="title ">Menu</h1>
+			<h1 class="title">Menu</h1>
 		</ion-header-bar>
-		<ion-content>
+		<ion-content class="has-header">
 			<ion-list>
-				<ion-item menu-close data-ng-repeat="menu in ::vm.sideMenuItems" data-ng-click="vm.events.onMenuItemClicked(menu)">
+				<ion-item data-ui-sref-active="active" menu-close data-ng-repeat="menu in ::vm.sideMenuItems" data-ui-sref="{{menu.state}}" data-ng-if="vm.events.checkMenuItemVisibility(menu)">
 					<i data-ng-if="menu.icon" class="icon ion-{{menu.icon}}"></i> {{::menu.title}}
 				</ion-item>
 			</ion-list>
@@ -40,38 +40,36 @@
 			</button>
 		</ion-header-bar>
 		<ion-content>
-				<ion-list>
+				<ion-list data-ng-if="!vm.isServiceProvider">
 					<ion-item ng-repeat="item in vm.matchedOrders" data-ng-click="vm.events.onSearchItemClick(item)">
-						<div class="row">
-							<div class="col">
+						<span class="label label-success">{{::item.BarcodeName}}</span>
+						<div class="padding-top">
+							<h3>{{::item.DisplayName}}</h3>
+							<address>
 								<p>
-									<h3>{{item.DisplayName}}</h3>
+									<strong>{{::item.Company_Name}}</strong>
 								</p>
+							</address>
+						</div>
+					</ion-item>
+				</ion-list>
+				<ion-list data-ng-if="vm.isServiceProvider">
+					<ion-item ng-repeat="item in vm.matchedOrders" data-ng-click="vm.events.onSearchItemClick(item)">
+						<span class="label label-success">{{::item.barcodeName}}</span>
+						<div class="padding-top">
+							<h3>{{::item.displayName}}</h3>
+							<address>
 								<p>
-									<h4>{{item.Company_Name}}</h4>
+									<strong>{{::item.company_Name}}</strong>
 								</p>
-							</div>
-							<div class="col">
-								<h3 class="pull-right">{{item.BarcodeName}}</h3>
-							</div>
+							</address>
 						</div>
 					</ion-item>
 				</ion-list>
 		</ion-content>
 	</ion-modal-view>
 </script>
-<script id="editProductModal.html" type="text/ng-template">
-	<ion-modal-view>
-		<edit-product-component is-edtimate="false" data-modal-type="0" data-product="vm.currentProduct"></edit-product-component>
-	</ion-modal-view>
-</script>
 
-<script id="addProductModal.html" type="text/ng-template">
-	<ion-modal-view>
-		<edit-product-component is-edtimate="false" data-modal-type="1" 
-		data-product="vm.currentProduct" data-on-add-product-completed="vm.events.onAddProductCompleted(product)"></edit-product-component>
-	</ion-modal-view>
-</script>
 <script id="productSearchModal.html" type="text/ng-template">
 	<ion-modal-view>
 		<product-search-component></product-search-component>

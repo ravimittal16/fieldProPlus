@@ -4,9 +4,10 @@
     var defCordinates = { x: 44.31127, y: -92.67851, xcom: -92.67851, ycom: 44.3112679 };
     var mapMarkers = [];
     var markers = [];
-    function initController($scope, $state, $cordovaGeolocation, $ionicActionSheet, $timeout, $ionicModal, mapFactory,
-        sharedDataFactory, fpmUtilitiesFactory) {
+    function initController($scope, $state, $cordovaGeolocation, $ionicActionSheet, $timeout, $ionicPopup, $cordovaNetwork, $rootScope,
+        mapFactory, sharedDataFactory, fpmUtilitiesFactory, authenticationFactory) {
         var vm = this;
+        vm.user = authenticationFactory.getLoggedInUserInfo();
         var options = { timeout: 10000, enableHighAccuracy: true };
         var mapOptions = {
             center: null,
@@ -24,18 +25,10 @@
         //     vm.map = new google.maps.Map(document.getElementById("map"), mapOptions);
         // });
 
-        $ionicModal.fromTemplateUrl("mapFilters.html", {
-            scope: $scope,
-            animation: 'slide-in-up'
-        }).then(function (modal) {
-            vm.filtersModal = modal;
-        });
 
         vm.filtersApplied = false;
         function onFiltersClicked() {
-            if (vm.filtersModal) {
-                vm.filtersModal.show();
-            }
+            showFilterModal();
         }
         function clearFilters() {
             if (vm.filtersModal) {
@@ -46,6 +39,17 @@
                 });
                 updateMapMarkersView();
                 vm.filtersModal.hide();
+            }
+        }
+
+        function showFilterModal() {
+            if (!vm.filtersModal) {
+                fpmUtilitiesFactory.getModal("mapFilters.html", $scope).then(function (modal) {
+                    vm.filtersModal = modal;
+                    vm.filtersModal.show();
+                });
+            } else {
+                vm.filtersModal.show();
             }
         }
         vm.filterDate = null;
@@ -187,9 +191,24 @@
         };
         function addHandler(m, o) {
             window.google.maps.event.addListener(m, "click", function () {
-                if (!o.isHome && o.numFromTechnician) {
-                    fpmUtilitiesFactory.alerts.confirm("Confirmation", "Are you sure to edit this work order?", function () {
-                        $state.go("app.editOrder", { barCode: o.barCode, technicianNum: o.numFromTechnician, src: "map" });
+                vm.currentMarker = o.o;
+                if (!o.isHome) {
+                    var myPopup = $ionicPopup.show({
+                        templateUrl: "mapInfoWindow.html",
+                        title: vm.currentMarker.barcodeName,
+                        scope: $scope,
+                        buttons:
+                        [
+                            { text: "Close" },
+                            {
+                                text: 'Edit Order',
+                                type: 'button-positive',
+                                onTap: function (e) {
+                                    if (o.numFromTechnician) {
+                                        $state.go("app.editOrder", { barCode: o.barCode, technicianNum: o.numFromTechnician, src: "map" });
+                                    }
+                                }
+                            }]
                     });
                 }
             });
@@ -256,6 +275,7 @@
                 });
             }
         }
+
         function updateMapMarkersArray() {
             mapMarkers = [];
             $.each(vm.mapData.orders, function (i, e) {
@@ -272,7 +292,7 @@
                         x: e.coordinateX, y: e.coordinateY, barCode: e.barcode, isHome: false, color: color,
                         scale: color === defaultColor ? 4 : 6, isAssigned: isWorkAssigned,
                         technician: e.technicianNum, start: e.scheduledStartDateTime,
-                        numFromTechnician: e.numFromTechnicianSchedule
+                        numFromTechnician: e.numFromTechnicianSchedule, o: e
                     });
                 }
                 if (i === vm.mapData.orders.length - 1) {
@@ -280,6 +300,7 @@
                 }
             });
         }
+
         function getMapData(forceGet) {
 
             fpmUtilitiesFactory.showLoading().then(function () {
@@ -294,6 +315,16 @@
                 }).finally(fpmUtilitiesFactory.hideLoading);
             });
         }
+
+
+        function mapLoadedEvent() {
+            if (angular.isDefined(google)) {
+                google.maps.event.addListenerOnce(vm.map, "idle", function () {
+                    getMapData(false);
+                });
+            }
+        }
+
         function getIniitialData() {
             markers = [];
             mapOptions.center = new window.google.maps.LatLng(defCordinates.y, defCordinates.x);
@@ -304,14 +335,13 @@
                     mapOptions.center = new window.google.maps.LatLng(cn.coordinateY || defCordinates.y, cn.coordinateX || defCordinates.x);
                     mapOptions.zoom = cn.zoomDepth || 8;
                     vm.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+                    mapLoadedEvent();
                     mapMarkers.push({ x: cn.coordinateX || defCordinates.x, y: cn.coordinateY || defCordinates.y, imageurl: "../images/markers/home.png", barCode: "[HOME]", isHome: true, color: defaultColor, technician: '', isAssigned: true, start: null, numFromTechnician: 0 });
                 } else {
                     mapOptions.center = new window.google.maps.LatLng(defCordinates.y, defCordinates.x);
                     vm.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+                    mapLoadedEvent();
                 }
-
-            }).finally(function () {
-                getMapData(false);
             });
         }
         function activateController() {
@@ -329,9 +359,17 @@
                 $timeout.cancel(dateFilterTimer);
             }
         });
+
+        $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
+            fpmUtilitiesFactory.hideLoading();
+        })
+
+        $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
+            fpmUtilitiesFactory.showLoading("You must connected to the internet to view this map");
+        })
     }
 
     initController.$inject = ["$scope", "$state", "$cordovaGeolocation", "$ionicActionSheet", "$timeout",
-        "$ionicModal", "map-factory", "shared-data-factory", "fpm-utilities-factory"];
+        "$ionicPopup", "$cordovaNetwork", "$rootScope", "map-factory", "shared-data-factory", "fpm-utilities-factory", "authenticationFactory"];
     angular.module("fpm").controller("map-controller", initController);
 })();
