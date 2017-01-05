@@ -7,6 +7,9 @@
         "files": {}
     },
     "installed_plugins": {
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
         "cordova-plugin-console": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
@@ -32,9 +35,6 @@
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
         "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
-        },
-        "cordova-plugin-camera": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         }
     },
