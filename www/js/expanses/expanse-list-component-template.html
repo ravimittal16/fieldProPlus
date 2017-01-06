@@ -2,8 +2,10 @@
 </ion-refresher>
 
 <div class="item item-divider bg-white" data-ng-if="vm.barcode">
-    <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
-        data-ng-click="vm.events.onActionDotsClicked()"></a>
+    <!--<a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+        data-ng-click="vm.events.onActionDotsClicked()"></a>-->
+        <button class="button button-small button-positive pull-right" type="button" data-ng-click="vm.events.onActionDotsClicked()">
+            Add Expense</button>
 </div>
 <div class="card" data-ng-if="vm.requestCompleted && vm.expanses.length == 0">
     <div class="item item-text-wrap text-center">

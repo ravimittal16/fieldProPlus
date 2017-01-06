@@ -37,7 +37,12 @@
                 return true;
             },
             onMenuItemClicked: function (item) {
-                $state.go(item.state);
+                if (item.state === "app.logout") {
+                    authenticationFactory.logout();
+                    $state.go("login");
+                } else {
+                    $state.go(item.state);
+                }
             },
             toggleLeft: function () {
 

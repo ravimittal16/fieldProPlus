@@ -239,9 +239,9 @@
         <ion-content>
           <ion-list can-swipe="true">
             <div class="item item-divider">
-              Products selected for Work Order
-              <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
-                data-ng-click="vm.tabs.prod.events.onProdcutActionButtonClicked()"></a>
+              Products
+              <button type="button" class="button pull-right button-small button-small button-positive"
+                data-ng-click="vm.tabs.prod.events.onProdcutActionButtonClicked()">Add Product</a>
             </div>
             <ion-item class="item-text-wrap p-10" data-ng-repeat="p in vm.barCodeData.products">
               <div class="row">

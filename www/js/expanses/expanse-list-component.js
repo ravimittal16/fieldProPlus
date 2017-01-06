@@ -5,8 +5,8 @@
             barcode: "<",
             refresher: "<"
         },
-        controller: ["$scope", "$ionicActionSheet", "expense-data-factory", "fpm-utilities-factory",
-            function ($scope, $ionicActionSheet, expenseDataFactory, fpmUtilitiesFactory) {
+        controller: ["$scope", "$timeout", "$ionicActionSheet", "expense-data-factory", "fpm-utilities-factory",
+            function ($scope, $timeout, $ionicActionSheet, expenseDataFactory, fpmUtilitiesFactory) {
                 var vm = this;
                 vm.paid = [];
                 vm.unpaid = [];
@@ -19,12 +19,16 @@
                 };
                 vm.requestCompleted = false;
                 function loadExpenses(callback) {
+                    vm.paid = [];
+                    vm.unpaid = [];
                     vm.requestCompleted = false;
                     fpmUtilitiesFactory.showLoading().then(function () {
                         expenseDataFactory.getExpense(vm.barcode || "", true).then(function (response) {
-                            vm.expanses = response;
-                            vm.paid = _.filter(response, function (o) { return o.expenseStatus == 1 });
-                            vm.unpaid = _.filter(response, function (o) { return o.expenseStatus == 0 });
+                            if (response) {
+                                vm.expanses = response;
+                                vm.paid = _.filter(response, function (o) { return o.expenseStatus == 1 });
+                                vm.unpaid = _.filter(response, function (o) { return o.expenseStatus == 0 });
+                            }
                             vm.requestCompleted = true;
                         }).finally(function () {
                             if (angular.isFunction(callback)) {
@@ -37,14 +41,17 @@
                 function activateController() {
                     loadExpenses();
                 }
+                var deleteTimer = null;
                 function onDeleteClicked(item, index, isFromPaid) {
                     alerts.confirmDelete(function () {
                         fpmUtilitiesFactory.showLoading().then(function () {
                             expenseDataFactory.deleteExpense(item.expenseId).then(function (response) {
                                 if (response === true) {
-                                    alerts.alert("Deleted", "Expense deleted successfully", function () {
-                                        vm.expanses.splice(index, 1);
-                                    });
+                                    deleteTimer = $timeout(function () {
+                                        alerts.alert("Deleted", "Expense deleted successfully", function () {
+                                            vm.expanses.splice(index, 1);
+                                        });
+                                    }, 200)
                                 }
                             }).finally(fpmUtilitiesFactory.hideLoading);
                         });
@@ -88,22 +95,7 @@
                     openModal(angular.copy(schema));
                 }
                 function onActionDotsClicked() {
-                    $ionicActionSheet.show({
-                        buttons: [{
-                            text: "Add New Expense"
-                        }],
-                        titleText: 'Expense',
-                        cancelText: 'Cancel',
-                        cancel: function () {
-                            // add cancel code..
-                        },
-                        buttonClicked: function (index) {
-                            if (index === 0) {
-                                addNewExpanse();
-                            }
-                            return true;
-                        }
-                    });
+                    addNewExpanse();
                 }
                 function uploadImage(mappedImage, imageName) {
                     vm.entity.imageChanged = true;
@@ -170,6 +162,9 @@
                     loadExpenses(function () {
                         $scope.$broadcast("scroll.refreshComplete");
                     });
+                }
+                vm.$onDestroy = function () {
+                    $timeout.cancel(deleteTimer);
                 }
                 vm.events = {
                     refreshOnPullDown: refreshOnPullDown,

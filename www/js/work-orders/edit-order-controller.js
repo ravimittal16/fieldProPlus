@@ -161,7 +161,7 @@
                             findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
                         }
                     }
-                } else { 
+                } else {
                     updateSchedule(false, false);
                 }
             },
@@ -442,21 +442,19 @@
                         }
                     },
                     onAddressTapped: function () {
-                        fpmUtilities.alerts.confirm("Show Map", "Would you like to open map?", function () {
-                            if (workOrderMapModal) {
+                        if (workOrderMapModal) {
+                            workOrderMapModal.show();
+                            workOrderMapTimer = $timeout(loadWorkOrderMap, 2000);
+                        }
+                        else {
+                            fpmUtilities.getModal("workOrderMap.html", $scope).then(function (modal) {
+                                workOrderMapModal = modal;
                                 workOrderMapModal.show();
-                                workOrderMapTimer = $timeout(loadWorkOrderMap, 2000);
-                            }
-                            else {
-                                fpmUtilities.getModal("workOrderMap.html", $scope).then(function (modal) {
-                                    workOrderMapModal = modal;
-                                    workOrderMapModal.show();
-                                    if (!isMapLoaded) {
-                                        workOrderMapTimer = $timeout(loadWorkOrderMap, 2000);
-                                    }
-                                });
-                            }
-                        });
+                                if (!isMapLoaded) {
+                                    workOrderMapTimer = $timeout(loadWorkOrderMap, 2000);
+                                }
+                            });
+                        }
                     },
                     onDescriptionOrResolutionChanged: function () {
                         updateOrder();
@@ -619,22 +617,7 @@
             prod: {
                 events: {
                     onProdcutActionButtonClicked: function () {
-                        var productSheet = $ionicActionSheet.show({
-                            buttons: [{
-                                text: 'Add New Product'
-                            }],
-                            titleText: 'New Product',
-                            cancelText: 'Cancel',
-                            cancel: function () {
-                                // add cancel code..
-                            },
-                            buttonClicked: function (index) {
-                                if (index === 0) {
-                                    openProductSearchModal();
-                                }
-                                return true;
-                            }
-                        });
+                        openProductSearchModal();
                     },
                     closeProductEditModal: function () {
                         vm.productModal.hide();

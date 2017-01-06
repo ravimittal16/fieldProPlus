@@ -5,19 +5,28 @@
             padEventsRef: "="
         },
         templateUrl: "js/work-orders/order-signature-pad-template.html",
-        controller: ["$scope", "$stateParams", "$q", "work-orders-factory",
-            function ($scope, $stateParams, $q, workOrdersFactory) {
+        controller: ["$scope", "$stateParams", "$q", "work-orders-factory", "fpm-utilities-factory",
+            function ($scope, $stateParams, $q, workOrdersFactory, fpmUtilities) {
                 var vm = this;
                 vm.customerName = "";
                 var barcode = $stateParams.barCode;
                 vm.events = {
+                    onCustomerNameKeyup: function (keyCode) {
+                        if (keyCode === 13) {
+                            vm.events.trySaveSignature().then(function () {
+                                $scope.$emit("$signature:completedEvent");
+                             });
+                        }
+                    },
                     trySaveSignature: function () {
                         var defer = $q.defer();
                         var isFromEstimates = false;
                         var sign = $(angular.element("#signature")).jSignature("getData", "image");
                         if ($.trim(vm.customerName) !== "" && angular.isArray(sign)) {
-                            workOrdersFactory.saveJsonSignForBarcode({ BaseString: sign[1], Barcode: (isFromEstimates ? "" : barcode), CustomerName: vm.customerName, EstimateId: 0 }).then(function () {
-                                defer.resolve(true);
+                            fpmUtilities.showLoading().then(function () {
+                                workOrdersFactory.saveJsonSignForBarcode({ BaseString: sign[1], Barcode: (isFromEstimates ? "" : barcode), CustomerName: vm.customerName, EstimateId: 0 }).then(function () {
+                                    defer.resolve(true);
+                                }).finally(fpmUtilities.hideLoading);
                             });
                         }
                         return defer.promise;

@@ -7,7 +7,6 @@
             $state.go("login");
         }
         activateController();
-        console.log("HELLO WORLD")
     }
     initController.$inject = ["$scope", "$state", "authenticationFactory"];
     angular.module("fpm").controller("logout-controller", initController);
