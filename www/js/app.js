@@ -34,7 +34,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
         { state: "app.timecard", config: { url: "/timecard", controller: "timecard-controller", controllerAs: "vm", templateUrl: "views/timecard.html" } },
         { state: "app.settings", config: { url: "/settings", controller: "settings-controller", controllerAs: "vm", templateUrl: "views/settings.html" } },
         { state: "app.changePassword", config: { url: "/changePassword", controller: "change-password-controller", controllerAs: "vm", templateUrl: "views/change-password.html" } },
-        { state: "app.logout", config: { controller: "logout-controller", controllerAs: "vm" } }
+        { state: "app.logout", config: { url: "/logout", controller: "logout-controller", controllerAs: "vm", templateUrl: "views/logout.html" } }
       ];
 
       angular.forEach(routes, function (route) {

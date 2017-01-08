@@ -1,13 +1,18 @@
 (function () {
     "use strict";
-    function initController($scope, $state, authenticationFactory) {
+    function initController($scope, $timeout, $state, authenticationFactory) {
         var vm = this;
         function activateController() {
+            console.log("HELLLOD");
             authenticationFactory.logout();
-            $state.go("login");
+            $timeout(function () {
+                $state.go("login");
+            }, 200);
         }
-        activateController();
+        $scope.$on("$ionicView.beforeEnter", function (e, data) {
+            activateController();
+        });
     }
-    initController.$inject = ["$scope", "$state", "authenticationFactory"];
+    initController.$inject = ["$scope", "$timeout", "$state", "authenticationFactory"];
     angular.module("fpm").controller("logout-controller", initController);
 })();

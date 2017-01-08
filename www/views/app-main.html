@@ -17,7 +17,7 @@
 		</ion-header-bar>
 		<ion-content class="has-header">
 			<ion-list>
-				<ion-item data-ui-sref-active="active" menu-close data-ng-repeat="menu in ::vm.sideMenuItems" data-ng-click="vm.events.onMenuItemClicked(menu)" data-ng-if="vm.events.checkMenuItemVisibility(menu)">
+				<ion-item data-ui-sref-active="active" menu-close data-ng-repeat="menu in ::vm.sideMenuItems" data-ui-sref="{{menu.state}}" data-ng-if="vm.events.checkMenuItemVisibility(menu)">
 					<i data-ng-if="menu.icon" class="icon ion-{{menu.icon}}"></i> {{::menu.title}}
 				</ion-item>
 			</ion-list>
