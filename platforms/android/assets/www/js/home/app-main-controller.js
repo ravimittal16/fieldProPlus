@@ -17,7 +17,7 @@
             { title: "Time Card", state: "app.timecard", icon: "clock", basedOn: "timeCard", specialFeature: true },
             { title: "Settings", state: "app.settings", icon: "settings" },
             { title: "Change Password", state: "app.changePassword", icon: "" },
-            { title: "Logout", state: "app.logout", icon: "power" }
+            { title: "Logout", state: "app.logout..", icon: "power" }
 
         ];
         $scope.$on("$ionicView.beforeEnter", function (e, data) {
