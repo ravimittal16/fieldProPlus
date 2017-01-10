@@ -1,10 +1,10 @@
 (function () {
     "use strict";
-    function initFactory($http, $q, fieldPromaxConfig) {
+    function initFactory($http, $q, fieldPromaxConfig, fpmUtilitiesFactory) {
 
         function request(type, url, urlData) {
             var defer = $q.defer();
-
+            console.log("IS CONNECTED", fpmUtilitiesFactory.device.isConnected())
             function onsuccess(data, status, headers, config) {
                 return defer.resolve(data);
             }
@@ -36,6 +36,6 @@
         }
         return factory;
     }
-    initFactory.$inject = ["$http", "$q", "fieldPromaxConfig"];
+    initFactory.$inject = ["$http", "$q", "fieldPromaxConfig", "fpm-utilities-factory"];
     angular.module("fpm").factory("api-base-factory", initFactory);
 })();

@@ -3,7 +3,6 @@
     function initController($scope, $timeout, $state, authenticationFactory) {
         var vm = this;
         function activateController() {
-            console.log("HELLLOD");
             authenticationFactory.logout();
             $timeout(function () {
                 $state.go("login");

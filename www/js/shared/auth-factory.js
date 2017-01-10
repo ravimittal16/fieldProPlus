@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  function initFactory($http, $q, $rootScope, $state, $window, $timeout, fpmUtilitiesFactory,
+  function initFactory($http, $q, $rootScope, $state, $window, $ionicHistory, fpmUtilitiesFactory,
     localStorageService, fieldPromaxConfig, apiContext, workOrdersFactory) {
     var serviceBase = fieldPromaxConfig.fieldPromaxApi;
     var localStorageKeys = fieldPromaxConfig.localStorageKeys;
@@ -79,6 +79,8 @@
     }
 
     function logout() {
+      $ionicHistory.clearHistory();
+      $ionicHistory.clearCache();
       workOrdersFactory.clearAllCache();
       localStorageService.remove(localStorageKeys.initialData);
       localStorageService.remove(localStorageKeys.storageKeyName);
@@ -108,7 +110,7 @@
     return factory;
   }
 
-  initFactory.$inject = ["$http", "$q", "$rootScope", "$state", "$window", "$timeout", "fpm-utilities-factory",
+  initFactory.$inject = ["$http", "$q", "$rootScope", "$state", "$window", "$ionicHistory", "fpm-utilities-factory",
     "localStorageService", "fieldPromaxConfig", "api-base-factory", "work-orders-factory"
   ];
   angular.module("fpm").factory("authenticationFactory", initFactory);

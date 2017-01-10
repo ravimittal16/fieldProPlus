@@ -17,8 +17,8 @@ var constants = {
 var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ngCordova", "ionic-datepicker",
   "kendo.directives", "mobiscroll-datetime", "mobiscroll-timespan", "mobiscroll-numpad", "ui.rCalendar"])
   .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider", "$ionicConfigProvider",
-    "ionicDatePickerProvider", "fpm-utilities-factoryProvider", function ($stateProvider, $urlRouterProvider, $compileProvider, $httpProvider, $ionicConfigProvider,
-      ionicDatePickerProvider, fpmUtilitiesFactoryProvider) {
+    "ionicDatePickerProvider", "$provide", "fpm-utilities-factoryProvider", function ($stateProvider, $urlRouterProvider, $compileProvider,
+      $httpProvider, $ionicConfigProvider, ionicDatePickerProvider, $provide, fpmUtilitiesFactoryProvider) {
       fpmUtilitiesFactoryProvider.setApplicationModel(isInDevMode);
       var routes = [
         { state: "login", config: { url: "/", controller: "login-controller", controllerAs: "vm", templateUrl: "views/login.html" } },
@@ -64,8 +64,25 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
 
       //$ionicConfigProvider.tabs.position(isInDevMode ? 'top' : 'bottom');
       $ionicConfigProvider.tabs.position('bottom');
+
+      //EXCPTION HANDLING
+      $provide.decorator("$exceptionHandler", ["$delegate", "$injector", function ($delegate, $injector) {
+        return function (exception, cause) {
+          var data = {
+            type: 'angular', url: window.location.hash, localtime: Date.now()
+          };
+          if (cause) { data.cause = cause; }
+          if (exception) {
+            if (exception.message) { data.message = exception.message; }
+            if (exception.name) { data.name = exception.name; }
+            if (exception.stack) { data.stack = exception.stack; }
+          }
+          console.log("EXCPTION", data);
+        }
+      }]);
+
     }])
-  .run(["$ionicPlatform", function ($ionicPlatform) {
+  .run(["$ionicPlatform", "$rootScope", "fpm-utilities-factory", function ($ionicPlatform, $rootScope, fpmUtilitiesFactory) {
     $ionicPlatform.ready(function () {
       if (window.cordova && window.cordova.plugins.Keyboard) {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -80,6 +97,13 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
       if (window.StatusBar) {
         StatusBar.styleDefault();
       }
+    });
+    //CHECK CONNECTION
+    $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
+      fpmUtilitiesFactory.hideNetworkDialog();
+    });
+    $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
+      fpmUtilitiesFactory.showNetworkDialog();
     });
   }]);
 

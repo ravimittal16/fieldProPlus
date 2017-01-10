@@ -1,23 +1,50 @@
 (function () {
   "use strict";
+  var fpm = angular.module("fpm");
 
-
-  angular.module("fpm").provider("fpm-utilities-factory", function () {
+  fpm.provider("fpm-utilities-factory", function () {
     var isOnDevMode = false;
     this.setApplicationModel = function (isOnDev) {
       isOnDevMode = isOnDev;
     }
 
 
-    function initFactory($cordovaDialogs, $q, $ionicPopup, $ionicModal, $ionicLoading, $cordovaDevice, $cordovaCamera, $ionicHistory) {
+    function initFactory($cordovaDialogs, $window, $cordovaNetwork, $q, $ionicPopup, $ionicModal, $ionicLoading,
+      $cordovaDevice, $cordovaCamera, $ionicHistory) {
       var platforms = {
         ANDROID: 1, IOS: 2, OTHER: 3
       };
+      var isShowingNotworkDialog = false;
+      var networkModal = null;
       return {
+        showNetworkDialog: function () {
+          if (!isShowingNotworkDialog) {
+            networkModal = $ionicPopup.alert({
+              title: "No Network",
+              template: "You're not connected to internet"
+            });
+            isShowingNotworkDialog = true;
+            networkModal.then(function () {
+              isShowingNotworkDialog = false;
+            });
+          }
+        },
+        hideNetworkDialog: function () {
+          if (networkModal && isShowingNotworkDialog) {
+            networkModal.close();
+            isShowingNotworkDialog = false;
+          }
+        },
         clearHistory: function () {
           $ionicHistory.clearHistory();
         },
         device: {
+          isConnected: function () {
+            if (!isOnDevMode) {
+              return $cordovaNetwork.isOnline();
+            }
+            return isOnDevMode;
+          },
           getPicture: function () {
             var defer = $q.defer();
             var options = {
@@ -120,7 +147,8 @@
     }
 
 
-    this.$get = ["$cordovaDialogs", "$q", "$ionicPopup", "$ionicModal", "$ionicLoading", "$cordovaDevice", "$cordovaCamera", "$ionicHistory", initFactory];
+    this.$get = ["$cordovaDialogs", "$window", "$cordovaNetwork", "$q", "$ionicPopup", "$ionicModal", "$ionicLoading", "$cordovaDevice", "$cordovaCamera", "$ionicHistory",
+      initFactory];
   });
 
 
@@ -134,5 +162,5 @@
     }
   }
 
-  angular.module("fpm").filter("removeExt", [initRemoveExtension]);
+  fpm.filter("removeExt", [initRemoveExtension]);
 })();

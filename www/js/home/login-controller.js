@@ -1,6 +1,7 @@
 (function () {
     "use strict";
-    function initController($scope, $ionicScrollDelegate, $ionicPopup, $ionicLoading, authenticationFactory, $state, dashboardFactory, fpmUtilitiesFactory) {
+    function initController($scope, $ionicScrollDelegate, $ionicPopup, $ionicLoading, authenticationFactory,
+        $state, $ionicHistory, dashboardFactory, fpmUtilitiesFactory) {
         var vm = this;
         vm.user = { userName: "", password: "" };
         vm.showError = false;
@@ -8,6 +9,7 @@
             model: ""
         };
         var alerts = fpmUtilitiesFactory.alerts;
+
         vm.events = {
             onForgotPasswordClicked: function () {
                 vm.forgotPasswordModalErrors = [];
@@ -67,8 +69,10 @@
                 });
             }
         };
+        $ionicHistory.clearHistory();
+        $ionicHistory.clearCache();
     }
     initController.$inject = ["$scope", "$ionicScrollDelegate", "$ionicPopup", "$ionicLoading", "authenticationFactory", "$state",
-        "dashboard-factory", "fpm-utilities-factory"];
+        "$ionicHistory", "dashboard-factory", "fpm-utilities-factory"];
     angular.module("fpm").controller("login-controller", initController);
 })();

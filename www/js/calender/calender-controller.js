@@ -9,6 +9,12 @@
             noEventLabel: "No Schedules Found",
             currentDate: new Date()
         };
+        var buttons = [
+            { text: "Work Week View", mode: 'week', otext: "Work Week View" },
+            { text: "Day View", mode: 'day', otext: "Day View" },
+            { text: "Month View", mode: 'month', otext: "Month View" },
+            { text: "Refresh Calender", mode: 'null', otext: "Refresh Calender" }
+        ]
         vm.viewTitle = "Calendar";
         var alerts = fpmUtilitiesFactory.alerts;
         vm.events = {
@@ -28,6 +34,13 @@
             },
             changeMode: function (mode) {
                 vm.calendar.mode = mode;
+                angular.forEach(buttons, function (e) {
+                    e.text = e.otext;
+                });
+                var cbutton = _.findWhere(buttons, { mode: mode });
+                if (cbutton) {
+                    cbutton.text = cbutton.otext + "<i class='icon ion-checkmark'></i>"
+                }
             },
             onViewTitleChanged: function (title) {
                 vm.viewTitle = title;
@@ -37,19 +50,7 @@
             },
             showActionSheet: function () {
                 $ionicActionSheet.show({
-                    buttons: [
-                        {
-                            text: "Work Week View"
-                        },
-                        {
-                            text: "Day View"
-                        },
-                        {
-                            text: "Month View"
-                        },
-                        {
-                            text: "Refresh Calender"
-                        }],
+                    buttons: buttons,
                     titleText: 'Calendar Options',
                     cancelText: 'Cancel',
                     cancel: function () {
@@ -129,13 +130,13 @@
             fpmUtilitiesFactory.showLoading().then(function () {
                 workOrdersFactory.getDatewiseEvents(forceGet).then(function (response) {
                     if (response) {
-                        if (response.estimates.length > 0) {
+                        if (response.estimates && response.estimates.length > 0) {
                             populateEventsFromEstimates(response.estimates);
                         }
-                        if (response.schedules.length > 0) {
+                        if (response.schedules && response.schedules.length > 0) {
                             populateEventsFromSchedules(response.schedules);
                         }
-                        if (response.vacations.length > 0) {
+                        if (response.vacations && response.vacations.length > 0) {
                             populateEventsFromVacations(response.vacations);
                         }
                     }

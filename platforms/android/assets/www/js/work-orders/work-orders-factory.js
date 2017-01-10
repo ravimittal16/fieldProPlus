@@ -7,6 +7,7 @@
         var dashboardDataKeyName = "dashboardData";
 
         function clearAllCache() {
+            cache.remove(dashboardDataKeyName);
             cache.removeAll();
         }
         function getMobileDashboard(forceGet, initialData) {
