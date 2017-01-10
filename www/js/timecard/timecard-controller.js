@@ -91,9 +91,10 @@
             _updateBindingsForSummaryStatus(details);
             if (angular.isDefined(vm.ui.data.currentClockedIn)) {
                 var clockIn = vm.ui.data.currentClockedIn;
+                console.log("clockIn", clockIn);
                 vm.ui.data.clockInDateTime = moment(clockIn.startTime);
                 vm.ui.data.isClockedIn = true;
-                vm.ui.data.isClockedOut = clockIn.finishTime !== null;
+                vm.ui.data.isClockedOut = false;
                 vm.ui.data.addTimeVisibility = !vm.ui.data.isClockedOut;
                 vm.ui.data.clockOutDateTime = moment(clockIn.finishTime);
                 vm.ui.data.clockedInDate = angular.copy(clockIn);
@@ -182,27 +183,31 @@
                 timeCardDate: kendo.parseDate(vm.ui.data.summary.timeCardDate),
                 uniqueIdentifier: vm.ui.data.currentClockedIn.uniqueIdentifier
             };
-            timecardFactory.clockInOutUser(details).then(function (response) {
-                if (response.errors === null) {
-                    vm.ui.data.clockOutDateTime = clockOutTime;
-                    vm.ui.data.isClockedOut = true;
-                    vm.ui.data.isClockedIn = false;
-                    vm.ui.data.disableClockOutButton = true;
-                    vm.ui.data.addTimeVisibility = false;
-                    vm.ui.data.ptoButtonVisibility = true;
-                    vm.ui.data.summary = response.timeCardSummary;
-                    vm.factory.summary = response.timeCardSummary;
-                    var dt = new Date();
-                    var cDate = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 0, 0, 0, 0);
-                    var tcd = new Date(moment(vm.ui.data.summary.timeCardDate));
-                    var tcDate = new Date(tcd.getFullYear(), tcd.getMonth(), tcd.getDate(), 0, 0, 0, 0);
-                    if (moment(tcDate).isSameOrAfter(cDate)) {
-                        vm.ui.data.disableClockInButton = false;
+            fpmUtilitiesFactory.showLoading().then(function () {
+                timecardFactory.clockInOutUser(details).then(function (response) {
+                    if (response.errors === null) {
+                        vm.ui.data.clockOutDateTime = clockOutTime;
+                        vm.ui.data.isClockedOut = true;
+                        vm.ui.data.isClockedIn = false;
+                        vm.ui.data.disableClockOutButton = true;
+                        vm.ui.data.addTimeVisibility = false;
+                        vm.ui.data.ptoButtonVisibility = true;
+                        vm.ui.data.summary = response.timeCardSummary;
+                        vm.factory.summary = response.timeCardSummary;
+                        var dt = new Date();
+                        var cDate = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 0, 0, 0, 0);
+                        var tcd = new Date(moment(vm.ui.data.summary.timeCardDate));
+                        var tcDate = new Date(tcd.getFullYear(), tcd.getMonth(), tcd.getDate(), 0, 0, 0, 0);
+                        if (moment(tcDate).isSameOrAfter(cDate)) {
+                            vm.ui.data.disableClockInButton = false;
+                        }
+                        vm.ui.data.approvalStatus = response.timeCardSummary.approveStatus || 0;
+                        _updateTimeCardsArray(response.timeCardDetails);
+                        _updateBindingsForSummaryStatus(response);
                     }
-                    vm.ui.data.approvalStatus = response.timeCardSummary.approveStatus || 0;
-                    _updateTimeCardsArray(response.timeCardDetails);
-                    _updateBindingsForSummaryStatus(response);
-                }
+                }).finally(function () {
+                    fpmUtilitiesFactory.hideLoading();
+                });
             });
         }
 
@@ -213,11 +218,11 @@
                     animation: 'slide-in-up'
                 }).then(function (modal) {
                     vm.ui.data.addEditDetailsModal = modal;
-                    $scope.$broadcast("timecard:addEditDetailsModal:open");
+                    $scope.$broadcast("timecard:addEditDetailsModal:open", { isFromPto: vm.ui.data.isFromPto });
                     vm.ui.data.addEditDetailsModal.show();
                 });
             } else {
-                $scope.$broadcast("timecard:addEditDetailsModal:open");
+                $scope.$broadcast("timecard:addEditDetailsModal:open", { isFromPto: vm.ui.data.isFromPto });
                 vm.ui.data.addEditDetailsModal.show();
             }
         }
@@ -408,22 +413,27 @@
                         timeCardDate: clockInTime
                     };
                     vm.errors = [];
-                    timecardFactory.clockInOutUser(details).then(function (response) {
-                        if (response.errors === null) {
-                            vm.ui.data.clockInDateTime = clockInTime;
-                            vm.ui.data.isClockedIn = true;
-                            vm.ui.data.addTimeVisibility = true;
-                            vm.ui.data.ptoButtonVisibility = false;
-                            alerts.alert("Clocked In", "Clocked in successfully", function () {
-                                if (havingPreRoute === true) {
-                                    $state.go($stateParams.proute);
-                                } else {
-                                    _updateTimeCardBindings(response);
-                                }
-                            });
-                        } else {
-                            vm.errors = response.errors;
-                        }
+                    fpmUtilitiesFactory.showLoading().then(function () {
+                        timecardFactory.clockInOutUser(details).then(function (response) {
+                            if (response.errors === null) {
+                                vm.ui.data.clockInDateTime = clockInTime;
+                                vm.ui.data.isClockedIn = true;
+                                vm.ui.data.disableClockOutButton = false;
+                                vm.ui.data.addTimeVisibility = true;
+                                vm.ui.data.ptoButtonVisibility = false;
+                                alerts.alert("Clocked In", "Clocked in successfully", function () {
+                                    if (havingPreRoute === true) {
+                                        $state.go($stateParams.proute);
+                                    } else {
+                                        _updateTimeCardBindings(response);
+                                    }
+                                });
+                            } else {
+                                vm.errors = response.errors;
+                            }
+                        }).then(function () {
+                            fpmUtilitiesFactory.hideLoading();
+                        });
                     });
                 }
             }
@@ -447,7 +457,9 @@
                 $timeout.cancel(timeoutvar)
             }
         });
-        activateController();
+        $scope.$on("$ionicView.beforeEnter", function (e, data) {
+            activateController();
+        });
     }
     initController.$inject = ["$scope", "$timeout", "$rootScope", "$state", "ionicDatePicker", "$ionicPopover", "$ionicModal",
         "$ionicActionSheet", "timecard-factory", "fpm-utilities-factory", "authenticationFactory"];

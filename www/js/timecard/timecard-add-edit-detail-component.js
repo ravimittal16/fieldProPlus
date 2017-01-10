@@ -243,15 +243,10 @@
                     if (vm.userInfo) {
                         vm.timecardPermissions.allowPushTime = vm.userInfo.allowPushTime;
                         vm.timecardPermissions.timePickerVisibility = vm.userInfo.allowPushTime;
-                        //vm.timecardPermissions.timePickerVisibility = false;
-                    }
-                    vm.timecardPermissions.isFromAddingPto = vm.isFromPto;
-                    if (vm.timecardPermissions.isFromAddingPto === true) {
-                        vm.timecardPermissions.timePickerVisibility = true;
                     }
                     _getOrders();
                 }
-                $scope.$on("timecard:addEditDetailsModal:open", function () {
+                $scope.$on("timecard:addEditDetailsModal:open", function ($event, params) {
                     vm.entity = angular.copy(schema);
                     vm.dateTimeMode.startTime = null;
                     vm.dateTimeMode.finishTime = null;
@@ -259,6 +254,10 @@
                     vm.dateTimeMode.isCheckedIn = false;
                     vm.dateTimeMode.isCheckedOut = false;
                     vm.ui.errors = [];
+                    vm.timecardPermissions.isFromAddingPto = params.isFromPto;
+                    if (vm.timecardPermissions.isFromAddingPto === true) {
+                        vm.timecardPermissions.timePickerVisibility = true;
+                    }
                 })
             }],
         controllerAs: "vm",
