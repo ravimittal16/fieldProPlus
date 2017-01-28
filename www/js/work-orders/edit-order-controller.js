@@ -36,26 +36,35 @@
             }).then(function () {
                 workOrderFactory.getBarcodeDetails(vm.barcode).then(function (response) {
                     vm.barCodeData = response;
+                    //console.log("WORK response", response);
                     vm.uiSettings.woData = angular.copy(response);
                     vm.taxCheckboxVisibility = (vm.barCodeData.taxRate || 0) > 0;
-                    if (angular.isArray(response.schedules)) {
-                        vm.schedule = angular.copy(angular.copy(_.findWhere(response.schedules, { num: parseInt($stateParams.technicianNum, 10) })));
-                        if (vm.schedule.actualStartDateTime) {
-                            vm.schedule.actualStartDateTime = new Date(moment(vm.schedule.actualStartDateTime));
-                        }
+                    if (angular.isArray(response.schedules) && response.schedules.length > 0) {
+                        vm.schedule = angular.copy(_.findWhere(response.schedules, { num: parseInt($stateParams.technicianNum, 10) }));
+                        if (angular.isDefined(vm.schedule)) {
+                            if (vm.schedule.actualStartDateTime) {
+                                vm.schedule.actualStartDateTime = new Date(moment(vm.schedule.actualStartDateTime));
+                            }
 
-                        if (vm.schedule.actualFinishDateTime) {
-                            vm.schedule.actualFinishDateTime = new Date(moment(vm.schedule.actualFinishDateTime));
+                            if (vm.schedule.actualFinishDateTime) {
+                                vm.schedule.actualFinishDateTime = new Date(moment(vm.schedule.actualFinishDateTime));
+                            }
+                            findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
+                            if (vm.uiSettings.billingOption === 0) {
+                                vm.schedule.inRouteStartTime = kendo.parseDate(vm.schedule.inRouteStartTime);
+                                vm.schedule.inRouteEndTime = kendo.parseDate(vm.schedule.inRouteEndTime);
+                            }
+                            if (vm.uiSettings.billingOption === 0 && vm.uiSettings.isRouteTimeOptionChecked) {
+                                findTimeDiff(vm.schedule.inRouteStartTime, vm.schedule.inRouteEndTime, true);
+                            }
+                            vm.uiSettings.orderBelongToCurrentUser = vm.schedule.technicianNum === vm.userId;
+                            $ionicLoading.hide();
+                            calculateTotals();
+                        } else {
+                            $ionicLoading.hide();
+                            calculateTotals();
                         }
-                        findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
-                        if (vm.uiSettings.billingOption === 0) {
-                            vm.schedule.inRouteStartTime = kendo.parseDate(vm.schedule.inRouteStartTime);
-                            vm.schedule.inRouteEndTime = kendo.parseDate(vm.schedule.inRouteEndTime);
-                        }
-                        if (vm.uiSettings.billingOption === 0 && vm.uiSettings.isRouteTimeOptionChecked) {
-                            findTimeDiff(vm.schedule.inRouteStartTime, vm.schedule.inRouteEndTime, true);
-                        }
-                        vm.uiSettings.orderBelongToCurrentUser = vm.schedule.technicianNum === vm.userId;
+                    } else {
                         $ionicLoading.hide();
                         calculateTotals();
                     }
@@ -64,7 +73,7 @@
                 });
             });
         }
-        getBarcodeDetails();
+
 
         //CURRENT SCHEDULE CARD
         //============================================================================================
@@ -153,7 +162,7 @@
                 }, 50);
             },
             onStartDateTimeChaged: function () {
-                if (vm.uiSettings.billingOption === 0) {
+                if (vm.uiSettings.billingOption === 0 && vm.schedule) {
                     if (vm.schedule.actualStartDateTime && vm.schedule.actualFinishDateTime) {
                         if (new Date(vm.schedule.actualStartDateTime) > new Date(vm.schedule.actualFinishDateTime)) {
                             alerts.alert("Warning", "Start time cannot be greater than finish time.");
@@ -166,7 +175,7 @@
                 }
             },
             onEndDateTimeChanged: function () {
-                if (vm.schedule.actualStartDateTime && vm.schedule.actualFinishDateTime) {
+                if (vm.schedule && vm.schedule.actualStartDateTime && vm.schedule.actualFinishDateTime) {
                     if (new Date(vm.schedule.actualStartDateTime) > new Date(vm.schedule.actualFinishDateTime)) {
                         alerts.alert("Warning", "Start time cannot be greater than finish time.");
                     } else {
@@ -178,28 +187,32 @@
         };
 
         function checkAuthorizationIfServiceProvider(co, cb, fromAddSchedule) {
-            var havingGroupsAssigned = vm.user.havingGroupsAssigned;
-            if (vm.isServiceProvider === false) {
-                return true;
-            }
-            var isBeongToCurrentUser = vm.schedule.technicianNum === vm.user.userEmail;
-            if (havingGroupsAssinged === true && fromAddSchedule && fromAddSchedule === true) {
-                var checkifBelongToAssinedUser = _.findWhere(vm.serviceProviders, {
-                    UserId: vm.schedule.TechnicianNum
-                });
-                if (angular.isDefined(checkifBelongToAssinedUser)) {
+            if (vm.schedule) {
+               // console.log("vm.user", vm.user);
+                var havingGroupsAssigned = vm.user.havingGroupsAssigned;
+                if (vm.isServiceProvider === false) {
                     return true;
                 }
-            }
-            if (vm.isServiceProvider === true && isBeongToCurrentUser === false) {
-                alerts.alert("Oops!", "you are not authorized to perform this action", function () {
-                    if (angular.isFunction(cb)) {
-                        cb(co);
+                var isBeongToCurrentUser = vm.schedule.technicianNum === vm.user.userEmail;
+                if (havingGroupsAssigned === true && fromAddSchedule && fromAddSchedule === true) {
+                    var checkifBelongToAssinedUser = _.findWhere(vm.serviceProviders, {
+                        UserId: vm.schedule.TechnicianNum
+                    });
+                    if (angular.isDefined(checkifBelongToAssinedUser)) {
+                        return true;
                     }
-                });
-                return false;
+                }
+                if (vm.isServiceProvider === true && isBeongToCurrentUser === false) {
+                    alerts.alert("Oops!", "you are not authorized to perform this action", function () {
+                        if (angular.isFunction(cb)) {
+                            cb(co);
+                        }
+                    });
+                    return false;
+                }
+                return true;
             }
-            return true;
+            return false;
         }
 
         function clearAllDateTimeSelection(clearAll) {
@@ -240,6 +253,7 @@
         //================================================================================================
         vm.user = authenticationFactory.getLoggedInUserInfo();
         function activateController() {
+            isMapLoaded = false;
             vm.uiSettings.isTimeCardModuleEnabled = vm.user.timeCard && vm.user.allowPushTime;
             vm.isServiceProvider = !vm.user.isAdminstrator;
             sharedDataFactory.getIniitialData().then(function (response) {
@@ -255,13 +269,14 @@
                     if (vm.uiSettings.billingOption === 0) {
                         vm.uiSettings.isRouteTimeOptionChecked = response.customerNumberEntity.isRouteTimeOptionChecked;
                     }
+
                     vm.scheduleStatus = response.secondaryOrderStatus;
                     vm.serviceProviders = response.serviceProviders;
                     vm.vehicles = response.vehicles;
                 }
             }).finally(_getTodaysTimeCardEntries);
         }
-        activateController();
+
 
         function calculateTotals() {
             vm.totals = {
@@ -348,6 +363,19 @@
             text: 'Update Schedule'
         }];
 
+        function restoreSchedule(o) {
+            if (vm.uiSettings.woData) {
+                var s = _.findWhere(vm.uiSettings.woData.schedules, { num: o.num });
+                if (angular.isDefined(s)) {
+                    for (var prop in s) {
+                        if (o.hasOwnProperty(prop)) {
+                            o[prop] = s[prop];
+                        }
+                    }
+                }
+            }
+        }
+
         function restoreInvoice(o) {
             if (vm.uiSettings.woData) {
                 var s = _.findWhere(vm.uiSettings.woData.invoice, { num: o.num });
@@ -410,6 +438,8 @@
             new google.maps.Geocoder().geocode({ 'address': addressf }, function (results, status) {
                 if (results.length > 0) {
                     var myLatLng = new window.google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+                    var mapControl = $("#map");
+                    mapControl.css({ height: "100%", width: "100%" });
                     if (vm.map === null) {
                         vm.map = new google.maps.Map(document.getElementById("map"), {
                             zoom: 15,
@@ -419,6 +449,8 @@
                             center: myLatLng,
                             mapTypeId: google.maps.MapTypeId.ROADMAP
                         });
+                    } else {
+                        vm.map.setCenter(myLatLng);
                     }
                     new window.google.maps.Marker({
                         position: myLatLng,
@@ -428,6 +460,8 @@
                     isMapLoaded = true;
                 } else {
                     fpmUtilities.alerts.alert("Not Found", "Failed to locate the address", function () {
+                        //vm.map = null;
+                        isMapLoaded = false;
                         workOrderMapModal.hide();
                     });
                 }
@@ -436,25 +470,23 @@
         vm.tabs = {
             desc: {
                 events: {
+                    refreshOnPullDown: function () {
+                        _getTodaysTimeCardEntries();
+                        $scope.$broadcast("scroll.refreshComplete");
+                    },
                     closeWorkOrderMapModal: function () {
+                        isMapLoaded = false;
                         if (workOrderMapModal) {
                             workOrderMapModal.hide();
                         }
                     },
                     onAddressTapped: function () {
-                        if (workOrderMapModal) {
-                            workOrderMapModal.show();
-                            workOrderMapTimer = $timeout(loadWorkOrderMap, 2000);
-                        }
-                        else {
-                            fpmUtilities.getModal("workOrderMap.html", $scope).then(function (modal) {
-                                workOrderMapModal = modal;
-                                workOrderMapModal.show();
-                                if (!isMapLoaded) {
-                                    workOrderMapTimer = $timeout(loadWorkOrderMap, 2000);
-                                }
-                            });
-                        }
+                        // fpmUtilities.getModal("workOrderMap.html", $scope).then(function (modal) {
+                        //     workOrderMapModal = modal;
+                        //     workOrderMapModal.show().then(function () { 
+                        //         loadWorkOrderMap();
+                        //     });
+                        // });
                     },
                     onDescriptionOrResolutionChanged: function () {
                         updateOrder();
@@ -463,6 +495,11 @@
             },
             sch: {
                 events: {
+                    workCompleteChanged: function () {
+                        if (checkAuthorizationIfServiceProvider(vm.schedule, restoreSchedule, false)) {
+
+                        }
+                    },
                     onCustomScheduleChanged: function (e) {
                         if (!vm.schedule.approve) {
                             workOrderFactory.updateCustomScheduleData(e);
@@ -651,7 +688,7 @@
             if (vm.user.timeCard === true) {
                 var cdt = new Date();
                 var dt = fpmUtilities.toStringDate(new Date(cdt.getFullYear(), cdt.getMonth(), cdt.getDate(), 0, 0, 0, 0));
-                timeCardFactory.getTimeCardByDate(dt).then(function (response) {
+                timecardFactory.getTimeCardByDate(dt).then(function (response) {
                     if (response) {
                         timeCardInfo.currentDetails = response.timeCardDetails;
                     }
@@ -703,8 +740,16 @@
             if (onTimespanSeletionChangedTimer) $timeout.cancel(onTimespanSeletionChangedTimer);
             if (workOrderMapTimer) $timeout.cancel(workOrderMapTimer);
             if (onInRouteTimespanChangedTimer) $timeout.cancel(onInRouteTimespanChangedTimer);
-            vm.map = null;
+            //vm.map = null;
             isMapLoaded = false;
+        });
+
+        getBarcodeDetails();
+
+        activateController();
+
+        $scope.$on("$ionicView.beforeEnter", function (e, data) {
+            //console.log("HEHEHEHEHEHE");
         });
     }
     initController.$inject = ["$scope", "$state", "$timeout", "$stateParams", "$ionicActionSheet",

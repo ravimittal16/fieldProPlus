@@ -40,7 +40,7 @@
 			</button>
 		</ion-header-bar>
 		<ion-content>
-				<ion-list data-ng-if="!vm.isServiceProvider">
+				<ion-list data-ng-if="!vm.isServiceProvider || vm.havingGroupsAssigned">
 					<ion-item ng-repeat="item in vm.matchedOrders" data-ng-click="vm.events.onSearchItemClick(item)">
 						<span class="label label-success">{{::item.BarcodeName}}</span>
 						<div class="padding-top">
@@ -53,7 +53,7 @@
 						</div>
 					</ion-item>
 				</ion-list>
-				<ion-list data-ng-if="vm.isServiceProvider">
+				<ion-list data-ng-if="vm.isServiceProvider && !vm.havingGroupsAssigned">
 					<ion-item ng-repeat="item in vm.matchedOrders" data-ng-click="vm.events.onSearchItemClick(item)">
 						<span class="label label-success">{{::item.barcodeName}}</span>
 						<div class="padding-top">

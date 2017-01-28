@@ -19,7 +19,7 @@
             var settings = localStorageService.get(fieldPromaxConfig.localStorageKeys.settingsKeyName);
             if (settings) {
                 vm.userSettings.defaultCalenderViewForMobile = settings.DefaultCalenderViewForMobile || "workWeek";
-                vm.userSettings.startupPageForMobile = settings.StartupPageForMobile || states.todaysWorkOrders;
+                vm.userSettings.startupPageForMobile = settings.StartupPageForMobile;
                 vm.userSettings.pushNotifications = settings.PushNotifications || false;
                 vm.userSettings.locationServices = settings.LocationServices || false;
             }

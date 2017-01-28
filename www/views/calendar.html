@@ -3,20 +3,15 @@
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-        <!--<button class="button" ng-disabled="isToday()" ng-click="vm.events.today()">Today</button>-->
-        <!--<button class="button" ng-click="vm.events.changeMode('month')">M</button>
-        <button class="button" ng-click="vm.events.changeMode('week')">W</button>
-        <button class="button" ng-click="vm.events.changeMode('day')">D</button>-->
-        <!--<a class="button" data-ui-sref="app.dashboard">D</a>-->
         <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
             data-ng-click="vm.events.showActionSheet()"></a>
     </ion-nav-buttons>
     <ion-content scroll="false" class="main-content">
-        <calendar calendar-mode="vm.calendar.mode" ng-model="vm.calendar.currentDate" no-events-label="{{vm.calendar.noEventLabel}}"
+        <div class="text-center padding-top" data-ng-if="vm.loadingCalender">
+			<ion-spinner icon="ripple"></ion-spinner>
+		</div>
+        <calendar calendar-mode="vm.calendar.mode" data-ng-if="!vm.loadingCalender" ng-model="vm.calendar.currentDate" no-events-label="{{vm.calendar.noEventLabel}}"
             event-source="vm.calendar.events" title-changed="vm.events.onViewTitleChanged(title)" event-selected="vm.events.onEventSelected(event)"
             time-selected="vm.events.onTimeSelected(selectedTime, events)" step="60" />
     </ion-content>
-    <script id="monthviewDisplayEventTemplateUrl.html" type="text/ng-template">
-        <b>HELLO WORLD</b>
-    </script>
 </ion-view>

@@ -3,6 +3,7 @@
     function initController($scope, $state, localStorageService, fieldPromaxConfig,
         sharedDataFactory, fpmUtilitiesFactory) {
         var vm = this;
+        //var states = appConfigConstants.states;
         vm.userSettings = { defaultCalenderViewForMobile: "workWeek", pushNotifications: false, locationServices: false };
         vm.events = {
             updateSettings: function () {
@@ -19,7 +20,7 @@
             var settings = localStorageService.get(fieldPromaxConfig.localStorageKeys.settingsKeyName);
             if (settings) {
                 vm.userSettings.defaultCalenderViewForMobile = settings.DefaultCalenderViewForMobile || "workWeek";
-                vm.userSettings.startupPageForMobile = settings.StartupPageForMobile || states.todaysWorkOrders;
+                vm.userSettings.startupPageForMobile = settings.StartupPageForMobile;
                 vm.userSettings.pushNotifications = settings.PushNotifications || false;
                 vm.userSettings.locationServices = settings.LocationServices || false;
             }
