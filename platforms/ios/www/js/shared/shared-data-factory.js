@@ -2,6 +2,12 @@
     "use strict";
     function initFactory($q, apiBaseFactory, localStorageService, fieldPromaxConfig) {
         var apibaseurl = "api/Shared/";
+
+
+        function updateSettings(settings) {
+            return apiBaseFactory.post("api/User/UpdateUserSettings", settings);
+        }
+
         function getIniitialData(byForce) {
             var keyName = fieldPromaxConfig.localStorageKeys.initialData;
             var froce = byForce || false;
@@ -18,8 +24,14 @@
                 });
             }
         }
+
+        function saveLocationCordinates(p) {
+            return apiBaseFactory.get(apibaseurl + "SaveLocationCoordinates?lat=" + p.latitude + "&lng=" + p.longitude);
+        }
         return {
-            getIniitialData: getIniitialData
+            updateSettings: updateSettings,
+            getIniitialData: getIniitialData,
+            saveLocationCordinates: saveLocationCordinates
         };
     }
     initFactory.$inject = ["$q", "api-base-factory", "localStorageService", "fieldPromaxConfig"];

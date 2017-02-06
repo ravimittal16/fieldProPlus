@@ -9,7 +9,7 @@
         var alerts = fpmUtilitiesFactory.alerts;
         function extractJsonOrdersToLocalArray() {
             orders = [];
-            if (vm.isServiceProvider === false) {
+            if (!vm.isServiceProvider || vm.havingGroupsAssigned) {
                 angular.forEach(vm.result, function (r, i) {
                     if (r.dataForAdministrator && r.dataForAdministrator.length > 0) {
                         _.forEach(r.dataForAdministrator, function (p) {
@@ -36,6 +36,10 @@
             vm.showingLoading = true;
             workOrderFactory.getMobileDashboard(forceGet).then(function (response) {
                 vm.result = response.result;
+                vm.havingGroupsAssinged = response.havingGroupsAssinged;
+                if (vm.isServiceProvider && !vm.havingGroupsAssigned) {
+                    barcodePropName = "barcodeName";
+                }
                 extractJsonOrdersToLocalArray();
             }).finally(function () {
                 vm.showingLoading = false;
@@ -92,7 +96,7 @@
                     vm.isSearchModalOpened = false;
                     vm.searchModal.hide();
                     vm.searchValue = "";
-                    if (vm.isServiceProvider) {
+                    if (vm.isServiceProvider && !vm.havingGroupsAssigned) {
                         timerForonSearchItemClick = $timeout(function () {
                             $state.go("app.editOrder", { barCode: order.barcode, technicianNum: order.technicianScheduleNum, src: "main" });
                         }, 300);
@@ -104,13 +108,15 @@
                 }
             },
             applySearch: function () {
-                var tolower = vm.searchValue.toLowerCase();
-                var matchedOrders = _.filter(orders, function (o) {
-                    return o[barcodePropName].indexOf(tolower) > -1;
-                });
-                vm.matchedOrders = _.uniq(matchedOrders, function (item, key, a) {
-                    return item[barcodePropName];
-                });
+                if (orders && orders.length > 0) {
+                    var tolower = vm.searchValue.toLowerCase();
+                    var matchedOrders = _.filter(orders, function (o) {
+                        return o[barcodePropName].indexOf(tolower) > -1;
+                    });
+                    vm.matchedOrders = _.uniq(matchedOrders, function (item, key, a) {
+                        return item[barcodePropName];
+                    });
+                }
             },
             closeSearchModal: function () {
                 vm.matchedOrders = [];
@@ -130,6 +136,7 @@
                 });
             },
             onChildGroupClicked: function (item, type, prop) {
+
                 item.isOpen = !item.isOpen;
                 var orderState = localStorageService.get("orderState");
                 if (orderState === null) orderState = {};
@@ -145,6 +152,7 @@
                 if (item.isOpen === true && item.clickCount === 0) {
                     orderState[prop] = item;
                     localStorageService.set("orderState", orderState);
+
                     if (type === "SP") {
                         item.dataForServiceProvider = JSON.parse(item.ordersJson);
                     } else {
@@ -157,9 +165,6 @@
                 }
             }
         };
-        $scope.$on("$ionicView.loaded", function (event, data) {
-            
-        });
 
         function _getTodaysTimeCardEntries() {
             var jobCodes = { CLOCK_IN: 5001, CLOCK_OUT: 5002 };
@@ -181,9 +186,7 @@
             if (timeCardInfo.enabled === true) {
                 _getTodaysTimeCardEntries();
             }
-            if (vm.isServiceProvider) {
-                barcodePropName = "barcodeName";
-            }
+
             sharedDataFactory.getIniitialData().then(function (response) {
                 vm.trackJobStatus = response.customerNumberEntity.trackJobStatus || false;
             }).finally(function () {

@@ -3,7 +3,6 @@
     function initController($scope, $state, localStorageService, fieldPromaxConfig,
         sharedDataFactory, fpmUtilitiesFactory) {
         var vm = this;
-        //var states = appConfigConstants.states;
         vm.userSettings = { defaultCalenderViewForMobile: "workWeek", pushNotifications: false, locationServices: false };
         vm.events = {
             updateSettings: function () {

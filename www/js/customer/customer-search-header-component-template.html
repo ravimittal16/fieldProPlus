@@ -8,9 +8,9 @@
 			<h1 class="title">Search Customer</h1>
 		</ion-header-bar>
 		<ion-header-bar class="bar-subheader item-input-inset">
-			<label class="item-input-wrapper">
+			<label class="item-input-wrapper" focus-me>
 				<i class="icon ion-search placeholder-icon"></i>
-				<input type="search" name="searchBox" autofocus="" placeholder="Search customer..." autofocus=""  
+				<input type="search" name="searchBox" autofocus="" placeholder="Search customer..."
 				ng-change="vm.events.applySearch()" data-ng-model-options="{debounce:500}" ng-model="vm.searchValue" />
 			</label>
 			<button class="button" data-ng-click="vm.events.closeSearchModal()">

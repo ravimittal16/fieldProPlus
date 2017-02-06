@@ -6,6 +6,6 @@
 
 <div class="list">
   <label class="item item-input">
-    <input type="text" placeholder="Customer Name" data-ng-model="vm.customerName" />
+    <input type="text" placeholder="Customer Name" data-ng-model="vm.customerName" data-ng-keyUp="vm.events.onCustomerNameKeyup($event.keyCode)" />
   </label>
 </div>

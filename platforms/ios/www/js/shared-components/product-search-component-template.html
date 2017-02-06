@@ -2,9 +2,9 @@
 	<h1 class="title">Search Product</h1>
 </ion-header-bar>
 <ion-header-bar class="bar-subheader item-input-inset">
-	<label class="item-input-wrapper">
+	<label class="item-input-wrapper" focus-me="">
 				<i class="icon ion-search placeholder-icon"></i>
-				<input type="search" name="searchBox" autofocus="" placeholder="Search"  
+				<input type="search" name="searchBox" placeholder="Search"  
 				ng-change="vm.events.applySearch()" data-ng-model-options="{debounce:500}" ng-model="vm.searchValue" />
 			</label>
 	<button class="button" data-ng-click="vm.events.closeSearchModal()">
@@ -12,9 +12,18 @@
 			</button>
 </ion-header-bar>
 <ion-content>
-	<ion-list>
+	<div class="text-center padding-top" data-ng-if="vm.runningSearch">
+		<ion-spinner icon="ripple"></ion-spinner>
+	</div>
+	<ion-list data-ng-if="vm.products.length > 0">
 		<ion-item data-ng-repeat="p in vm.products" item="p" data-on-tap="vm.events.onProductItemClicked(p)">
-			{{::p.productName}}<strong style="float:right;">{{p.price | currency:'$':2}}</strong>
-		</ion-item>
-	</ion-list>
+			{{::p.productName}}
+			<strong style="float:right;" data-ng-if="vm.user.showPrice">{{p.price | currency:'$':2}}</strong>
+</ion-item>
+</ion-list>
+<div class="list" data-ng-if="vm.products.length == 0 && vm.searchApplied && vm.searchValue != ''">
+	<li class="item item-text-wrap text-center">
+		<small class="text-muted">no customer found with <strong data-ng-bind="vm.searchValue"></strong></small>
+	</li>
+</div>
 </ion-content>

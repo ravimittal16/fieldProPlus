@@ -1,7 +1,7 @@
 (function () {
     "use strict";
     function initController($scope, $ionicScrollDelegate, $ionicPopup, $ionicLoading, authenticationFactory,
-        $state, $ionicHistory, dashboardFactory, fpmUtilitiesFactory) {
+        $state, $ionicHistory, dashboardFactory, fpmUtilitiesFactory, sharedDataFactory) {
         var vm = this;
         vm.user = { userName: "", password: "" };
         vm.showError = false;
@@ -55,6 +55,7 @@
                         $ionicLoading.hide().then(function () {
                             if (response && authenticationFactory.authentication.isAuth) {
                                 $state.go("app.dashboard");
+                                fpmUtilitiesFactory.locationService.start(sharedDataFactory.saveLocationCordinates);
                             }
                         });
                     }, function (data) {
@@ -73,6 +74,6 @@
         $ionicHistory.clearCache();
     }
     initController.$inject = ["$scope", "$ionicScrollDelegate", "$ionicPopup", "$ionicLoading", "authenticationFactory", "$state",
-        "$ionicHistory", "dashboard-factory", "fpm-utilities-factory"];
+        "$ionicHistory", "dashboard-factory", "fpm-utilities-factory", "shared-data-factory"];
     angular.module("fpm").controller("login-controller", initController);
 })();

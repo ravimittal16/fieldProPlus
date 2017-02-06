@@ -1,4 +1,4 @@
-<ion-view title="TimeCard" view-title="Time card">
+<ion-view title="TimeCard" view-title="Time card" cache-view="false">
     <ion-nav-buttons side="left">
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
@@ -122,7 +122,7 @@
             <ion-popover-view>
                 <ion-content>
                     <div class="list">
-                        <a data-ng-if="vm.ui.data.ptoButtonVisibility  && (vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2)"><a data-ng-click="vm.ui.events.addTimeClick(true)" class="item">Add PTO</a>
+                        <a data-ng-if="vm.ui.data.ptoButtonVisibility  && (vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2)" data-ng-click="vm.ui.events.addTimeClick(true)" class="item">Add PTO</a>
                         <a data-ng-if="vm.ui.data.addTimeVisibility && (vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2)" data-ng-click="vm.ui.events.addTimeClick(false)" class="item">Add Time</a>
                         <a class="item" ng-click="vm.ui.events.checkSummaryClick()">Check Summary</a>
                         <a class="item" ng-click="vm.ui.events.showTimeCardTutorialWindow()">Tutorial</a>

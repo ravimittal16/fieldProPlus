@@ -24,9 +24,14 @@
                 });
             }
         }
+
+        function saveLocationCordinates(p) {
+            return apiBaseFactory.get(apibaseurl + "SaveLocationCoordinates?lat=" + p.latitude + "&lng=" + p.longitude);
+        }
         return {
             updateSettings: updateSettings,
-            getIniitialData: getIniitialData
+            getIniitialData: getIniitialData,
+            saveLocationCordinates: saveLocationCordinates
         };
     }
     initFactory.$inject = ["$q", "api-base-factory", "localStorageService", "fieldPromaxConfig"];

@@ -8,16 +8,18 @@
 //"http://localhost/FieldPromaxApi/"  
 var isInDevMode = true;
 var constants = {
-  fieldPromaxApi: isInDevMode ? "http://localhost:51518/" : "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/",
+  fieldPromaxApi: isInDevMode ? "http://localhost:51518/" : "https://fieldpromax.azurewebsites.net/",
   localStorageKeys: {
     authorizationDataKey: "authorizationData", initialData: "initialData",
     storageKeyName: "authorizationData", configKeyName: "configurations", settingsKeyName: "userSettings"
   }
 };
-var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ngCordova", "ionic-datepicker"])
-  .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider", "$ionicConfigProvider", "ionicDatePickerProvider",
-    function ($stateProvider, $urlRouterProvider, $compileProvider, $httpProvider, $ionicConfigProvider, ionicDatePickerProvider) {
-
+var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ngCordova", "ionic-datepicker",
+  "kendo.directives", "mobiscroll-datetime", "mobiscroll-timespan", "mobiscroll-numpad", "ui.rCalendar"])
+  .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider", "$ionicConfigProvider",
+    "ionicDatePickerProvider", "$provide", "fpm-utilities-factoryProvider", function ($stateProvider, $urlRouterProvider, $compileProvider,
+      $httpProvider, $ionicConfigProvider, ionicDatePickerProvider, $provide, fpmUtilitiesFactoryProvider) {
+      fpmUtilitiesFactoryProvider.setApplicationModel(isInDevMode);
       var routes = [
         { state: "login", config: { url: "/", controller: "login-controller", controllerAs: "vm", templateUrl: "views/login.html" } },
         { state: "app", config: { abstract: true, controller: "app-main-controller", controllerAs: "vm", templateUrl: "views/app-main.html" } },
@@ -25,14 +27,18 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
         { state: "app.calendar", config: { url: "/calendar", controller: "calendar-controller", controllerAs: "vm", templateUrl: "views/calendar.html" } },
         { state: "app.map", config: { url: "/map", controller: "map-controller", controllerAs: "vm", templateUrl: "views/map.html" } },
         { state: "app.createWorkOrder", config: { url: "/createorder", controller: "create-order-controller", controllerAs: "vm", templateUrl: "views/create-order.html" } },
-        { state: "app.editOrder", config: { url: "/editOrder?barCode&technicianNum&src", controller: "edit-order-controller", controllerAs: "vm", templateUrl: "views/edit-order.html" } },
+        {
+          state: "app.editOrder", config: {
+            url: "/editOrder?barCode&technicianNum&src", controller: "edit-order-controller", controllerAs: "vm", templateUrl: "views/edit-order.html"
+          }
+        },
         { state: "app.createCustomer", config: { url: "/createcustomer", controller: "create-customer-controller", controllerAs: "vm", templateUrl: "views/create-customer.html" } },
         { state: "app.createEstimate", config: { url: "/createestimate", controller: "create-estimate-controller", controllerAs: "vm", templateUrl: "views/create-estimate.html" } },
         { state: "app.expense", config: { url: "/expanses", controller: "expanses-controller", controllerAs: "vm", templateUrl: "views/expanses.html" } },
         { state: "app.timecard", config: { url: "/timecard", controller: "timecard-controller", controllerAs: "vm", templateUrl: "views/timecard.html" } },
         { state: "app.settings", config: { url: "/settings", controller: "settings-controller", controllerAs: "vm", templateUrl: "views/settings.html" } },
         { state: "app.changePassword", config: { url: "/changePassword", controller: "change-password-controller", controllerAs: "vm", templateUrl: "views/change-password.html" } },
-        { state: "app.logout", config: { controller: "logout-controller", controllerAs: "vm" } }
+        { state: "app.logout", config: { url: "/logout", controller: "logout-controller", controllerAs: "vm", templateUrl: "views/logout.html" } }
       ];
 
       angular.forEach(routes, function (route) {
@@ -60,9 +66,27 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
       };
       ionicDatePickerProvider.configDatePicker(datePickerObj);
 
-      $ionicConfigProvider.tabs.position(isInDevMode ? 'top' : 'bottom');
+      //$ionicConfigProvider.tabs.position(isInDevMode ? 'top' : 'bottom');
+      $ionicConfigProvider.tabs.position('bottom');
+
+      //EXCPTION HANDLING
+      $provide.decorator("$exceptionHandler", ["$delegate", "$injector", function ($delegate, $injector) {
+        return function (exception, cause) {
+          var data = {
+            type: 'angular', url: window.location.hash, localtime: Date.now()
+          };
+          if (cause) { data.cause = cause; }
+          if (exception) {
+            if (exception.message) { data.message = exception.message; }
+            if (exception.name) { data.name = exception.name; }
+            if (exception.stack) { data.stack = exception.stack; }
+          }
+          console.log("EXCPTION", data);
+        }
+      }]);
+
     }])
-  .run(["$ionicPlatform", function ($ionicPlatform) {
+  .run(["$ionicPlatform", "$rootScope", "fpm-utilities-factory", function ($ionicPlatform, $rootScope, fpmUtilitiesFactory) {
     $ionicPlatform.ready(function () {
       if (window.cordova && window.cordova.plugins.Keyboard) {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -77,6 +101,13 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
       if (window.StatusBar) {
         StatusBar.styleDefault();
       }
+    });
+    //CHECK CONNECTION
+    $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
+      fpmUtilitiesFactory.hideNetworkDialog();
+    });
+    $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
+      fpmUtilitiesFactory.showNetworkDialog();
     });
   }]);
 

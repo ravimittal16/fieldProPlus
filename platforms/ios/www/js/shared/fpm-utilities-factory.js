@@ -1,34 +1,208 @@
 (function () {
-    "use strict";
-    function initFactory($cordovaDialogs, $q, $ionicPopup, $ionicModal) {
-        return {
-            toStringDate: function (date) {
-                //return moment(date).format("MM/DD/YYYY h:mm a");
-                return moment(date).format("lll");
-            },
-            alerts: {
-                alert: function () {
+  "use strict";
+  var fpm = angular.module("fpm");
 
-                },
-                confirm: function () {
-
-                },
-                confirmDelete: function (okCallback) {
-                    var confirmPopup = $ionicPopup.confirm({
-                        title: "Confirmation",
-                        template: 'Are you sure?'
-                    });
-                    confirmPopup.then(function (res) {
-                        if (res) {
-                            if (angular.isFunction(okCallback)) {
-                                okCallback();
-                            }
-                        }
-                    });
-                }
-            }
-        };
+  fpm.provider("fpm-utilities-factory", function () {
+    var isOnDevMode = false;
+    this.setApplicationModel = function (isOnDev) {
+      isOnDevMode = isOnDev;
     }
-    initFactory.$inject = ["$cordovaDialogs", "$q", "$ionicPopup", "$ionicModal"];
-    angular.module("fpm").factory("fpm-utilities-factory", initFactory);
+
+
+    function initFactory($cordovaDialogs, $window, $cordovaNetwork, $q, $ionicPopup, $ionicModal, $ionicLoading,
+      $cordovaDevice, $cordovaCamera, $ionicHistory, $cordovaGeolocation, fieldPromaxConfig, localStorageService) {
+      var platforms = {
+        ANDROID: 1, IOS: 2, OTHER: 3
+      };
+      var isShowingNotworkDialog = false;
+      var networkModal = null;
+      var watcher = null;
+      var timeout = 1000 * 60 * 5,
+        watchOptions = { timeout: timeout, enableHighAccuracy: false },
+        posOptions = { timeout: 10000, enableHighAccuracy: false },
+        localStorageKeys = fieldPromaxConfig.localStorageKeys;
+
+
+      var alerts = {
+        alert: function (title, template, callback) {
+          var alertPopUp = $ionicPopup.alert({
+            title: title,
+            template: template
+          });
+          if (angular.isFunction(callback)) {
+            alertPopUp.then(function (res) {
+              callback();
+            });
+          }
+        },
+        confirm: function (title, template, okayCallback, cancelCallback) {
+          var confirmPopup = $ionicPopup.confirm({
+            title: title,
+            template: template
+          });
+          confirmPopup.then(function (res) {
+            if (res) {
+              if (angular.isFunction(okayCallback)) {
+                okayCallback();
+              }
+            } else {
+              if (angular.isFunction(cancelCallback)) {
+                cancelCallback();
+              }
+            }
+          });
+        },
+        confirmDelete: function (okCallback) {
+          var confirmPopup = $ionicPopup.confirm({
+            title: "Confirmation",
+            template: 'Are you sure?'
+          });
+          confirmPopup.then(function (res) {
+            if (res) {
+              if (angular.isFunction(okCallback)) {
+                okCallback();
+              }
+            }
+          });
+        }
+      }
+      return {
+        locationService: {
+          start: function (cb) {
+            console.log($window.plugins)
+            var settings = localStorageService.get(fieldPromaxConfig.localStorageKeys.settingsKeyName);
+
+            if (settings && settings.LocationServices) {
+              watcher = $cordovaGeolocation.watchPosition(watchOptions);
+              $cordovaGeolocation.getCurrentPosition(posOptions).then(onLocationSuccess);
+            }
+            function onLocationError() {
+              //DO NOTHING
+              alerts.alert("ERROR", "ERROR WHILE READING LOCATION");
+            }
+            function onLocationSuccess(position) {
+              alerts.alert("ERROR", "CURRENT LOCATION :" + JSON.stringify(position));
+              if (position && position.coords) {
+                if (angular.isFunction(cb)) {
+                  cb(position.coords);
+                }
+              }
+            }
+            watcher.then(null, onLocationError, onLocationSuccess);
+          },
+          stop: function () {
+            if (watcher && angular.isFunction(watcher.clear)) {
+              watcher.clear();
+            }
+          }
+        },
+        showNetworkDialog: function () {
+          if (!isShowingNotworkDialog) {
+            networkModal = $ionicPopup.alert({
+              title: "No Network",
+              template: "You're not connected to internet"
+            });
+            isShowingNotworkDialog = true;
+            networkModal.then(function () {
+              isShowingNotworkDialog = false;
+            });
+          }
+        },
+        hideNetworkDialog: function () {
+          if (networkModal && isShowingNotworkDialog) {
+            networkModal.close();
+            isShowingNotworkDialog = false;
+          }
+        },
+        clearHistory: function () {
+          $ionicHistory.clearHistory();
+        },
+        device: {
+          isConnected: function () {
+            if (!isOnDevMode) {
+              return $cordovaNetwork.isOnline();
+            }
+            return isOnDevMode;
+          },
+          getPicture: function () {
+            var defer = $q.defer();
+            var options = {
+              quality: 75,
+              destinationType: Camera.DestinationType.DATA_URL,
+              sourceType: Camera.PictureSourceType.CAMERA,
+              allowEdit: true,
+              encodingType: Camera.EncodingType.JPEG,
+              saveToPhotoAlbum: false
+            };
+            $cordovaCamera.getPicture(options).then(function (imageData) {
+              defer.resolve(imageData);
+            }, function () {
+              $ionicPopup.alert({ title: "Failed", template: "Failed to get Image Data" }, function () {
+                defer.resolve(null);
+              });
+            });
+            return defer.promise;
+          },
+          platforms: platforms,
+          getPlatformInfo: function () {
+            var type = isOnDevMode ? "Android" : $cordovaDevice.getPlatform();
+            if (type === "Android") {
+              return platforms.ANDROID;
+            }
+            if (type === "iOS") {
+              return platforms.IOS
+            }
+            return platforms.OTHER;
+          }
+        },
+        toStringDate: function (date) {
+          return kendo.toString(kendo.parseDate(date), "g");
+          //return moment(date).format("lll");
+        },
+        showLoading: function (title) {
+          var template = title || "please wait...";
+          return $ionicLoading.show({
+            template: template
+          });
+        },
+        getModal: function (name, scope) {
+          var defer = $q.defer();
+          $ionicModal.fromTemplateUrl(name, {
+            scope: scope,
+            animation: 'slide-in-up',
+            focusFirstInput: true
+          }).then(function (modal) {
+            defer.resolve(modal);
+          });
+          return defer.promise;
+        },
+        hideLoading: function () {
+          return $ionicLoading.hide();
+        },
+        alerts: {
+          alert: alerts.alert,
+          confirm: alerts.confirm,
+          confirmDelete: alerts.confirmDelete
+        }
+      };
+    }
+
+
+    this.$get = ["$cordovaDialogs", "$window", "$cordovaNetwork", "$q", "$ionicPopup", "$ionicModal", "$ionicLoading", "$cordovaDevice",
+      "$cordovaCamera", "$ionicHistory", "$cordovaGeolocation", "fieldPromaxConfig", "localStorageService",
+      initFactory];
+  });
+
+
+
+
+  function initRemoveExtension() {
+    return function (i) {
+      var o = i.substr(i.lastIndexOf("/") + 1);
+      var imageName = o.substr(0, o.lastIndexOf(".")) || "";
+      return imageName;
+    }
+  }
+
+  fpm.filter("removeExt", [initRemoveExtension]);
 })();

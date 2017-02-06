@@ -10,13 +10,92 @@
 
 
     function initFactory($cordovaDialogs, $window, $cordovaNetwork, $q, $ionicPopup, $ionicModal, $ionicLoading,
-      $cordovaDevice, $cordovaCamera, $ionicHistory) {
+      $cordovaDevice, $cordovaCamera, $ionicHistory, $cordovaGeolocation, fieldPromaxConfig, localStorageService) {
       var platforms = {
         ANDROID: 1, IOS: 2, OTHER: 3
       };
       var isShowingNotworkDialog = false;
       var networkModal = null;
+      var watcher = null;
+      var timeout = 1000 * 60 * 5,
+        watchOptions = { timeout: timeout, enableHighAccuracy: false },
+        posOptions = { timeout: 10000, enableHighAccuracy: false },
+        localStorageKeys = fieldPromaxConfig.localStorageKeys;
+
+
+      var alerts = {
+        alert: function (title, template, callback) {
+          var alertPopUp = $ionicPopup.alert({
+            title: title,
+            template: template
+          });
+          if (angular.isFunction(callback)) {
+            alertPopUp.then(function (res) {
+              callback();
+            });
+          }
+        },
+        confirm: function (title, template, okayCallback, cancelCallback) {
+          var confirmPopup = $ionicPopup.confirm({
+            title: title,
+            template: template
+          });
+          confirmPopup.then(function (res) {
+            if (res) {
+              if (angular.isFunction(okayCallback)) {
+                okayCallback();
+              }
+            } else {
+              if (angular.isFunction(cancelCallback)) {
+                cancelCallback();
+              }
+            }
+          });
+        },
+        confirmDelete: function (okCallback) {
+          var confirmPopup = $ionicPopup.confirm({
+            title: "Confirmation",
+            template: 'Are you sure?'
+          });
+          confirmPopup.then(function (res) {
+            if (res) {
+              if (angular.isFunction(okCallback)) {
+                okCallback();
+              }
+            }
+          });
+        }
+      }
       return {
+        locationService: {
+          start: function (cb) {
+            var settings = localStorageService.get(fieldPromaxConfig.localStorageKeys.settingsKeyName);
+
+            if (settings && settings.LocationServices) {
+              $cordovaGeolocation.getCurrentPosition(posOptions).then(onLocationSuccess);
+              watcher = $cordovaGeolocation.watchPosition(watchOptions);
+            }
+            function onLocationError() {
+              //DO NOTHING
+              alerts.alert("ERROR", "ERROR WHILE READING LOCATION");
+            }
+            function onLocationSuccess(position) {
+              alerts.alert("CURRENT LOCATION", "CURRENT LOCATION : " + JSON.stringify(position));
+              if (position && position.coords) {
+                if (angular.isFunction(cb)) {
+                  cb(position.coords);
+                }
+              }
+            }
+            watcher.then(null, onLocationError, onLocationSuccess);
+          },
+          stop: function () {
+            if (watcher && angular.isFunction(watcher.clearWatch)) {
+              watcher.clearWatch();
+            }
+            $cordovaGeolocation.clearWatch(watcher);
+          }
+        },
         showNetworkDialog: function () {
           if (!isShowingNotworkDialog) {
             networkModal = $ionicPopup.alert({
@@ -101,53 +180,16 @@
           return $ionicLoading.hide();
         },
         alerts: {
-          alert: function (title, template, callback) {
-            var alertPopUp = $ionicPopup.alert({
-              title: title,
-              template: template
-            });
-            if (angular.isFunction(callback)) {
-              alertPopUp.then(function (res) {
-                callback();
-              });
-            }
-          },
-          confirm: function (title, template, okayCallback, cancelCallback) {
-            var confirmPopup = $ionicPopup.confirm({
-              title: title,
-              template: template
-            });
-            confirmPopup.then(function (res) {
-              if (res) {
-                if (angular.isFunction(okayCallback)) {
-                  okayCallback();
-                }
-              } else {
-                if (angular.isFunction(cancelCallback)) {
-                  cancelCallback();
-                }
-              }
-            });
-          },
-          confirmDelete: function (okCallback) {
-            var confirmPopup = $ionicPopup.confirm({
-              title: "Confirmation",
-              template: 'Are you sure?'
-            });
-            confirmPopup.then(function (res) {
-              if (res) {
-                if (angular.isFunction(okCallback)) {
-                  okCallback();
-                }
-              }
-            });
-          }
+          alert: alerts.alert,
+          confirm: alerts.confirm,
+          confirmDelete: alerts.confirmDelete
         }
       };
     }
 
 
-    this.$get = ["$cordovaDialogs", "$window", "$cordovaNetwork", "$q", "$ionicPopup", "$ionicModal", "$ionicLoading", "$cordovaDevice", "$cordovaCamera", "$ionicHistory",
+    this.$get = ["$cordovaDialogs", "$window", "$cordovaNetwork", "$q", "$ionicPopup", "$ionicModal", "$ionicLoading", "$cordovaDevice",
+      "$cordovaCamera", "$ionicHistory", "$cordovaGeolocation", "fieldPromaxConfig", "localStorageService",
       initFactory];
   });
 

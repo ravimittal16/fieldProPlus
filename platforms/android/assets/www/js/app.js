@@ -27,7 +27,11 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
         { state: "app.calendar", config: { url: "/calendar", controller: "calendar-controller", controllerAs: "vm", templateUrl: "views/calendar.html" } },
         { state: "app.map", config: { url: "/map", controller: "map-controller", controllerAs: "vm", templateUrl: "views/map.html" } },
         { state: "app.createWorkOrder", config: { url: "/createorder", controller: "create-order-controller", controllerAs: "vm", templateUrl: "views/create-order.html" } },
-        { state: "app.editOrder", config: { url: "/editOrder?barCode&technicianNum&src", controller: "edit-order-controller", controllerAs: "vm", templateUrl: "views/edit-order.html" } },
+        {
+          state: "app.editOrder", config: {
+            url: "/editOrder?barCode&technicianNum&src", controller: "edit-order-controller", controllerAs: "vm", templateUrl: "views/edit-order.html"
+          }
+        },
         { state: "app.createCustomer", config: { url: "/createcustomer", controller: "create-customer-controller", controllerAs: "vm", templateUrl: "views/create-customer.html" } },
         { state: "app.createEstimate", config: { url: "/createestimate", controller: "create-estimate-controller", controllerAs: "vm", templateUrl: "views/create-estimate.html" } },
         { state: "app.expense", config: { url: "/expanses", controller: "expanses-controller", controllerAs: "vm", templateUrl: "views/expanses.html" } },

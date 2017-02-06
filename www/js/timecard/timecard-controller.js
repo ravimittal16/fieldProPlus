@@ -91,7 +91,6 @@
             _updateBindingsForSummaryStatus(details);
             if (angular.isDefined(vm.ui.data.currentClockedIn)) {
                 var clockIn = vm.ui.data.currentClockedIn;
-                console.log("clockIn", clockIn);
                 vm.ui.data.clockInDateTime = moment(clockIn.startTime);
                 vm.ui.data.isClockedIn = true;
                 vm.ui.data.isClockedOut = false;
@@ -202,6 +201,7 @@
                             vm.ui.data.disableClockInButton = false;
                         }
                         vm.ui.data.approvalStatus = response.timeCardSummary.approveStatus || 0;
+                        console.log("TIME CARD response", response);
                         _updateTimeCardsArray(response.timeCardDetails);
                         _updateBindingsForSummaryStatus(response);
                     }
@@ -379,13 +379,10 @@
                             timecardFactory.sendForApproval(vm.ui.data.summary.num, status).then(function (response) {
                                 if (response) {
                                     vm.ui.data.summary = response.timeCardSummary;
-                                    timeoutvar = $timeout(function () {
-                                        alerts.alert("Success", "Time card sent for approval successfully", function () {
-                                            vm.ui.data.addTimeVisibility = false;
-                                            vm.ui.data.ptoButtonVisibility = false;
-                                            vm.ui.data.approvalStatus = vm.ui.data.summary.approveStatus || 0;
-                                        });
-                                    }, 100);
+                                    alerts.alert("Success", "Time card sent for approval successfully");
+                                    vm.ui.data.addTimeVisibility = false;
+                                    vm.ui.data.ptoButtonVisibility = false;
+                                    vm.ui.data.approvalStatus = vm.ui.data.summary.approveStatus;
                                 }
                             }).finally(fpmUtilitiesFactory.hideLoading);
                         });

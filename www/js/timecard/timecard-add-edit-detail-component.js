@@ -186,11 +186,9 @@
                 function _findTimeDiff() {
                     vm.ui.errors = [];
                     vm.ui.isInvalidSave = false;
-                    console.log("Date.parse(vm.entity.finishTime)", Date.parse(vm.entity.finishTime));
                     if (Date.parse(vm.entity.startTime) && Date.parse(vm.entity.finishTime)) {
                         var fd = new Date(vm.entity.finishTime);
                         var sd = new Date(vm.entity.startTime);
-                        console.log("new Date(vm.entity.finishTime", new Date(vm.entity.finishTime));
                         var ft = new Date(fd.getFullYear(), fd.getMonth(), fd.getDate(), fd.getHours(), fd.getMinutes(), 0, 0);
                         var st = new Date(sd.getFullYear(), sd.getMonth(), sd.getDate(), sd.getHours(), sd.getMinutes(), 0, 0);
                         var totalMintues = moment(ft).diff(moment(st), "minutes");

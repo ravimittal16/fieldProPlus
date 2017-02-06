@@ -12,7 +12,9 @@
       function onSearchBoxTapped() {
         vm.searchValue = "";
         vm.customers = [];
-        vm.customerModal.show();
+        vm.customerModal.show().then(function () {
+          
+        });
       }
 
       function applySearch() {
@@ -41,7 +43,6 @@
             customer: customer
           });
         }
-        console.log(customer);
       }
 
       vm.events = {

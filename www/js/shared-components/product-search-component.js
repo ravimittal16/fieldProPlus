@@ -2,8 +2,8 @@
     "use strict";
     var componentConfig = {
         templateUrl: "js/shared-components/product-search-component-template.html",
-        controller: ["$scope", "$timeout", "$ionicModal", "work-orders-factory", "authenticationFactory",
-            function ($scope, $timeout, $ionicModal, workOrderFactory, authenticationFactory) {
+        controller: ["$scope", "$timeout", "$ionicModal", "fpm-utilities-factory", "work-orders-factory", "authenticationFactory",
+            function ($scope, $timeout, $ionicModal, fpmUtilitiesFactory, workOrderFactory, authenticationFactory) {
                 var vm = this;
                 vm.searchValue = "";
                 vm.products = [];
@@ -32,7 +32,9 @@
                         vm.currentProduct.qty = 1;
                         vm.currentProduct.markup = 0;
                         if (vm.productModal) {
-                            vm.productModal.show();
+                            vm.productModal.show().then(function () {
+                                
+                            });
                         }
                     },
                     closeSearchModal: function () {
@@ -53,17 +55,9 @@
                     if (timer) $timeout.cancel(timer);
                 });
 
-
-
-                $ionicModal.fromTemplateUrl("addProductModal.html", {
-                    scope: $scope,
-                    animation: 'slide-in-up'
-                }).then(function (modal) {
+                fpmUtilitiesFactory.getModal("addProductModal.html", $scope).then(function (modal) {
                     vm.productModal = modal;
                 });
-                // $scope.$on("$fpm:operation:addProduct", function () {
-                //     vm.productModal.hide();
-                // });
             }],
         controllerAs: "vm"
     };

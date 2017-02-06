@@ -1,7 +1,7 @@
 (function () {
     "use strict";
     function initController($scope, $ionicSideMenuDelegate, $ionicNavBarDelegate, $state,
-        fieldPromaxConfig, localStorageService, authenticationFactory) {
+        fieldPromaxConfig, localStorageService, authenticationFactory, fpmUtilities) {
         var vm = this;
         var secLevels = fieldPromaxConfig.secLevels;
         var userData = authenticationFactory.getLoggedInUserInfo();
@@ -44,6 +44,7 @@
             }
         };
     }
-    initController.$inject = ["$scope", "$ionicSideMenuDelegate", "$ionicNavBarDelegate", "$state", "fieldPromaxConfig", "localStorageService", "authenticationFactory"];
+    initController.$inject = ["$scope", "$ionicSideMenuDelegate", "$ionicNavBarDelegate", "$state",
+        "fieldPromaxConfig", "localStorageService", "authenticationFactory", "fpm-utilities-factory"];
     angular.module("fpm").controller("app-main-controller", initController);
 })();

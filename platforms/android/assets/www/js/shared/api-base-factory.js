@@ -4,7 +4,6 @@
 
         function request(type, url, urlData) {
             var defer = $q.defer();
-            console.log("IS CONNECTED", fpmUtilitiesFactory.device.isConnected())
             function onsuccess(data, status, headers, config) {
                 return defer.resolve(data);
             }
