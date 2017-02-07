@@ -77,10 +77,10 @@
             }
             function onLocationError() {
               //DO NOTHING
-              alerts.alert("ERROR", "ERROR WHILE READING LOCATION");
+              //alerts.alert("ERROR", "ERROR WHILE READING LOCATION");
             }
             function onLocationSuccess(position) {
-              alerts.alert("CURRENT LOCATION", "CURRENT LOCATION : " + JSON.stringify(position));
+              //alerts.alert("CURRENT LOCATION", "CURRENT LOCATION : " + JSON.stringify(position));
               if (position && position.coords) {
                 if (angular.isFunction(cb)) {
                   cb(position.coords);

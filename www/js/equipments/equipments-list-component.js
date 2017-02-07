@@ -89,30 +89,21 @@
                 }
 
                 function openAttachEquipmentModal() {
-                    if (vm.view.equipments.length === 0) {
-                        fpmUtilitiesFactory.showLoading().then(function () {
-                            equipmentFactory.getEquipmentsByUin(vm.uin).then(function (response) {
-                                if (response && angular.isArray(response) && response.length === 0) {
-                                    fpmUtilitiesFactory.hideLoading();
-                                    return;
-                                }
-                                vm.view.equipments = response;
-                                fpmUtilitiesFactory.getModal("attachEquipmentModal.html", $scope).then(function (modal) {
-                                    vm.view.attachEquipmentsModal = modal;
-                                    vm.view.attachEquipmentsModal.show();
-                                });
-                            }).finally(fpmUtilitiesFactory.hideLoading);
-                        });
-                    } else {
-                        if (vm.view.attachEquipmentsModal === null) {
+                    vm.view.errors = [];
+                    fpmUtilitiesFactory.showLoading().then(function () {
+                        equipmentFactory.getEquipmentsByUin(vm.uin).then(function (response) {
+                            if (response && angular.isArray(response) && response.length === 0) {
+                                fpmUtilitiesFactory.hideLoading();
+                                return;
+                            }
+                            vm.view.equipments = response;
                             fpmUtilitiesFactory.getModal("attachEquipmentModal.html", $scope).then(function (modal) {
                                 vm.view.attachEquipmentsModal = modal;
                                 vm.view.attachEquipmentsModal.show();
                             });
-                        } else {
-                            vm.view.attachEquipmentsModal.show();
-                        }
-                    }
+                        }).finally(fpmUtilitiesFactory.hideLoading);
+                    });
+
 
                 }
 
