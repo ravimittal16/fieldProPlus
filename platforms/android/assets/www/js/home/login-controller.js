@@ -54,8 +54,9 @@
                     authenticationFactory.login(vm.user).then(function (response) {
                         $ionicLoading.hide().then(function () {
                             if (response && authenticationFactory.authentication.isAuth) {
-                                $state.go("app.dashboard");
                                 fpmUtilitiesFactory.locationService.start(sharedDataFactory.saveLocationCordinates);
+                                sharedDataFactory.registerUserTemplateForPushNotifications();
+                                $state.go("app.dashboard");
                             }
                         });
                     }, function (data) {

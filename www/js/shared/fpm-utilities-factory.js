@@ -17,12 +17,12 @@
       var isShowingNotworkDialog = false;
       var networkModal = null;
       var watcher = null;
-      var timeout = 1000 * 60 * 5,
-        watchOptions = { timeout: timeout, enableHighAccuracy: false },
-        posOptions = { timeout: 10000, enableHighAccuracy: false },
+      var timeout = (1000 * 60 * 5),
+        watchOptions = { maximumAge: 3000, timeout: 60000, enableHighAccuracy: false },
+        posOptions = { maximumAge: 3000, timeout: 60000, enableHighAccuracy: false },
         localStorageKeys = fieldPromaxConfig.localStorageKeys;
 
-
+      //PERMISSION_DENIED: 1 POSITION_UNAVAILABLE: 2 TIMEOUT: 3
       var alerts = {
         alert: function (title, template, callback) {
           var alertPopUp = $ionicPopup.alert({
@@ -66,28 +66,77 @@
           });
         }
       }
+
+      var deviceInfo = {
+        isAndroid: function isAndroid() {
+          /*Will work only from the device and if you are developing Ionic App
+          * If you are on non-ionic platform you should use a method which identify whether iOS or Android.
+          * return navigator.userAgent.match(/Android/i);
+          */
+          return (ionic.Platform.device().platform.match(/android/i));
+        },
+        isIOS: function isIOS() {
+          /*Will work only from the device and if you are developing Ionic App
+          * If you are on non-ionic platform you should use a method which identify whether iOS or Android.
+          * return navigator.userAgent.match(/iOS/i);
+          */
+          return (ionic.Platform.device().platform.match(/ios/i));
+        }
+      };
+
+      var pushConfig = { GCM_SENDER_ID: "504804224593", registrationId: null };
+
       return {
+        push: {
+          getRegistrationId: function () {
+            var id = localStorageService.get("PUSH:registrationId");
+            return id;
+          },
+          register: function () {
+            pushNotification = PushNotification.init({
+              "android": { senderID: pushConfig.GCM_SENDER_ID, forceShow: "false" },
+              "ios": { alert: "true", badge: "true", sound: "true" }
+            });
+
+            pushNotification.on('registration', function (data) {
+              if (data) {
+                pushConfig.registrationId = data.registrationId;
+                localStorageService.set("PUSH:registrationId", data.registrationId);
+                //to register push PushNotification for ANDROID device
+                if (deviceInfo.isAndroid()) {
+
+                }
+                //to register push PushNotification for IOS device
+                else if (deviceInfo.isIOS()) {
+
+                }
+              }
+            });
+          }
+        },
         locationService: {
           start: function (cb) {
             var settings = localStorageService.get(fieldPromaxConfig.localStorageKeys.settingsKeyName);
-
             if (settings && settings.LocationServices) {
-              $cordovaGeolocation.getCurrentPosition(posOptions).then(onLocationSuccess);
+              // $cordovaGeolocation.getCurrentPosition(posOptions).then(onLocationSuccess);
+              console.log("GETTING LOCATION");
+              navigator.geolocation.getCurrentPosition(onLocationSuccess, onLocationError, posOptions);
               watcher = $cordovaGeolocation.watchPosition(watchOptions);
+              watcher.then(null, onLocationError, onLocationSuccess);
             }
-            function onLocationError() {
+            function onLocationError(e) {
               //DO NOTHING
-              //alerts.alert("ERROR", "ERROR WHILE READING LOCATION");
+              console.log("ERROR", e);
             }
             function onLocationSuccess(position) {
-              //alerts.alert("CURRENT LOCATION", "CURRENT LOCATION : " + JSON.stringify(position));
+              console.log("CURRENT LOCATION", "CURRENT LOCATION : " + JSON.stringify(position));
               if (position && position.coords) {
                 if (angular.isFunction(cb)) {
                   cb(position.coords);
                 }
               }
             }
-            watcher.then(null, onLocationError, onLocationSuccess);
+
           },
           stop: function () {
             if (watcher && angular.isFunction(watcher.clearWatch)) {
@@ -96,6 +145,7 @@
             $cordovaGeolocation.clearWatch(watcher);
           }
         },
+        isOnDevMode: isOnDevMode,
         showNetworkDialog: function () {
           if (!isShowingNotworkDialog) {
             networkModal = $ionicPopup.alert({
@@ -118,6 +168,8 @@
           $ionicHistory.clearHistory();
         },
         device: {
+          isAndroid: deviceInfo.isAndroid,
+          isIOS: deviceInfo.isIOS,
           isConnected: function () {
             if (!isOnDevMode) {
               return $cordovaNetwork.isOnline();

@@ -87,15 +87,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "com.phonegap.plugins.PushPlugin": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/phonegap-build/PushPlugin.git",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "com.transistorsoft.cordova.background-geolocation": {
         "source": {
             "type": "registry",
@@ -127,5 +118,31 @@
         },
         "is_top_level": false,
         "variables": {}
+    },
+    "cordova-plugin-ms-azure-mobile-apps": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-ms-azure-mobile-apps"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-sqlite-storage": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-sqlite-storage@1.4.8"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "phonegap-plugin-push": {
+        "source": {
+            "type": "registry",
+            "id": "phonegap-plugin-push@1.8.4"
+        },
+        "is_top_level": true,
+        "variables": {
+            "SENDER_ID": "504804224593"
+        }
     }
 }

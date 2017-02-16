@@ -1,8 +1,8 @@
 (function () {
     "use strict";
-    function initFactory($q, apiBaseFactory, localStorageService, fieldPromaxConfig) {
+    function initFactory($q, apiBaseFactory, localStorageService, fieldPromaxConfig, fpmUtilitiesFactory) {
         var apibaseurl = "api/Shared/";
-
+        var pushapi = "api/NotificationsHub/"
 
         function updateSettings(settings) {
             return apiBaseFactory.post("api/User/UpdateUserSettings", settings);
@@ -28,12 +28,22 @@
         function saveLocationCordinates(p) {
             return apiBaseFactory.get(apibaseurl + "SaveLocationCoordinates?lat=" + p.latitude + "&lng=" + p.longitude);
         }
+        function registerUserTemplateForPushNotifications() {
+            var pushRegistrationId = localStorageService.get("PUSH:registrationId");
+            var isOnDevMode = fpmUtilitiesFactory.isOnDevMode;
+            var isAndroid = fpmUtilitiesFactory.device.isAndroid();
+            if (!isOnDevMode) {
+                var android = isAndroid ? "0" : "1";
+                return apiBaseFactory.get(pushapi + "RegisterUserToHub?registrationId=" + pushRegistrationId + "&platform=" + android);
+            }
+        }
         return {
+            registerUserTemplateForPushNotifications: registerUserTemplateForPushNotifications,
             updateSettings: updateSettings,
             getIniitialData: getIniitialData,
             saveLocationCordinates: saveLocationCordinates
         };
     }
-    initFactory.$inject = ["$q", "api-base-factory", "localStorageService", "fieldPromaxConfig"];
+    initFactory.$inject = ["$q", "api-base-factory", "localStorageService", "fieldPromaxConfig", "fpm-utilities-factory"];
     angular.module("fpm").factory("shared-data-factory", initFactory);
 })();

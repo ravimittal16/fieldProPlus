@@ -1,14 +1,6 @@
 cordova.define('cordova/plugin_list', function(require, exports, module) {
 module.exports = [
     {
-        "id": "com.phonegap.plugins.PushPlugin.PushNotification",
-        "file": "plugins/com.phonegap.plugins.PushPlugin/www/PushNotification.js",
-        "pluginId": "com.phonegap.plugins.PushPlugin",
-        "clobbers": [
-            "PushNotification"
-        ]
-    },
-    {
         "id": "cordova-plugin-dialogs.notification",
         "file": "plugins/cordova-plugin-dialogs/www/notification.js",
         "pluginId": "cordova-plugin-dialogs",
@@ -95,15 +87,6 @@ module.exports = [
         "runs": true
     },
     {
-        "id": "cordova-plugin-inappbrowser.inappbrowser",
-        "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
-        "pluginId": "cordova-plugin-inappbrowser",
-        "clobbers": [
-            "cordova.InAppBrowser.open",
-            "window.open"
-        ]
-    },
-    {
         "id": "cordova-plugin-network-information.network",
         "file": "plugins/cordova-plugin-network-information/www/network.js",
         "pluginId": "cordova-plugin-network-information",
@@ -144,12 +127,50 @@ module.exports = [
             "cordova.plugins.Keyboard"
         ],
         "runs": true
+    },
+    {
+        "id": "cordova-sqlite-storage.SQLitePlugin",
+        "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
+        "pluginId": "cordova-sqlite-storage",
+        "clobbers": [
+            "SQLitePlugin"
+        ]
+    },
+    {
+        "id": "cordova-plugin-ms-azure-mobile-apps.AzureMobileServices.Ext",
+        "file": "plugins/cordova-plugin-ms-azure-mobile-apps/www/MobileServices.Cordova.Ext.js",
+        "pluginId": "cordova-plugin-ms-azure-mobile-apps",
+        "runs": true
+    },
+    {
+        "id": "cordova-plugin-ms-azure-mobile-apps.AzureMobileServices",
+        "file": "plugins/cordova-plugin-ms-azure-mobile-apps/www/MobileServices.Cordova.js",
+        "pluginId": "cordova-plugin-ms-azure-mobile-apps",
+        "clobbers": [
+            "WindowsAzure"
+        ]
+    },
+    {
+        "id": "cordova-plugin-inappbrowser.inappbrowser",
+        "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
+        "pluginId": "cordova-plugin-inappbrowser",
+        "clobbers": [
+            "cordova.InAppBrowser.open",
+            "window.open"
+        ]
+    },
+    {
+        "id": "phonegap-plugin-push.PushNotification",
+        "file": "plugins/phonegap-plugin-push/www/push.js",
+        "pluginId": "phonegap-plugin-push",
+        "clobbers": [
+            "PushNotification"
+        ]
     }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
-    "com.phonegap.plugins.PushPlugin": "2.5.0",
     "cordova-plugin-dialogs": "1.3.1",
     "cordova-plugin-background-fetch": "4.0.0",
     "com.transistorsoft.cordova.background-geolocation": "2.3.0",
@@ -159,12 +180,15 @@ module.exports.metadata =
     "cordova-plugin-console": "1.0.3",
     "cordova-plugin-device": "1.1.2",
     "cordova-plugin-geolocation": "2.4.0",
-    "cordova-plugin-inappbrowser": "1.5.0",
     "cordova-plugin-network-information": "1.3.0",
     "cordova-plugin-splashscreen": "3.2.2",
     "cordova-plugin-statusbar": "2.1.3",
     "cordova-plugin-whitelist": "1.2.2",
-    "ionic-plugin-keyboard": "2.2.1"
+    "ionic-plugin-keyboard": "2.2.1",
+    "cordova-sqlite-storage": "1.4.8",
+    "cordova-plugin-ms-azure-mobile-apps": "2.0.0",
+    "cordova-plugin-inappbrowser": "1.5.0",
+    "phonegap-plugin-push": "1.8.4"
 };
 // BOTTOM OF METADATA
 });

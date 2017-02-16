@@ -137,10 +137,14 @@
             "PHOTOLIBRARY_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
-        "com.phonegap.plugins.PushPlugin": {
+        "com.transistorsoft.cordova.background-geolocation": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
-        "com.transistorsoft.cordova.background-geolocation": {
+        "cordova-plugin-ms-azure-mobile-apps": {
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
+        "phonegap-plugin-push": {
+            "SENDER_ID": "504804224593",
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         }
     },
@@ -155,6 +159,9 @@
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
         "cordova-plugin-cocoalumberjack": {
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
+        "cordova-sqlite-storage": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         }
     }

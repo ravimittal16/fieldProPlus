@@ -1,7 +1,7 @@
 (function () {
     "use strict";
 
-    function initController($scope, $state, $timeout, $stateParams, $ionicActionSheet, $ionicLoading,
+    function initController($scope, $state, $timeout, $window, $stateParams, $ionicActionSheet, $ionicLoading,
         $ionicPopup, $ionicModal, workOrderFactory, fpmUtilities, sharedDataFactory, authenticationFactory, timecardFactory) {
         var vm = this;
         vm.barcode = $stateParams.barCode;
@@ -188,7 +188,7 @@
 
         function checkAuthorizationIfServiceProvider(co, cb, fromAddSchedule) {
             if (vm.schedule) {
-               // console.log("vm.user", vm.user);
+                // console.log("vm.user", vm.user);
                 var havingGroupsAssigned = vm.user.havingGroupsAssigned;
                 if (vm.isServiceProvider === false) {
                     return true;
@@ -432,40 +432,50 @@
         vm.map = null;
         var isMapLoaded = false;
         function loadWorkOrderMap() {
-            var defCordinates = { x: 44.31127, y: -92.67851, xcom: -92.67851, ycom: 44.3112679 };
+
+
+            var goourl = "http://maps.google.com/maps?saddr=";
             var d = vm.barCodeData.barcodeDetails;
-            var addressf = d.shipStreet + " " + d.shipCity + " " + d.shipState + " " + d.shipZIP;
-            new google.maps.Geocoder().geocode({ 'address': addressf }, function (results, status) {
-                if (results.length > 0) {
-                    var myLatLng = new window.google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
-                    var mapControl = $("#map");
-                    mapControl.css({ height: "100%", width: "100%" });
-                    if (vm.map === null) {
-                        vm.map = new google.maps.Map(document.getElementById("map"), {
-                            zoom: 15,
-                            panControl: false,
-                            zoomControl: true,
-                            scaleControl: true,
-                            center: myLatLng,
-                            mapTypeId: google.maps.MapTypeId.ROADMAP
-                        });
-                    } else {
-                        vm.map.setCenter(myLatLng);
-                    }
-                    new window.google.maps.Marker({
-                        position: myLatLng,
-                        map: vm.map,
-                        animation: google.maps.Animation.DROP
-                    });
-                    isMapLoaded = true;
-                } else {
-                    fpmUtilities.alerts.alert("Not Found", "Failed to locate the address", function () {
-                        //vm.map = null;
-                        isMapLoaded = false;
-                        workOrderMapModal.hide();
-                    });
-                }
-            });
+            if (d.shipStreet) {
+                goourl += d.shipStreet.replace("::", " ");
+            }
+            goourl += " " + d.shipCity + ", " + d.shipState + " " + d.shipZIP;
+            $window.open(goourl, '_blank', 'location=yes');
+
+            // var defCordinates = { x: 44.31127, y: -92.67851, xcom: -92.67851, ycom: 44.3112679 };
+            // var d = vm.barCodeData.barcodeDetails;
+            // var addressf = d.shipStreet + " " + d.shipCity + " " + d.shipState + " " + d.shipZIP;
+            // new google.maps.Geocoder().geocode({ 'address': addressf }, function (results, status) {
+            //     if (results.length > 0) {
+            //         var myLatLng = new window.google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+            //         var mapControl = $("#map");
+            //         mapControl.css({ height: "100%", width: "100%" });
+            //         if (vm.map === null) {
+            //             vm.map = new google.maps.Map(document.getElementById("map"), {
+            //                 zoom: 15,
+            //                 panControl: false,
+            //                 zoomControl: true,
+            //                 scaleControl: true,
+            //                 center: myLatLng,
+            //                 mapTypeId: google.maps.MapTypeId.ROADMAP
+            //             });
+            //         } else {
+            //             vm.map.setCenter(myLatLng);
+            //         }
+            //         new window.google.maps.Marker({
+            //             position: myLatLng,
+            //             map: vm.map,
+            //             animation: google.maps.Animation.DROP
+            //         });
+            //         isMapLoaded = true;
+            //     } else {
+            //         fpmUtilities.alerts.alert("Not Found", "Failed to locate the address", function () {
+            //             //vm.map = null;
+            //             isMapLoaded = false;
+            //             workOrderMapModal.hide();
+            //         });
+            //     }
+            // });
         }
         vm.tabs = {
             desc: {
@@ -487,6 +497,7 @@
                         //         loadWorkOrderMap();
                         //     });
                         // });
+                        loadWorkOrderMap();
                     },
                     onDescriptionOrResolutionChanged: function () {
                         updateOrder();
@@ -752,7 +763,7 @@
             //console.log("HEHEHEHEHEHE");
         });
     }
-    initController.$inject = ["$scope", "$state", "$timeout", "$stateParams", "$ionicActionSheet",
+    initController.$inject = ["$scope", "$state", "$timeout", "$window", "$stateParams", "$ionicActionSheet",
         "$ionicLoading", "$ionicPopup", "$ionicModal", "work-orders-factory", "fpm-utilities-factory",
         "shared-data-factory", "authenticationFactory", "timecard-factory"
     ];

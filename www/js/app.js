@@ -6,7 +6,7 @@
 // "http://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 // "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 //"http://localhost/FieldPromaxApi/"  
-var isInDevMode = true;
+var isInDevMode = false;
 var constants = {
   fieldPromaxApi: isInDevMode ? "http://localhost:51518/" : "https://fieldpromax.azurewebsites.net/",
   localStorageKeys: {
@@ -97,6 +97,9 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
         // from snapping when text inputs are focused. Ionic handles this internally for
         // a much nicer keyboard experience.
         cordova.plugins.Keyboard.disableScroll(true);
+
+        //REGISTER FOR PUSH NOTIFICATIONS
+        fpmUtilitiesFactory.push.register();
       }
       if (window.StatusBar) {
         StatusBar.styleDefault();

@@ -5,7 +5,7 @@
         function activateController() {
             authenticationFactory.logout();
             $timeout(function () {
-                fpmUtilities.locationService.stop();
+                //fpmUtilities.locationService.stop();
                 $state.go("login");
             }, 200);
         }

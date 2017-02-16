@@ -41,15 +41,7 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"PushPlugin\"><param name=\"ios-package\" value=\"PushPlugin\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"NetworkStatus\"><param name=\"ios-package\" value=\"CDVConnection\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"InAppBrowser\"><param name=\"ios-package\" value=\"CDVInAppBrowser\" /></feature>",
                             "count": 1
                         },
                         {
@@ -70,6 +62,18 @@
                         },
                         {
                             "xml": "<feature name=\"BackgroundGeolocation\"><param name=\"ios-package\" value=\"CDVBackgroundGeolocation\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"SQLitePlugin\"><param name=\"ios-package\" value=\"SQLitePlugin\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"InAppBrowser\"><param name=\"ios-package\" value=\"CDVInAppBrowser\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"PushNotification\"><param name=\"ios-package\" value=\"PushPlugin\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -95,6 +99,10 @@
                         {
                             "xml": "<array><string>location</string></array>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<array><string>remote-notification</string></array>",
+                            "count": 1
                         }
                     ],
                     "NSLocationAlwaysUsageDescription": [
@@ -106,6 +114,18 @@
                     "NSMotionUsageDescription": [
                         {
                             "xml": "<string>Accelerometer use increases battery efficiency by intelligently toggling location-tracking</string>",
+                            "count": 1
+                        }
+                    ],
+                    "GCM_SENDER_ID": [
+                        {
+                            "xml": "<string>504804224593</string>",
+                            "count": 1
+                        }
+                    ],
+                    "IS_GCM_ENABLED": [
+                        {
+                            "xml": "<true />",
                             "count": 1
                         }
                     ]
@@ -138,13 +158,7 @@
         "cordova-plugin-geolocation": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
-        "com.phonegap.plugins.PushPlugin": {
-            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
-        },
         "cordova-plugin-network-information": {
-            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
-        },
-        "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
         "cordova-plugin-camera": {
@@ -162,6 +176,19 @@
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
         "com.transistorsoft.cordova.background-geolocation": {
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
+        "cordova-plugin-ms-azure-mobile-apps": {
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
+        "phonegap-plugin-push": {
+            "SENDER_ID": "504804224593",
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         }
     },
@@ -249,14 +276,6 @@
             ]
         },
         {
-            "file": "plugins/com.phonegap.plugins.PushPlugin/www/PushNotification.js",
-            "id": "com.phonegap.plugins.PushPlugin.PushNotification",
-            "pluginId": "com.phonegap.plugins.PushPlugin",
-            "clobbers": [
-                "PushNotification"
-            ]
-        },
-        {
             "file": "plugins/cordova-plugin-network-information/www/network.js",
             "id": "cordova-plugin-network-information.network",
             "pluginId": "cordova-plugin-network-information",
@@ -271,15 +290,6 @@
             "pluginId": "cordova-plugin-network-information",
             "clobbers": [
                 "Connection"
-            ]
-        },
-        {
-            "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
-            "id": "cordova-plugin-inappbrowser.inappbrowser",
-            "pluginId": "cordova-plugin-inappbrowser",
-            "clobbers": [
-                "cordova.InAppBrowser.open",
-                "window.open"
             ]
         },
         {
@@ -337,6 +347,45 @@
             "clobbers": [
                 "window.BackgroundGeolocation"
             ]
+        },
+        {
+            "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
+            "id": "cordova-sqlite-storage.SQLitePlugin",
+            "pluginId": "cordova-sqlite-storage",
+            "clobbers": [
+                "SQLitePlugin"
+            ]
+        },
+        {
+            "file": "plugins/cordova-plugin-ms-azure-mobile-apps/www/MobileServices.Cordova.Ext.js",
+            "id": "cordova-plugin-ms-azure-mobile-apps.AzureMobileServices.Ext",
+            "pluginId": "cordova-plugin-ms-azure-mobile-apps",
+            "runs": true
+        },
+        {
+            "file": "plugins/cordova-plugin-ms-azure-mobile-apps/www/MobileServices.Cordova.js",
+            "id": "cordova-plugin-ms-azure-mobile-apps.AzureMobileServices",
+            "pluginId": "cordova-plugin-ms-azure-mobile-apps",
+            "clobbers": [
+                "WindowsAzure"
+            ]
+        },
+        {
+            "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
+            "id": "cordova-plugin-inappbrowser.inappbrowser",
+            "pluginId": "cordova-plugin-inappbrowser",
+            "clobbers": [
+                "cordova.InAppBrowser.open",
+                "window.open"
+            ]
+        },
+        {
+            "file": "plugins/phonegap-plugin-push/www/push.js",
+            "id": "phonegap-plugin-push.PushNotification",
+            "pluginId": "phonegap-plugin-push",
+            "clobbers": [
+                "PushNotification"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -348,13 +397,15 @@
         "ionic-plugin-keyboard": "2.2.1",
         "cordova-plugin-compat": "1.0.0",
         "cordova-plugin-geolocation": "2.4.0",
-        "com.phonegap.plugins.PushPlugin": "2.5.0",
         "cordova-plugin-network-information": "1.3.0",
-        "cordova-plugin-inappbrowser": "1.5.0",
         "cordova-plugin-camera": "2.2.0",
         "cordova-plugin-dialogs": "1.3.1",
         "cordova-plugin-background-fetch": "4.0.0",
         "cordova-plugin-cocoalumberjack": "0.0.1",
-        "com.transistorsoft.cordova.background-geolocation": "2.3.0"
+        "com.transistorsoft.cordova.background-geolocation": "2.3.0",
+        "cordova-sqlite-storage": "1.4.8",
+        "cordova-plugin-ms-azure-mobile-apps": "2.0.0",
+        "cordova-plugin-inappbrowser": "1.5.0",
+        "phonegap-plugin-push": "1.8.4"
     }
 }
