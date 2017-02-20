@@ -8,13 +8,7 @@
   </ion-header-bar>
   <form name="formWorkOrder" novalidate="">
     <ion-content>
-      <div class="list padding-top" data-ng-if="vm.errors.length > 0">
-        <div class="error">
-          <ui class="list-unstyled">
-            <li data-ng-repeat="error in vm.errors">{{::error}}</li>
-          </ui>
-        </div>
-      </div>
+      <errors-view errors="vm.errors"></errors-view>
       <div class="list">
         <label class="item item-input">
                     <span class="input-label">Order #</span>

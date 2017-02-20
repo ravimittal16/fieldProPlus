@@ -9,7 +9,7 @@
         };
         vm.errors = [];
         function moveToDashboard() {
-            $state.go("app.dashboard");
+            $state.go("app.dashboard", { refresh: false });
         }
         function onBackToDashboardClicked(isDirty) {
             if (isDirty) {

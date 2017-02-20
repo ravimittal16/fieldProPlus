@@ -36,14 +36,14 @@
     </div>
 </ion-list>
 <script id="attachEquipmentModal.html" type="text/ng-template">
-	<ion-modal-view>
-		<ion-header-bar>
-			<h1 class="title">Attach Equipment</h1>
+    <ion-modal-view>
+        <ion-header-bar>
+            <h1 class="title">Attach Equipment</h1>
             <button class="button" data-ng-click="vm.events.closeEquipmentAttachModal()">
 				Cancel
 			</button>
-		</ion-header-bar>
-		<ion-content>
+        </ion-header-bar>
+        <ion-content>
             <div class="list" data-ng-if="vm.view.errors.length > 0">
                 <div class="error">
                     <ui class="list-unstyled">
@@ -59,19 +59,20 @@
                     <h6 class="text-muted">{{::item.description}}</h6>
                 </ion-item>
             </ion-list>
-		</ion-content>
-	</ion-modal-view>
+        </ion-content>
+    </ion-modal-view>
 </script>
 
 <script id="newEquipmentModal.html" type="text/ng-template">
-	<ion-modal-view>
-		<ion-header-bar>
-			<h1 class="title">New Equipment</h1>
+    <ion-modal-view>
+        <ion-header-bar>
+            <h1 class="title">New Equipment</h1>
             <button class="button" data-ng-click="vm.events.closeNewEquipmentModal()">
 				Cancel
 			</button>
-		</ion-header-bar>
-		<ion-content>
+        </ion-header-bar>
+        <ion-content>
+            <errors-view errors="vm.data.errors"></errors-view>
             <form Name="newEquipmentForm">
                 <div class="list">
                     <label class="item item-input item-floating-label">
@@ -88,25 +89,25 @@
                     </label>
                     <div class="row">
                         <div class="col text-right">
-                            <a class="button button-small button-positive" data-ng-click="vm.events.createEquipmentSubmit(newEquipmentForm.$valid,false)">Create Equipment</a>
-                            <a class="button button-small button-positive" data-ng-click="vm.events.createEquipmentSubmit(newEquipmentForm.$valid,true)">Create & Attach Equipment</a>
+                            <a class="button button-small button-positive" data-ng-disabled="newEquipmentForm.$invalid" data-ng-click="vm.events.createEquipmentSubmit(newEquipmentForm.$valid,false)">Create Equipment</a>
+                            <a class="button button-small button-positive" data-ng-disabled="newEquipmentForm.$invalid" data-ng-click="vm.events.createEquipmentSubmit(newEquipmentForm.$valid,true)">Create & Attach Equipment</a>
                         </div>
                     </div>
                 </div>
             </form>
-		</ion-content>
-	</ion-modal-view>
+        </ion-content>
+    </ion-modal-view>
 </script>
 
 <script id="equipmentHistoryModal.html" type="text/ng-template">
-	<ion-modal-view>
-		<ion-header-bar>
-			<h1 class="title">Equipment History</h1>
+    <ion-modal-view>
+        <ion-header-bar>
+            <h1 class="title">Equipment History</h1>
             <button class="button" data-ng-click="vm.events.closeHistoryModal()">
 				Cancel
 			</button>
-		</ion-header-bar>
-		<ion-content>
+        </ion-header-bar>
+        <ion-content>
             <div class="card" data-ng-repeat="d in vm.uiResult">
                 <div class="item item-divider">
                     <small>Work Order # {{::d.barcodeView.barcodeName}}</small>
@@ -116,6 +117,6 @@
                     <h4><strong>{{::f.value}}</strong></h4>
                 </div>
             </div>
-		</ion-content>
-	</ion-modal-view>
+        </ion-content>
+    </ion-modal-view>
 </script>

@@ -185,7 +185,9 @@
                                 if (response != null && angular.isArray(response)) {
                                     vm.data.errors = response;
                                 } else {
-                                    alerts.alert("Success!", "Equipment " + (isFromEdit ? "updated" : "created") + " successfully", function () {
+                                    var msg = saveAndAttach ? "Equipment saved and attached successfully" :
+                                        ("Equipment " + (isFromEdit ? "updated" : "created") + " successfully");
+                                    alerts.alert("Success!", msg, function () {
                                         vm.view.newEquipmentModal.hide();
                                         getEquipmentsByBarcode(false);
                                     });

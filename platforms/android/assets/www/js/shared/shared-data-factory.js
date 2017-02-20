@@ -29,12 +29,25 @@
             return apiBaseFactory.get(apibaseurl + "SaveLocationCoordinates?lat=" + p.latitude + "&lng=" + p.longitude);
         }
         function registerUserTemplateForPushNotifications() {
-            var pushRegistrationId = localStorageService.get("PUSH:registrationId");
+            var handle = localStorageService.get("PUSH:registrationId");
             var isOnDevMode = fpmUtilitiesFactory.isOnDevMode;
-            var isAndroid = fpmUtilitiesFactory.device.isAndroid();
             if (!isOnDevMode) {
+                var isAndroid = fpmUtilitiesFactory.device.isAndroid();
                 var android = isAndroid ? "0" : "1";
-                return apiBaseFactory.get(pushapi + "RegisterUserToHub?registrationId=" + pushRegistrationId + "&platform=" + android);
+                var pUrl = pushapi + "RegisterUserToHub?handle=" + handle + "&platform=" + android;
+                return apiBaseFactory.get(pUrl).then(function () {
+                    fpmUtilitiesFactory.alerts.alert("SUCCESS", "SAVED REGISTRATION FOR PUSH");
+                }, function () {
+                    fpmUtilitiesFactory.alerts.alert("ERROR", "WHILE ADDING PUSH");
+                });
+            } else {
+                console.log("TRY TO SAVE PUSH");
+                var pUrl = pushapi + "RegisterUserToHub?handle=" + handle + "&platform=0";
+                return apiBaseFactory.get(pUrl).then(function () {
+                    fpmUtilitiesFactory.alerts.alert("SUCCESS", "SAVED REGISTRATION FOR PUSH");
+                }, function () {
+                    fpmUtilitiesFactory.alerts.alert("ERROR", "WHILE ADDING PUSH");
+                });
             }
         }
         return {

@@ -23,7 +23,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
       var routes = [
         { state: "login", config: { url: "/", controller: "login-controller", controllerAs: "vm", templateUrl: "views/login.html" } },
         { state: "app", config: { abstract: true, controller: "app-main-controller", controllerAs: "vm", templateUrl: "views/app-main.html" } },
-        { state: "app.dashboard", config: { url: "/home", controller: "dashboard-controller", controllerAs: "vm", templateUrl: "views/dashboard.html" } },
+        { state: "app.dashboard", config: { url: "/home?refresh", controller: "dashboard-controller", controllerAs: "vm", templateUrl: "views/dashboard.html" } },
         { state: "app.calendar", config: { url: "/calendar", controller: "calendar-controller", controllerAs: "vm", templateUrl: "views/calendar.html" } },
         { state: "app.map", config: { url: "/map", controller: "map-controller", controllerAs: "vm", templateUrl: "views/map.html" } },
         { state: "app.createWorkOrder", config: { url: "/createorder", controller: "create-order-controller", controllerAs: "vm", templateUrl: "views/create-order.html" } },
@@ -97,13 +97,12 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
         // from snapping when text inputs are focused. Ionic handles this internally for
         // a much nicer keyboard experience.
         cordova.plugins.Keyboard.disableScroll(true);
-
-        //REGISTER FOR PUSH NOTIFICATIONS
-        fpmUtilitiesFactory.push.register();
       }
       if (window.StatusBar) {
         StatusBar.styleDefault();
       }
+      //REGISTER FOR PUSH NOTIFICATIONS
+      fpmUtilitiesFactory.push.register();
     });
     //CHECK CONNECTION
     $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {

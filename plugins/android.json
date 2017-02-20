@@ -25,6 +25,9 @@
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
+        "cordova-plugin-ms-azure-mobile-apps": {
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
         "cordova-plugin-network-information": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
@@ -38,9 +41,6 @@
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
         "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
-        },
-        "cordova-plugin-ms-azure-mobile-apps": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
         "phonegap-plugin-push": {

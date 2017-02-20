@@ -57,7 +57,7 @@
         </ion-header-bar>
         <ion-content>
             <form  name="expenseEditForm">
-                <div class="list padding-top" data-ng-if="vm.showError">
+                <div class="list padding-top" data-ng-if="vm.errors && vm.errors.length > 0">
                     <div class="error">
                         <ui class="list-unstyled">
                             <li data-ng-repeat="error in vm.errors">{{::error}}</li>
@@ -93,7 +93,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <button type="button" class="button button-small button-positive button-block" data-ng-click="vm.events.onSubmitClicked(expenseEditForm.$valid)">
+                            <button type="button" class="button button-small button-positive button-block" data-ng-disabled="expenseEditForm.$invalid" data-ng-click="vm.events.onSubmitClicked(expenseEditForm.$valid)">
                                 <span data-ng-if="vm.entity.expenseId == 0">Add</span>
                                 <span data-ng-if="vm.entity.expenseId != 0">Update</span> 
                                 Expense
@@ -104,4 +104,4 @@
             </form>
         </ion-content>
     </ion-modal-view>
-</script>
+</script>   

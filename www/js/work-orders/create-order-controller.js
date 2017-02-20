@@ -39,7 +39,7 @@
               vm.errors = response.errors;
             } else {
               alerts.alert("Success", "Work Order created successfully", function () {
-                $state.go("app.dashboard");
+                $state.go("app.dashboard", { refresh: true });
               });
             }
           }
@@ -88,7 +88,7 @@
     initDates();
 
     function onBackToDashboardClicked() {
-      $state.go("app.dashboard");
+      $state.go("app.dashboard", { refresh: false });
     }
 
     vm.isCustomerSelected = false;
@@ -124,6 +124,13 @@
         if (response) {
           vm.jobTypes = response.jobTypes;
           vm.serviceProviders = response.serviceProviders;
+          vm.isServiceProvider = !vm.userInfo.isAdminstrator;
+          if (vm.isServiceProvider === true) {
+            var timer = $timeout(function () {
+              vm.woEntity.serviceProvider = response.userInfo.userId;
+              $timeout.cancel(timer);
+            }, 100);
+          }
         }
       }).finally(createEntity);
     }
