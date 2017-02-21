@@ -31,23 +31,14 @@
         function registerUserTemplateForPushNotifications() {
             var handle = localStorageService.get("PUSH:registrationId");
             var isOnDevMode = fpmUtilitiesFactory.isOnDevMode;
-            if (!isOnDevMode) {
+            if (!isOnDevMode && angular.isDefined(handle)) {
                 var isAndroid = fpmUtilitiesFactory.device.isAndroid();
                 var android = isAndroid ? "0" : "1";
                 var pUrl = pushapi + "RegisterUserToHub?handle=" + handle + "&platform=" + android;
-                return apiBaseFactory.get(pUrl).then(function () {
-                    fpmUtilitiesFactory.alerts.alert("SUCCESS", "SAVED REGISTRATION FOR PUSH");
-                }, function () {
-                    fpmUtilitiesFactory.alerts.alert("ERROR", "WHILE ADDING PUSH");
-                });
+                return apiBaseFactory.get(pUrl);
             } else {
-                console.log("TRY TO SAVE PUSH");
                 var pUrl = pushapi + "RegisterUserToHub?handle=" + handle + "&platform=0";
-                return apiBaseFactory.get(pUrl).then(function () {
-                    fpmUtilitiesFactory.alerts.alert("SUCCESS", "SAVED REGISTRATION FOR PUSH");
-                }, function () {
-                    fpmUtilitiesFactory.alerts.alert("ERROR", "WHILE ADDING PUSH");
-                });
+                return apiBaseFactory.get(pUrl);
             }
         }
         return {

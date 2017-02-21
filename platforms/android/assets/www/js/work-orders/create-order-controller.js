@@ -1,10 +1,10 @@
 (function () {
   "use strict";
 
-  function initController($scope, $state, $ionicActionSheet, workOrderFactory, sharedDataFactory, fpmUtilitiesFactory) {
+  function initController($scope, $state, $timeout, $ionicActionSheet, workOrderFactory, sharedDataFactory, fpmUtilitiesFactory, authenticationFactory) {
     var vm = this;
     var alerts = fpmUtilitiesFactory.alerts;
-
+    vm.userInfo = authenticationFactory.getLoggedInUserInfo();
     function getBarcodeNumber() {
       workOrderFactory.getBarCodeNumber().then(function (response) {
         vm.woEntity.barCode = response.barcode;
@@ -17,6 +17,12 @@
         workOrderFactory.createEntity().then(function (response) {
           vm.woEntity = angular.copy(response);
           vm.woEntity.fromMobile = true;
+          if (vm.isServiceProvider === true) {
+            var timer = $timeout(function () {
+              vm.woEntity.serviceProvider = vm.userInfo.userEmail;
+              $timeout.cancel(timer);
+            }, 100);
+          }
           initDates();
         }).finally(getBarcodeNumber);
       });
@@ -125,17 +131,12 @@
           vm.jobTypes = response.jobTypes;
           vm.serviceProviders = response.serviceProviders;
           vm.isServiceProvider = !vm.userInfo.isAdminstrator;
-          if (vm.isServiceProvider === true) {
-            var timer = $timeout(function () {
-              vm.woEntity.serviceProvider = response.userInfo.userId;
-              $timeout.cancel(timer);
-            }, 100);
-          }
+
         }
       }).finally(createEntity);
     }
     activateController();
   }
-  initController.$inject = ["$scope", "$state", "$ionicActionSheet", "work-orders-factory", "shared-data-factory", "fpm-utilities-factory"];
+  initController.$inject = ["$scope", "$state", "$timeout", "$ionicActionSheet", "work-orders-factory", "shared-data-factory", "fpm-utilities-factory", "authenticationFactory"];
   angular.module("fpm").controller("create-order-controller", initController);
 })();

@@ -7,7 +7,7 @@
         var orders = [];
         var timeCardInfo = { enabled: false, clockedInInfo: null, currentDetails: [], todaysClockIns: [] };
         var alerts = fpmUtilitiesFactory.alerts;
-        console.log("stateParams", $stateParams);
+        
         function extractJsonOrdersToLocalArray() {
             orders = [];
             if (!vm.isServiceProvider || vm.havingGroupsAssigned) {

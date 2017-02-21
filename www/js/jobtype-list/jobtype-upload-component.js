@@ -7,7 +7,6 @@
             function ($scope, $stateParams, $timeout, customTypesFactory, fpmUtilitiesFactory) {
                 var vm = this;
                 vm.entity = {};
-                console.log("vm.ctEntity.value", vm.ctEntity.value);
                 vm.showImageUpload = vm.ctEntity.value === null;
                 var alerts = fpmUtilitiesFactory.alerts;
                 function uploadImage(mappedImage, imageName) {

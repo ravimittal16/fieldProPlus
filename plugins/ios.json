@@ -105,9 +105,6 @@
         }
     },
     "installed_plugins": {
-        "cordova-plugin-console": {
-            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
-        },
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },

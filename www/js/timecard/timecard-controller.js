@@ -201,7 +201,6 @@
                             vm.ui.data.disableClockInButton = false;
                         }
                         vm.ui.data.approvalStatus = response.timeCardSummary.approveStatus || 0;
-                        console.log("TIME CARD response", response);
                         _updateTimeCardsArray(response.timeCardDetails);
                         _updateBindingsForSummaryStatus(response);
                     }

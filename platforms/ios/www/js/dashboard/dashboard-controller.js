@@ -1,12 +1,13 @@
 (function () {
     "use strict";
-    function initController($scope, $state, $timeout, $ionicModal, workOrderFactory, sharedDataFactory,
+    function initController($scope, $state, $stateParams, $timeout, $ionicModal, workOrderFactory, sharedDataFactory,
         authenticationFactory, timecardFactory, fpmUtilitiesFactory, localStorageService) {
         var vm = this;
         vm.userInfo = authenticationFactory.getLoggedInUserInfo();
         var orders = [];
         var timeCardInfo = { enabled: false, clockedInInfo: null, currentDetails: [], todaysClockIns: [] };
         var alerts = fpmUtilitiesFactory.alerts;
+        
         function extractJsonOrdersToLocalArray() {
             orders = [];
             if (!vm.isServiceProvider || vm.havingGroupsAssigned) {
@@ -190,7 +191,8 @@
             sharedDataFactory.getIniitialData().then(function (response) {
                 vm.trackJobStatus = response.customerNumberEntity.trackJobStatus || false;
             }).finally(function () {
-                loadDashboard(false);
+                var refresh = $stateParams.refresh || false;
+                loadDashboard(refresh);
             });
 
         }
@@ -214,7 +216,7 @@
             vm.searchModal = modal;
         });
     }
-    initController.$inject = ["$scope", "$state", "$timeout", "$ionicModal", "work-orders-factory",
+    initController.$inject = ["$scope", "$state", "$stateParams", "$timeout", "$ionicModal", "work-orders-factory",
         "shared-data-factory", "authenticationFactory", "timecard-factory", "fpm-utilities-factory", "localStorageService"];
     angular.module("fpm").controller("dashboard-controller", initController);
 })();

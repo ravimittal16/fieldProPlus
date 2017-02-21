@@ -16,7 +16,6 @@
 
                 vm.events = {
                     closeProductEditModal: function () {
-                        console.log("vm.enableMarkupOrders", vm.enableMarkupOrders);
                         $rootScope.$broadcast("$fpm:closeEditProductModal");
                     },
                     updateProductClick: function () {

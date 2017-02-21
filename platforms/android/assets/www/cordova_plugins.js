@@ -177,7 +177,6 @@ module.exports.metadata =
     "cordova-plugin-compat": "1.0.0",
     "cordova-plugin-camera": "2.2.0",
     "cordova-plugin-cocoalumberjack": "0.0.1",
-    "cordova-plugin-console": "1.0.3",
     "cordova-plugin-device": "1.1.2",
     "cordova-plugin-geolocation": "2.4.0",
     "cordova-plugin-inappbrowser": "1.5.0",

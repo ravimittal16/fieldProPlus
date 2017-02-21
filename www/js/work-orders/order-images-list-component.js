@@ -72,7 +72,6 @@
           },
           onDeleteImageClicked: function (img) {
             alerts.confirmDelete(function () {
-              //console.log("HELLO WORLDF");
             });
           },
           onImageTap: function (p) {

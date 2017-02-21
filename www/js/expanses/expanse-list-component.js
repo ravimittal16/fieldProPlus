@@ -126,7 +126,6 @@
                                 alerts.alert("Warning", "Invalid image file extension ( ." + getExt[0] + " ). Please upload only image file.");
                                 return;
                             }
-                            console.log("e", e);
                             var fileReader = new FileReader();
                             fileReader.onload = function (event) {
                                 var mapImage = event.target.result;

@@ -73,8 +73,10 @@
                 });
             }
         };
-        $ionicHistory.clearHistory();
-        $ionicHistory.clearCache();
+        $scope.$on('$ionicView.enter', function () {
+            $ionicHistory.clearHistory();
+            $ionicHistory.clearCache();
+        });
     }
     initController.$inject = ["$scope", "$ionicScrollDelegate", "$ionicPopup", "$ionicLoading", "authenticationFactory", "$state",
         "$ionicHistory", "dashboard-factory", "fpm-utilities-factory", "shared-data-factory"];

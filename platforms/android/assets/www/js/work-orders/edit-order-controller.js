@@ -177,7 +177,7 @@
             onEndDateTimeChanged: function () {
                 if (vm.schedule && vm.schedule.actualStartDateTime && vm.schedule.actualFinishDateTime) {
                     if (new Date(vm.schedule.actualStartDateTime) > new Date(vm.schedule.actualFinishDateTime)) {
-                        alerts.alert("Warning", "Start time cannot be greater than finish time.");
+                        alerts.alert("Warning", "Finish time cannot be less than start time");
                     } else {
                         findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
                     }
@@ -508,7 +508,7 @@
                 events: {
                     workCompleteChanged: function () {
                         if (checkAuthorizationIfServiceProvider(vm.schedule, restoreSchedule, false)) {
-
+                            updateSchedule(false, false);
                         }
                     },
                     onCustomScheduleChanged: function (e) {

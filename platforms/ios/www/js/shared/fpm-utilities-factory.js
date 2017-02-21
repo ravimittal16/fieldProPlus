@@ -38,7 +38,9 @@
         confirm: function (title, template, okayCallback, cancelCallback) {
           var confirmPopup = $ionicPopup.confirm({
             title: title,
-            template: template
+            template: template,
+            cancelText: "No",
+            okText: "Yes"
           });
           confirmPopup.then(function (res) {
             if (res) {
@@ -55,7 +57,9 @@
         confirmDelete: function (okCallback) {
           var confirmPopup = $ionicPopup.confirm({
             title: "Confirmation",
-            template: 'Are you sure?'
+            template: 'Are you sure?',
+            cancelText: "No",
+            okText: "Yes"
           });
           confirmPopup.then(function (res) {
             if (res) {
@@ -93,43 +97,32 @@
             return id;
           },
           register: function () {
-            pushNotification = PushNotification.init({
-              "android": { senderID: pushConfig.GCM_SENDER_ID, forceShow: "false" },
-              "ios": { alert: "true", badge: "true", sound: "true" }
-            });
-
-            pushNotification.on('registration', function (data) {
-              if (data) {
-                pushConfig.registrationId = data.registrationId;
-                localStorageService.set("PUSH:registrationId", data.registrationId);
-                //to register push PushNotification for ANDROID device
-                if (deviceInfo.isAndroid()) {
-
+            if (!isOnDevMode) {
+              var pushNotification = PushNotification.init({
+                "android": { senderID: pushConfig.GCM_SENDER_ID, forceShow: "false" },
+                "ios": { alert: "true", badge: "true", sound: "true" }
+              });
+              pushNotification.on('registration', function (data) {
+                if (data) {
+                  pushConfig.registrationId = data.registrationId;
+                  localStorageService.set("PUSH:registrationId", data.registrationId);
                 }
-                //to register push PushNotification for IOS device
-                else if (deviceInfo.isIOS()) {
-
-                }
-              }
-            });
+              });
+            }
           }
         },
         locationService: {
           start: function (cb) {
             var settings = localStorageService.get(fieldPromaxConfig.localStorageKeys.settingsKeyName);
             if (settings && settings.LocationServices) {
-              // $cordovaGeolocation.getCurrentPosition(posOptions).then(onLocationSuccess);
-              console.log("GETTING LOCATION");
               navigator.geolocation.getCurrentPosition(onLocationSuccess, onLocationError, posOptions);
               watcher = $cordovaGeolocation.watchPosition(watchOptions);
               watcher.then(null, onLocationError, onLocationSuccess);
             }
             function onLocationError(e) {
               //DO NOTHING
-              console.log("ERROR", e);
             }
             function onLocationSuccess(position) {
-              console.log("CURRENT LOCATION", "CURRENT LOCATION : " + JSON.stringify(position));
               if (position && position.coords) {
                 if (angular.isFunction(cb)) {
                   cb(position.coords);
@@ -138,7 +131,7 @@
             }
 
           },
-          stop: function () {
+        stop: function () {
             if (watcher && angular.isFunction(watcher.clearWatch)) {
               watcher.clearWatch();
             }

@@ -34,7 +34,6 @@
                     model.currentTime.isRunning = true;
                     interval = $interval(function() {
                         model.currentTime.totalMinutes += 1;
-                        console.log(model.currentTime.totalMinutes);
                         updateUi();
                     }, (1000 * 60));
                 }
