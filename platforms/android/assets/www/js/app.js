@@ -11,7 +11,7 @@ var constants = {
   fieldPromaxApi: isInDevMode ? "http://localhost:51518/" : "https://fieldpromax.azurewebsites.net/",
   localStorageKeys: {
     authorizationDataKey: "authorizationData", initialData: "initialData",
-    storageKeyName: "authorizationData", configKeyName: "configurations", settingsKeyName: "userSettings"
+    storageKeyName: "authorizationData", configKeyName: "configurations", settingsKeyName: "userSettings", userCredentials: "userCredentials"
   }
 };
 var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ngCordova", "ionic-datepicker",
@@ -109,30 +109,45 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
             authenticationFactory.logout();
           }
         }, false);
-        //HANDLING BACK BUTTON FOR MOBILE
-        // $ionicPlatform.onHardwareBackButton(function (event) {
-        //   if ($state.current.name === "app.dashboard") {
-        //     fpmUtilitiesFactory.alerts.confirm("Confirmation", "Are you sure to logout?", function () {
-        //       authenticationFactory.logout();
-        //     }, function () {
-        //       if (event) {
-        //         event.preventDefault();
-        //         event.stopPropagation();
-        //       }
-        //     });
-        //   }
-        // });
 
-        // $ionicPlatform.registerBackButtonAction(function (event) {
-        //   fpmUtilitiesFactory.alerts.alert("HELLO", "HIT BACK BUTTON");
-        //   // if ($state.current.name === "app.dashboard") {
-        //   //   fpmUtilitiesFactory.alerts.alert("HELLO", "ON DASHBOARD");
-        //   // } else {
-        //   //   navigator.app.backHistory();
-        //   // }
-        //   event.preventDefault();
-        //   event.stopPropagation();
-        // });
+
+        //TRY TO READ location
+        function readLocation() {
+
+          var bgGeo = window.BackgroundGeolocation;
+          bgGeo.on("motionchange", function (isMoving, location, taskId) {
+            fpmUtilitiesFactory.alerts.alert("motion state changed: ", JSON.stringify({ isMoving: isMoving, location: location }));
+            if (taskId) {
+              bgGeo.finish(taskId);
+            }
+          });
+
+          bgGeo.on("location", function (location, taskId) {
+            fpmUtilitiesFactory.alerts.alert("location: ", JSON.stringify({ location: location }));
+          });
+
+          bgGeo.configure({
+            desiredAccuracy: 0,
+            stationaryRadius: 50,
+            distanceFilter: 50,
+
+            // Activity recognition config
+            activityRecognitionInterval: 10000,
+            stopTimeout: 5,  // Stop-detection timeout minutes (wait x minutes to turn off tracking)
+
+            // Application config
+            debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+            logLevel: 5,    // Verbose logging.  0: NONE
+            stopOnTerminate: false,              // <-- Don't stop tracking when user closes app.
+            startOnBoot: true,
+          }, function (state) {
+            // Plugin is configured and ready to use.
+            if (!state.enabled) {
+              bgGeo.start();  // <-- start-tracking
+            }
+          });
+        }
+        readLocation();
       });
       //CHECK CONNECTION
       $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {

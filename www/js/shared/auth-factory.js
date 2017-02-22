@@ -36,6 +36,7 @@
           if (response.userSettings) {
             localStorageService.set(localStorageKeys.settingsKeyName, JSON.parse(response.userSettings));
           }
+          localStorageService.set(localStorageKeys.userCredentials, loginModel);
           defered.resolve(response);
         } else {
           if (response.data) {
@@ -87,6 +88,7 @@
         localStorageService.remove(localStorageKeys.storageKeyName);
         localStorageService.remove(localStorageKeys.configKeyName);
         localStorageService.remove(localStorageKeys.settingsKeyName);
+        localStorageService.remove(localStorageKeys.userCredentials);
         localStorageService.remove("orderState");
         fpmUtilitiesFactory.clearHistory();
       }, 200)
@@ -99,8 +101,11 @@
     function changePassword(m) {
       return apiContext.post("api/user/changepassword", m);
     }
-
+    function getStoredCredentials() {
+      return localStorageService.get(localStorageKeys.userCredentials);
+    }
     var factory = {
+      getStoredCredentials: getStoredCredentials,
       login: login,
       isAuthenticated: isAuthenticated,
       getLoggedInUserInfo: getLoggedInUserInfo,

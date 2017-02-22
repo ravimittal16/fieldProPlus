@@ -27,12 +27,10 @@
             </intent-filter>
         </service>
         <service android:exported="false" android:name="com.adobe.phonegap.push.RegistrationIntentService" />
+        <meta-data android:name="com.transistorsoft.locationmanager.license" android:value="37fc089424706b6f816e88c5ec5fd590fbd26b7be92a41a40bdb5f91b666c64f" />
     </application>
     <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="23" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-feature android:name="android.hardware.location.gps" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.NETWORK_ACCESS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />

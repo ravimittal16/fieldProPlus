@@ -10,17 +10,23 @@
                 var vm = this;
                 vm.customerName = "";
                 var barcode = $stateParams.barCode;
+                vm.errors = ["Please add customer name before save"];
+                vm.showError = false;
                 vm.events = {
                     onCustomerNameKeyup: function (keyCode) {
                         if (keyCode === 13) {
+                            vm.showError = false;
                             vm.events.trySaveSignature().then(function () {
                                 $scope.$emit("$signature:completedEvent");
-                             });
+                            }, function (error) {
+                                vm.showError = error;
+                            });
                         }
                     },
                     trySaveSignature: function () {
                         var defer = $q.defer();
                         var isFromEstimates = false;
+                        if ($.trim(vm.customerName) === "") defer.reject(true);
                         var sign = $(angular.element("#signature")).jSignature("getData", "image");
                         if ($.trim(vm.customerName) !== "" && angular.isArray(sign)) {
                             fpmUtilities.showLoading().then(function () {

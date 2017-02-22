@@ -39,14 +39,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-geolocation": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-geolocation"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-compat": {
         "source": {
             "type": "registry",
@@ -75,14 +67,6 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-camera@~2.2.0"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "com.transistorsoft.cordova.background-geolocation": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-background-geolocation-lt"
         },
         "is_top_level": true,
         "variables": {}
@@ -135,6 +119,20 @@
         "is_top_level": true,
         "variables": {
             "SENDER_ID": "504804224593"
+        }
+    },
+    "cordova-background-geolocation": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/transistorsoft/cordova-background-geolocation.git",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {
+            "LICENSE": "37fc089424706b6f816e88c5ec5fd590fbd26b7be92a41a40bdb5f91b666c64f",
+            "LOCATION_ALWAYS_USAGE_DESCRIPTION": "Background location-tracking is required",
+            "LOCATION_WHEN_IN_USE_USAGE_DESCRIPTION": "Background location-tracking is required",
+            "MOTION_USAGE_DESCRIPTION": "Using the accelerometer increases battery-efficiency by intelligently toggling location-tracking only when the device is detected to be moving"
         }
     }
 }

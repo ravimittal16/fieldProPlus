@@ -137,6 +137,11 @@
                 };
                 function closeModal() {
                     vm.modal.hide();
+                    vm.entity.imageModel = null;
+                    vm.entity = angular.copy(schema);
+                    vm.image = {
+                        name: "", visible: false
+                    };
                 }
                 vm.errors = [];
                 function onSubmitClicked(isValid) {
@@ -148,7 +153,7 @@
                         fpmUtilitiesFactory.showLoading().then(function () {
                             expenseDataFactory.addExpense(vm.entity).then(function (response) {
                                 if (response) {
-                                    vm.modal.hide();
+                                    closeModal();
                                     loadExpenses(fpmUtilitiesFactory.hideLoading);
                                 }
                             });

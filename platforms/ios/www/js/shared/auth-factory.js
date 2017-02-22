@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  function initFactory($http, $q, $rootScope, $state, $window, $ionicHistory, fpmUtilitiesFactory,
+  function initFactory($http, $q, $rootScope, $state, $window, $timeout, $ionicHistory, fpmUtilitiesFactory,
     localStorageService, fieldPromaxConfig, apiContext, workOrdersFactory) {
     var serviceBase = fieldPromaxConfig.fieldPromaxApi;
     var localStorageKeys = fieldPromaxConfig.localStorageKeys;
@@ -36,6 +36,7 @@
           if (response.userSettings) {
             localStorageService.set(localStorageKeys.settingsKeyName, JSON.parse(response.userSettings));
           }
+          localStorageService.set(localStorageKeys.userCredentials, loginModel);
           defered.resolve(response);
         } else {
           if (response.data) {
@@ -79,15 +80,18 @@
     }
 
     function logout() {
-      $ionicHistory.clearHistory();
-      $ionicHistory.clearCache();
-      workOrdersFactory.clearAllCache();
-      localStorageService.remove(localStorageKeys.initialData);
-      localStorageService.remove(localStorageKeys.storageKeyName);
-      localStorageService.remove(localStorageKeys.configKeyName);
-      localStorageService.remove(localStorageKeys.settingsKeyName);
-      localStorageService.remove("orderState");
-      fpmUtilitiesFactory.clearHistory();
+      $timeout(function () {
+        $ionicHistory.clearHistory();
+        $ionicHistory.clearCache();
+        workOrdersFactory.clearAllCache();
+        localStorageService.remove(localStorageKeys.initialData);
+        localStorageService.remove(localStorageKeys.storageKeyName);
+        localStorageService.remove(localStorageKeys.configKeyName);
+        localStorageService.remove(localStorageKeys.settingsKeyName);
+        localStorageService.remove(localStorageKeys.userCredentials);
+        localStorageService.remove("orderState");
+        fpmUtilitiesFactory.clearHistory();
+      }, 200)
     }
 
     function sendPassword(uid) {
@@ -97,8 +101,11 @@
     function changePassword(m) {
       return apiContext.post("api/user/changepassword", m);
     }
-
+    function getStoredCredentials() {
+      return localStorageService.get(localStorageKeys.userCredentials);
+    }
     var factory = {
+      getStoredCredentials: getStoredCredentials,
       login: login,
       isAuthenticated: isAuthenticated,
       getLoggedInUserInfo: getLoggedInUserInfo,
@@ -110,7 +117,7 @@
     return factory;
   }
 
-  initFactory.$inject = ["$http", "$q", "$rootScope", "$state", "$window", "$ionicHistory", "fpm-utilities-factory",
+  initFactory.$inject = ["$http", "$q", "$rootScope", "$state", "$window", "$timeout", "$ionicHistory", "fpm-utilities-factory",
     "localStorageService", "fieldPromaxConfig", "api-base-factory", "work-orders-factory"
   ];
   angular.module("fpm").factory("authenticationFactory", initFactory);

@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    function initController($scope, $ionicScrollDelegate, $ionicPopup, $ionicLoading, authenticationFactory,
+    function initController($scope, $timeout, $ionicPopup, $ionicLoading, authenticationFactory,
         $state, $ionicHistory, dashboardFactory, fpmUtilitiesFactory, sharedDataFactory) {
         var vm = this;
         vm.user = { userName: "", password: "" };
@@ -73,10 +73,24 @@
                 });
             }
         };
-        $ionicHistory.clearHistory();
-        $ionicHistory.clearCache();
+
+        function tryUserLoginFromStorage() {
+            var credentials = authenticationFactory.getStoredCredentials();
+            if (credentials && angular.isDefined(credentials)) {
+                fpmUtilitiesFactory.alerts.alert("LOGIN", JSON.stringify(credentials));
+            }
+        }
+
+        $scope.$on('$ionicView.beforeEnter', function () {
+            console.log("HELLO WORLD");
+            $timeout(function () {
+                $ionicHistory.clearHistory();
+                $ionicHistory.clearCache();
+                tryUserLoginFromStorage();
+            }, 200);
+        });
     }
-    initController.$inject = ["$scope", "$ionicScrollDelegate", "$ionicPopup", "$ionicLoading", "authenticationFactory", "$state",
+    initController.$inject = ["$scope", "$timeout", "$ionicPopup", "$ionicLoading", "authenticationFactory", "$state",
         "$ionicHistory", "dashboard-factory", "fpm-utilities-factory", "shared-data-factory"];
     angular.module("fpm").controller("login-controller", initController);
 })();

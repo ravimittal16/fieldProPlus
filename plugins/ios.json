@@ -120,9 +120,6 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
-        "cordova-plugin-geolocation": {
-            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
-        },
         "cordova-plugin-network-information": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
@@ -134,19 +131,26 @@
             "PHOTOLIBRARY_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
-        "com.transistorsoft.cordova.background-geolocation": {
-            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
-        },
         "cordova-plugin-ms-azure-mobile-apps": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
         "phonegap-plugin-push": {
             "SENDER_ID": "504804224593",
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
+        "cordova-background-geolocation": {
+            "BACKGROUND_MODE_LOCATION": "<string>location</string>",
+            "LOCATION_ALWAYS_USAGE_DESCRIPTION": "Background location-tracking is required",
+            "LOCATION_WHEN_IN_USE_USAGE_DESCRIPTION": "Background location-tracking is required",
+            "MOTION_USAGE_DESCRIPTION": "Using the accelerometer increases battery-efficiency by intelligently toggling location-tracking only when the device is detected to be moving",
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         }
     },
     "dependent_plugins": {
         "cordova-plugin-compat": {
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
+        "cordova-sqlite-storage": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
         "cordova-plugin-dialogs": {
@@ -156,9 +160,6 @@
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
         "cordova-plugin-cocoalumberjack": {
-            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
-        },
-        "cordova-sqlite-storage": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         }
     }

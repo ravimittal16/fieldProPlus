@@ -1,38 +1,6 @@
 cordova.define('cordova/plugin_list', function(require, exports, module) {
 module.exports = [
     {
-        "id": "cordova-plugin-dialogs.notification",
-        "file": "plugins/cordova-plugin-dialogs/www/notification.js",
-        "pluginId": "cordova-plugin-dialogs",
-        "merges": [
-            "navigator.notification"
-        ]
-    },
-    {
-        "id": "cordova-plugin-dialogs.notification_android",
-        "file": "plugins/cordova-plugin-dialogs/www/android/notification.js",
-        "pluginId": "cordova-plugin-dialogs",
-        "merges": [
-            "navigator.notification"
-        ]
-    },
-    {
-        "id": "cordova-plugin-background-fetch.BackgroundFetch",
-        "file": "plugins/cordova-plugin-background-fetch/www/BackgroundFetch.js",
-        "pluginId": "cordova-plugin-background-fetch",
-        "clobbers": [
-            "window.BackgroundFetch"
-        ]
-    },
-    {
-        "id": "com.transistorsoft.cordova.background-geolocation.BackgroundGeolocation",
-        "file": "plugins/com.transistorsoft.cordova.background-geolocation/www/BackgroundGeolocation.js",
-        "pluginId": "com.transistorsoft.cordova.background-geolocation",
-        "clobbers": [
-            "window.BackgroundGeolocation"
-        ]
-    },
-    {
         "id": "cordova-plugin-camera.Camera",
         "file": "plugins/cordova-plugin-camera/www/CameraConstants.js",
         "pluginId": "cordova-plugin-camera",
@@ -71,20 +39,6 @@ module.exports = [
         "clobbers": [
             "device"
         ]
-    },
-    {
-        "id": "cordova-plugin-geolocation.geolocation",
-        "file": "plugins/cordova-plugin-geolocation/www/android/geolocation.js",
-        "pluginId": "cordova-plugin-geolocation",
-        "clobbers": [
-            "navigator.geolocation"
-        ]
-    },
-    {
-        "id": "cordova-plugin-geolocation.PositionError",
-        "file": "plugins/cordova-plugin-geolocation/www/PositionError.js",
-        "pluginId": "cordova-plugin-geolocation",
-        "runs": true
     },
     {
         "id": "cordova-plugin-inappbrowser.inappbrowser",
@@ -166,19 +120,47 @@ module.exports = [
         "clobbers": [
             "PushNotification"
         ]
+    },
+    {
+        "id": "cordova-plugin-dialogs.notification",
+        "file": "plugins/cordova-plugin-dialogs/www/notification.js",
+        "pluginId": "cordova-plugin-dialogs",
+        "merges": [
+            "navigator.notification"
+        ]
+    },
+    {
+        "id": "cordova-plugin-dialogs.notification_android",
+        "file": "plugins/cordova-plugin-dialogs/www/android/notification.js",
+        "pluginId": "cordova-plugin-dialogs",
+        "merges": [
+            "navigator.notification"
+        ]
+    },
+    {
+        "id": "cordova-plugin-background-fetch.BackgroundFetch",
+        "file": "plugins/cordova-plugin-background-fetch/www/BackgroundFetch.js",
+        "pluginId": "cordova-plugin-background-fetch",
+        "clobbers": [
+            "window.BackgroundFetch"
+        ]
+    },
+    {
+        "id": "cordova-background-geolocation.BackgroundGeolocation",
+        "file": "plugins/cordova-background-geolocation/www/BackgroundGeolocation.js",
+        "pluginId": "cordova-background-geolocation",
+        "clobbers": [
+            "window.BackgroundGeolocation"
+        ]
     }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
-    "cordova-plugin-dialogs": "1.3.1",
-    "cordova-plugin-background-fetch": "4.0.0",
-    "com.transistorsoft.cordova.background-geolocation": "2.3.0",
     "cordova-plugin-compat": "1.0.0",
     "cordova-plugin-camera": "2.2.0",
     "cordova-plugin-cocoalumberjack": "0.0.1",
     "cordova-plugin-device": "1.1.2",
-    "cordova-plugin-geolocation": "2.4.0",
     "cordova-plugin-inappbrowser": "1.5.0",
     "cordova-sqlite-storage": "1.4.8",
     "cordova-plugin-ms-azure-mobile-apps": "2.0.0",
@@ -187,7 +169,10 @@ module.exports.metadata =
     "cordova-plugin-statusbar": "2.1.3",
     "cordova-plugin-whitelist": "1.2.2",
     "ionic-plugin-keyboard": "2.2.1",
-    "phonegap-plugin-push": "1.8.4"
+    "phonegap-plugin-push": "1.8.4",
+    "cordova-plugin-dialogs": "1.3.1",
+    "cordova-plugin-background-fetch": "4.0.0",
+    "cordova-background-geolocation": "2.5.1"
 };
 // BOTTOM OF METADATA
 });
