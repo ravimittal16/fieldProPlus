@@ -77,6 +77,7 @@
                         if (entity.expenseId !== 0) {
                             vm.entity.isReimbursable = entity.expenseType === 0;
                             vm.entity.havingImage = entity.imageName !== null;
+                            vm.entity.imageModel = { name: entity.imageName, image: null };
                         } else {
                             vm.entity.havingImage = false;
                         }

@@ -508,7 +508,7 @@
                 events: {
                     workCompleteChanged: function () {
                         if (checkAuthorizationIfServiceProvider(vm.schedule, restoreSchedule, false)) {
-                            updateSchedule(false, false);
+                            updateSchedule(true, true);
                         }
                     },
                     onCustomScheduleChanged: function (e) {

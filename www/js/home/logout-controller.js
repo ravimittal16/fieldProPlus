@@ -3,9 +3,8 @@
     function initController($scope, $timeout, $state, authenticationFactory, fpmUtilities) {
         var vm = this;
         function activateController() {
-            authenticationFactory.logout();
+            authenticationFactory.logout(true);
             $timeout(function () {
-                //fpmUtilities.locationService.stop();
                 $state.go("login");
             }, 200);
         }

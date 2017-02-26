@@ -39,6 +39,8 @@
                     authenticationFactory.sendPassword(res).then(function (res) {
                         if (angular.isArray(res) && res.length > 0) {
                             vm.forgotPasswordModalErrors = res;
+                        } else {
+                            alerts.alert("Password Sent", "Password has been sent successfully.");
                         }
                     })
                 });
@@ -77,12 +79,12 @@
         function tryUserLoginFromStorage() {
             var credentials = authenticationFactory.getStoredCredentials();
             if (credentials && angular.isDefined(credentials)) {
-                fpmUtilitiesFactory.alerts.alert("LOGIN", JSON.stringify(credentials));
+                vm.user = angular.copy(credentials);
+                vm.events.loginClick(true);
             }
         }
 
-        $scope.$on('$ionicView.beforeEnter', function () {
-            console.log("HELLO WORLD");
+        $scope.$on('$ionicView.loaded', function () {
             $timeout(function () {
                 $ionicHistory.clearHistory();
                 $ionicHistory.clearCache();

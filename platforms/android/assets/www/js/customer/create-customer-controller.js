@@ -28,7 +28,7 @@
                         if (angular.isArray(response.errors) && response.errors.length > 0) {
                             vm.errors = response.errors;
                         } else {
-                            fpmUtilitiesFactory.alerts.alert("Success", "Customer create successfully", function () {
+                            fpmUtilitiesFactory.alerts.alert("Success", "Customer created successfully", function () {
                                 moveToDashboard();
                             });
                         }

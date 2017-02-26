@@ -79,7 +79,7 @@
       return localStorageService.get(localStorageKeys.storageKeyName);
     }
 
-    function logout() {
+    function logout(clearCredentials) {
       $timeout(function () {
         $ionicHistory.clearHistory();
         $ionicHistory.clearCache();
@@ -88,7 +88,9 @@
         localStorageService.remove(localStorageKeys.storageKeyName);
         localStorageService.remove(localStorageKeys.configKeyName);
         localStorageService.remove(localStorageKeys.settingsKeyName);
-        localStorageService.remove(localStorageKeys.userCredentials);
+        if (clearCredentials) {
+          localStorageService.remove(localStorageKeys.userCredentials);
+        }
         localStorageService.remove("orderState");
         fpmUtilitiesFactory.clearHistory();
       }, 200)

@@ -10,7 +10,8 @@
         controller: ["$scope", "$ionicActionSheet", "$q", "work-orders-factory", "fpm-utilities-factory",
             function ($scope, $ionicActionSheet, $q, workOrdersFactory, fpmUtilitiesFactory) {
                 var vm = this;
-
+                vm.emailErrors = [];
+                vm.sendingEmails = false;
                 function checkEmail(email) {
                     //var regExp = /(^[a-z]([a-z_\.]*)@([a-z_\.]*)([.][a-z]{3})$)|(^[a-z]([a-z_\.]*)@([a-z_\.]*)(\.[a-z]{3})(\.[a-z]{2})*$)/i;
                     var regExp = /(^[a-z]([a-z_\.]*)@([a-z_\.]*)([.][a-z]{3})$)|(^[a-z]([a-z_\.]*)@([a-z-0-9]*)(\.[a-z]{3})(\.[a-z]{2})*$)/i;
@@ -41,35 +42,27 @@
                 };
 
                 function sendEmail(sendAsInvoice) {
+                    vm.emailErrors = [];
+                    vm.sendingEmails = false;
                     if (vm.mailConfig.mailAddresses && vm.mailConfig.mailAddresses.length > 0) {
-                        workOrdersFactory.sendInvoiceMail({ BarCode: vm.barcode, SendAsInvoice: sendAsInvoice, emailAddresses: vm.mailConfig.mailAddresses, TaxRate: vm.taxrate }).then(function () {
-                            fpmUtilitiesFactory.alerts.alert("Email Sent", "Email Sent Successfully");
+                        checkEmails().then(function (havingInvalidEmails) {
+                            if (!havingInvalidEmails) {
+                                vm.sendingEmails = true;
+                                workOrdersFactory.sendInvoiceMail({ BarCode: vm.barcode, SendAsInvoice: sendAsInvoice, emailAddresses: vm.mailConfig.mailAddresses, TaxRate: vm.taxrate }).then(function () {
+                                    fpmUtilitiesFactory.alerts.alert("Email Sent", "Email Sent Successfully", function () {
+                                        vm.sendingEmails = false;
+                                    });
+                                });
+                            } else {
+
+                                vm.emailErrors = ["Please enter valid emails"];
+                            }
                         });
                     }
                 }
 
-                function onOrderEmailActionClicked() {
-                    var signatureAction = $ionicActionSheet.show({
-                        buttons: [
-                            { text: 'Send As Invoice' }, { text: "Send As Work Order" }
-                        ],
-                        titleText: 'Work Order Email Options',
-                        cancelText: 'Cancel',
-                        cancel: function () {
+                vm.events = { sendEmail: sendEmail };
 
-                        },
-                        buttonClicked: function (index) {
-                            if (index === 0 || index === 1) {
-                                sendEmail(index === 0);
-                            }
-                            return true;
-                        }
-                    });
-                }
-                vm.events = { onOrderEmailActionClicked: onOrderEmailActionClicked };
-                vm.$onChanges = function () {
-
-                }
                 vm.$onInit = function () {
                     if (vm.defaultEmails != null && vm.defaultEmails.includes(",")) {
                         var emailArray = [];

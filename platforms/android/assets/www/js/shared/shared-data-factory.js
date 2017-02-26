@@ -2,7 +2,8 @@
     "use strict";
     function initFactory($q, apiBaseFactory, localStorageService, fieldPromaxConfig, fpmUtilitiesFactory) {
         var apibaseurl = "api/Shared/";
-        var pushapi = "api/NotificationsHub/"
+        var pushapi = "api/NotificationsHub/";
+        var locationapi = "api/Location/";
 
         function updateSettings(settings) {
             return apiBaseFactory.post("api/User/UpdateUserSettings", settings);
@@ -41,7 +42,12 @@
                 return apiBaseFactory.get(pUrl);
             }
         }
+        //this will save gps location data to azure table storage
+        function postLocation(location) {
+            return apiBaseFactory.post(locationapi + "PostLocation", location);
+        }
         return {
+            postLocation: postLocation,
             registerUserTemplateForPushNotifications: registerUserTemplateForPushNotifications,
             updateSettings: updateSettings,
             getIniitialData: getIniitialData,

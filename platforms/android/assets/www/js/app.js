@@ -86,8 +86,8 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
       }]);
 
     }])
-  .run(["$ionicPlatform", "$rootScope", "$state", "$timeout", "fpm-utilities-factory", "authenticationFactory",
-    function ($ionicPlatform, $rootScope, $state, $timeout, fpmUtilitiesFactory, authenticationFactory) {
+  .run(["$ionicPlatform", "$rootScope", "$state", "$timeout", "fpm-utilities-factory", "authenticationFactory", "shared-data-factory",
+    function ($ionicPlatform, $rootScope, $state, $timeout, fpmUtilitiesFactory, authenticationFactory, sharedDataFactory) {
       $ionicPlatform.ready(function () {
         if (window.cordova && window.cordova.plugins.Keyboard) {
           // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -106,7 +106,8 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
         fpmUtilitiesFactory.push.register();
         document.addEventListener("backbutton", function (event) {
           if ($state.current.name === "app.dashboard") {
-            authenticationFactory.logout();
+            //authenticationFactory.logout(false);
+            if (navigator) navigator.app.exitApp();
           }
         }, false);
 
@@ -115,28 +116,59 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
         function readLocation() {
 
           var bgGeo = window.BackgroundGeolocation;
-          bgGeo.on("motionchange", function (isMoving, location, taskId) {
-            fpmUtilitiesFactory.alerts.alert("motion state changed: ", JSON.stringify({ isMoving: isMoving, location: location }));
-            if (taskId) {
-              bgGeo.finish(taskId);
-            }
-          });
+          // bgGeo.on("motionchange", function (isMoving, location, taskId) {
+          //   fpmUtilitiesFactory.alerts.alert("motion state changed: ", JSON.stringify({ isMoving: isMoving, location: location }));
+          //   if (taskId) {
+          //     bgGeo.finish(taskId);
+          //   }
+          // });
 
-          bgGeo.on("location", function (location, taskId) {
-            fpmUtilitiesFactory.alerts.alert("location: ", JSON.stringify({ location: location }));
+          // bgGeo.on("location", function (location, taskId) {
+          //   fpmUtilitiesFactory.alerts.alert("location: ", JSON.stringify({ location: location }));
+          // });
+          function succesFn(location) {
+            var credentials = authenticationFactory.getStoredCredentials();
+            if (angular.isDefined(credentials) && location) {
+              location.userId = credentials.userName;
+              location.isMoving = location.is_moving;
+              location.coords.altitudeAccuracy = location.coords.altitude_accuracy;
+              sharedDataFactory.postLocation(location);
+            }
+          }
+
+          function errorFn(errorCode) {
+            switch (errorCode) {
+              case 0:
+                //fpmUtilitiesFactory.alerts.alert("ERROR 0", 'Failed to retrieve location');
+                break;
+              case 1:
+                //fpmUtilitiesFactory.alerts.alert('ERROR 1', 'You must enable location services in Settings');
+                break;
+              case 2:
+                //fpmUtilitiesFactory.alerts.alert('ERROR 2', 'Network Error');
+                break;
+              case 408:
+                //fpmUtilitiesFactory.alerts.alert('ERROR 408', 'Location timeout');
+                break;
+            }
+          }
+          bgGeo.getCurrentPosition(succesFn, errorFn);
+
+
+          bgGeo.watchPosition(succesFn, errorFn, {
+            interval: 10000,    // <-- retrieve a location every 5s.
+            persist: false,    // <-- default is true
           });
 
           bgGeo.configure({
             desiredAccuracy: 0,
             stationaryRadius: 50,
             distanceFilter: 50,
-
             // Activity recognition config
             activityRecognitionInterval: 10000,
             stopTimeout: 5,  // Stop-detection timeout minutes (wait x minutes to turn off tracking)
-
             // Application config
-            debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+            debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
             logLevel: 5,    // Verbose logging.  0: NONE
             stopOnTerminate: false,              // <-- Don't stop tracking when user closes app.
             startOnBoot: true,
@@ -147,7 +179,9 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
             }
           });
         }
-        readLocation();
+        if (!isInDevMode) {
+          readLocation();
+        }
       });
       //CHECK CONNECTION
       $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {

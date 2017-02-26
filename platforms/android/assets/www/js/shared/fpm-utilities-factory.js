@@ -35,6 +35,25 @@
             });
           }
         },
+        confirmWithOkayCancel: function (title, template, okayCallback, cancelCallback) {
+          var confirmPopup = $ionicPopup.confirm({
+            title: title,
+            template: template,
+            cancelText: "Cancel",
+            okText: "Okay"
+          });
+          confirmPopup.then(function (res) {
+            if (res) {
+              if (angular.isFunction(okayCallback)) {
+                okayCallback();
+              }
+            } else {
+              if (angular.isFunction(cancelCallback)) {
+                cancelCallback();
+              }
+            }
+          });
+        },
         confirm: function (title, template, okayCallback, cancelCallback) {
           var confirmPopup = $ionicPopup.confirm({
             title: title,
@@ -131,7 +150,7 @@
             }
 
           },
-        stop: function () {
+          stop: function () {
             if (watcher && angular.isFunction(watcher.clearWatch)) {
               watcher.clearWatch();
             }

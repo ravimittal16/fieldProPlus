@@ -7,7 +7,7 @@
         var orders = [];
         var timeCardInfo = { enabled: false, clockedInInfo: null, currentDetails: [], todaysClockIns: [] };
         var alerts = fpmUtilitiesFactory.alerts;
-        
+
         function extractJsonOrdersToLocalArray() {
             orders = [];
             if (!vm.isServiceProvider || vm.havingGroupsAssigned) {
@@ -51,7 +51,7 @@
         }
         var scheduleButtons = { AcceptJob: 0, InRoute: 1, CheckIn: 3, CheckOut: 4 };
         function _processInRouteClick(job) {
-            alerts.confirm("Confirmation!", "Your status has been updated to In Route", function () {
+            alerts.confirmWithOkayCancel("Confirmation!", "Your status has been updated to In Route", function () {
                 fpmUtilitiesFactory.showLoading().then(function () {
                     workOrderFactory.updateJobStatus({ scheduleButton: scheduleButtons.InRoute, scheduleNum: job.TechnicianScheduleNum, barcode: job.Barcode }).then(function () {
                         job.InRoute = true;
@@ -67,7 +67,7 @@
         function beforeFinalInRoute(job) {
             var notCheckInDetails = _.where(timeCardInfo.currentDetails, { finishTime: null });
             if (notCheckInDetails.length > 0) {
-                alerts.confirm("Confirmation", "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?", function () {
+                alerts.confirmWithOkayCancel("Confirmation", "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?", function () {
                     _processInRouteClick(job);
                 });
             } else {
@@ -135,6 +135,12 @@
                 loadDashboard(true, function () {
                     $scope.$broadcast("scroll.refreshComplete");
                 });
+                // sharedDataFactory.postLocation({ userId: "smpgaut@gmail.com", timestamp: new Date(), event: 1, isMoving: false, uuid: "as", coords: { latitude: 20.1, longitude: 1.2 } })
+                //     .then(function () {
+                //         console.log("SUCCESS LOCATION");
+                //     }, function () {
+                //         console.log("ERROR LOCATION");
+                //     })
             },
             onChildGroupClicked: function (item, type, prop) {
 
