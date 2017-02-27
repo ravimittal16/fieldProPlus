@@ -164,6 +164,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
             desiredAccuracy: 0,
             stationaryRadius: 50,
             distanceFilter: 50,
+            disableElasticity: true,
             // Activity recognition config
             activityRecognitionInterval: 60000,
             stopTimeout: 5,  // Stop-detection timeout minutes (wait x minutes to turn off tracking)
@@ -172,6 +173,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
             logLevel: 5,    // Verbose logging.  0: NONE
             stopOnTerminate: false,              // <-- Don't stop tracking when user closes app.
             startOnBoot: true,
+            autoSync: false
           }, function (state) {
             // Plugin is configured and ready to use.
             if (!state.enabled) {
