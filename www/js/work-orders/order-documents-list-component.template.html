@@ -9,6 +9,12 @@
 				<ion-item class="item-text-wrap" data-ng-repeat="p in vm.barcodeDocuments | filter:{extension:'.pdf'}" data-ng-click="vm.events.onDocumentClicked(p)">
                     {{::p.fleName}}
 				</ion-item>
+
+				<ion-item class="item item-text-wrap text-center" data-ng-if="!vm.gettinDocuments && vm.barcodeDocuments.length == 0">
+                    <h3 class="text-muted">
+                        <strong>No Documents uploaded</strong>
+                    </h3>
+                </ion-item>
 			</ion-list>
 		</div>
 	</div>

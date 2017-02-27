@@ -14,6 +14,7 @@
             vm.customTypes = {
                 data: []
             };
+            vm.gettingCustomTypes = false;
             function updateToDatabase(type, dateType) {
                 var o = angular.copy(type);
                 var cbox = false;
@@ -53,8 +54,10 @@
                     vm.factory.requestDataCompleted = true;
                     return;
                 }
+                vm.gettingCustomTypes = true;
                 customTypesFactory.getCustomTypesDataByBarcode(vm.barcode, vm.jobtype)
                     .then(function (response) {
+                        vm.gettingCustomTypes = false;
                         if (response && response.length > 0) {
                             var checkBoxes = _.where(response, { type: controlTypes.CHECKBOX });
                             angular.forEach(checkBoxes, function (e) {

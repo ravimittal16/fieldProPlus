@@ -6,7 +6,7 @@
 // "http://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 // "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 //"http://localhost/FieldPromaxApi/"  
-var isInDevMode = false;
+var isInDevMode = true;
 var constants = {
   fieldPromaxApi: isInDevMode ? "http://localhost:51518/" : "https://fieldpromax.azurewebsites.net/",
   localStorageKeys: {
@@ -156,7 +156,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
 
 
           bgGeo.watchPosition(succesFn, errorFn, {
-            interval: 10000,    // <-- retrieve a location every 5s.
+            interval: 60000,    // <-- retrieve a location every 5s.
             persist: false,    // <-- default is true
           });
 
@@ -165,7 +165,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
             stationaryRadius: 50,
             distanceFilter: 50,
             // Activity recognition config
-            activityRecognitionInterval: 10000,
+            activityRecognitionInterval: 60000,
             stopTimeout: 5,  // Stop-detection timeout minutes (wait x minutes to turn off tracking)
             // Application config
             debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.

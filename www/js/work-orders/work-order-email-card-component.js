@@ -14,7 +14,7 @@
                 vm.sendingEmails = false;
                 function checkEmail(email) {
                     //var regExp = /(^[a-z]([a-z_\.]*)@([a-z_\.]*)([.][a-z]{3})$)|(^[a-z]([a-z_\.]*)@([a-z_\.]*)(\.[a-z]{3})(\.[a-z]{2})*$)/i;
-                    var regExp = /(^[a-z]([a-z_\.]*)@([a-z_\.]*)([.][a-z]{3})$)|(^[a-z]([a-z_\.]*)@([a-z-0-9]*)(\.[a-z]{3})(\.[a-z]{2})*$)/i;
+                    var regExp = /(^[a-z-0-9]([a-z-0-9_\.]*)@([a-z_\.]*)([.][a-z]{3})$)|(^[a-z]([a-z_\.]*)@([a-z-0-9]*)(\.[a-z]{3})(\.[a-z]{2})*$)/i;
                     return regExp.test(email);
                 }
 
@@ -22,10 +22,13 @@
                     var defer = $q.defer();
                     var hasErrors = false;
                     var emailArray = vm.mailConfig.mailAddresses;
+                    console.log(vm.mailConfig.mailAddresses);
                     if (emailArray.length > 0) {
                         for (var i = 0; i <= (emailArray.length - 1); i++) {
                             hasErrors = false;
-                            if (!checkEmail(emailArray[i])) {
+                            var email = $.trim(emailArray[i]);
+                            if (!checkEmail(email)) {
+                                console.log(email);
                                 hasErrors = true;
                             }
                             if (i === emailArray.length - 1) {
@@ -49,7 +52,7 @@
                             if (!havingInvalidEmails) {
                                 vm.sendingEmails = true;
                                 workOrdersFactory.sendInvoiceMail({ BarCode: vm.barcode, SendAsInvoice: sendAsInvoice, emailAddresses: vm.mailConfig.mailAddresses, TaxRate: vm.taxrate }).then(function () {
-                                    fpmUtilitiesFactory.alerts.alert("Email Sent", "Email Sent Successfully", function () {
+                                    fpmUtilitiesFactory.alerts.alert("Email Sent", "Email has been sent successfully", function () {
                                         vm.sendingEmails = false;
                                     });
                                 });

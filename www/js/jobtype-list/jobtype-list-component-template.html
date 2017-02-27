@@ -5,7 +5,12 @@
         </ion-item>
         <div data-ng-if="vm.isExpanded">
             <div class="list">
-                <div data-ng-repeat="ct in vm.customTypes.data" data-ng-switch="ct.type">
+                <div class="item item-text-wrap text-center" ng-if="vm.customTypes.data.length == 0 && !vm.gettingCustomTypes">
+                    <h3 class="text-muted">
+                        <strong>No Job Types defined</strong>
+                    </h3>
+                </div>
+                <div data-ng-repeat="ct in vm.customTypes.data" ng-if="vm.customTypes.data.length != 0 && !vm.gettingCustomTypes" data-ng-switch="ct.type">
                     <label class="item item-input" data-ng-switch-when="1">
                         <span class="input-label" data-ng-bind="ct.title"></span>
                         <input type="text" data-ng-model="ct.value" maxlength="100" placeholder="enter text here"

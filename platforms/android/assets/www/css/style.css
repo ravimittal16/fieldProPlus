@@ -351,3 +351,12 @@ customer-search-header-component {
     .text-italic{
       font-style: italic;
     }
+
+  .header-dark {    
+    /*background-color: #909090 !important;
+    color: #fff !important;*/
+    font-weight: 500;
+}
+.header-dark>a.item-divider-left-buttion {    
+   /*color:white;*/
+}

@@ -432,9 +432,7 @@
         vm.map = null;
         var isMapLoaded = false;
         function loadWorkOrderMap() {
-
-
-            var goourl = "http://maps.google.com/maps?saddr=";
+            var goourl = "http://maps.google.com/maps?saddr=Current+Location&daddr=";
             var d = vm.barCodeData.barcodeDetails;
             if (d.shipStreet) {
                 goourl += d.shipStreet.replace("::", " ");

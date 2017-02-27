@@ -11,6 +11,7 @@
         var baseUrl = fieldPromaxConfig.fieldPromaxApi;
         var alerts = fpmUtilitiesFactory.alerts;
         vm.docUrl = "";
+        vm.gettinDocuments = false;
         vm.events = {
           onDocumentClicked: function (doc) {
             window.open(baseUrl + "Handlers/GetImageFromBlob.ashx?imageId=" + doc.num + "&dateStamp=" + new Date() + "&flag=viewTarget&cust=" + doc.customerNumber, "_system", "location=yes");
@@ -18,9 +19,13 @@
         };
         vm.$onInit = function () {
           if (vm.barcode) {
+            vm.gettinDocuments = true;
             workOrdersFactory.getUploadedDocuments(vm.barcode).then(function (response) {
               vm.barcodeDocuments = response;
+              vm.gettinDocuments = false;
             });
+          } else {
+            vm.gettinDocuments = false;
           }
         }
       }
