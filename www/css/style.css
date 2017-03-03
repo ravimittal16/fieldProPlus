@@ -357,6 +357,18 @@ customer-search-header-component {
     color: #fff !important;*/
     font-weight: 500;
 }
+.card > .item-divider{
+    background-color: #d4d4d4 !important;
+    color: #404040 !important;
+}
+.list > .item-divider{
+    background-color: #d4d4d4 !important;
+    color: #404040 !important;
+}
 .header-dark>a.item-divider-left-buttion {    
    /*color:white;*/
+}
+.item-bg-gray{
+ border-color: #b5a9a9 !important;
+    background-color: #d4d4d4 !important;
 }

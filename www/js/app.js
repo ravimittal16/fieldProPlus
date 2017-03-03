@@ -103,6 +103,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
           StatusBar.styleDefault();
         }
         //REGISTER FOR PUSH NOTIFICATIONS
+        var isandr = fpmUtilitiesFactory.device.isAndroid();
         fpmUtilitiesFactory.push.register();
         document.addEventListener("backbutton", function (event) {
           if ($state.current.name === "app.dashboard") {
@@ -112,72 +113,103 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
         }, false);
 
 
-        //TRY TO READ location
-        function readLocation() {
+
+
+        function succesFn(location) {
+          var credentials = authenticationFactory.getStoredCredentials();
+          if (angular.isDefined(credentials) && location) {
+            location.userId = credentials.userName;
+            location.isMoving = location.is_moving;
+            location.coords.altitudeAccuracy = location.coords.altitude_accuracy;
+            sharedDataFactory.postLocation(location);
+          }
+        }
+
+        if (!isInDevMode) {
 
           var bgGeo = window.BackgroundGeolocation;
-          // bgGeo.on("motionchange", function (isMoving, location, taskId) {
-          //   fpmUtilitiesFactory.alerts.alert("motion state changed: ", JSON.stringify({ isMoving: isMoving, location: location }));
-          //   if (taskId) {
-          //     bgGeo.finish(taskId);
-          //   }
-          // });
 
-          // bgGeo.on("location", function (location, taskId) {
-          //   fpmUtilitiesFactory.alerts.alert("location: ", JSON.stringify({ location: location }));
-          // });
-          function succesFn(location) {
-            var credentials = authenticationFactory.getStoredCredentials();
-            if (angular.isDefined(credentials) && location) {
-              location.userId = credentials.userName;
-              location.isMoving = location.is_moving;
-              location.coords.altitudeAccuracy = location.coords.altitude_accuracy;
-              sharedDataFactory.postLocation(location);
-            }
-          }
-
-          function errorFn(errorCode) {
-            switch (errorCode) {
-              case 0:
-                //fpmUtilitiesFactory.alerts.alert("ERROR 0", 'Failed to retrieve location');
-                break;
-              case 1:
-                //fpmUtilitiesFactory.alerts.alert('ERROR 1', 'You must enable location services in Settings');
-                break;
-              case 2:
-                //fpmUtilitiesFactory.alerts.alert('ERROR 2', 'Network Error');
-                break;
-              case 408:
-                //fpmUtilitiesFactory.alerts.alert('ERROR 408', 'Location timeout');
-                break;
-            }
-          }
-          bgGeo.getCurrentPosition(succesFn, errorFn);
-
-
-          bgGeo.watchPosition(succesFn, errorFn, {
-            interval: 60000,    // <-- retrieve a location every 5s.
-            persist: false,    // <-- default is true
+          bgGeo.on("location", function (location, taskId) {
+            succesFn(location);
           });
 
-          bgGeo.configure({
-            desiredAccuracy: 0,
-            stationaryRadius: 50,
-            distanceFilter: 50,
-            disableElasticity: true,
-            // Activity recognition config
-            activityRecognitionInterval: 60000,
-            stopTimeout: 5,  // Stop-detection timeout minutes (wait x minutes to turn off tracking)
-            // Application config
-            debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
-            logLevel: 5,    // Verbose logging.  0: NONE
-            stopOnTerminate: false,              // <-- Don't stop tracking when user closes app.
-            startOnBoot: true,
-            autoSync: false
-          }, function (state) {
-            // Plugin is configured and ready to use.
+
+          bgGeo.on("motionchange", function (isMoving, location, taskId) {
+            location.is_moving = isMoving;
+            succesFn(location);
+          });
+
+          var lastActivity = "";
+
+          bgGeo.on('activitychange', function (activityName) {
+            if (lastActivity !== activityName) {
+              lastActivity = activityName;
+              BackgroundGeolocation.getCurrentPosition(function (location, taskId) {
+                succesFn(location);
+              }, errorFn, {
+                  timeout: 30,      // 30 second timeout to fetch location
+                  maximumAge: 5000, // Accept the last-known-location if not older than 5000 ms.
+                  desiredAccuracy: 10,  // Try to fetch a location with an accuracy of `10` meters.
+                });
+            }
+          });
+        }
+        function errorFn(errorCode) {
+          switch (errorCode) {
+            case 0:
+              //fpmUtilitiesFactory.alerts.alert("ERROR 0", 'Failed to retrieve location');
+              break;
+            case 1:
+              //fpmUtilitiesFactory.alerts.alert('ERROR 1', 'You must enable location services in Settings');
+              break;
+            case 2:
+              //fpmUtilitiesFactory.alerts.alert('ERROR 2', 'Network Error');
+              break;
+            case 408:
+              //fpmUtilitiesFactory.alerts.alert('ERROR 408', 'Location timeout');
+              break;
+          }
+        }
+
+
+
+        var androidLocationConfig = {
+          desiredAccuracy: 0,
+          stationaryRadius: 50,
+          distanceFilter: 0,
+          disableElasticity: true,
+          locationUpdateInterval: 120000,
+          activityRecognitionInterval: 60000,
+          stopTimeout: 5,  // Stop-detection timeout minutes (wait x minutes to turn off tracking)
+          debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
+          logLevel: 5,    // Verbose logging.  0: NONE
+          stopOnTerminate: false,              // <-- Don't stop tracking when user closes app.
+          startOnBoot: true,
+          autoSync: false
+        };
+        var iosConfig = {
+          desiredAccuracy: 0,
+          stationaryRadius: 50,
+          distanceFilter: 100,
+          disableElasticity: true,
+          activityRecognitionInterval: 60000,
+          stopTimeout: 5,  // Stop-detection timeout minutes (wait x minutes to turn off tracking)
+          // Application config
+          debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
+          logLevel: 5,    // Verbose logging.  0: NONE
+          stopOnTerminate: false,              // <-- Don't stop tracking when user closes app.
+          startOnBoot: true,
+          autoSync: false
+        };
+        var locationConfig = androidLocationConfig;
+        if (!isandr) {
+          locationConfig = iosConfig;
+        }
+        //TRY TO READ location
+        function readLocation() {
+          bgGeo.configure(locationConfig, function (state) {
             if (!state.enabled) {
-              bgGeo.start();  // <-- start-tracking
+              bgGeo.start();
             }
           });
         }

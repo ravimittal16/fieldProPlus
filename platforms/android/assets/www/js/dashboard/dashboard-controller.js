@@ -198,6 +198,7 @@
                 vm.trackJobStatus = response.customerNumberEntity.trackJobStatus || false;
             }).finally(function () {
                 var refresh = $stateParams.refresh || false;
+                if (!angular.isDefined($stateParams.refresh)) { refresh = true; }
                 loadDashboard(refresh);
             });
 

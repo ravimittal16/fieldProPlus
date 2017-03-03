@@ -15,7 +15,7 @@
         var jobCodes = {
             CLOCK_IN: 5001, CLOCK_OUT: 5002
         };
-        vm.invoiceOpen = false;
+        vm.invoiceOpen = true;
         vm.uiSettings = {
             isTimeCardModuleEnabled: false,
             milageTrackingEnabled: false,

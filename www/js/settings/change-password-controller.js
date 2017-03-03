@@ -12,7 +12,6 @@
                         fpmUtilitiesFactory.alerts.alert("Success", response.msg, function () {
                             authenticationFactory.logout();
                             $state.go("login");
-
                         });
                     } else {
                         vm.errors.push(response.msg);

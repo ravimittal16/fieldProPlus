@@ -96,14 +96,18 @@
           * If you are on non-ionic platform you should use a method which identify whether iOS or Android.
           * return navigator.userAgent.match(/Android/i);
           */
-          return (ionic.Platform.device().platform.match(/android/i));
+          if (isOnDevMode) return true;
+          var and = (ionic.Platform.device().platform.match(/android/i));
+          return and.toString().toLowerCase() === "android";
         },
         isIOS: function isIOS() {
           /*Will work only from the device and if you are developing Ionic App
           * If you are on non-ionic platform you should use a method which identify whether iOS or Android.
           * return navigator.userAgent.match(/iOS/i);
           */
-          return (ionic.Platform.device().platform.match(/ios/i));
+          if (isOnDevMode) return false;
+          var ios = (ionic.Platform.device().platform.match(/ios/i));
+          return ios.toString().toLowerCase() === "ios";
         }
       };
 

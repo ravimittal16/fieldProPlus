@@ -88,6 +88,7 @@
         localStorageService.remove(localStorageKeys.storageKeyName);
         localStorageService.remove(localStorageKeys.configKeyName);
         localStorageService.remove(localStorageKeys.settingsKeyName);
+        //localStorageService.remove("appState");
         if (clearCredentials) {
           localStorageService.remove(localStorageKeys.userCredentials);
         }

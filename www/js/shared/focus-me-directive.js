@@ -9,7 +9,7 @@
                         if (ionic.Platform.isAndroid()) {
                             cordova.plugins.Keyboard.show();
                         }
-                    }, 500);
+                    }, 750);
                 });
             }
         };
