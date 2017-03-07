@@ -197,8 +197,7 @@
             sharedDataFactory.getIniitialData().then(function (response) {
                 vm.trackJobStatus = response.customerNumberEntity.trackJobStatus || false;
             }).finally(function () {
-                var refresh = $stateParams.refresh || false;
-                if (!angular.isDefined($stateParams.refresh)) { refresh = true; }
+                var refresh = angular.isDefined($stateParams.refresh) ? $stateParams.refresh : false;
                 loadDashboard(refresh);
             });
 

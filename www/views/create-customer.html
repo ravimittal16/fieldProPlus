@@ -13,60 +13,73 @@
                             </ui>
                         </div>
                     </div>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Display Name</span>
-                    <input type="text" name="displayName" placeholder="Display Name" required="" type="text" maxlength="50" data-ng-model="vm.customerModel.displayName"  />
-                </label>
-                    <label class="item item-input">
-                    <input type="text" placeholder="First Name" maxlength="50" data-ng-model="vm.customerModel.firstName"/>
-                </label>
-                    <label class="item item-input">
-                    <input type="text" placeholder="Last Name" maxlength="50" data-ng-model="vm.customerModel.lastName"/>
-                </label>
-
-                    <label class="item item-input">
-                    <input type="text" placeholder="Company Name" maxlength="100" data-ng-model="vm.customerModel.companyName"/>
-                </label>
-                    <div class="item item-divider">
-                        Billing Address
+                    <div class="card">
+                        <div class="item item-divider header-dark">
+                            Customer Details
+                        </div>
+                        <label class="item item-input">
+                            <input type="text" name="displayName" placeholder="Display Name" required="" type="text" maxlength="50" data-ng-model="vm.customerModel.displayName"  />
+                        </label>
+                        <label class="item item-input">
+                            <input type="text" placeholder="First Name" maxlength="50" data-ng-model="vm.customerModel.firstName"/>
+                        </label>
+                        <label class="item item-input">
+                            <input type="text" placeholder="Last Name" maxlength="50" data-ng-model="vm.customerModel.lastName"/>
+                        </label>
+                        <label class="item item-input">
+                            <input type="text" placeholder="Company Name" maxlength="100" data-ng-model="vm.customerModel.companyName"/>
+                        </label>
+                        <label class="item item-input">
+                            <input type="email" name="customerEmail" placeholder="Email" maxlength="200" data-ng-model="vm.customerModel.email"/>
+                        </label>
+                                <label class="item item-input">
+                            <input type="text" placeholder="Phone" maxlength="200" data-ng-model="vm.customerModel.phone"/>
+                        </label>
                     </div>
-                    <label class="item item-input">
+                    <div class="card">
+                        <div class="item item-divider header-dark">
+                            Billing Address
+                        </div>
+                        <label class="item item-input">
                         <textarea type="text" rows="3" placeholder="Street" maxlength="200" data-ng-model="vm.customerModel.bStreet"></textarea>
                     </label>
-                    <label class="item item-input">
+                        <label class="item item-input">
                         <input type="text" placeholder="City" maxlength="50" data-ng-model="vm.customerModel.bCity" />
                     </label>
-                    <label class="item item-input">
+                        <label class="item item-input">
                     <input type="text" placeholder="State" maxlength="50" data-ng-model="vm.customerModel.bState"/>
                     
                 </label>
-                    <label for="" class="item item-input">
+                        <label for="" class="item item-input">
                     <input type="text" placeholder="Zip" maxlength="20" data-ng-model="vm.customerModel.bZip"/>
                 </label>
-                    <div class="item item-divider">
-                        Service Address
-                        <a class="button pull-right button-small button-icon icon ion-android-more-vertical item-divider-left-buttion" data-ng-click="vm.events.onServiceAddressActionClicked()"></a>
                     </div>
-                    <label class="item item-input">
+                    <div class="card">
+
+                        <div class="item item-divider header-dark">
+                            Service Address
+                            <!--<a class="button pull-right button-small button-icon icon ion-android-more-vertical item-divider-left-buttion" data-ng-click="vm.events.onServiceAddressActionClicked()"></a>-->
+                            <button type="button" class="button button-small button-assertive pull-right" style="margin-left: 5px;" data-ng-click="vm.events.clearAddress()">
+                                <i class="icon ion-trash-a"></i>
+                            </button>
+                            <button type="button" class="button button-small button-positive pull-right" data-ng-click="vm.events.sameAsBilling()">Same as Billing</button>
+                        </div>
+                        <label class="item item-input">
                     <textarea type="text" rows="3" placeholder="Street" maxlength="200" data-ng-model="vm.customerModel.sStreet"></textarea>
                 </label>
-                    <label class="item item-input">
+                        <label class="item item-input">
                     <input type="text" placeholder="City" maxlength="50" data-ng-model="vm.customerModel.sCity"/>
                 </label>
-                    <label class="item item-input">
+                        <label class="item item-input">
                     <input type="text" placeholder="State" maxlength="50" data-ng-model="vm.customerModel.sState"/>
                     
                 </label>
 
-                    <label for="" class="item item-input">
+                        <label for="" class="item item-input">
                     <input type="text" placeholder="Zip" maxlength="20" data-ng-model="vm.customerModel.sZip"/>
                 </label>
-                    <label class="item item-input">
-                    <input type="email" name="customerEmail" placeholder="Email" maxlength="200" data-ng-model="vm.customerModel.email"/>
-                </label>
-                    <label class="item item-input">
-                    <input type="text" placeholder="Phone" maxlength="200" data-ng-model="vm.customerModel.phone"/>
-                </label>
+                    </div>
+
                 </div>
         </ion-content>
         <ion-footer-bar align-title="left" class="bar-light">

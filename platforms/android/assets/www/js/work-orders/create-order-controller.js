@@ -55,35 +55,7 @@
       });
     }
 
-    function onServiceAddressActionClicked() {
-      $ionicActionSheet.show({
-        buttons: [{
-          text: 'Same as Business Address'
-        }, {
-          text: "Clear Address"
-        }],
-        titleText: 'Service Address Options',
-        cancelText: 'Cancel',
-        cancel: function () {
-          // add cancel code..
-        },
-        buttonClicked: function (index) {
-          if (index === 0) {
-            vm.woEntity.sStreet = vm.woEntity.bStreet;
-            vm.woEntity.sState = vm.woEntity.bState;
-            vm.woEntity.sCity = vm.woEntity.bCity;
-            vm.woEntity.sZip = vm.woEntity.bZip;
-          }
-          if (index === 1) {
-            vm.woEntity.sStreet = "";
-            vm.woEntity.sState = "";
-            vm.woEntity.sCity = "";
-            vm.woEntity.sZip = "";
-          }
-          return true;
-        }
-      });
-    }
+    
 
     function initDates() {
       vm.dates = {
@@ -100,6 +72,18 @@
     vm.isCustomerSelected = false;
 
     vm.events = {
+      sameAsBilling: function () {
+        vm.woEntity.sStreet = vm.woEntity.bStreet;
+        vm.woEntity.sState = vm.woEntity.bState;
+        vm.woEntity.sCity = vm.woEntity.bCity;
+        vm.woEntity.sZip = vm.woEntity.bZip;
+      },
+      clearServiceAddress: function () {
+        vm.woEntity.sStreet = "";
+        vm.woEntity.sState = "";
+        vm.woEntity.sCity = "";
+        vm.woEntity.sZip = "";
+      },
       onCustomerSelected: function (customer) {
         vm.isCustomerSelected = true;
         vm.woEntity.firstName = customer.firstName;
@@ -121,7 +105,6 @@
         vm.woEntity.sZip = customer.shipZIP;
       },
       onSubmitButtonClicked: onSubmitButtonClicked,
-      onServiceAddressActionClicked: onServiceAddressActionClicked,
       onBackToDashboardClicked: onBackToDashboardClicked
     };
 

@@ -1,4 +1,4 @@
-<ion-list>
+<!--<ion-list>
 	<div>
 		<ion-item class="item-stable" ng-click="vm.isExpanded = !vm.isExpanded" ng-class="{active: vm.isExpanded}">
 			<i class="icon" ng-class="vm.isExpanded ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>Images</strong>
@@ -20,23 +20,40 @@
 			</ion-list>
 		</div>
 	</div>
-</ion-list>
+</ion-list>-->
+<div class="card">
+	<div class="item item-divider header-dark">
+		<strong>Images</strong>
+		<span class="badge badge-dark">{{vm.barcodeImages.length}}</span>
+	</div>
+	<div class="item item-body">
+		<input type="file" data-kendo-upload="vm.upload.control" data-k-options="vm.upload.options" />
+	</div>
+	<ion-list can-swipe="true">
+		<ion-item class="item-text-wrap" data-ng-repeat="p in vm.barcodeImages" data-ng-click="vm.events.onImageTap(p)">
+			{{p.imageURL | removeExt}}
+			<ion-option-button class="button-assertive" ng-click="vm.events.onDeleteImageClicked(p)">
+				Delete
+			</ion-option-button>
+		</ion-item>
+	</ion-list>
+</div>
 <script id="imageViewerModal.html" type="text/ng-template">
 	<ion-modal-view>
 		<ion-header-bar>
-            <h1 class="title">
+			<h1 class="title">
 
-            </h1>
-            <button class="button" data-ng-click="vm.events.closeImageViewModal()">
+			</h1>
+			<button class="button" data-ng-click="vm.events.closeImageViewModal()">
                 Cancel
             </button>
-        </ion-header-bar>
-        <ion-content>
-                <div class="card">
-					<div class="item item-body">
-						<img data-ng-src="{{vm.imageUrl}}" class="full-image" alt="" />	
-					</div>	
+		</ion-header-bar>
+		<ion-content>
+			<div class="card">
+				<div class="item item-body">
+					<img data-ng-src="{{vm.imageUrl}}" class="full-image" alt="" />
 				</div>
-        </ion-content>
+			</div>
+		</ion-content>
 	</ion-modal-view>
 </script>

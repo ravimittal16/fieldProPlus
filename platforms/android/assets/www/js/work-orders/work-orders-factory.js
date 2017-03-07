@@ -131,7 +131,12 @@
             return apiBaseFactory.post(apibaseurl + "UpdateCustomScheduleData", o);
         }
 
+        function getWorkOrderResolution(id) {
+            return apiBaseFactory.get(apibaseurl + "GetWorkOrderResolution?id=" + id);
+         }
+
         return {
+            getWorkOrderResolution: getWorkOrderResolution,
             updateCustomScheduleData: updateCustomScheduleData,
             getMobileDashboard: getMobileDashboard,
             getBarcodeDetails: getBarcodeDetails,

@@ -151,6 +151,8 @@
                                 fpmUtilitiesFactory.hideLoading();
                             });
                         });
+                    } else {
+                        alerts.alert("No Equipment Found", "No Equipment Found");
                     }
                 }
                 var newEquipemtSchama = { num: 0, displayName: vm.displayName, numFromCustomerFile: 0, equipmentNumber: "", description: "", uin: vm.uin, customTypesJson: "" };

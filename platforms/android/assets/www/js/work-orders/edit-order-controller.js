@@ -159,6 +159,9 @@
                     }
                     var finalDate = addMinutes(startDate, minutesToAdd);
                     vm.schedule.actualFinishDateTime = kendo.parseDate(finalDate);
+                    if (!vm.schedule.approve) {
+                        updateSchedule(false, false);
+                    }
                 }, 50);
             },
             onStartDateTimeChaged: function () {
@@ -168,6 +171,9 @@
                             alerts.alert("Warning", "Start time cannot be greater than finish time.");
                         } else {
                             findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
+                            if (!vm.schedule.approve) {
+                                updateSchedule(false, false);
+                            }
                         }
                     }
                 } else {
@@ -175,12 +181,19 @@
                 }
             },
             onEndDateTimeChanged: function () {
-                if (vm.schedule && vm.schedule.actualStartDateTime && vm.schedule.actualFinishDateTime) {
-                    if (new Date(vm.schedule.actualStartDateTime) > new Date(vm.schedule.actualFinishDateTime)) {
-                        alerts.alert("Warning", "Finish time cannot be less than start time");
-                    } else {
-                        findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
+                if (vm.uiSettings.billingOption === 0 && vm.schedule) {
+                    if (vm.schedule && vm.schedule.actualStartDateTime && vm.schedule.actualFinishDateTime) {
+                        if (new Date(vm.schedule.actualStartDateTime) > new Date(vm.schedule.actualFinishDateTime)) {
+                            alerts.alert("Warning", "Finish time cannot be less than start time");
+                        } else {
+                            findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
+                            if (!vm.schedule.approve) {
+                                updateSchedule(false, false);
+                            }
+                        }
                     }
+                } else {
+                    updateSchedule(false, false);
                 }
             },
             clearAllDateTimeSelection: function () { }
@@ -204,7 +217,7 @@
                 }
                 if (vm.isServiceProvider === true && isBeongToCurrentUser === false) {
                     alerts.alert("Oops!", "you are not authorized to perform this action", function () {
-                        if (angular.isFunction(cb)) {
+                        if (angular.isFunction(cb) && co) {
                             cb(co);
                         }
                     });
@@ -439,45 +452,23 @@
             }
             goourl += " " + d.shipCity + ", " + d.shipState + " " + d.shipZIP;
             $window.open(goourl, '_blank', 'location=yes');
-
-            // var defCordinates = { x: 44.31127, y: -92.67851, xcom: -92.67851, ycom: 44.3112679 };
-            // var d = vm.barCodeData.barcodeDetails;
-            // var addressf = d.shipStreet + " " + d.shipCity + " " + d.shipState + " " + d.shipZIP;
-            // new google.maps.Geocoder().geocode({ 'address': addressf }, function (results, status) {
-            //     if (results.length > 0) {
-            //         var myLatLng = new window.google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
-            //         var mapControl = $("#map");
-            //         mapControl.css({ height: "100%", width: "100%" });
-            //         if (vm.map === null) {
-            //             vm.map = new google.maps.Map(document.getElementById("map"), {
-            //                 zoom: 15,
-            //                 panControl: false,
-            //                 zoomControl: true,
-            //                 scaleControl: true,
-            //                 center: myLatLng,
-            //                 mapTypeId: google.maps.MapTypeId.ROADMAP
-            //             });
-            //         } else {
-            //             vm.map.setCenter(myLatLng);
-            //         }
-            //         new window.google.maps.Marker({
-            //             position: myLatLng,
-            //             map: vm.map,
-            //             animation: google.maps.Animation.DROP
-            //         });
-            //         isMapLoaded = true;
-            //     } else {
-            //         fpmUtilities.alerts.alert("Not Found", "Failed to locate the address", function () {
-            //             //vm.map = null;
-            //             isMapLoaded = false;
-            //             workOrderMapModal.hide();
-            //         });
-            //     }
-            // });
         }
         vm.tabs = {
             desc: {
                 events: {
+                    reloadWorkResolution: function () {
+                        if (checkAuthorizationIfServiceProvider()) {
+                            fpmUtilities.showLoading().then(function () {
+                                var id = vm.barCodeData.barcodeDetails.id;
+                                workOrderFactory.getWorkOrderResolution(id).then(function (response) {
+                                    if (response) {
+                                        vm.barCodeData.barcodeDetails.comment_2 = response.comment_2;
+                                        vm.barCodeData.barcodeDetails.comment_4 = response.comment_4;
+                                    }
+                                }).finally(fpmUtilities.hideLoading)
+                            })
+                        }
+                    },
                     refreshOnPullDown: function () {
                         _getTodaysTimeCardEntries();
                         $scope.$broadcast("scroll.refreshComplete");
@@ -616,6 +607,9 @@
                                 });
                             }
                         }
+                    },
+                    clearAllDateTimeSelection: function (clearAll) {
+                        clearAllDateTimeSelection(clearAll);
                     },
                     onScheduleActionButtonClicked: function () {
                         var defaultActions = angular.copy(actions);

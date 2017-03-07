@@ -2,7 +2,8 @@
   "use strict";
   var componentConfig = {
     bindings: {
-      onCustomerSelected: "&"
+      onCustomerSelected: "&",
+      placeholder: "@"
     },
     controller: ["$scope", "$ionicModal", "customers-file-factory", function ($scope, $ionicModal, customerFileFactory) {
       var vm = this;
@@ -13,7 +14,7 @@
         vm.searchValue = "";
         vm.customers = [];
         vm.customerModal.show().then(function () {
-          
+
         });
       }
 
