@@ -21,7 +21,10 @@
           if (vm.barcode) {
             vm.gettinDocuments = true;
             workOrdersFactory.getUploadedDocuments(vm.barcode).then(function (response) {
-              vm.barcodeDocuments = response;
+              if (angular.isArray(response) && response.length > 0) {
+                var pdfs = _.where(response, { extension: ".pdf" });
+                vm.barcodeDocuments = pdfs;
+              }
               vm.gettinDocuments = false;
             });
           } else {

@@ -1,7 +1,6 @@
 <div class="card" data-ng-if="!vm.showingSignaturePad">
 	<div class="item item-divider header-dark">
-		<!--<a class="button pull-right button-small button-icon icon ion-android-more-vertical item-divider-left-buttion" 
-        data-ng-click="vm.events.onSignatureActionButtonClicked()"></a>-->
+		SIGNATURE
 		<button class="button button-small button-positive pull-right" type="button" data-ng-click="vm.events.onSignatureActionButtonClicked()">Add Signature</button>
 	</div>
 	<div class="item item-text-wrap text-center" id="noImageMessageContainer">
@@ -10,13 +9,18 @@
 		</h3>
 	</div>
 	<div class="item item-body">
-		<img class="full-image" style="height:250px !important;" data-ng-src="{{vm.imageUrl}}" alt="signature" image-src-check=""
+		<img class="full-image" style="height:180px !important;" data-ng-src="{{vm.imageUrl}}" alt="signature" image-src-check=""
 		/>
 	</div>
 </div>
 <div class="card" data-ng-if="vm.showingSignaturePad">
-	<div class="item item-divider">
-		<a class="button pull-right button-small button-icon icon ion-android-more-vertical item-divider-left-buttion" data-ng-click="vm.events.onSignaturePadActionButtonClicked()"></a>
+	<div class="item item-divider header-dark">
+		SIGNATURE
+		<!--<a class="button pull-right button-small button-icon icon ion-android-more-vertical item-divider-left-buttion" data-ng-click="vm.events.onSignaturePadActionButtonClicked()"></a>-->
+		<button type="button" class="button button-small button-assertive pull-right" style="margin-left: 5px;" data-ng-click="vm.events.closeSignaturePad()">
+                                <i class="icon ion-close-round"></i>
+                            </button>
+		<button type="button" class="button button-small button-positive pull-right" data-ng-click="vm.events.saveSignature()">Save Signature</button>
 	</div>
 	<div class="item item-body">
 		<order-signature-pad data-pad-events-ref="vm.signPadEvents"></order-signature-pad>

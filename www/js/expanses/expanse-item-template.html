@@ -1,25 +1,23 @@
-<div class="row">
-    <div class="col col-60">
-        <h3>
-
-            <i class="icon ion-checkmark text-balanced" data-ng-if="vm.item.expenseType == 0 && vm.item.expenseStatus == 1"></i>
-            <i class="icon ion-alert text-positive" data-ng-if="vm.item.expenseType == 1"></i> {{vm.item.title}}
-            <br><small class="text-small">
-                    {{vm.item.description}}</small><br>
-        </h3>
+<div class="row ">
+    <div class="col col-50">
+        <h5>
+            {{vm.item.title}}
+            <br><small class="text-small">{{vm.item.description}}</small><br>
+            <small class="text-muted text-small"><strong>Added On : </strong>{{vm.item.addedOn | date}}</small>
+        </h5>
     </div>
     <div class="col col-25 col-center center">
-        <h3>
+        <h5>
             <small class="text-small">Total Cost</small><br> {{vm.item.totalCost | currency}}
-        </h3>
+        </h5>
     </div>
-    <div class="col col-center center">
-        <h3>
+    <div class="col col-25 col-center center">
+        <h5>
             <small class="text-small">Qty</small><br> {{vm.item.quantity}}
-        </h3>
+        </h5>
     </div>
 </div>
-<!--<div class="row">
+<div class="row border-bottom">
     <div class="col">
         <span class="label label-info text-xsmall" data-ng-if="vm.item.expenseType == 0">Reimbursable</span>
         <span class="label label-warning text-xsmall" data-ng-if="vm.item.expenseType == 1">Non Reimbursable</span>
@@ -27,4 +25,15 @@
                             <i class="ion-checkmark"></i>&nbsp;Paid
                         </span>
     </div>
+    <div class="col" style="padding-left: 0px;padding-right: 0px;">
+        <div class="pull-right">
+            <button type="button" class="button icon ion-edit button-small text-energized" style="margin-top: -5px;float: left;" data-ng-if="!vm.isServiceProvider || sch.technicianNum == vm.userId"
+                ng-click="vm.events.onEditClicked()"></button>
+            <button type="button" class="button icon ion-trash-b button-small text-assertive" style="margin-top: -5px;float: left;margin-left: 5px;"
+                ng-click="vm.events.onDeleteClicked()"></button>
+        </div>
+    </div>
+</div>
+<!--<div class="row">
+   
 </div>-->
