@@ -183,7 +183,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
           stopTimeout: 5,  // Stop-detection timeout minutes (wait x minutes to turn off tracking)
           debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
           logLevel: 5,    // Verbose logging.  0: NONE
-          stopOnTerminate: false,              // <-- Don't stop tracking when user closes app.
+          stopOnTerminate: true,              // <-- Don't stop tracking when user closes app.
           startOnBoot: true,
           autoSync: false
         };
@@ -197,7 +197,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
           // Application config
           debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
           logLevel: 5,    // Verbose logging.  0: NONE
-          stopOnTerminate: false,              // <-- Don't stop tracking when user closes app.
+          stopOnTerminate: true,              // <-- Don't stop tracking when user closes app.
           startOnBoot: true,
           autoSync: false
         };
