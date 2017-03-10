@@ -114,7 +114,6 @@
           vm.jobTypes = response.jobTypes;
           vm.serviceProviders = response.serviceProviders;
           vm.isServiceProvider = !vm.userInfo.isAdminstrator;
-
         }
       }).finally(createEntity);
     }

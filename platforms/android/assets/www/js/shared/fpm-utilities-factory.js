@@ -250,7 +250,8 @@
         alerts: {
           alert: alerts.alert,
           confirm: alerts.confirm,
-          confirmDelete: alerts.confirmDelete
+          confirmDelete: alerts.confirmDelete,
+          confirmWithOkayCancel: alerts.confirmWithOkayCancel
         }
       };
     }

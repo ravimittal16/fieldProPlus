@@ -43,11 +43,12 @@
                         vm.schedule = angular.copy(_.findWhere(response.schedules, { num: parseInt($stateParams.technicianNum, 10) }));
                         if (angular.isDefined(vm.schedule)) {
                             if (vm.schedule.actualStartDateTime) {
-                                vm.schedule.actualStartDateTime = new Date(moment(vm.schedule.actualStartDateTime));
+                                vm.schedule.actualStartDateTime = kendo.parseDate(vm.schedule.actualStartDateTime);
+                                vm.schedule.actualStartDateTimeString = kendo.toString(kendo.parseDate(vm.schedule.actualStartDateTime), "g");
                             }
-
                             if (vm.schedule.actualFinishDateTime) {
-                                vm.schedule.actualFinishDateTime = new Date(moment(vm.schedule.actualFinishDateTime));
+                                vm.schedule.actualFinishDateTime = kendo.parseDate(vm.schedule.actualFinishDateTime);
+                                vm.schedule.actualFinishDateTimeString = kendo.toString(kendo.parseDate(vm.schedule.actualFinishDateTime), "g");
                             }
                             findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
                             if (vm.uiSettings.billingOption === 0) {

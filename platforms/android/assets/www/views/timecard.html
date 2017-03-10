@@ -13,7 +13,8 @@
         <div style="border-bottom:2px solid #DDD;background-color:#f9f9f9;">
             <div class="row">
                 <div class="col">
-                    <strong><a data-ng-click="vm.events.onDatePickerClicked()">{{vm.currentDate | date:'fullDate'}}
+                    <input data-ng-model="vm.currentDate" data-mobiscroll-date="vm.ui.calendar.settings" data-ng-change="vm.ui.events.onCurrentDateChanged()" data-mobiscroll-instance="vm.ui.calendar.control" class="hidden" />
+                    <strong><a data-ng-click="vm.ui.events.onShowCalenderClick($event)">{{vm.currentDate | date:'fullDate'}}
                         <i class="icon ion-arrow-down-b"></i></a></strong>
                 </div>
             </div>

@@ -93,7 +93,7 @@
                 var clockIn = vm.ui.data.currentClockedIn;
                 vm.ui.data.clockInDateTime = moment(clockIn.startTime);
                 vm.ui.data.isClockedIn = true;
-                vm.ui.data.isClockedOut = false;
+                vm.ui.data.isClockedOut = clockIn.finishTime !== null;
                 vm.ui.data.addTimeVisibility = !vm.ui.data.isClockedOut;
                 vm.ui.data.clockOutDateTime = moment(clockIn.finishTime);
                 vm.ui.data.clockedInDate = angular.copy(clockIn);
@@ -136,7 +136,23 @@
         }
 
 
+        function _clearClockInData() {
+            vm.ui.data.allowSendForApproval = false;
+            vm.ui.data.summary = null;
+            vm.ui.data.approvalStatus = 0;
+            vm.ui.data.isClockedOut = false;
+            vm.ui.data.summary = null;
+            vm.ui.data.clockInDateTime = new Date();
+            vm.ui.data.isClockedIn = false;
+            vm.ui.data.addTimeVisibility = false;
+            vm.ui.data.clockedInDate = null;
+            vm.ui.data.timeCards = [];
+            vm.ui.data.disableClockInButton = false;
+            vm.ui.data.disableClockOutButton = false;
+        }
+
         function _getTimeCardByDate() {
+            _clearClockInData();
             fpmUtilitiesFactory.showLoading().then(function () {
                 timecardFactory.getTimeCardByDate(toDateString(vm.currentDate)).then(function (response) {
                     if (response) {
@@ -253,6 +269,14 @@
                 vm.ui.data.timecardTutorialModal.show();
             }
         }
+        function onCurrentDateChanged(event) {
+            _getTimeCardByDate();
+        }
+        function onShowCalenderClick() {
+            if (angular.isDefined(vm.ui.calendar.control)) {
+                vm.ui.calendar.control.show();
+            }
+        }
         var timeoutvar = null;
         vm.ui = {
             errors: [],
@@ -290,6 +314,8 @@
                 timecardTutorialModal: null
             },
             events: {
+                onShowCalenderClick: onShowCalenderClick,
+                onCurrentDateChanged: onCurrentDateChanged,
                 onTutorialModalCancel: function () {
                     if (vm.ui.data.timecardTutorialModal) {
                         vm.ui.data.timecardTutorialModal.hide();

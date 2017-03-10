@@ -372,3 +372,10 @@ customer-search-header-component {
  border-color: #b5a9a9 !important;
     background-color: #d4d4d4 !important;
 }
+.hidden{
+  display:none;
+}
+
+.border-bottom{
+  border-bottom:1px solid #eee;
+}
