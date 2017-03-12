@@ -18,6 +18,9 @@
         vm.viewTitle = "Calendar";
         var alerts = fpmUtilitiesFactory.alerts;
         vm.events = {
+            refreshCalender: function () {
+                getCalendarEvents(true);
+            },
             onTimeSelected: function (selectedTime, events) {
 
             },
@@ -155,7 +158,10 @@
             }
             getCalendarEvents(false);
         }
-
+        $scope.$on("$ionicView.beforeEnter", function (e, data) {
+            console.log("HELLO WORLD");
+            $scope.$root.showNavButton = true;
+        });
         $scope.$on("$ionicView.afterEnter", function (e, data) {
             activateController();
         });

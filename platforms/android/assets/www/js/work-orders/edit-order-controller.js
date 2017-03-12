@@ -1,9 +1,10 @@
 (function () {
     "use strict";
 
-    function initController($scope, $state, $timeout, $window, $stateParams, $ionicActionSheet, $ionicLoading,
+    function initController($scope, $state, $q, $timeout, $window, $stateParams, $ionicActionSheet, $ionicNavBarDelegate, $ionicLoading,
         $ionicPopup, $ionicModal, workOrderFactory, fpmUtilities, sharedDataFactory, authenticationFactory, timecardFactory) {
         var vm = this;
+
         vm.barcode = $stateParams.barCode;
         var platforms = fpmUtilities.device.platforms;
         var platform = fpmUtilities.device.getPlatformInfo();
@@ -29,14 +30,16 @@
         };
 
         vm.errors = [];
-
+        vm.gettingBarcodeDetails = true;
         function getBarcodeDetails() {
+            vm.gettingBarcodeDetails = true;
             $ionicLoading.show({
                 template: "loading work order..."
             }).then(function () {
                 workOrderFactory.getBarcodeDetails(vm.barcode).then(function (response) {
+                    vm.gettingBarcodeDetails = false;
                     vm.barCodeData = response;
-                    //console.log("WORK response", response);
+                    $ionicNavBarDelegate.title(vm.barCodeData.barcodeDetails.barcodeName);
                     vm.uiSettings.woData = angular.copy(response);
                     vm.taxCheckboxVisibility = (vm.barCodeData.taxRate || 0) > 0;
                     if (angular.isArray(response.schedules) && response.schedules.length > 0) {
@@ -80,31 +83,35 @@
         //============================================================================================
         var findTimeDiffTimer = null;
         function findTimeDiff(startDate, endDate, forInRoute) {
+            var defer = $q.defer();
             if (Date.parse(startDate) && Date.parse(endDate)) {
-                var diff = Math.abs(new Date(startDate) - new Date(endDate));
-                var seconds = Math.floor(diff / 1000); //ignore any left over units smaller than a second
-                var minutes = Math.floor(seconds / 60);
-                var hours = Math.floor(minutes / 60);
-                minutes = minutes % 60;
+                var fd = new Date(endDate);
+                var sd = new Date(startDate);
+                var ft = new Date(fd.getFullYear(), fd.getMonth(), fd.getDate(), fd.getHours(), fd.getMinutes(), 0, 0);
+                var st = new Date(sd.getFullYear(), sd.getMonth(), sd.getDate(), sd.getHours(), sd.getMinutes(), 0, 0);
+                var totalMintues = moment(ft).diff(moment(st), "minutes");
+                var mins = totalMintues % 60;
+                var hours = Math.floor(totalMintues / 60);
                 findTimeDiffTimer = $timeout(function () {
                     if (forInRoute) {
                         if (hours === 0) {
-                            vm.scheduleTimeSpan.inRouteTimeSpan = minutes + " Minutes";
+                            vm.scheduleTimeSpan.inRouteTimeSpan = mins + " Minutes";
                         } else {
-                            vm.scheduleTimeSpan.inRouteTimeSpan = hours + " Hours " + minutes + " Minutes";
+                            vm.scheduleTimeSpan.inRouteTimeSpan = hours + " Hours " + mins + " Minutes";
                         }
                     } else {
                         if (hours === 0) {
-                            vm.scheduleTimeSpan.timeSpan = minutes + " Minutes";
+                            vm.scheduleTimeSpan.timeSpan = mins + " Minutes";
                         } else {
-                            vm.scheduleTimeSpan.timeSpan = hours + " Hours " + minutes + " Minutes";
+                            vm.scheduleTimeSpan.timeSpan = hours + " Hours " + mins + " Minutes";
                         }
                     }
                 }, 50);
+                defer.resolve(totalMintues);
             } else {
-                return 0;
+                defer.resolve(0);
             }
-            return 0;
+            return defer.promise;
         }
 
         function addMinutes(date, minutes) {
@@ -161,7 +168,7 @@
                     var finalDate = addMinutes(startDate, minutesToAdd);
                     vm.schedule.actualFinishDateTime = kendo.parseDate(finalDate);
                     if (!vm.schedule.approve) {
-                        updateSchedule(false, false);
+                        updateSchduleTotalTime();
                     }
                 }, 50);
             },
@@ -171,10 +178,11 @@
                         if (new Date(vm.schedule.actualStartDateTime) > new Date(vm.schedule.actualFinishDateTime)) {
                             alerts.alert("Warning", "Start time cannot be greater than finish time.");
                         } else {
-                            findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
-                            if (!vm.schedule.approve) {
-                                updateSchedule(false, false);
-                            }
+                            findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime).then(function (totalMins) {
+                                if (!vm.schedule.approve) {
+                                    updateSchduleTotalTime();
+                                }
+                            });
                         }
                     }
                 } else {
@@ -187,10 +195,11 @@
                         if (new Date(vm.schedule.actualStartDateTime) > new Date(vm.schedule.actualFinishDateTime)) {
                             alerts.alert("Warning", "Finish time cannot be less than start time");
                         } else {
-                            findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime);
-                            if (!vm.schedule.approve) {
-                                updateSchedule(false, false);
-                            }
+                            findTimeDiff(vm.schedule.actualStartDateTime, vm.schedule.actualFinishDateTime).then(function (totalMins) {
+                                if (!vm.schedule.approve) {
+                                    updateSchduleTotalTime();
+                                }
+                            });
                         }
                     }
                 } else {
@@ -236,7 +245,22 @@
                 }
                 vm.schedule.actualFinishDateTime = null;
                 vm.scheduleTimeSpan.timeSpan = "";
+                if (!vm.schedule.approve) {
+                    updateSchduleTotalTime();
+                }
             }
+        }
+
+        function updateSchduleTotalTime() {
+            var sch = angular.copy(vm.schedule);
+            sch.actualStartDateTime = kendo.toString(vm.schedule.actualStartDateTime, "g");
+            sch.actualFinishDateTime = kendo.toString(vm.schedule.actualFinishDateTime, "g");
+            workOrderFactory.updateSchduleTotalTime(sch).then(function (response) {
+                if (response) {
+                    vm.barCodeData.schedules = response.schedules;
+                    vm.barCodeData.invoice = response.invoice;
+                }
+            });
         }
 
         function pushToTimecard() {
@@ -344,8 +368,12 @@
 
         function updateSchedule(showSuccessAlert, showLoading) {
             var sch = angular.copy(vm.schedule);
-            sch.actualStartDateTime = kendo.toString(kendo.parseDate(vm.schedule.actualStartDateTime), "g");
-            sch.actualFinishDateTime = kendo.toString(kendo.parseDate(vm.schedule.actualFinishDateTime), "g");
+            if (vm.schedule.actualStartDateTime) {
+                sch.actualStartDateTime = kendo.toString(vm.schedule.actualStartDateTime, "g");
+            }
+            if (vm.schedule.actualFinishDateTime) {
+                sch.actualFinishDateTime = kendo.toString(vm.schedule.actualFinishDateTime, "g");
+            }
             if (vm.schedule.inRouteStartTime) {
                 sch.inRouteStartTime = kendo.toString(vm.schedule.inRouteStartTime, "g");
             }
@@ -521,7 +549,10 @@
                         vm.scheduleAddModal.hide();
                     },
                     updateMilage: function () {
-                        updateSchedule(false, false);
+                        if (vm.schedule.startMiles && vm.schedule.endMiles) {
+                            vm.schedule.totalMiles = parseFloat(parseFloat(vm.schedule.endMiles) - parseFloat(vm.schedule.startMiles)).toFixed(2);
+                            updateSchedule(false, false);
+                        }
                     },
                     onTripnoteChanged: function () {
                         updateSchedule(false, false);
@@ -756,7 +787,7 @@
             //console.log("HEHEHEHEHEHE");
         });
     }
-    initController.$inject = ["$scope", "$state", "$timeout", "$window", "$stateParams", "$ionicActionSheet",
+    initController.$inject = ["$scope", "$state", "$q", "$timeout", "$window", "$stateParams", "$ionicActionSheet", "$ionicNavBarDelegate",
         "$ionicLoading", "$ionicPopup", "$ionicModal", "work-orders-factory", "fpm-utilities-factory",
         "shared-data-factory", "authenticationFactory", "timecard-factory"
     ];

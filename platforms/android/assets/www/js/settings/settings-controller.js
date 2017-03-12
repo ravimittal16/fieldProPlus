@@ -25,7 +25,9 @@
             }
         }
 
-        activateController();
+        $scope.$on("$ionicView.beforeEnter", function (e, data) {
+            activateController();
+        });
     }
     initController.$inject = ["$scope", "$state", "localStorageService", "fieldPromaxConfig",
         "shared-data-factory", "fpm-utilities-factory"];

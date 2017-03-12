@@ -11,8 +11,7 @@
             cache.removeAll();
         }
         function getMobileDashboard(forceGet, initialData) {
-            forceGet = forceGet === null ? false : forceGet;
-            if (forceGet === true) {
+            if (angular.isDefined(forceGet) && forceGet) {
                 cache.remove(dashboardDataKeyName);
             }
             var orders = cache.get(dashboardDataKeyName);
@@ -133,9 +132,14 @@
 
         function getWorkOrderResolution(id) {
             return apiBaseFactory.get(apibaseurl + "GetWorkOrderResolution?id=" + id);
-         }
+        }
+
+        function updateSchduleTotalTime(schedule) {
+            return apiBaseFactory.post(apibaseurl + "UpdateSchduleTotalTime", schedule);
+        }
 
         return {
+            updateSchduleTotalTime: updateSchduleTotalTime,
             getWorkOrderResolution: getWorkOrderResolution,
             updateCustomScheduleData: updateCustomScheduleData,
             getMobileDashboard: getMobileDashboard,
