@@ -171,6 +171,10 @@
                 var defaultCustomTypes = [{ EntityId: 0, EntityType: 101, UIOrder: 1, Title: "Maintenance Note", Type: 6 },
                 { EntityId: 0, EntityType: 101, UIOrder: 2, Title: "Performed Date", Type: 4 }];
                 vm.events = {
+                    tryAttachEquipment: function () { 
+                        //link button clicked
+                        openAttachEquipmentModal();
+                    },
                     closeHistoryModal: function () {
                         if (vm.view.equipmentHistoryModal) {
                             vm.view.equipmentHistoryModal.hide();

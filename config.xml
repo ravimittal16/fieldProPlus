@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="19" id="com.ionicframework.fieldproionic807801" version="0.0.19" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>AlphaFP</name>
+<widget android-versionCode="21" id="com.ionicframework.fieldproionic807801" version="0.0.21" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>FieldPromax</name>
     <description>
       Alpha Field Promax Beta
     </description>

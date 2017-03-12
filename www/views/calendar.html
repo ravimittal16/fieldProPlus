@@ -2,16 +2,31 @@
     <ion-nav-buttons side="left">
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
-    <ion-nav-buttons side="right">
-        <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
-            data-ng-click="vm.events.showActionSheet()"></a>
-    </ion-nav-buttons>
-    <ion-content scroll="false" class="main-content">
+
+    <!--<ion-header-bar align-title="left" class="bar-positive">
+       <ion-nav-buttons side="right" data-ng-show="$root.showNavButton">
+            <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                data-ng-click="vm.events.showActionSheet()"></a>
+        </ion-nav-buttons>
+        HELLO WORLD
+    </ion-header-bar>-->
+    <ion-content scroll="false" class="main-content" class="has-footer">
         <div class="text-center padding-top" data-ng-if="vm.loadingCalender">
-			<ion-spinner icon="ripple"></ion-spinner>
-		</div>
+            <ion-spinner icon="ripple"></ion-spinner>
+        </div>
         <calendar calendar-mode="vm.calendar.mode" data-ng-if="!vm.loadingCalender" ng-model="vm.calendar.currentDate" no-events-label="{{vm.calendar.noEventLabel}}"
             event-source="vm.calendar.events" title-changed="vm.events.onViewTitleChanged(title)" event-selected="vm.events.onEventSelected(event)"
             time-selected="vm.events.onTimeSelected(selectedTime, events)" step="60" />
     </ion-content>
+    <ion-footer-bar align-title="left" class="bar-default">
+        <div class="buttons">
+            <button class="button" type="button" data-ng-click="vm.events.showActionSheet()">
+                <i class="icon ion-calendar"></i> Change View
+            </button>
+            <h5 class="title">&nbsp;</h5>
+            <div class="buttons" data-ng-click="vm.events.refreshCalender()">
+                <button class="button"> <i class="icon ion-refresh"></i></button>
+            </div>
+        </div>
+    </ion-footer-bar>
 </ion-view>

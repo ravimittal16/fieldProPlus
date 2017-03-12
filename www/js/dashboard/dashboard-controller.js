@@ -135,12 +135,6 @@
                 loadDashboard(true, function () {
                     $scope.$broadcast("scroll.refreshComplete");
                 });
-                // sharedDataFactory.postLocation({ userId: "smpgaut@gmail.com", timestamp: new Date(), event: 1, isMoving: false, uuid: "as", coords: { latitude: 20.1, longitude: 1.2 } })
-                //     .then(function () {
-                //         console.log("SUCCESS LOCATION");
-                //     }, function () {
-                //         console.log("ERROR LOCATION");
-                //     })
             },
             onChildGroupClicked: function (item, type, prop) {
 
@@ -198,7 +192,7 @@
                 vm.trackJobStatus = response.customerNumberEntity.trackJobStatus || false;
             }).finally(function () {
                 var refresh = angular.isDefined($stateParams.refresh) ? $stateParams.refresh : false;
-                loadDashboard(refresh);
+                loadDashboard(refresh, null);
             });
 
         }

@@ -26,7 +26,9 @@
                 </div>
                 <div class="item item-text-wrap text-center" data-ng-if="!vm.view.gettingEquipements && vm.view.barcodeEquipments.length == 0">
                     <h3 class="text-muted">
-                        <strong>No Equipments attached</strong>
+                        <strong>No Equipments attached
+                            <p><a data-ng-click="vm.events.tryAttachEquipment()">Try Attach Equipment</a></p>
+                        </strong>
                     </h3>
                 </div>
 

@@ -31,7 +31,8 @@
 	</div>
 	<ion-list can-swipe="true">
 		<ion-item class="item-text-wrap" data-ng-repeat="p in vm.barcodeImages">
-			<a data-ng-click="vm.events.onImageTap(p)">{{p.imageURL | removeExt}}</a>
+			<a data-ng-click="vm.events.onImageTap(p)">
+				<strong><i class="icon ion-plus-circled"></i> </strong>&nbsp;{{p.imageURL | removeExt}}</a>
 			<button type="button" class="button icon ion-trash-b button-small text-assertive pull-right" style="margin-top: -5px;" ng-click="vm.events.onDeleteImageClicked(p)"></button>
 		</ion-item>
 	</ion-list>

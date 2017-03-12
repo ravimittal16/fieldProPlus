@@ -8,8 +8,8 @@
             isFromPto: "<",
             editMode: "<"
         },
-        controller: ["$scope", "$timeout", "$ionicActionSheet", "timecard-factory", "fpm-utilities-factory", "authenticationFactory",
-            function ($scope, $timeout, $ionicActionSheet, timecardFactory, fpmUtilitiesFactory, authenticationFactory) {
+        controller: ["$scope", "$timeout", "$q", "$ionicActionSheet", "timecard-factory", "fpm-utilities-factory", "authenticationFactory",
+            function ($scope, $timeout, $q, $ionicActionSheet, timecardFactory, fpmUtilitiesFactory, authenticationFactory) {
                 var vm = this;
                 var alerts = fpmUtilitiesFactory.alerts;
                 var isConfirmedBefore = false;
@@ -49,6 +49,10 @@
                                 vm.ui.errors.push("Cannot be a future time");
                                 return false;
                             }
+                            if (!vm.editMode && ft.isBefore(tcd)) {
+                                vm.ui.errors.push("Finish time must be greater then Start Time");
+                                return false;
+                            }
                         }
                     }
                     if (vm.entity.jobCode === null || vm.entity.jobCode === 0) {
@@ -78,8 +82,13 @@
                             vm.entity.startTime = new Date();
                             vm.entity.finishTime = null;
                             vm.dateTimeMode.finishTime = null;
-                            vm.dateTimeMode.isCheckedIn = true;
-                            _findTimeDiff();
+                            _findTimeDiff().then(function (isValid) {
+                                if (isValid) {
+                                    vm.dateTimeMode.isCheckedIn = true;
+                                } else {
+                                    vm.ui.errors.push("Invalid Time");
+                                }
+                            });
                         }
                     },
                     checkOutClick: function () {
@@ -87,8 +96,13 @@
                             vm.dateTimeMode.finishTime = new Date();
                             vm.entity.finishTime = new Date();
                         }
-                        vm.dateTimeMode.isCheckedOut = true;
-                        _findTimeDiff();
+                        _findTimeDiff().then(function (isValid) {
+                            if (isValid) {
+                                vm.dateTimeMode.isCheckedOut = true;
+                            } else {
+                                vm.ui.errors.push("Invalid Time");
+                            }
+                        });
                     },
                     updateButtonClicked: function () {
                         vm.ui.errors = [];
@@ -136,7 +150,7 @@
                     if (vm.entity.startTime === null) {
                         onDateTimeChaged();
                     }
-                    var ft = vm.dateTimeMode.finishTime;
+                    var ft = kendo.parseDate(vm.dateTimeMode.finishTime);
                     var smDt = kendo.parseDate(summary.timeCardDate);
                     vm.entity.finishTime = new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), ft.getHours(), ft.getMinutes(), 0, 0);
                     _findTimeDiff();
@@ -184,6 +198,7 @@
                 }
 
                 function _findTimeDiff() {
+                    var defer = $q.defer();
                     vm.ui.errors = [];
                     vm.ui.isInvalidSave = false;
                     if (Date.parse(vm.entity.startTime) && Date.parse(vm.entity.finishTime)) {
@@ -201,17 +216,19 @@
                                 } else {
                                     vm.dateTimeMode.timeSpan = mintues + " Minutes";
                                 }
+                                defer.resolve(true);
                             } else {
                                 if (!vm.isInEditMode) {
-                                    vm.entity.finishTime = new Date();
+                                    // vm.entity.finishTime = new Date();
                                     vm.ui.isInvalidSave = true;
-                                    vm.ui.errors.push("Invalid Time");
+                                    //vm.ui.errors.push("Invalid Time");
+                                    defer.resolve(false);
                                 }
                             }
                             $timeout.cancel(t);
                         }, 10);
                     }
-                    return "";
+                    return defer.promise;
                 }
 
                 vm.$onChanges = function () {

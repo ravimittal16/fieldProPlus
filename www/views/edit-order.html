@@ -1,4 +1,5 @@
-<ion-view title="{{vm.barCodeData.barcodeDetails.barcodeName}}" cache-view="false" hide-back-button="true" view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
+<ion-view title="{{vm.barCodeData.barcodeDetails.barcodeName}}" cache-view="false" hide-back-button="true" 
+view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
   <ion-nav-buttons side="left">
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
@@ -261,15 +262,15 @@
 							</label>
               <label class="item item-input">
 								<span class="input-label">Start (Miles)</span>
-								<input type="text" class="transparent-background" maxlength="5" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:99999.99,preset:'decimal',onSelect:vm.tabs.sch.events.updateMilage}" data-ng-model="vm.schedule.startMiles" data-ng-change="vm.schedule.totalMiles = vm.schedule.endMiles - vm.schedule.startMiles" />
+								<input type="text" class="transparent-background text-right"  data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,preset:'decimal',onSelect:vm.tabs.sch.events.updateMilage}" data-ng-model="vm.schedule.startMiles" />
 							</label>
               <label class="item item-input">
 									<span class="input-label">End</span>
-									<input type="text" class="transparent-background" maxlength="5" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:99999,preset:'decimal',onSelect:vm.tabs.sch.events.updateMilage}" data-ng-model="vm.schedule.endMiles" data-ng-change="vm.schedule.totalMiles = vm.schedule.endMiles - vm.schedule.startMiles"/>
+									<input type="text" class="transparent-background text-right"  data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,preset:'decimal',onSelect:vm.tabs.sch.events.updateMilage}" data-ng-model="vm.schedule.endMiles"/>
 							</label>
               <label class="item item-input">
 									<span class="input-label"><strong>Total</strong></span>
-									<input type="text" readonly="" class="transparent-background" data-ng-model="vm.schedule.totalMiles"/>
+									<input type="text" readonly="" class="transparent-background text-right" data-ng-model="vm.schedule.totalMiles"/>
 							</label>
             </div>
           </div>
@@ -307,8 +308,12 @@
               PRODUCTS
               <button type="button" class="button pull-right button-small button-small button-positive" data-ng-click="vm.tabs.prod.events.onProdcutActionButtonClicked()">Add Product</a>
             </div>
-
- <div data-ng-repeat="p in vm.barCodeData.products">
+          <div class="item item-text-wrap text-center" data-ng-if="vm.barCodeData.products.length == 0 && !vm.gettingBarcodeDetails">
+             <h3 class="text-muted">
+                <strong>No product found</strong>
+              </h3>
+          </div>
+            <div data-ng-if="vm.barCodeData.products.length > 0 && !vm.gettingBarcodeDetails" data-ng-repeat="p in vm.barCodeData.products">
               <div class="row n-p-b n-m-b">
                 <div class="col col-50">
                   <h5>{{::p.productName}}</h5>

@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    function initController($scope, $timeout, $rootScope, $state, ionicDatePicker, $ionicPopover,
+    function initController($scope, $timeout, $rootScope, $state, $ionicPopover,
         $ionicModal, $ionicActionSheet, timecardFactory, fpmUtilitiesFactory, authenticationFactory) {
         var vm = this;
         var jobCodes = { CLOCK_IN: 5001, CLOCK_OUT: 5002 };
@@ -177,14 +177,11 @@
             inputDate: vm.currentDate
         };
 
-        function onDatePickerClicked() {
-            ionicDatePicker.openDatePicker(datePickerConfig);
-        }
+      
         function showPopoverClicked($event) {
             vm.popover.show($event);
         }
         vm.events = {
-            onDatePickerClicked: onDatePickerClicked,
             showPopoverClicked: showPopoverClicked
         }
 
@@ -483,7 +480,7 @@
             activateController();
         });
     }
-    initController.$inject = ["$scope", "$timeout", "$rootScope", "$state", "ionicDatePicker", "$ionicPopover", "$ionicModal",
+    initController.$inject = ["$scope", "$timeout", "$rootScope", "$state", "$ionicPopover", "$ionicModal",
         "$ionicActionSheet", "timecard-factory", "fpm-utilities-factory", "authenticationFactory"];
     angular.module("fpm").controller("timecard-controller", initController);
 })();
