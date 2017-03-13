@@ -97,8 +97,7 @@
           * return navigator.userAgent.match(/Android/i);
           */
           if (isOnDevMode) return true;
-          var and = (ionic.Platform.device().platform.match(/android/i));
-          return and.toString().toLowerCase() === "android";
+          return ionic.Platform.isAndroid();
         },
         isIOS: function isIOS() {
           /*Will work only from the device and if you are developing Ionic App
@@ -106,8 +105,9 @@
           * return navigator.userAgent.match(/iOS/i);
           */
           if (isOnDevMode) return false;
-          var ios = (ionic.Platform.device().platform.match(/ios/i));
-          return ios.toString().toLowerCase() === "ios";
+          return ionic.Platform.isIOS();
+          // var ios = (ionic.Platform.device().platform.match(/ios/i));
+          // return ios.toString().toLowerCase() === "ios";
         }
       };
 
