@@ -259,6 +259,7 @@
                 if (response) {
                     vm.barCodeData.schedules = response.schedules;
                     vm.barCodeData.invoice = response.invoice;
+                    calculateTotals();
                 }
             });
         }
@@ -294,6 +295,7 @@
             isMapLoaded = false;
             vm.uiSettings.isTimeCardModuleEnabled = vm.user.timeCard && vm.user.allowPushTime;
             vm.isServiceProvider = !vm.user.isAdminstrator;
+            vm.showPrice = vm.user.showPrice;
             sharedDataFactory.getIniitialData().then(function (response) {
                 if (response) {
                     vm.uiSettings.milageTrackingEnabled = response.customerNumberEntity.milageTrackingEnabled || false;
@@ -539,10 +541,15 @@
                     },
                     onAddScheduleCompleted: function (o) {
                         if (o) {
-                            vm.barCodeData.schedules = o.schedules;
-                            vm.barCodeData.invoice = o.invoice;
                             vm.scheduleAddModal.hide();
-                            alerts.alert("Success", "Schedule added successfully");
+                            alerts.alert("Success", "Schedule added successfully", function () {
+                                $timeout(function () {
+                                    //vm.user = authenticationFactory.getLoggedInUserInfo();
+                                    vm.barCodeData.schedules = o.schedules;
+                                    vm.barCodeData.invoice = o.invoice;
+                                    calculateTotals();
+                                }, 50);
+                            });
                         }
                     },
                     onModalCancelClicked: function () {

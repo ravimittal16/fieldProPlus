@@ -355,7 +355,7 @@ view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
                 <strong>INVOICE DETAILS</strong>
               </div>
               <div>
-                <ion-list>
+                <div class="list">
                   <div class="item item-stable">
                     <div class="row">
                       <div class="col col-50">Name</div>
@@ -366,7 +366,7 @@ view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
                       </div>
                     </div>
                   </div>
-                  <ion-item data-ng-repeat="inv in vm.barCodeData.invoice" class="item item-text-wrap">
+                  <div data-ng-repeat="inv in vm.barCodeData.invoice" class="item item-text-wrap">
                     <div class="row">
                       <div class="col col-50">
                         <h3>{{::inv.productName}}</h3>
@@ -378,11 +378,12 @@ view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
                         <h3>{{inv.qty || 0}}</h3>
                       </div>
                       <div class="col col-20">
-                        <h3 class="pull-right" data-ng-if="vm.user.showPrice">{{inv.totalPrice | currency:'$':2}}</h3>
+                        <h3 class="pull-right" data-ng-if="vm.user.showPrice">
+                          <span data-ng-bind="inv.totalPrice | currency:'$':2">  </span></h3>
                       </div>
                     </div>
-                  </ion-item>
-                </ion-list>
+                  </div>
+                </div>
               </div>
             </div>
           </ion-list>

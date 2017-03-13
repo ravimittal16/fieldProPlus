@@ -7,8 +7,8 @@
             onAddCompleted: "&",
             serviceProviders: "<"
         },
-        controller: ["$scope", "fpm-utilities-factory", "work-orders-factory",
-            function ($scope, fpmUtilitiesFactory, workOrdersFactory) {
+        controller: ["$scope", "fpm-utilities-factory", "work-orders-factory", "authenticationFactory",
+            function ($scope, fpmUtilitiesFactory, workOrdersFactory, authenticationFactory) {
                 var vm = this;
                 vm.errors = [];
                 var scheduleSchema = { serviceProvider: "", startDate: new Date(), endTime: new Date(), fromMobile: true, barCode: vm.barcode, intuitQboItemId: "" };
@@ -42,6 +42,7 @@
                 };
 
                 vm.$onInit = function () {
+                    vm.user = authenticationFactory.getLoggedInUserInfo();
                 }
             }],
         controllerAs: "vm",
