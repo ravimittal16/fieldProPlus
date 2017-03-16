@@ -193,23 +193,25 @@
             return isOnDevMode;
           },
           getPicture: function () {
-            var defer = $q.defer();
             var options = {
-              quality: 75,
+              quality: 50,
               destinationType: Camera.DestinationType.DATA_URL,
               sourceType: Camera.PictureSourceType.CAMERA,
-              allowEdit: true,
+              allowEdit: false,
               encodingType: Camera.EncodingType.JPEG,
               saveToPhotoAlbum: false
             };
-            $cordovaCamera.getPicture(options).then(function (imageData) {
-              defer.resolve(imageData);
+            return $cordovaCamera.getPicture(options).then(function (imageData) {
+              $ionicLoading.show({
+                template: 'Processing Image',
+                duration: 2000
+              });
+              return imageData;
             }, function () {
-              $ionicPopup.alert({ title: "Failed", template: "Failed to get Image Data" }, function () {
-                defer.resolve(null);
+              return $ionicPopup.alert({ title: "Failed", template: "Failed to get Image Data" }, function () {
+                return null;
               });
             });
-            return defer.promise;
           },
           platforms: platforms,
           getPlatformInfo: function () {

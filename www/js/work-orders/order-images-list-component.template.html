@@ -23,17 +23,24 @@
 </ion-list>-->
 <div class="card">
 	<div class="item item-divider header-dark">
-		IMAGES
-		<span class="badge badge-dark">{{vm.barcodeImages.length}}</span>
+		IMAGES <small class="badge badge-dark" data-ng-bind="vm.barcodeImages.length"></small>
 	</div>
 	<div class="item item-body">
-		<input type="file" data-kendo-upload="vm.upload.control" data-k-options="vm.upload.options" />
+		<div class="row">
+			<div class="col">
+				<input type="file" data-kendo-upload="vm.upload.control" data-k-options="vm.upload.options" />
+			</div>
+			<div class="col">
+				<button class="button button-block button-small button-positive" data-ng-click="vm.events.takePictureClicked()">
+					<i class="icon ion-camera"></i> Take Picture</button>
+			</div>
+		</div>
 	</div>
 	<ion-list can-swipe="true">
 		<ion-item class="item-text-wrap" data-ng-repeat="p in vm.barcodeImages">
 			<a data-ng-click="vm.events.onImageTap(p)">
 				<strong><i class="icon ion-plus-circled"></i> </strong>&nbsp;{{p.imageURL | removeExt}}</a>
-			<button type="button" class="button icon ion-trash-b button-small text-assertive pull-right" style="margin-top: -5px;" ng-click="vm.events.onDeleteImageClicked(p)"></button>
+			<button type="button" class="button icon ion-trash-b button-small text-assertive pull-right" style="margin-top: -5px;" ng-click="vm.events.onDeleteImageClicked(p,$index)"></button>
 		</ion-item>
 	</ion-list>
 </div>

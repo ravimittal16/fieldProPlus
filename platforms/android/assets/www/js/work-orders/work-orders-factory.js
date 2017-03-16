@@ -138,7 +138,12 @@
             return apiBaseFactory.post(apibaseurl + "UpdateSchduleTotalTime", schedule);
         }
 
+        function deleteImageFromBlob(num, barcode) {
+            return apiBaseFactory.deleteReq(apibaseurl + "DeleteImage?imageId=" + num + "&barcode=" + barcode);
+        }
+
         return {
+            deleteImageFromBlob: deleteImageFromBlob,
             updateSchduleTotalTime: updateSchduleTotalTime,
             getWorkOrderResolution: getWorkOrderResolution,
             updateCustomScheduleData: updateCustomScheduleData,

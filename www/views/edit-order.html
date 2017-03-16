@@ -35,7 +35,7 @@ view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
                         <p>{{::vm.barCodeData.barcodeDetails.shipCity}},{{::vm.barCodeData.barcodeDetails.shipState}}&nbsp;{{::vm.barCodeData.barcodeDetails.shipZIP}}
                         </p>
                         <p ng-if="vm.barCodeData.barcodeDetails.phone">
-                          <a><i class="icon ion-android-call"></i>&nbsp;{{::vm.barCodeData.barcodeDetails.phone}}</a>
+                          <span><i class="icon ion-android-call"></i>&nbsp;{{::vm.barCodeData.barcodeDetails.phone}}</span>
                         </p>
                         <p data-ng-if="vm.barCodeData.barcodeDetails.contactInfo">Contact Info : <span>{{::vm.barCodeData.barcodeDetails.contactInfo}}</span></p>
                         <button class="button button-block button-small button-positive" data-ng-click="vm.tabs.desc.events.onAddressTapped()">

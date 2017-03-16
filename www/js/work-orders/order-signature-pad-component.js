@@ -16,24 +16,26 @@
                     onCustomerNameKeyup: function (keyCode) {
                         if (keyCode === 13) {
                             vm.showError = false;
-                            vm.events.trySaveSignature().then(function () {
-                                $scope.$emit("$signature:completedEvent");
-                            }, function (error) {
-                                vm.showError = error;
-                            });
+                            vm.events.trySaveSignature();
                         }
                     },
                     trySaveSignature: function () {
                         var defer = $q.defer();
+                        vm.showError = false;
                         var isFromEstimates = false;
-                        if ($.trim(vm.customerName) === "") defer.reject(true);
-                        var sign = $(angular.element("#signature")).jSignature("getData", "image");
-                        if ($.trim(vm.customerName) !== "" && angular.isArray(sign)) {
-                            fpmUtilities.showLoading().then(function () {
-                                workOrdersFactory.saveJsonSignForBarcode({ BaseString: sign[1], Barcode: (isFromEstimates ? "" : barcode), CustomerName: vm.customerName, EstimateId: 0 }).then(function () {
-                                    defer.resolve(true);
-                                }).finally(fpmUtilities.hideLoading);
-                            });
+                        if ($.trim(vm.customerName) === "") {
+                            vm.showError = true;
+                            defer.resolve(false);
+                        } else {
+                            var sign = $(angular.element("#signature")).jSignature("getData", "image");
+                            if ($.trim(vm.customerName) !== "" && angular.isArray(sign)) {
+                                fpmUtilities.showLoading().then(function () {
+                                    workOrdersFactory.saveJsonSignForBarcode({ BaseString: sign[1], Barcode: (isFromEstimates ? "" : barcode), CustomerName: vm.customerName, EstimateId: 0 }).then(function () {
+                                        $scope.$emit("$signature:completedEvent");
+                                        defer.resolve(true);
+                                    }).finally(fpmUtilities.hideLoading);
+                                });
+                            }
                         }
                         return defer.promise;
                     }

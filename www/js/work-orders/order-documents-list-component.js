@@ -19,6 +19,7 @@
         };
         vm.$onInit = function () {
           if (vm.barcode) {
+            vm.barcodeDocuments = [];
             vm.gettinDocuments = true;
             workOrdersFactory.getUploadedDocuments(vm.barcode).then(function (response) {
               if (angular.isArray(response) && response.length > 0) {

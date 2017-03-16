@@ -308,16 +308,15 @@ customer-search-header-component {
 }
 
 .k-upload-button {
-        width: 150px !important;
         margin-left: 0px !important;
         width: 100% !important;
-        font-size:78%;
+        font-size:74%;
         background-color: #f0ad4e;
         border: 1px solid #f0ad4e;
         background-image: none;
         color:#FFF;
         font-weight: normal;
-        padding: 3px;
+        padding: 5px;
     }
 
     .k-upload-button:hover {
