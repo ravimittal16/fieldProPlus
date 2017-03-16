@@ -81,7 +81,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
             if (exception.name) { data.name = exception.name; }
             if (exception.stack) { data.stack = exception.stack; }
           }
-          console.log("EXCPTION", data);
+          //console.log("EXCPTION", data);
         }
       }]);
 
@@ -154,6 +154,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
             }
           });
         }
+
         function errorFn(errorCode) {
           switch (errorCode) {
             case 0:
@@ -171,7 +172,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
           }
         }
 
-
+        var locationServiceRunning = false;
 
         var androidLocationConfig = {
           desiredAccuracy: 0,
@@ -209,13 +210,38 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
         function readLocation() {
           bgGeo.configure(locationConfig, function (state) {
             if (!state.enabled) {
-              bgGeo.start();
+              bgGeo.start(function () {
+                locationServiceRunning = true;
+              });
             }
           });
         }
         if (!isInDevMode) {
           readLocation();
         }
+
+
+
+        document.addEventListener("pause", function () {
+          if (!isInDevMode) {
+            if (bgGeo) {
+              bgGeo.stop(function () {
+                locationServiceRunning = false;
+              });
+            }
+          }
+        }, false);
+        document.addEventListener("resume", function () {
+          if (!isInDevMode && bgGeo) {
+            bgGeo.getState(function (state) {
+              if (!state.enabled) {
+                bgGeo.start(function () { 
+                  locationServiceRunning = false;
+                });
+              }
+            });
+          }
+        }, false);
       });
       //CHECK CONNECTION
       $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
