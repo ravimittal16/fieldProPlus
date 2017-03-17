@@ -231,6 +231,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
             }
           }
         }, false);
+        
         document.addEventListener("resume", function () {
           if (!isInDevMode && bgGeo && !locationServiceRunning) {
             bgGeo.getState(function (state) {
