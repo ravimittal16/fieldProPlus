@@ -223,7 +223,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
 
 
         document.addEventListener("pause", function () {
-          if (!isInDevMode) {
+          if (!isInDevMode && locationServiceRunning) {
             if (bgGeo) {
               bgGeo.stop(function () {
                 locationServiceRunning = false;
@@ -232,11 +232,11 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
           }
         }, false);
         document.addEventListener("resume", function () {
-          if (!isInDevMode && bgGeo) {
+          if (!isInDevMode && bgGeo && !locationServiceRunning) {
             bgGeo.getState(function (state) {
               if (!state.enabled) {
                 bgGeo.start(function () { 
-                  locationServiceRunning = false;
+                  locationServiceRunning = true;
                 });
               }
             });
