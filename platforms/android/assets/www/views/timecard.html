@@ -71,6 +71,7 @@
                     <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
                         data-ng-click="vm.ui.events.onCardActionClicked(t)" data-ng-if="vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2"></a>
                 </div>
+
                 <div class="item item-text-wrap">
                     <div class="row" data-ng-if="t.jobCode != 5001 && t.barcode != 0">
                         <div class="col col-50">
@@ -134,8 +135,7 @@
     </ion-content>
     <script id="timecardDetailsModal.html" type="text/ng-template">
 	<ion-modal-view>
-		<add-edit-details-component data-details="vm.ui.data.currentDetails" on-cancel-clicked="vm.ui.events.onModalCancelClicked()"
-        is-from-pto="vm.ui.data.isFromPto" data-edit-mode="vm.ui.data.isInEditMode" on-add-completed="vm.ui.events.onAddScheduleCompleted(o)"></add-edit-details-component>
+		<add-edit-details-component on-cancel-clicked="vm.ui.events.onModalCancelClicked()" on-add-completed="vm.ui.events.onAddScheduleCompleted(o)"></add-edit-details-component>
 	</ion-modal-view>
 </script>
     <script id="timecardSummaryModal.html" type="text/ng-template">

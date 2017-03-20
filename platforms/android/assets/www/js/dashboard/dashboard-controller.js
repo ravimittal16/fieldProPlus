@@ -53,7 +53,7 @@
         function _processInRouteClick(job) {
             alerts.confirmWithOkayCancel("Confirmation!", "Your status has been updated to In Route", function () {
                 fpmUtilitiesFactory.showLoading().then(function () {
-                    workOrderFactory.updateJobStatus({ scheduleButton: scheduleButtons.InRoute, scheduleNum: job.TechnicianScheduleNum, barcode: job.Barcode }).then(function () {
+                    workOrderFactory.updateJobStatus({ scheduleButton: scheduleButtons.InRoute, scheduleNum: job.TechnicianScheduleNum, barcode: job.Barcode, ClientTime: kendo.toString(new Date(), "g") }).then(function () {
                         job.InRoute = true;
                     }).finally(function () {
                         fpmUtilitiesFactory.hideLoading();

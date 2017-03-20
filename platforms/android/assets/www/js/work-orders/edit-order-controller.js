@@ -39,8 +39,6 @@
                 workOrderFactory.getBarcodeDetails(vm.barcode).then(function (response) {
                     vm.gettingBarcodeDetails = false;
                     vm.barCodeData = response;
-                    $ionicNavBarDelegate.title(vm.barCodeData.barcodeDetails.barcodeName);
-                    $ionicNavBarDelegate.align("center");
                     vm.uiSettings.woData = angular.copy(response);
                     vm.taxCheckboxVisibility = (vm.barCodeData.taxRate || 0) > 0;
                     if (angular.isArray(response.schedules) && response.schedules.length > 0) {

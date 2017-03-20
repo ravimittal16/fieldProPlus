@@ -91,9 +91,12 @@
         function getSummaryPayableHours(filters) {
             return apicontext.post(baseUrl + "GetPayableHoursSummaryView", filters);
         }
-        
+        function clearTimecardFactoryData() { 
+            factory.data = { details: [], jobCodes: { CLOCK_IN: 5001, CLOCK_OUT: 5002 }, summary: null };
+        }
         var data = { details: [], jobCodes: { CLOCK_IN: 5001, CLOCK_OUT: 5002 }, summary: null };
         var factory = {};
+        factory.clearTimecardFactoryData = clearTimecardFactoryData;
         factory.addPtoDetails = addPtoDetails;
         factory.getSummaryPayableHours = getSummaryPayableHours;
         factory.certifyUser = certifyUser;

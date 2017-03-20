@@ -4,9 +4,6 @@
         bindings: {
             onCancelClicked: "&",
             onAddCompleted: "&",
-            details: "<",
-            isFromPto: "<",
-            editMode: "<"
         },
         controller: ["$scope", "$timeout", "$q", "$ionicActionSheet", "timecard-factory", "fpm-utilities-factory", "authenticationFactory",
             function ($scope, $timeout, $q, $ionicActionSheet, timecardFactory, fpmUtilitiesFactory, authenticationFactory) {
@@ -157,8 +154,8 @@
                 }
 
                 function setInitialStartDateForPto() {
-                    var summary = timecardFactory.summary;
-                    if (summary && summary.timeCardDate) {
+                    if (timecardFactory.summary && timecardFactory.summary.timeCardDate) {
+                        var summary = timecardFactory.summary;
                         var td = kendo.parseDate(summary.timeCardDate);
                         var newStartDate = new Date(td.getFullYear(), td.getMonth(), td.getDate(), new Date().getHours(), new Date().getMinutes(), 0);
                         vm.entity.startTime = newStartDate;
@@ -166,16 +163,24 @@
                     }
                 }
 
-                function initController() {
+                function initController(eventParams) {
+                    //console.log("INIT CONTROLLER");
+                    vm.ui.errors = [];
+                    vm.details = eventParams.details;
+                    vm.editMode = eventParams.editMode;
+                    var fromPto = eventParams.isFromPto;
+                    vm.isFromPto = fromPto;
                     if (vm.editMode && vm.details) {
                         vm.entity = angular.copy(vm.details);
                         vm.entity.startTime = kendo.parseDate(vm.details.startTime);
                         vm.entity.finishTime = kendo.parseDate(vm.details.finishTime);
                         vm.isFromPto = vm.details.isPtoType;
+                        vm.dateTimeMode.startTime = null;
                         if (vm.entity.startTime) {
                             vm.dateTimeMode.startTime = vm.entity.startTime;
                             vm.dateTimeMode.isCheckedIn = true;
                         }
+                        vm.dateTimeMode.finishTime = null;
                         if (vm.entity.finishTime) {
                             vm.dateTimeMode.finishTime = vm.entity.finishTime;
                             vm.dateTimeMode.isCheckedOut = true;
@@ -185,8 +190,13 @@
                     } else {
                         vm.entity = angular.copy(schema);
                         vm.entity.startTime = new Date();
-                        vm.entity.finishTime = new Date();
-                        if (vm.isFromPto === true) {
+                        vm.entity.finishTime = null;
+                        vm.dateTimeMode.startTime = new Date();
+                        vm.dateTimeMode.finishTime = null;
+                        vm.dateTimeMode.isCheckedIn = false;
+                        vm.dateTimeMode.isCheckedOut = false;
+                        vm.dateTimeMode.timeSpan = "";
+                        if (fromPto === true) {
                             setInitialStartDateForPto();
                         }
                     }
@@ -194,7 +204,8 @@
                         vm.entity.numFromSummary = timecardFactory.summary.num;
                         vm.entity.timeCardDate = new Date(moment(timecardFactory.summary.timeCardDate));
                     }
-                    vm.timecardPermissions.isFromAddingPto = vm.isFromPto;
+                    vm.timecardPermissions.isFromAddingPto = fromPto;
+                    //vm.timecardPermissions.timePickerVisibility = fromPto;
                 }
 
                 function _findTimeDiff() {
@@ -232,9 +243,10 @@
                 }
 
                 vm.$onChanges = function () {
-                    initController();
+                    // //initController();
+                    // console.log("CHANGED");
                 }
-                initController();
+                // initController();
 
                 function _getOrders() {
                     fpmUtilitiesFactory.showLoading().then(function () {
@@ -250,7 +262,7 @@
                             vm.ui.jobCodes = _.where(response, { isPtoType: false });;
                             vm.ui.ptoJobCodes = _.where(response, { isPtoType: true });
                         }).finally(fpmUtilitiesFactory.hideLoading);
-                    }).finally(fpmUtilitiesFactory.hideLoading);
+                    });
                 }
 
                 vm.$onInit = function () {
@@ -262,17 +274,19 @@
                     _getOrders();
                 }
                 $scope.$on("timecard:addEditDetailsModal:open", function ($event, params) {
-                    vm.entity = angular.copy(schema);
-                    vm.dateTimeMode.startTime = null;
-                    vm.dateTimeMode.finishTime = null;
-                    vm.dateTimeMode.timeSpan = "";
-                    vm.dateTimeMode.isCheckedIn = false;
-                    vm.dateTimeMode.isCheckedOut = false;
-                    vm.ui.errors = [];
-                    vm.timecardPermissions.isFromAddingPto = params.isFromPto;
-                    if (vm.timecardPermissions.isFromAddingPto === true) {
-                        vm.timecardPermissions.timePickerVisibility = true;
-                    }
+                    initController(params);
+                    // vm.entity = angular.copy(schema);
+                    // vm.dateTimeMode.startTime = null;
+                    // vm.dateTimeMode.finishTime = null;
+                    // vm.dateTimeMode.timeSpan = "";
+                    // vm.dateTimeMode.isCheckedIn = false;
+                    // vm.dateTimeMode.isCheckedOut = false;
+                    // vm.ui.errors = [];
+                    // vm.timecardPermissions.isFromAddingPto = params.isFromPto;
+                    // //vm.isFromPto = params.isFromPto;
+                    // if (vm.timecardPermissions.isFromAddingPto === true) {
+                    //     vm.timecardPermissions.timePickerVisibility = true;
+                    // }
                 })
             }],
         controllerAs: "vm",

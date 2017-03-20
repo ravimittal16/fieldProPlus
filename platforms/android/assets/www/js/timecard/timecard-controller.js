@@ -114,7 +114,7 @@
             var totalMins = 0;
             if (payables.length > 0) {
                 angular.forEach(payables, function (e, i) {
-                    totalMins += moment(e.FinishTime).diff(kendo.parseDate(e.startTime), "minutes");
+                    totalMins += moment(e.finishTime).diff(kendo.parseDate(e.startTime), "minutes");
                 });
             }
             if (nonPayables.length > 0) {
@@ -177,7 +177,7 @@
             inputDate: vm.currentDate
         };
 
-      
+
         function showPopoverClicked($event) {
             vm.popover.show($event);
         }
@@ -187,7 +187,8 @@
 
         function _processClockOutUser() {
             var smDt = new Date();
-            var clockOutTime = new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), smDt.getHours(), smDt.getMinutes(), 0, 0);
+            var tcdt = vm.currentDate;
+            var clockOutTime = new Date(tcdt.getFullYear(), tcdt.getMonth(), tcdt.getDate(), smDt.getHours(), smDt.getMinutes(), 0, 0);
             var details = {
                 startTime: kendo.toString(clockOutTime, "g"),
                 jobCode: jobCodes.CLOCK_OUT,
@@ -224,17 +225,28 @@
         }
 
         function showModal() {
+
+
+            if (vm.ui.data.isFromPto === true && vm.ui.data.summary === null) {
+                vm.ui.data.summary = { num: 0, timeCardDate: vm.ui.data.currentDate };
+                vm.factory.summary = vm.ui.data.summary;
+            }
+
+
+
             if (vm.ui.data.addEditDetailsModal === null) {
                 $ionicModal.fromTemplateUrl("timecardDetailsModal.html", {
                     scope: $scope,
                     animation: 'slide-in-up'
                 }).then(function (modal) {
                     vm.ui.data.addEditDetailsModal = modal;
-                    $scope.$broadcast("timecard:addEditDetailsModal:open", { isFromPto: vm.ui.data.isFromPto });
-                    vm.ui.data.addEditDetailsModal.show();
+                    $timeout(function () {
+                        $scope.$broadcast("timecard:addEditDetailsModal:open", { isFromPto: vm.ui.data.isFromPto, details: vm.ui.data.currentDetails, editMode: vm.ui.data.isInEditMode });
+                        modal.show();
+                    }, 300);
                 });
             } else {
-                $scope.$broadcast("timecard:addEditDetailsModal:open", { isFromPto: vm.ui.data.isFromPto });
+                $scope.$broadcast("timecard:addEditDetailsModal:open", { isFromPto: vm.ui.data.isFromPto, details: vm.ui.data.currentDetails, editMode: vm.ui.data.isInEditMode });
                 vm.ui.data.addEditDetailsModal.show();
             }
         }
@@ -345,9 +357,11 @@
                     vm.ui.data.addEditDetailsModal.hide();
                 },
                 addTimeClick: function (isFromPto) {
-                    vm.ui.data.isFromPto = isFromPto;
-                    vm.ui.data.isInEditMode = false;
-                    showModal();
+                    $timeout(function () {
+                        vm.ui.data.isFromPto = isFromPto;
+                        vm.ui.data.isInEditMode = false;
+                        showModal();
+                    }, 100);
                     vm.popover.hide();
                     return true;
                 },
@@ -382,10 +396,12 @@
                         },
                         buttonClicked: function (index) {
                             if (index === 0) {
-                                vm.ui.data.currentDetails = t;
-                                vm.ui.data.isInEditMode = true;
-                                vm.ui.data.isFromPto = false;
-                                showModal();
+                                $timeout(function () {
+                                    vm.ui.data.currentDetails = t;
+                                    vm.ui.data.isInEditMode = true;
+                                    vm.ui.data.isFromPto = t.isPtoType;
+                                    showModal();
+                                }, 100)
                             }
                             return true;
                         }
@@ -423,7 +439,7 @@
                     }
                 },
                 clockInClick: function () {
-                    var smDt = new Date();
+                    var smDt = vm.currentDate;
                     var clockInTime = new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0);
                     var details = {
                         startTime: fpmUtilitiesFactory.toStringDate(clockInTime),
