@@ -117,6 +117,7 @@
                     totalMins += moment(e.finishTime).diff(kendo.parseDate(e.startTime), "minutes");
                 });
             }
+            
             if (nonPayables.length > 0) {
                 var totalNonPMins = 0;
                 angular.forEach(nonPayables, function (e, i) {

@@ -68,8 +68,8 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <h6 class="text-success">Payable Codes</h6>
-                    <table class="timecard-table table-condensed table-hover table-bordered table-summary">
+                    <h6 class="label label-success">Payable Codes</h6>
+                    <table class="timecard-table table-condensed table-hover table-summary m-t-10">
                         <thead>
                             <tr>
                                 <th class="text-center">
@@ -124,10 +124,10 @@
                     </table>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" data-ng-if="vm.lists.nonPayables.length > 0">
                 <div class="col">
-                    <h6 class="text-assertive">Non Payable Codes</h6>
-                    <table class="timecard-table">
+                    <h6 class="label label-danger ">Non Payable Codes</h6>
+                    <table class="timecard-table table-condensed table-hover table-summary m-t-10">
                         <thead>
                             <tr>
                                 <th class="text-center">

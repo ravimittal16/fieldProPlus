@@ -104,7 +104,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
         }
         //REGISTER FOR PUSH NOTIFICATIONS
         var isandr = fpmUtilitiesFactory.device.isAndroid();
-        fpmUtilitiesFactory.push.register();
+
         document.addEventListener("backbutton", function (event) {
           if ($state.current.name === "app.dashboard") {
             //authenticationFactory.logout(false);
@@ -131,28 +131,30 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
 
           bgGeo.on("location", function (location, taskId) {
             succesFn(location);
+            bgGeo.finish(taskId);
           });
 
 
           bgGeo.on("motionchange", function (isMoving, location, taskId) {
             location.is_moving = isMoving;
             succesFn(location);
+            bgGeo.finish(taskId);
           });
 
           var lastActivity = "";
 
-          bgGeo.on('activitychange', function (activityName) {
-            if (lastActivity !== activityName) {
-              lastActivity = activityName;
-              BackgroundGeolocation.getCurrentPosition(function (location, taskId) {
-                succesFn(location);
-              }, errorFn, {
-                  timeout: 30,      // 30 second timeout to fetch location
-                  maximumAge: 5000, // Accept the last-known-location if not older than 5000 ms.
-                  desiredAccuracy: 10,  // Try to fetch a location with an accuracy of `10` meters.
-                });
-            }
-          });
+          // bgGeo.on('activitychange', function (activityName) {
+          //   if (lastActivity !== activityName) {
+          //     lastActivity = activityName;
+          //     BackgroundGeolocation.getCurrentPosition(function (location, taskId) {
+          //       succesFn(location);
+          //     }, errorFn, {
+          //         timeout: 30,      
+          //         maximumAge: 5000, 
+          //         desiredAccuracy: 10, 
+          //       });
+          //   }
+          // });
         }
 
         function errorFn(errorCode) {
@@ -184,7 +186,6 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
           stopTimeout: 5,  // Stop-detection timeout minutes (wait x minutes to turn off tracking)
           debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
           logLevel: 5,    // Verbose logging.  0: NONE
-          stopOnTerminate: true,              // <-- Don't stop tracking when user closes app.
           startOnBoot: true,
           autoSync: false
         };
@@ -198,7 +199,6 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
           // Application config
           debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
           logLevel: 5,    // Verbose logging.  0: NONE
-          stopOnTerminate: true,              // <-- Don't stop tracking when user closes app.
           startOnBoot: true,
           autoSync: false
         };
@@ -218,31 +218,30 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
         }
         if (!isInDevMode) {
           readLocation();
+          fpmUtilitiesFactory.push.register();
         }
 
+        // document.addEventListener("pause", function () {
+        //   if (!isInDevMode && locationServiceRunning) {
+        //     if (bgGeo) {
+        //       bgGeo.stop(function () {
+        //         locationServiceRunning = false;
+        //       });
+        //     }
+        //   }
+        // }, false);
 
-
-        document.addEventListener("pause", function () {
-          if (!isInDevMode && locationServiceRunning) {
-            if (bgGeo) {
-              bgGeo.stop(function () {
-                locationServiceRunning = false;
-              });
-            }
-          }
-        }, false);
-        
-        document.addEventListener("resume", function () {
-          if (!isInDevMode && bgGeo && !locationServiceRunning) {
-            bgGeo.getState(function (state) {
-              if (!state.enabled) {
-                bgGeo.start(function () { 
-                  locationServiceRunning = true;
-                });
-              }
-            });
-          }
-        }, false);
+        // document.addEventListener("resume", function () {
+        //   if (!isInDevMode && bgGeo && !locationServiceRunning) {
+        //     bgGeo.getState(function (state) {
+        //       if (!state.enabled) {
+        //         bgGeo.start(function () {
+        //           locationServiceRunning = true;
+        //         });
+        //       }
+        //     });
+        //   }
+        // }, false);
       });
       //CHECK CONNECTION
       $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {

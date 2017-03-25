@@ -13,7 +13,8 @@
         <div style="border-bottom:2px solid #DDD;background-color:#f9f9f9;">
             <div class="row">
                 <div class="col">
-                    <input data-ng-model="vm.currentDate" data-mobiscroll-date="vm.ui.calendar.settings" data-ng-change="vm.ui.events.onCurrentDateChanged()" data-mobiscroll-instance="vm.ui.calendar.control" class="hidden" />
+                    <input data-ng-model="vm.currentDate" data-mobiscroll-date="vm.ui.calendar.settings" data-ng-change="vm.ui.events.onCurrentDateChanged()"
+                        data-mobiscroll-instance="vm.ui.calendar.control" class="hidden" />
                     <strong><a data-ng-click="vm.ui.events.onShowCalenderClick($event)">{{vm.currentDate | date:'fullDate'}}
                         <i class="icon ion-arrow-down-b"></i></a></strong>
                 </div>
@@ -22,6 +23,8 @@
                 <div class="col center">
                     <button class="button icon-center ion-clock button-block button-positive button-small" data-ng-click="vm.ui.events.clockInClick()"
                         data-ng-if="!vm.ui.data.isClockedIn" data-ng-disabled="vm.ui.data.disableClockInButton || (vm.ui.data.approvalStatus != 0 && vm.ui.data.approvalStatus != 2)">&nbsp;Clock In</button>
+
+                    <h5 class="m-t-b-2" data-ng-if="vm.ui.data.isClockedIn" data-ng-bind="vm.ui.data.clockInDateTime | date:'hh:mm a'"></h5>
                 </div>
                 <div class="col center">
                     <button class="button icon-center ion-clock button-block button-positive button-small" data-ng-if="!vm.ui.data.isClockedOut"
@@ -45,22 +48,21 @@
             </div>
         </div>
         <div class="list">
-            <div class="alert" data-ng-if="vm.ui.data.approvalStatus != 0" 
-            data-ng-class="{'alert-info': vm.ui.data.approvalStatus == 1 || vm.ui.data.approvalStatus == 5,'alert-success': vm.ui.data.approvalStatus == 3,'alert-danger': vm.ui.data.approvalStatus == 4 || vm.ui.data.approvalStatus == 2}">
+            <div class="alert" data-ng-if="vm.ui.data.approvalStatus != 0" data-ng-class="{'alert-info': vm.ui.data.approvalStatus == 1 || vm.ui.data.approvalStatus == 5,'alert-success': vm.ui.data.approvalStatus == 3,'alert-danger': vm.ui.data.approvalStatus == 4 || vm.ui.data.approvalStatus == 2}">
                 <span data-ng-switch="vm.ui.data.approvalStatus">
                     <span data-ng-switch-when="1" class="">
                         <i class="fa fa-info-circle"></i>&nbsp;Waiting for approval
                     </span>
-                    <span data-ng-switch-when="2">Time card has been rejected due to following reason : {{::vm.ui.data.summary.MessageText}}
+                <span data-ng-switch-when="2">Time card has been rejected due to following reason : {{::vm.ui.data.summary.MessageText}}
                         <button class="button button-block button-small button-positive" data-ng-click="vm.ui.events.sendForApproval(5)">Re-submit for Approval</button>
                     </span>
-                    <span data-ng-switch-when="3">
+                <span data-ng-switch-when="3">
                         <i class="fa fa-check"></i>&nbsp;Time card has been approved
                     </span>
-                    <span data-ng-switch-when="4">Time card has been unapproved due to following reason : {{::vm.ui.data.summary.MessageText}}
+                <span data-ng-switch-when="4">Time card has been unapproved due to following reason : {{::vm.ui.data.summary.MessageText}}
                         <button class="button button-block button-small button-positive" data-ng-click="vm.ui.events.sendForApproval(5)">Re-submit for Approval</button>
                     </span>
-                    <span data-ng-switch-when="5">Time card has been resent for approval
+                <span data-ng-switch-when="5">Time card has been resent for approval
                     </span>
                 </span>
             </div>
@@ -72,10 +74,10 @@
                         data-ng-click="vm.ui.events.onCardActionClicked(t)" data-ng-if="vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2"></a>
                 </div>
 
-                <div class="item item-text-wrap">
+                <div class="item item-text-wrap" data-ng-class="{'clockin-item':t.jobCode == 5001,'timecard-checkin-item':t.jobCode != 5001}">
                     <div class="row" data-ng-if="t.jobCode != 5001 && t.barcode != 0">
                         <div class="col col-50">
-                            <h4 class="text-muted">
+                            <h4 class="text-muted pull-left">
                                 #<strong data-ng-bind="t.barcodeName"></strong></h4>
                         </div>
                         <div class="col col-50">
@@ -124,8 +126,10 @@
             <ion-popover-view>
                 <ion-content>
                     <div class="list">
-                        <a data-ng-if="vm.ui.data.ptoButtonVisibility  && (vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2)" data-ng-click="vm.ui.events.addTimeClick(true)" class="item">Add PTO</a>
-                        <a data-ng-if="vm.ui.data.addTimeVisibility && (vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2)" data-ng-click="vm.ui.events.addTimeClick(false)" class="item">Add Time</a>
+                        <a data-ng-if="vm.ui.data.ptoButtonVisibility  && (vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2)" data-ng-click="vm.ui.events.addTimeClick(true)"
+                            class="item">Add PTO</a>
+                        <a data-ng-if="vm.ui.data.addTimeVisibility && (vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2)" data-ng-click="vm.ui.events.addTimeClick(false)"
+                            class="item">Add Time</a>
                         <a class="item" ng-click="vm.ui.events.checkSummaryClick()">Check Summary</a>
                         <a class="item" ng-click="vm.ui.events.showTimeCardTutorialWindow()">Tutorial</a>
                     </div>
@@ -134,18 +138,18 @@
         </script>
     </ion-content>
     <script id="timecardDetailsModal.html" type="text/ng-template">
-	<ion-modal-view>
-		<add-edit-details-component on-cancel-clicked="vm.ui.events.onModalCancelClicked()" on-add-completed="vm.ui.events.onAddScheduleCompleted(o)"></add-edit-details-component>
-	</ion-modal-view>
-</script>
+        <ion-modal-view>
+            <add-edit-details-component on-cancel-clicked="vm.ui.events.onModalCancelClicked()" on-add-completed="vm.ui.events.onAddScheduleCompleted(o)"></add-edit-details-component>
+        </ion-modal-view>
+    </script>
     <script id="timecardSummaryModal.html" type="text/ng-template">
-	<ion-modal-view>
-		<timecard-summary-component on-cancel-clicked="vm.ui.events.onSummaryModalCancel()"></timecard-summary-component>
-	</ion-modal-view>
-</script>
+        <ion-modal-view>
+            <timecard-summary-component on-cancel-clicked="vm.ui.events.onSummaryModalCancel()"></timecard-summary-component>
+        </ion-modal-view>
+    </script>
     <script id="timecardTutorialModal.html" type="text/ng-template">
-	<ion-modal-view>
-		<timecard-tutorial-view-component on-cancel-clicked="vm.ui.events.onTutorialModalCancel()"></timecard-tutorial-view-component>
-	</ion-modal-view>
-</script>
+        <ion-modal-view>
+            <timecard-tutorial-view-component on-cancel-clicked="vm.ui.events.onTutorialModalCancel()"></timecard-tutorial-view-component>
+        </ion-modal-view>
+    </script>
 </ion-view>

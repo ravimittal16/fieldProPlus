@@ -205,6 +205,9 @@
                         vm.entity.timeCardDate = new Date(moment(timecardFactory.summary.timeCardDate));
                     }
                     vm.timecardPermissions.isFromAddingPto = fromPto;
+                    if (fromPto) {
+                        vm.timecardPermissions.timePickerVisibility = fromPto;
+                    }
                     //vm.timecardPermissions.timePickerVisibility = fromPto;
                 }
 

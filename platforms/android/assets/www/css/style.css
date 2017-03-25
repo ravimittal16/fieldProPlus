@@ -378,3 +378,17 @@ customer-search-header-component {
 .border-bottom{
   border-bottom:1px solid #eee;
 }
+.clockin-item{
+  background: rgba(167, 144, 103, 0.89) !important;
+    color: white;
+    padding: 0px !important;
+    text-align: center !important;
+}
+.timecard-checkin-item{
+  padding: 5px;
+    text-align: center;
+}
+.m-t-10{
+
+  margin-top: 10px !important;
+}
