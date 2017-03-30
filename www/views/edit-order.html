@@ -262,11 +262,11 @@ view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
 							</label>
               <label class="item item-input">
 								<span class="input-label">Start (Miles)</span>
-								<input type="text" class="transparent-background text-right"  data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,preset:'decimal',onSelect:vm.tabs.sch.events.updateMilage}" data-ng-model="vm.schedule.startMiles" />
+								<input type="text" class="transparent-background text-right"  data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal',onSelect:vm.tabs.sch.events.updateMilage}" data-ng-model="vm.schedule.startMiles" />
 							</label>
               <label class="item item-input">
 									<span class="input-label">End</span>
-									<input type="text" class="transparent-background text-right"  data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,preset:'decimal',onSelect:vm.tabs.sch.events.updateMilage}" data-ng-model="vm.schedule.endMiles"/>
+									<input type="text" class="transparent-background text-right"  data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal',onSelect:vm.tabs.sch.events.updateMilage}" data-ng-model="vm.schedule.endMiles"/>
 							</label>
               <label class="item item-input">
 									<span class="input-label"><strong>Total</strong></span>

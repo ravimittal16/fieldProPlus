@@ -28,7 +28,7 @@
 
         $rootScope.$on('$stateChangeSuccess',
             function (event, toState, toParams, fromState, fromParams) {
-                if (toState.name !== "app.logout" && toState.name !== "login") {
+                if (toState.name !== "app.logout" && toState.name !== "login" && toState !== "app.editOrder") {
                     localStorageService.set("appState", { stateName: toState.name, params: toParams });
                 }
                 if (toState.name === "login" && fromState.name === "app.changePassword") { 

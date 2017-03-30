@@ -22,13 +22,11 @@
                     var defer = $q.defer();
                     var hasErrors = false;
                     var emailArray = vm.mailConfig.mailAddresses;
-                    console.log(vm.mailConfig.mailAddresses);
                     if (emailArray.length > 0) {
                         for (var i = 0; i <= (emailArray.length - 1); i++) {
                             hasErrors = false;
                             var email = $.trim(emailArray[i]);
                             if (!checkEmail(email)) {
-                                console.log(email);
                                 hasErrors = true;
                             }
                             if (i === emailArray.length - 1) {
@@ -51,6 +49,7 @@
                         checkEmails().then(function (havingInvalidEmails) {
                             if (!havingInvalidEmails) {
                                 vm.sendingEmails = true;
+
                                 workOrdersFactory.sendInvoiceMail({ BarCode: vm.barcode, SendAsInvoice: sendAsInvoice, emailAddresses: vm.mailConfig.mailAddresses, TaxRate: vm.taxrate }).then(function () {
                                     fpmUtilitiesFactory.alerts.alert("Email Sent", "Email has been sent successfully", function () {
                                         vm.sendingEmails = false;

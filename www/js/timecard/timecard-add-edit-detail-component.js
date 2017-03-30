@@ -168,6 +168,7 @@
                     vm.ui.errors = [];
                     vm.details = eventParams.details;
                     vm.editMode = eventParams.editMode;
+                    vm.isInEditMode = vm.editMode;
                     var fromPto = eventParams.isFromPto;
                     vm.isFromPto = fromPto;
                     if (vm.editMode && vm.details) {
@@ -202,7 +203,7 @@
                     }
                     if (timecardFactory.summary) {
                         vm.entity.numFromSummary = timecardFactory.summary.num;
-                        vm.entity.timeCardDate = new Date(moment(timecardFactory.summary.timeCardDate));
+                        vm.entity.timeCardDate = kendo.parseDate(timecardFactory.summary.timeCardDate);
                     }
                     vm.timecardPermissions.isFromAddingPto = fromPto;
                     if (fromPto) {
@@ -233,7 +234,7 @@
                                 defer.resolve(true);
                             } else {
                                 if (!vm.isInEditMode) {
-                                    // vm.entity.finishTime = new Date();
+                                    vm.entity.finishTime = new Date();
                                     vm.ui.isInvalidSave = true;
                                     //vm.ui.errors.push("Invalid Time");
                                     defer.resolve(false);

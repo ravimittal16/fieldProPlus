@@ -367,7 +367,7 @@
             }
         }
 
-        function updateSchedule(showSuccessAlert, showLoading) {
+        function updateSchedule(showSuccessAlert, showLoading, callback) {
             var sch = angular.copy(vm.schedule);
             if (vm.schedule.actualStartDateTime) {
                 sch.actualStartDateTime = kendo.toString(vm.schedule.actualStartDateTime, "g");
@@ -385,14 +385,30 @@
                 fpmUtilities.showLoading().then(function () {
                     workOrderFactory.updateSchedule(sch).then(function () {
                         if (showSuccessAlert) {
-                            alerts.alert("Success", "Schedule information updated successfully");
+                            alerts.alert("Success", "Schedule information updated successfully", function () {
+                                if (angular.isFunction(callback)) {
+                                    callback();
+                                }
+                            });
+                        } else {
+                            if (angular.isFunction(callback)) {
+                                callback();
+                            }
                         }
                     }).then(fpmUtilities.hideLoading);
                 });
             } else {
                 workOrderFactory.updateSchedule(sch).then(function () {
                     if (showSuccessAlert) {
-                        alerts.alert("Success", "Schedule information updated successfully");
+                        alerts.alert("Success", "Schedule information updated successfully", function () {
+                            if (angular.isFunction(callback)) {
+                                callback();
+                            }
+                        });
+                    } else {
+                        if (angular.isFunction(callback)) {
+                            callback();
+                        }
                     }
                 });
             }
@@ -527,7 +543,11 @@
                 events: {
                     workCompleteChanged: function () {
                         if (checkAuthorizationIfServiceProvider(vm.schedule, restoreSchedule, false)) {
-                            updateSchedule(true, true);
+                            updateSchedule(true, true, function () {
+                                $timeout(function () {
+                                    $state.go("app.dashboard", { refresh: true })
+                                }, 200);
+                            });
                         }
                     },
                     onCustomScheduleChanged: function (e) {

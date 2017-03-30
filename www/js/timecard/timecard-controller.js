@@ -74,7 +74,7 @@
                     } else {
                         s.section = 0;
                     }
-                    if (i === details.length - 1) {
+                    if (i === (details.length - 1)) {
                         vm.ui.data.timeCards = _.reject(details, { jobCode: jobCodes.CLOCK_IN, finishTime: null });
                     }
                 });
@@ -88,17 +88,19 @@
             vm.ui.data.approvalStatus = details.timeCardSummary.approveStatus || 0;
             pendingClockIns = details.pendingClockIns;
             vm.ui.data.currentClockedIn = _.findWhere(details.timeCardDetails, { jobCode: jobCodes.CLOCK_IN, finishTime: null });
+            
             _updateBindingsForSummaryStatus(details);
             if (angular.isDefined(vm.ui.data.currentClockedIn)) {
                 var clockIn = vm.ui.data.currentClockedIn;
-                vm.ui.data.clockInDateTime = moment(clockIn.startTime);
+                vm.ui.data.clockInDateTime = kendo.parseDate(clockIn.startTime);
                 vm.ui.data.isClockedIn = true;
                 vm.ui.data.isClockedOut = clockIn.finishTime !== null;
                 vm.ui.data.addTimeVisibility = !vm.ui.data.isClockedOut;
-                vm.ui.data.clockOutDateTime = moment(clockIn.finishTime);
+                vm.ui.data.clockOutDateTime = kendo.parseDate(clockIn.finishTime);
                 vm.ui.data.clockedInDate = angular.copy(clockIn);
             }
             _checkIfPastDateSelected();
+           
             _updateTimeCardsArray(details.timeCardDetails);
         }
 
@@ -114,14 +116,14 @@
             var totalMins = 0;
             if (payables.length > 0) {
                 angular.forEach(payables, function (e, i) {
-                    totalMins += moment(e.finishTime).diff(kendo.parseDate(e.startTime), "minutes");
+                    totalMins += moment(kendo.parseDate(e.finishTime)).diff(kendo.parseDate(e.startTime), "minutes");
                 });
             }
-            
+
             if (nonPayables.length > 0) {
                 var totalNonPMins = 0;
                 angular.forEach(nonPayables, function (e, i) {
-                    totalNonPMins += moment(e.finishTime).diff(moment(e.startTime), "minutes");
+                    totalNonPMins += moment(kendo.parseDate(e.finishTime)).diff(kendo.parseDate(e.startTime), "minutes");
                     if (i === nonPayables.length - 1) {
                         totalMins = totalMins - totalNonPMins;
                         var hours = Math.floor(totalMins / 60);
