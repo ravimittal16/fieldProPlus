@@ -7,7 +7,7 @@
                 $(element).on("error", function () {
                     $(element).hide();
                     $("#noImageMessageContainer").show();
-                })
+                });
             }
         }
     }

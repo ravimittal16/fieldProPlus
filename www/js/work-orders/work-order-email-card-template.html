@@ -11,11 +11,11 @@
                     <input type="text" placeholder="email address" data-ng-model="vm.mailConfig.mailAddresses" data-ng-list="," maxlength="100" required name="emailBox"/>
                 </label>
 
-                <div class="button-bar padding button-bar-with-margin">
-                    <button type="button" class="button button-small button-positive" ng-disabled="vm.sendingEmails || emailForm.$invalid" data-ng-click="vm.events.sendEmail(true)">
+                <div class="button-bar padding button-bar-with-margin" ng-if="!vm.hideEmailButton">
+                    <button type="button" class="button button-small button-positive" ng-if="vm.showPrice" ng-disabled="vm.sendingEmails || emailForm.$invalid" data-ng-click="vm.events.sendEmail(true)">
                         Send As Invoice
                         </button>
-                    <button type="button" class="button button-small button-positive" ng-disabled="vm.sendingEmails || emailForm.$invalid" data-ng-click="vm.events.sendEmail(false)">
+                    <button type="button" class="button button-small button-positive"  ng-disabled="vm.sendingEmails || emailForm.$invalid" data-ng-click="vm.events.sendEmail(false)">
                             Send As Work Order
                             </button>
                 </div>

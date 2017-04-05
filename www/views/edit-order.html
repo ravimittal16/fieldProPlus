@@ -222,7 +222,7 @@ view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
                 </div>
                 <label class="item item-input">
                     <span class="input-label">Total Time</span>
-                    <input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" placeholder="Total Time" data-mobiscroll-timespan="{display: 'bottom',preset:'timespan',wheelOrder: 'hhii',onSelect:vm.scheduleTimeSpan.onInRouteTimespanChanged}" data-ng-model="vm.scheduleTimeSpan.inRouteTimeSpan"/>
+                    <input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" placeholder="Total Time" data-mobiscroll-timespan="{display: 'bottom',preset:'timespan',wheelOrder: 'hhii',onSelect:vm.scheduleTimeSpan.onInRouteTimespanChanged}" data-ng-model="vm.scheduleTimeSpan.inRouteTimeSpan"/> 
                     <input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled placeholder="Total Time" data-ng-model="vm.scheduleTimeSpan.inRouteTimeSpan"/>
                   </label>
               </div>
@@ -231,7 +231,7 @@ view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
             <div class="list" ng-if="vm.uiSettings.billingOption == 1">
               <label class="item item-input">
 				        <span class="input-label">Actual Start Date</span>
-								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy',onSelect:vm.scheduleTimeSpan.onStartDateTimeChaged}" data-ng-model="vm.schedule.actualStartDateTime"/>
+								<input type="text" data-ng-if="!vm.schedule.approve" class="transparent-background text-right" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}" data-ng-model="vm.schedule.actualStartDateTime" data-ng-change="vm.scheduleTimeSpan.onStartDateTimeChaged()"/>
 								<input type="text" data-ng-if="vm.schedule.approve"  class="transparent-background text-right" disabled data-ng-model="vm.schedule.actualStartDateTime"/>
 							</label>
 
@@ -262,11 +262,11 @@ view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
 							</label>
               <label class="item item-input">
 								<span class="input-label">Start (Miles)</span>
-								<input type="text" class="transparent-background text-right"  data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal',onSelect:vm.tabs.sch.events.updateMilage}" data-ng-model="vm.schedule.startMiles" />
+								<input type="text" class="transparent-background text-right"  data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:999999.99,preset:'decimal'}" data-ng-model="vm.schedule.startMiles" data-ng-change="vm.tabs.sch.events.updateMilage()" />
 							</label>
               <label class="item item-input">
 									<span class="input-label">End</span>
-									<input type="text" class="transparent-background text-right"  data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal',onSelect:vm.tabs.sch.events.updateMilage}" data-ng-model="vm.schedule.endMiles"/>
+									<input type="text" class="transparent-background text-right"  data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:999999.99,preset:'decimal'}" data-ng-model="vm.schedule.endMiles" data-ng-change="vm.tabs.sch.events.updateMilage()"/>
 							</label>
               <label class="item item-input">
 									<span class="input-label"><strong>Total</strong></span>
@@ -407,7 +407,9 @@ view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
             </div>
           </div>
           <order-signature-component data-barcode="vm.barcode"></order-signature-component>
-          <order-email-card-component data-barcode="vm.barcode" data-taxrate="vm.barCodeData.taxRate" data-default-emails="vm.barCodeData.barcodeDetails.address2_Group"></order-email-card-component>
+          <order-email-card-component data-barcode="vm.barcode" data-taxrate="vm.barCodeData.taxRate" 
+          data-default-emails="vm.barCodeData.barcodeDetails.address2_Group" show-price="vm.showPrice" 
+          hide-email-button="vm.uiSettings.hideEmailButton"></order-email-card-component>
           <order-images-list-component data-barcode="vm.barcode"></order-images-list-component>
           <order-documents-list-component data-barcode="vm.barcode"></order-documents-list-component>
           <div class="card">

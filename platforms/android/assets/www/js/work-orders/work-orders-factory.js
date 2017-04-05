@@ -94,12 +94,16 @@
         }
 
         function updateJobStatus(sch) {
-            sch.clientTime = new Date();
+            sch.clientTime = kendo.toString(new Date(), "g");
             return apiBaseFactory.post(apibaseurl + "UpdateJobStatus", sch);
         }
 
-        function updateSchedule(schedule) {
-            return apiBaseFactory.post(apibaseurl + "UpdateSchedule?fromMobile=true", schedule);
+        function updateSchedule(model) {
+            console.log("model", model);
+            if (model.customSchedules) {
+                model.customSchedules = JSON.stringify(model.customSchedules);
+            }
+            return apiBaseFactory.post(apibaseurl + "UpdateSchedule?fromMobile=true", model);
         }
 
         function addWorkOrderSchedule(schedule) {

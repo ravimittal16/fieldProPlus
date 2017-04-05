@@ -2,6 +2,8 @@
     "use strict";
     var componentConfig = {
         bindings: {
+            showPrice: "<",
+            hideEmailButton: "<",
             barcode: "<",
             taxrate: "<",
             defaultEmails: "<"

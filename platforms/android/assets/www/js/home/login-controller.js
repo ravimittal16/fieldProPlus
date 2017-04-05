@@ -73,7 +73,10 @@
                                 }
                                 var previousState = localStorageService.get("appState");
                                 if (previousState && angular.isDefined(previousState)) {
-                                    if (previousState.params && angular.isDefined(previousState.params)) {
+                                    if (previousState.stateName === "app.editOrder") {
+                                        //Sometimes after minimizing the app and reopen it, the upper section of WO screen is not getting dipslyaed properly.
+                                        $state.go("app.dashboard", { refresh: true });
+                                    } else if (previousState.params && angular.isDefined(previousState.params)) {
                                         $state.go(previousState.stateName, previousState.params);
                                     } else {
                                         $state.go(previousState.stateName);

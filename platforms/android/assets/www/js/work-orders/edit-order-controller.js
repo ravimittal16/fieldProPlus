@@ -369,6 +369,7 @@
 
         function updateSchedule(showSuccessAlert, showLoading, callback) {
             var sch = angular.copy(vm.schedule);
+
             if (vm.schedule.actualStartDateTime) {
                 sch.actualStartDateTime = kendo.toString(vm.schedule.actualStartDateTime, "g");
             }
@@ -456,7 +457,8 @@
                 workOrderFactory.updateJobStatus({
                     scheduleButton: jobStatus.CheckIn, scheduleNum: vm.schedule.num,
                     actualStartTime: fpmUtilities.toStringDate(vm.schedule.actualStartDateTime), barcode: vm.barcode,
-                    timerStartAt: fpmUtilities.toStringDate(new Date())
+                    timerStartAt: fpmUtilities.toStringDate(new Date()),
+                    clientTime: kendo.toString(new Date(), "g")
                 }).then(function () {
                     vm.schedule.checkInStatus = true;
                 }).finally(fpmUtilities.hideLoading);
@@ -575,10 +577,14 @@
                         vm.scheduleAddModal.hide();
                     },
                     updateMilage: function () {
-                        if (vm.schedule.startMiles && vm.schedule.endMiles) {
-                            vm.schedule.totalMiles = parseFloat(parseFloat(vm.schedule.endMiles) - parseFloat(vm.schedule.startMiles)).toFixed(2);
-                            updateSchedule(false, false);
-                        }
+                        $timeout(function () {
+                            if (vm.schedule.startMiles && vm.schedule.endMiles) {
+                                vm.schedule.totalMiles = parseFloat(parseFloat(vm.schedule.endMiles) - parseFloat(vm.schedule.startMiles)).toFixed(2);
+                                updateSchedule(false, false);
+                            }
+
+
+                        }, 100);
                     },
                     onTripnoteChanged: function () {
                         updateSchedule(false, false);
@@ -659,7 +665,8 @@
                                 vm.scheduleTimeSpan.onEndDateTimeChanged();
                                 workOrderFactory.updateJobStatus({
                                     scheduleButton: jobStatus.CheckOut, scheduleNum: vm.schedule.num,
-                                    actualEndTime: fpmUtilities.toStringDate(vm.schedule.actualFinishDateTime), Barcode: vm.barcode
+                                    actualEndTime: fpmUtilities.toStringDate(vm.schedule.actualFinishDateTime), Barcode: vm.barcode,
+                                    clientTime: kendo.toString(new Date(), "g")
                                 }).then(function () {
                                     vm.schedule.checkOutStatus = true;
                                 });

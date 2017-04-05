@@ -46,10 +46,6 @@
                                 vm.ui.errors.push("Cannot be a future time");
                                 return false;
                             }
-                            if (!vm.editMode && ft.isBefore(tcd)) {
-                                vm.ui.errors.push("Finish time must be greater then Start Time");
-                                return false;
-                            }
                         }
                     }
                     if (vm.entity.jobCode === null || vm.entity.jobCode === 0) {

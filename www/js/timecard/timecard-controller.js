@@ -190,8 +190,7 @@
 
         function _processClockOutUser() {
             var smDt = new Date();
-            var tcdt = vm.currentDate;
-            var clockOutTime = new Date(tcdt.getFullYear(), tcdt.getMonth(), tcdt.getDate(), smDt.getHours(), smDt.getMinutes(), 0, 0);
+            var clockOutTime = new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), smDt.getHours(), smDt.getMinutes(), 0, 0);
             var details = {
                 startTime: kendo.toString(clockOutTime, "g"),
                 jobCode: jobCodes.CLOCK_OUT,
