@@ -53,13 +53,13 @@
                     <span data-ng-switch-when="1" class="">
                         <i class="fa fa-info-circle"></i>&nbsp;Waiting for approval
                     </span>
-                <span data-ng-switch-when="2">Time card has been rejected due to following reason : {{::vm.ui.data.summary.MessageText}}
+                <span data-ng-switch-when="2">Time card has been rejected due to following reason : {{::vm.ui.data.summary.messageText}}
                         <button class="button button-block button-small button-positive" data-ng-click="vm.ui.events.sendForApproval(5)">Re-submit for Approval</button>
                     </span>
                 <span data-ng-switch-when="3">
                         <i class="fa fa-check"></i>&nbsp;Time card has been approved
                     </span>
-                <span data-ng-switch-when="4">Time card has been unapproved due to following reason : {{::vm.ui.data.summary.MessageText}}
+                <span data-ng-switch-when="4">Time card has been unapproved due to following reason : {{::vm.ui.data.summary.messageText}}
                         <button class="button button-block button-small button-positive" data-ng-click="vm.ui.events.sendForApproval(5)">Re-submit for Approval</button>
                     </span>
                 <span data-ng-switch-when="5">Time card has been resent for approval

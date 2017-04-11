@@ -1,6 +1,7 @@
 (function () {
     "use strict"
-    angular.module("fpm").directive("focusMe", ["$timeout", function ($timeout) {
+    var fpm = angular.module("fpm");
+    fpm.directive("focusMe", ["$timeout", function ($timeout) {
         return {
             link: function (scope, element, attrs) {
                 scope.$on("modal.shown", function () {
@@ -14,4 +15,17 @@
             }
         };
     }]);
+
+    function _growTextbox() {
+        return {
+            link: function (scope, element, attrs) {
+                setTimeout(function () {
+                    $(element).autogrow({ vertical: true, horizontal: false });
+                }, 1000);
+            },
+            restrict: "A"
+        }
+    }
+
+    fpm.directive("autoGrow", _growTextbox);
 })();

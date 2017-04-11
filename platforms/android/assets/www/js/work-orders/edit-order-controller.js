@@ -26,7 +26,8 @@
             showEquipmentTabControl: false,
             billingOption: 0,
             isRouteTimeOptionChecked: false,
-            enableMarkup: false
+            enableMarkup: false,
+            hideEmailButton: false
         };
 
         vm.errors = [];
@@ -308,7 +309,10 @@
                     if (vm.uiSettings.billingOption === 0) {
                         vm.uiSettings.isRouteTimeOptionChecked = response.customerNumberEntity.isRouteTimeOptionChecked;
                     }
-
+                    if (response.customerNumberEntity.configurationJson) {
+                        var configurations = JSON.parse(response.customerNumberEntity.configurationJson);
+                        vm.uiSettings.hideEmailButton = configurations.HideEmailButtonOnMobile || false;
+                    }
                     vm.scheduleStatus = response.secondaryOrderStatus;
                     vm.serviceProviders = response.serviceProviders;
                     vm.vehicles = response.vehicles;
