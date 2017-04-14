@@ -1,18 +1,20 @@
 (function () {
     "use strict";
-    function initController($scope, $timeout, $ionicPopup, $ionicLoading, authenticationFactory,
-        $state, $ionicHistory, dashboardFactory, fpmUtilitiesFactory, sharedDataFactory) {
+    function initController($scope, $stateParams, $timeout, $ionicPopup, $ionicLoading, authenticationFactory,
+        $state, $ionicHistory, dashboardFactory, fpmUtilitiesFactory, sharedDataFactory, localStorageService) {
         var vm = this;
         vm.user = { userName: "", password: "" };
         vm.showError = false;
         vm.data = {
             model: ""
         };
+
         var alerts = fpmUtilitiesFactory.alerts;
 
         vm.events = {
             onForgotPasswordClicked: function () {
                 vm.forgotPasswordModalErrors = [];
+                vm.data.model = "";
                 var myPopup = $ionicPopup.show({
                     templateUrl: "forgotPasswordModal.html",
                     title: 'Forgot Password',
@@ -20,7 +22,12 @@
                     scope: $scope,
                     buttons:
                     [
-                        { text: 'Cancel' },
+                        {
+                            text: 'Cancel', onTap: function () {
+                                vm.data.model = "";
+                                return null;
+                            }
+                        },
                         {
                             text: 'Send password',
                             type: 'button-positive',
@@ -35,12 +42,18 @@
                         }]
                 });
                 myPopup.then(function (res) {
-                    vm.forgotPasswordModalErrors = []; vm.showError = false;
-                    authenticationFactory.sendPassword(res).then(function (res) {
-                        if (angular.isArray(res) && res.length > 0) {
-                            vm.forgotPasswordModalErrors = res;
-                        }
-                    })
+                    if ($.trim(vm.data.model) !== "") {
+                        vm.forgotPasswordModalErrors = []; vm.showError = false;
+                        fpmUtilitiesFactory.showLoading("sending password...").then(function () {
+                            authenticationFactory.sendPassword(res).then(function (res) {
+                                if (angular.isArray(res) && res.length > 0) {
+                                    vm.forgotPasswordModalErrors = res;
+                                } else {
+                                    alerts.alert("Password Sent", "Password has been sent successfully.");
+                                }
+                            }).finally(fpmUtilitiesFactory.hideLoading);
+                        });
+                    }
                 });
             },
             loginClick: function (isValid) {
@@ -58,7 +71,19 @@
                                     fpmUtilitiesFactory.locationService.start(sharedDataFactory.saveLocationCordinates);
                                     sharedDataFactory.registerUserTemplateForPushNotifications();
                                 }
-                                $state.go("app.dashboard", { refresh: true });
+                                var previousState = localStorageService.get("appState");
+                                if (previousState && angular.isDefined(previousState)) {
+                                    if (previousState.stateName === "app.editOrder") {
+                                        //Sometimes after minimizing the app and reopen it, the upper section of WO screen is not getting dipslyaed properly.
+                                        $state.go("app.dashboard", { refresh: true });
+                                    } else if (previousState.params && angular.isDefined(previousState.params)) {
+                                        $state.go(previousState.stateName, previousState.params);
+                                    } else {
+                                        $state.go(previousState.stateName);
+                                    }
+                                } else {
+                                    $state.go("app.dashboard", { refresh: true });
+                                }
                             }
                         });
                     }, function (data) {
@@ -77,20 +102,30 @@
         function tryUserLoginFromStorage() {
             var credentials = authenticationFactory.getStoredCredentials();
             if (credentials && angular.isDefined(credentials)) {
-                fpmUtilitiesFactory.alerts.alert("LOGIN", JSON.stringify(credentials));
+                vm.user = angular.copy(credentials);
+                vm.events.loginClick(true);
             }
         }
 
-        $scope.$on('$ionicView.beforeEnter', function () {
-            console.log("HELLO WORLD");
+        $scope.$on('$ionicView.loaded', function () {
             $timeout(function () {
                 $ionicHistory.clearHistory();
                 $ionicHistory.clearCache();
                 tryUserLoginFromStorage();
             }, 200);
         });
+
+        $scope.$on("$fpm:onLoginViewLoaded", function (event, args) {
+            console.log("EVENT FIRED");
+            $timeout(function () {
+                if (args.clearPassword) {
+                    vm.user.password = "";
+
+                }
+            }, 200);
+        });
     }
-    initController.$inject = ["$scope", "$timeout", "$ionicPopup", "$ionicLoading", "authenticationFactory", "$state",
-        "$ionicHistory", "dashboard-factory", "fpm-utilities-factory", "shared-data-factory"];
+    initController.$inject = ["$scope", "$stateParams", "$timeout", "$ionicPopup", "$ionicLoading", "authenticationFactory", "$state",
+        "$ionicHistory", "dashboard-factory", "fpm-utilities-factory", "shared-data-factory", "localStorageService"];
     angular.module("fpm").controller("login-controller", initController);
 })();

@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    function initController($scope, $timeout, $rootScope, $state, ionicDatePicker, $ionicPopover,
+    function initController($scope, $timeout, $rootScope, $state, $ionicPopover,
         $ionicModal, $ionicActionSheet, timecardFactory, fpmUtilitiesFactory, authenticationFactory) {
         var vm = this;
         var jobCodes = { CLOCK_IN: 5001, CLOCK_OUT: 5002 };
@@ -74,7 +74,7 @@
                     } else {
                         s.section = 0;
                     }
-                    if (i === details.length - 1) {
+                    if (i === (details.length - 1)) {
                         vm.ui.data.timeCards = _.reject(details, { jobCode: jobCodes.CLOCK_IN, finishTime: null });
                     }
                 });
@@ -88,17 +88,19 @@
             vm.ui.data.approvalStatus = details.timeCardSummary.approveStatus || 0;
             pendingClockIns = details.pendingClockIns;
             vm.ui.data.currentClockedIn = _.findWhere(details.timeCardDetails, { jobCode: jobCodes.CLOCK_IN, finishTime: null });
+            
             _updateBindingsForSummaryStatus(details);
             if (angular.isDefined(vm.ui.data.currentClockedIn)) {
                 var clockIn = vm.ui.data.currentClockedIn;
-                vm.ui.data.clockInDateTime = moment(clockIn.startTime);
+                vm.ui.data.clockInDateTime = kendo.parseDate(clockIn.startTime);
                 vm.ui.data.isClockedIn = true;
-                vm.ui.data.isClockedOut = false;
+                vm.ui.data.isClockedOut = clockIn.finishTime !== null;
                 vm.ui.data.addTimeVisibility = !vm.ui.data.isClockedOut;
-                vm.ui.data.clockOutDateTime = moment(clockIn.finishTime);
+                vm.ui.data.clockOutDateTime = kendo.parseDate(clockIn.finishTime);
                 vm.ui.data.clockedInDate = angular.copy(clockIn);
             }
             _checkIfPastDateSelected();
+           
             _updateTimeCardsArray(details.timeCardDetails);
         }
 
@@ -114,13 +116,14 @@
             var totalMins = 0;
             if (payables.length > 0) {
                 angular.forEach(payables, function (e, i) {
-                    totalMins += moment(e.FinishTime).diff(kendo.parseDate(e.startTime), "minutes");
+                    totalMins += moment(kendo.parseDate(e.finishTime)).diff(kendo.parseDate(e.startTime), "minutes");
                 });
             }
+
             if (nonPayables.length > 0) {
                 var totalNonPMins = 0;
                 angular.forEach(nonPayables, function (e, i) {
-                    totalNonPMins += moment(e.finishTime).diff(moment(e.startTime), "minutes");
+                    totalNonPMins += moment(kendo.parseDate(e.finishTime)).diff(kendo.parseDate(e.startTime), "minutes");
                     if (i === nonPayables.length - 1) {
                         totalMins = totalMins - totalNonPMins;
                         var hours = Math.floor(totalMins / 60);
@@ -136,7 +139,23 @@
         }
 
 
+        function _clearClockInData() {
+            vm.ui.data.allowSendForApproval = false;
+            vm.ui.data.summary = null;
+            vm.ui.data.approvalStatus = 0;
+            vm.ui.data.isClockedOut = false;
+            vm.ui.data.summary = null;
+            vm.ui.data.clockInDateTime = new Date();
+            vm.ui.data.isClockedIn = false;
+            vm.ui.data.addTimeVisibility = false;
+            vm.ui.data.clockedInDate = null;
+            vm.ui.data.timeCards = [];
+            vm.ui.data.disableClockInButton = false;
+            vm.ui.data.disableClockOutButton = false;
+        }
+
         function _getTimeCardByDate() {
+            _clearClockInData();
             fpmUtilitiesFactory.showLoading().then(function () {
                 timecardFactory.getTimeCardByDate(toDateString(vm.currentDate)).then(function (response) {
                     if (response) {
@@ -161,14 +180,11 @@
             inputDate: vm.currentDate
         };
 
-        function onDatePickerClicked() {
-            ionicDatePicker.openDatePicker(datePickerConfig);
-        }
+
         function showPopoverClicked($event) {
             vm.popover.show($event);
         }
         vm.events = {
-            onDatePickerClicked: onDatePickerClicked,
             showPopoverClicked: showPopoverClicked
         }
 
@@ -211,17 +227,28 @@
         }
 
         function showModal() {
+
+
+            if (vm.ui.data.isFromPto === true && vm.ui.data.summary === null) {
+                vm.ui.data.summary = { num: 0, timeCardDate: vm.ui.data.currentDate };
+                vm.factory.summary = vm.ui.data.summary;
+            }
+
+
+
             if (vm.ui.data.addEditDetailsModal === null) {
                 $ionicModal.fromTemplateUrl("timecardDetailsModal.html", {
                     scope: $scope,
                     animation: 'slide-in-up'
                 }).then(function (modal) {
                     vm.ui.data.addEditDetailsModal = modal;
-                    $scope.$broadcast("timecard:addEditDetailsModal:open", { isFromPto: vm.ui.data.isFromPto });
-                    vm.ui.data.addEditDetailsModal.show();
+                    $timeout(function () {
+                        $scope.$broadcast("timecard:addEditDetailsModal:open", { isFromPto: vm.ui.data.isFromPto, details: vm.ui.data.currentDetails, editMode: vm.ui.data.isInEditMode });
+                        modal.show();
+                    }, 300);
                 });
             } else {
-                $scope.$broadcast("timecard:addEditDetailsModal:open", { isFromPto: vm.ui.data.isFromPto });
+                $scope.$broadcast("timecard:addEditDetailsModal:open", { isFromPto: vm.ui.data.isFromPto, details: vm.ui.data.currentDetails, editMode: vm.ui.data.isInEditMode });
                 vm.ui.data.addEditDetailsModal.show();
             }
         }
@@ -251,6 +278,14 @@
                 });
             } else {
                 vm.ui.data.timecardTutorialModal.show();
+            }
+        }
+        function onCurrentDateChanged(event) {
+            _getTimeCardByDate();
+        }
+        function onShowCalenderClick() {
+            if (angular.isDefined(vm.ui.calendar.control)) {
+                vm.ui.calendar.control.show();
             }
         }
         var timeoutvar = null;
@@ -290,6 +325,8 @@
                 timecardTutorialModal: null
             },
             events: {
+                onShowCalenderClick: onShowCalenderClick,
+                onCurrentDateChanged: onCurrentDateChanged,
                 onTutorialModalCancel: function () {
                     if (vm.ui.data.timecardTutorialModal) {
                         vm.ui.data.timecardTutorialModal.hide();
@@ -322,9 +359,11 @@
                     vm.ui.data.addEditDetailsModal.hide();
                 },
                 addTimeClick: function (isFromPto) {
-                    vm.ui.data.isFromPto = isFromPto;
-                    vm.ui.data.isInEditMode = false;
-                    showModal();
+                    $timeout(function () {
+                        vm.ui.data.isFromPto = isFromPto;
+                        vm.ui.data.isInEditMode = false;
+                        showModal();
+                    }, 100);
                     vm.popover.hide();
                     return true;
                 },
@@ -359,10 +398,12 @@
                         },
                         buttonClicked: function (index) {
                             if (index === 0) {
-                                vm.ui.data.currentDetails = t;
-                                vm.ui.data.isInEditMode = true;
-                                vm.ui.data.isFromPto = false;
-                                showModal();
+                                $timeout(function () {
+                                    vm.ui.data.currentDetails = t;
+                                    vm.ui.data.isInEditMode = true;
+                                    vm.ui.data.isFromPto = t.isPtoType;
+                                    showModal();
+                                }, 100)
                             }
                             return true;
                         }
@@ -400,7 +441,7 @@
                     }
                 },
                 clockInClick: function () {
-                    var smDt = new Date();
+                    var smDt = vm.currentDate;
                     var clockInTime = new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0);
                     var details = {
                         startTime: fpmUtilitiesFactory.toStringDate(clockInTime),
@@ -457,7 +498,7 @@
             activateController();
         });
     }
-    initController.$inject = ["$scope", "$timeout", "$rootScope", "$state", "ionicDatePicker", "$ionicPopover", "$ionicModal",
+    initController.$inject = ["$scope", "$timeout", "$rootScope", "$state", "$ionicPopover", "$ionicModal",
         "$ionicActionSheet", "timecard-factory", "fpm-utilities-factory", "authenticationFactory"];
     angular.module("fpm").controller("timecard-controller", initController);
 })();

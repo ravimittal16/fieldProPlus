@@ -58,20 +58,6 @@ module.exports = [
         ]
     },
     {
-        "id": "cordova-plugin-ms-azure-mobile-apps.AzureMobileServices.Ext",
-        "file": "plugins/cordova-plugin-ms-azure-mobile-apps/www/MobileServices.Cordova.Ext.js",
-        "pluginId": "cordova-plugin-ms-azure-mobile-apps",
-        "runs": true
-    },
-    {
-        "id": "cordova-plugin-ms-azure-mobile-apps.AzureMobileServices",
-        "file": "plugins/cordova-plugin-ms-azure-mobile-apps/www/MobileServices.Cordova.js",
-        "pluginId": "cordova-plugin-ms-azure-mobile-apps",
-        "clobbers": [
-            "WindowsAzure"
-        ]
-    },
-    {
         "id": "cordova-plugin-network-information.network",
         "file": "plugins/cordova-plugin-network-information/www/network.js",
         "pluginId": "cordova-plugin-network-information",
@@ -163,7 +149,6 @@ module.exports.metadata =
     "cordova-plugin-device": "1.1.2",
     "cordova-plugin-inappbrowser": "1.5.0",
     "cordova-sqlite-storage": "1.4.8",
-    "cordova-plugin-ms-azure-mobile-apps": "2.0.0",
     "cordova-plugin-network-information": "1.3.0",
     "cordova-plugin-splashscreen": "3.2.2",
     "cordova-plugin-statusbar": "2.1.3",

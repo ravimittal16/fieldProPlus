@@ -20,27 +20,27 @@
             <div class="input-label">
                 Quantity
             </div>
-            <input type="number" placeholder="Quantity" data-ng-model="vm.product.qty"/>
+            <input type="number" class="transparent-background" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal'}" placeholder="Quantity" data-ng-model="vm.product.qty"/>
         </label>
             <label class="item item-input">
             <div class="input-label">
                 Price
             </div>
             <input type="number" class="transparent-background" data-ng-if="!vm.user.showPrice" placeholder="Price" value="0.0" disabled/>
-            <input type="number" data-ng-if="vm.user.showPrice" placeholder="Price" data-ng-model="vm.product.price"/>
+            <input type="number" data-ng-if="vm.user.showPrice" class="transparent-background" placeholder="Price" data-ng-model="vm.product.price" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal'}"/>
         </label>
         <label class="item item-input" ng-if="vm.enableMarkupOrders && !vm.isEstimate">
             <div class="input-label">
                 Markup
             </div>
             <input type="number" class="transparent-background" data-ng-if="!vm.user.showPrice" placeholder="Markup" value="0.0" disabled/>
-            <input type="number" data-ng-if="vm.user.showPrice" placeholder="Markup" data-ng-model="vm.product.markup"/>
+            <input type="number" class="transparent-background" data-ng-if="vm.user.showPrice" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal'}" placeholder="Markup" data-ng-model="vm.product.markup"/>
         </label>
         <label class="item item-input" data-ng-if="vm.isEstimate">
             <div class="input-label">
                 Markup
             </div>
-            <input type="number" placeholder="Price" pattern="\d*" data-ng-model="vm.product.markUpPercent"/>
+            <input type="number" placeholder="Price" pattern="\d*" data-mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal'}" data-ng-model="vm.product.markUpPercent"/>
         </label>
             <div class="padding">
                 <button class="button button-block button-positive" data-ng-click="vm.events.updateProductClick()" type="button">

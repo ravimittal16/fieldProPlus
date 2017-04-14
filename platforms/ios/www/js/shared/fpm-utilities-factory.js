@@ -35,6 +35,25 @@
             });
           }
         },
+        confirmWithOkayCancel: function (title, template, okayCallback, cancelCallback) {
+          var confirmPopup = $ionicPopup.confirm({
+            title: title,
+            template: template,
+            cancelText: "Cancel",
+            okText: "Okay"
+          });
+          confirmPopup.then(function (res) {
+            if (res) {
+              if (angular.isFunction(okayCallback)) {
+                okayCallback();
+              }
+            } else {
+              if (angular.isFunction(cancelCallback)) {
+                cancelCallback();
+              }
+            }
+          });
+        },
         confirm: function (title, template, okayCallback, cancelCallback) {
           var confirmPopup = $ionicPopup.confirm({
             title: title,
@@ -77,14 +96,18 @@
           * If you are on non-ionic platform you should use a method which identify whether iOS or Android.
           * return navigator.userAgent.match(/Android/i);
           */
-          return (ionic.Platform.device().platform.match(/android/i));
+          if (isOnDevMode) return true;
+          return ionic.Platform.isAndroid();
         },
         isIOS: function isIOS() {
           /*Will work only from the device and if you are developing Ionic App
           * If you are on non-ionic platform you should use a method which identify whether iOS or Android.
           * return navigator.userAgent.match(/iOS/i);
           */
-          return (ionic.Platform.device().platform.match(/ios/i));
+          if (isOnDevMode) return false;
+          return ionic.Platform.isIOS();
+          // var ios = (ionic.Platform.device().platform.match(/ios/i));
+          // return ios.toString().toLowerCase() === "ios";
         }
       };
 
@@ -131,7 +154,7 @@
             }
 
           },
-        stop: function () {
+          stop: function () {
             if (watcher && angular.isFunction(watcher.clearWatch)) {
               watcher.clearWatch();
             }
@@ -170,23 +193,25 @@
             return isOnDevMode;
           },
           getPicture: function () {
-            var defer = $q.defer();
             var options = {
-              quality: 75,
+              quality: 50,
               destinationType: Camera.DestinationType.DATA_URL,
               sourceType: Camera.PictureSourceType.CAMERA,
-              allowEdit: true,
+              allowEdit: false,
               encodingType: Camera.EncodingType.JPEG,
               saveToPhotoAlbum: false
             };
-            $cordovaCamera.getPicture(options).then(function (imageData) {
-              defer.resolve(imageData);
+            return $cordovaCamera.getPicture(options).then(function (imageData) {
+              $ionicLoading.show({
+                template: 'Processing Image',
+                duration: 2000
+              });
+              return imageData;
             }, function () {
-              $ionicPopup.alert({ title: "Failed", template: "Failed to get Image Data" }, function () {
-                defer.resolve(null);
+              return $ionicPopup.alert({ title: "Failed", template: "Failed to get Image Data" }, function () {
+                return null;
               });
             });
-            return defer.promise;
           },
           platforms: platforms,
           getPlatformInfo: function () {
@@ -227,7 +252,8 @@
         alerts: {
           alert: alerts.alert,
           confirm: alerts.confirm,
-          confirmDelete: alerts.confirmDelete
+          confirmDelete: alerts.confirmDelete,
+          confirmWithOkayCancel: alerts.confirmWithOkayCancel
         }
       };
     }

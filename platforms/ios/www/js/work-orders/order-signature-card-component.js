@@ -12,41 +12,27 @@
                 var baseUrl = fieldPromaxConfig.fieldPromaxApi;
                 var user = authenticationFactory.getLoggedInUserInfo();
                 vm.signPadEvents = null;
+
                 vm.events = {
-                    onSignaturePadActionButtonClicked: function () {
-                        var signatureAction = $ionicActionSheet.show({
-                            buttons: [
-                                { text: 'Hide Signature Pad' }, { text: "Save New Signature" }
-                            ],
-                            titleText: 'Work Order Signature',
-                            cancelText: 'Cancel',
-                            cancel: function () {
-                                // add cancel code..
-                            },
-                            buttonClicked: function (index) {
-                                if (index === 0) {
+                    closeSignaturePad: function () {
+                        vm.showingSignaturePad = false;
+                    },
+                    saveSignature: function () {
+                        if (vm.signPadEvents) {
+                            vm.signPadEvents.trySaveSignature().then(function (response) {
+                                if (response === true) {
                                     vm.showingSignaturePad = false;
+                                    vm.imageUrl = baseUrl + "Handlers/GetBarcodeSignature.ashx?barcode=" + vm.barcode + "&dateStamp=" + new Date() + "&customernumber=" + user.customerNumber;
                                 }
-                                if (index === 1) {
-                                    if (vm.signPadEvents) {
-                                        vm.signPadEvents.trySaveSignature().then(function (response) {
-                                            if (response === true) {
-                                                vm.showingSignaturePad = false;
-                                                vm.imageUrl = baseUrl + "Handlers/GetBarcodeSignature.ashx?barcode=" + vm.barcode + "&dateStamp=" + new Date() + "&customernumber=" + user.customerNumber;
-                                            }
-                                        });
-                                    }
-                                }
-                                return true;
-                            }
-                        });
+                            });
+                        }
                     },
                     onSignatureActionButtonClicked: function () {
                         vm.showingSignaturePad = true;
                         vm.imageUrl = baseUrl + "Handlers/GetBarcodeSignature.ashx?barcode=" + vm.barcode + "&dateStamp=" + new Date() + "&customernumber=" + user.customerNumber;
                     }
                 }
-                $scope.$on("$signature:completedEvent", function () { 
+                $scope.$on("$signature:completedEvent", function () {
                     vm.showingSignaturePad = false;
                 });
                 vm.imageUrl = baseUrl + "Handlers/GetBarcodeSignature.ashx?barcode";

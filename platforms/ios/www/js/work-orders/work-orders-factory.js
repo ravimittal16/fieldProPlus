@@ -11,8 +11,7 @@
             cache.removeAll();
         }
         function getMobileDashboard(forceGet, initialData) {
-            forceGet = forceGet === null ? false : forceGet;
-            if (forceGet === true) {
+            if (angular.isDefined(forceGet) && forceGet) {
                 cache.remove(dashboardDataKeyName);
             }
             var orders = cache.get(dashboardDataKeyName);
@@ -95,12 +94,16 @@
         }
 
         function updateJobStatus(sch) {
-            sch.clientTime = new Date();
+            sch.clientTime = kendo.toString(new Date(), "g");
             return apiBaseFactory.post(apibaseurl + "UpdateJobStatus", sch);
         }
 
-        function updateSchedule(schedule) {
-            return apiBaseFactory.post(apibaseurl + "UpdateSchedule?fromMobile=true", schedule);
+        function updateSchedule(model) {
+            console.log("model", model);
+            if (model.customSchedules) {
+                model.customSchedules = JSON.stringify(model.customSchedules);
+            }
+            return apiBaseFactory.post(apibaseurl + "UpdateSchedule?fromMobile=true", model);
         }
 
         function addWorkOrderSchedule(schedule) {
@@ -131,7 +134,22 @@
             return apiBaseFactory.post(apibaseurl + "UpdateCustomScheduleData", o);
         }
 
+        function getWorkOrderResolution(id) {
+            return apiBaseFactory.get(apibaseurl + "GetWorkOrderResolution?id=" + id);
+        }
+
+        function updateSchduleTotalTime(schedule) {
+            return apiBaseFactory.post(apibaseurl + "UpdateSchduleTotalTime", schedule);
+        }
+
+        function deleteImageFromBlob(num, barcode) {
+            return apiBaseFactory.deleteReq(apibaseurl + "DeleteImage?imageId=" + num + "&barcode=" + barcode);
+        }
+
         return {
+            deleteImageFromBlob: deleteImageFromBlob,
+            updateSchduleTotalTime: updateSchduleTotalTime,
+            getWorkOrderResolution: getWorkOrderResolution,
             updateCustomScheduleData: updateCustomScheduleData,
             getMobileDashboard: getMobileDashboard,
             getBarcodeDetails: getBarcodeDetails,

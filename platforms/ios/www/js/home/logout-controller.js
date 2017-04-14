@@ -1,11 +1,11 @@
 (function () {
     "use strict";
-    function initController($scope, $timeout, $state, authenticationFactory, fpmUtilities) {
+    function initController($scope, $rootScope, $timeout, $state, authenticationFactory, fpmUtilities) {
         var vm = this;
         function activateController() {
-            authenticationFactory.logout();
+            authenticationFactory.logout(true);
             $timeout(function () {
-                //fpmUtilities.locationService.stop();
+                $rootScope.$broadcast("$fpm:onLoginViewLoaded", { fromLogout: true });
                 $state.go("login");
             }, 200);
         }
@@ -13,6 +13,6 @@
             activateController();
         });
     }
-    initController.$inject = ["$scope", "$timeout", "$state", "authenticationFactory", "fpm-utilities-factory"];
+    initController.$inject = ["$scope", "$rootScope", "$timeout", "$state", "authenticationFactory", "fpm-utilities-factory"];
     angular.module("fpm").controller("logout-controller", initController);
 })();

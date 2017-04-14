@@ -28,7 +28,7 @@
                         if (angular.isArray(response.errors) && response.errors.length > 0) {
                             vm.errors = response.errors;
                         } else {
-                            fpmUtilitiesFactory.alerts.alert("Success", "Customer create successfully", function () {
+                            fpmUtilitiesFactory.alerts.alert("Success", "Customer created successfully", function () {
                                 moveToDashboard();
                             });
                         }
@@ -38,39 +38,25 @@
                 vm.errors.push("Please check all values before save");
             }
         }
-        function onServiceAddressActionClicked() {
-            $ionicActionSheet.show({
-                buttons: [{
-                    text: 'Same as Business Address'
-                }, {
-                    text: "Clear Address"
-                }],
-                titleText: 'Service Address Options',
-                cancelText: 'Cancel',
-                cancel: function () {
-                    // add cancel code..
-                },
-                buttonClicked: function (index) {
-                    if (index === 0) {
-                        vm.customerModel.sStreet = vm.customerModel.bStreet;
-                        vm.customerModel.sState = vm.customerModel.bState;
-                        vm.customerModel.sCity = vm.customerModel.bCity;
-                        vm.customerModel.sZip = vm.customerModel.bZip;
-                    }
-                    if (index === 1) {
-                        vm.customerModel.sStreet = "";
-                        vm.customerModel.sState = "";
-                        vm.customerModel.sCity = "";
-                        vm.customerModel.sZip = "";
-                    }
-                    return true;
-                }
-            });
-        }
+
         vm.events = {
+            sameAsBilling: function () {
+                if (vm.customerModel) {
+                    vm.customerModel.sStreet = vm.customerModel.bStreet;
+                    vm.customerModel.sState = vm.customerModel.bState;
+                    vm.customerModel.sCity = vm.customerModel.bCity;
+                    vm.customerModel.sZip = vm.customerModel.bZip;
+                }
+            },
+            clearAddress: function () {
+
+                vm.customerModel.sStreet = "";
+                vm.customerModel.sState = "";
+                vm.customerModel.sCity = "";
+                vm.customerModel.sZip = "";
+            },
             onBackToDashboardClicked: onBackToDashboardClicked,
-            onSubmitButtonClicked: onSubmitButtonClicked,
-            onServiceAddressActionClicked: onServiceAddressActionClicked
+            onSubmitButtonClicked: onSubmitButtonClicked
         }
         function activateController() {
             vm.customerModel = angular.copy(customerModel);

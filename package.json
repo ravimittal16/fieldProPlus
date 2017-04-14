@@ -27,7 +27,6 @@
     "cordova-plugin-network-information",
     "cordova-plugin-inappbrowser",
     "cordova-plugin-camera@~2.2.0",
-    "cordova-plugin-ms-azure-mobile-apps",
     "phonegap-plugin-push",
     "cordova-plugin-console@~1.0.3"
   ],

@@ -131,9 +131,6 @@
             "PHOTOLIBRARY_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
-        "cordova-plugin-ms-azure-mobile-apps": {
-            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
-        },
         "phonegap-plugin-push": {
             "SENDER_ID": "504804224593",
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"

@@ -4,90 +4,116 @@
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
   <ion-header-bar class="bar-subheader item-input-inset">
-    <customer-search-header-component data-on-customer-selected="vm.events.onCustomerSelected(customer)"></customer-search-header-component>
+    <customer-search-header-component data-on-customer-selected="vm.events.onCustomerSelected(customer)" placeholder="Search Customer and select..."></customer-search-header-component>
   </ion-header-bar>
   <form name="formWorkOrder" novalidate="">
     <ion-content>
       <errors-view errors="vm.errors"></errors-view>
       <div class="list">
-        <label class="item item-input">
+        <div class="card">
+          <label class="item item-input">
                     <span class="input-label">Order #</span>
                     <input type="text" data-ng-model="vm.woEntity.barCodeName" required />
                 </label>
-        <div class="padding">
-          <div data-ng-if="vm.isCustomerSelected">
-            <h4 data-ng-bind="vm.woEntity.displayName"></h4>
-            <p class="text-muted text-small">
-              <strong data-ng-bind="vm.woEntity.companyName"> </strong>
-            </p>
-          </div>
-          <div data-ng-if="!vm.isCustomerSelected">
-            <h5>
-              <strong class="text-assertive">
-                Please search and select customer
-              </strong>
-            </h5>
-          </div>
         </div>
-        <label class="item item-input">
+        <div class="card">
+          <div class="item item-divider header-dark">
+            Customer Details
+          </div>
+          <div class="padding">
+            <div data-ng-if="vm.isCustomerSelected">
+              <h4 data-ng-bind="vm.woEntity.displayName"></h4>
+              <p class="text-muted text-small">
+                <strong data-ng-bind="vm.woEntity.companyName"> </strong>
+              </p>
+            </div>
+          </div>
+          <label class="item item-input">
                 <span class="input-label">Email</span>
                     <input type="text" placeholder="Email" maxlength="500" data-ng-model="vm.woEntity.email"/>
                 </label>
-        <div class="item item-divider">
-          Billing Address
         </div>
-        <label class="item item-input">
+
+        <div class="card">
+          <div class="list">
+            <div class="item item-divider header-dark">
+              Billing Address
+            </div>
+            <label class="item item-input">
                     <textarea type="text" rows="2" placeholder="Street" class="transparent-background" data-ng-model="vm.woEntity.bStreet" readonly=""></textarea>
                 </label>
-        <label class="item item-input">
+            <label class="item item-input">
                     <input type="text" placeholder="City" class="transparent-background" data-ng-model="vm.woEntity.bCity" readonly=""/>
                 </label>
-        <label class="item item-input">
+            <label class="item item-input">
                     <input type="text" placeholder="State" class="transparent-background" data-ng-model="vm.woEntity.bState" readonly=""/>
                 </label>
-        <label for="" class="item item-input">
+            <label for="" class="item item-input">
                     <input type="text" placeholder="Zip" class="transparent-background" data-ng-model="vm.woEntity.bZip" readonly=""/>
                 </label>
-        <div class="item item-divider">
-          Service Address
-          <a class="button pull-right button-small button-icon icon ion-android-more-vertical item-divider-left-buttion" data-ng-click="vm.events.onServiceAddressActionClicked()"></a>
+          </div>
         </div>
-        <label class="item item-input">
+
+        <div class="card">
+          <div class="list">
+            <div class="item item-divider">
+              Service Address
+              <!--<a class="button pull-right button-small button-icon icon ion-android-more-vertical item-divider-left-buttion" data-ng-click="vm.events.onServiceAddressActionClicked()"></a>-->
+
+              <button type="button" class="button button-small button-assertive pull-right" style="margin-left: 5px;" data-ng-click="vm.events.clearServiceAddress()">
+                <i class="icon ion-trash-a"></i>
+              </button>
+              <button type="button" class="button button-small button-positive pull-right" data-ng-click="vm.events.sameAsBilling()">Same as Billing</button>
+            </div>
+            <label class="item item-input">
                     <textarea type="text" rows="2" placeholder="Street" maxlength="200" data-ng-model="vm.woEntity.sStreet"></textarea>
                 </label>
-        <label class="item item-input">
+            <label class="item item-input">
             <input type="text" placeholder="City" maxlength="50" data-ng-model="vm.woEntity.sCity"/>
           </label>
-        <label class="item item-input">
+            <label class="item item-input">
                     <input type="text" placeholder="State" data-ng-model="vm.woEntity.sState" maxlength="50"/>
                 </label>
-        <label for="" class="item item-input">
+            <label for="" class="item item-input">
                     <input type="text" placeholder="Zip" data-ng-model="vm.woEntity.sZip" maxlength="20"/>
                 </label>
-        <div class="item item-input item-select">
-          <div class="input-label">
-            Job Type
           </div>
-          <select data-ng-options="job.excptns as job.excptns for job in vm.jobTypes track by job.excptns" data-ng-model="vm.woEntity.jobType"></select>
         </div>
-        <div class="item item-input item-select">
-          <div class="input-label">
-            Service Provider
+
+        <div class="card">
+          <div class="item item-divider header-dark">
+            Other Information
           </div>
-          <select data-ng-options="pro.userId as pro.last_Name for pro in vm.serviceProviders" data-ng-model="vm.woEntity.serviceProvider">
+          <div class="item item-input item-select">
+            <div class="input-label">
+              Job Type
+            </div>
+            <select data-ng-options="job.excptns as job.excptns for job in vm.jobTypes track by job.excptns" data-ng-model="vm.woEntity.jobType"></select>
+          </div>
+          <div class="item item-input item-select">
+            <div class="input-label">
+              Service Provider
+            </div>
+            <select data-ng-options="pro.userId as pro.last_Name for pro in vm.serviceProviders" data-ng-model="vm.woEntity.serviceProvider">
                     </select>
-        </div>
-        <label class="item item-input">
+          </div>
+          <label class="item item-input">
                     <span class="input-label">Schedule Start</span>
-                    <input type="text" class="transparent-background" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A'}" data-ng-model="vm.dates.startDate" />
+                    <input type="text" class="transparent-background text-right" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A'}" data-ng-model="vm.dates.startDate" />
                 </label>
-        <label class="item item-input">
+          <label class="item item-input">
                     <span class="input-label">Schedule Finish</span>
-                    <input type="text" class="transparent-background" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A'}" data-ng-model="vm.dates.endDate" />
+                    <input type="text" class="transparent-background text-right" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A'}" data-ng-model="vm.dates.endDate" />
                 </label>
-        <label class="item item-input item-stacked-label">
+        </div>
+        <div class="card">
+          <div class="item item-divider header-dark">
+            Work Description
+          </div>
+          <label class="item item-input item-stacked-label">
                     <textarea cols="30" rows="6" placeholder="please add work description here..." data-ng-model="vm.woEntity.description"></textarea>
                 </label>
+        </div>
       </div>
     </ion-content>
     <ion-footer-bar align-title="left" class="bar-light">

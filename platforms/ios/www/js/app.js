@@ -6,7 +6,7 @@
 // "http://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 // "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 //"http://localhost/FieldPromaxApi/"  
-var isInDevMode = true;
+var isInDevMode = false;
 var constants = {
   fieldPromaxApi: isInDevMode ? "http://localhost:51518/" : "https://fieldpromax.azurewebsites.net/",
   localStorageKeys: {
@@ -81,13 +81,13 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
             if (exception.name) { data.name = exception.name; }
             if (exception.stack) { data.stack = exception.stack; }
           }
-          console.log("EXCPTION", data);
+          //console.log("EXCPTION", data);
         }
       }]);
 
     }])
-  .run(["$ionicPlatform", "$rootScope", "$state", "$timeout", "fpm-utilities-factory", "authenticationFactory",
-    function ($ionicPlatform, $rootScope, $state, $timeout, fpmUtilitiesFactory, authenticationFactory) {
+  .run(["$ionicPlatform", "$rootScope", "$state", "$timeout", "fpm-utilities-factory", "authenticationFactory", "shared-data-factory",
+    function ($ionicPlatform, $rootScope, $state, $timeout, fpmUtilitiesFactory, authenticationFactory, sharedDataFactory) {
       $ionicPlatform.ready(function () {
         if (window.cordova && window.cordova.plugins.Keyboard) {
           // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -103,36 +103,145 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
           StatusBar.styleDefault();
         }
         //REGISTER FOR PUSH NOTIFICATIONS
-        fpmUtilitiesFactory.push.register();
+        var isandr = fpmUtilitiesFactory.device.isAndroid();
+
         document.addEventListener("backbutton", function (event) {
           if ($state.current.name === "app.dashboard") {
-            authenticationFactory.logout();
+            //authenticationFactory.logout(false);
+            if (navigator) navigator.app.exitApp();
           }
         }, false);
-        //HANDLING BACK BUTTON FOR MOBILE
-        // $ionicPlatform.onHardwareBackButton(function (event) {
-        //   if ($state.current.name === "app.dashboard") {
-        //     fpmUtilitiesFactory.alerts.confirm("Confirmation", "Are you sure to logout?", function () {
-        //       authenticationFactory.logout();
-        //     }, function () {
-        //       if (event) {
-        //         event.preventDefault();
-        //         event.stopPropagation();
+
+
+
+
+        function succesFn(location) {
+          var credentials = authenticationFactory.getStoredCredentials();
+          if (angular.isDefined(credentials) && location) {
+            location.userId = credentials.userName;
+            location.isMoving = location.is_moving;
+            location.coords.altitudeAccuracy = location.coords.altitude_accuracy;
+            sharedDataFactory.postLocation(location);
+          }
+        }
+
+        if (!isInDevMode) {
+
+          var bgGeo = window.BackgroundGeolocation;
+
+          bgGeo.on("location", function (location, taskId) {
+            succesFn(location);
+            bgGeo.finish(taskId);
+          });
+
+
+          bgGeo.on("motionchange", function (isMoving, location, taskId) {
+            location.is_moving = isMoving;
+            succesFn(location);
+            bgGeo.finish(taskId);
+          });
+
+          var lastActivity = "";
+
+          // bgGeo.on('activitychange', function (activityName) {
+          //   if (lastActivity !== activityName) {
+          //     lastActivity = activityName;
+          //     BackgroundGeolocation.getCurrentPosition(function (location, taskId) {
+          //       succesFn(location);
+          //     }, errorFn, {
+          //         timeout: 30,      
+          //         maximumAge: 5000, 
+          //         desiredAccuracy: 10, 
+          //       });
+          //   }
+          // });
+        }
+
+        function errorFn(errorCode) {
+          switch (errorCode) {
+            case 0:
+              //fpmUtilitiesFactory.alerts.alert("ERROR 0", 'Failed to retrieve location');
+              break;
+            case 1:
+              //fpmUtilitiesFactory.alerts.alert('ERROR 1', 'You must enable location services in Settings');
+              break;
+            case 2:
+              //fpmUtilitiesFactory.alerts.alert('ERROR 2', 'Network Error');
+              break;
+            case 408:
+              //fpmUtilitiesFactory.alerts.alert('ERROR 408', 'Location timeout');
+              break;
+          }
+        }
+
+        var locationServiceRunning = false;
+
+        var androidLocationConfig = {
+          desiredAccuracy: 0,
+          stationaryRadius: 50,
+          distanceFilter: 0,
+          disableElasticity: true,
+          locationUpdateInterval: 120000,
+          activityRecognitionInterval: 60000,
+          stopTimeout: 5,  // Stop-detection timeout minutes (wait x minutes to turn off tracking)
+          debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
+          logLevel: 5,    // Verbose logging.  0: NONE
+          startOnBoot: true,
+          autoSync: false
+        };
+        var iosConfig = {
+          desiredAccuracy: 0,
+          stationaryRadius: 50,
+          distanceFilter: 100,
+          disableElasticity: true,
+          activityRecognitionInterval: 60000,
+          stopTimeout: 5,  // Stop-detection timeout minutes (wait x minutes to turn off tracking)
+          // Application config
+          debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
+          logLevel: 5,    // Verbose logging.  0: NONE
+          startOnBoot: true,
+          autoSync: false
+        };
+        var locationConfig = androidLocationConfig;
+        if (!isandr) {
+          locationConfig = iosConfig;
+        }
+        //TRY TO READ location
+        function readLocation() {
+          bgGeo.configure(locationConfig, function (state) {
+            if (!state.enabled) {
+              bgGeo.start(function () {
+                locationServiceRunning = true;
+              });
+            }
+          });
+        }
+        if (!isInDevMode) {
+          readLocation();
+          fpmUtilitiesFactory.push.register();
+        }
+
+        // document.addEventListener("pause", function () {
+        //   if (!isInDevMode && locationServiceRunning) {
+        //     if (bgGeo) {
+        //       bgGeo.stop(function () {
+        //         locationServiceRunning = false;
+        //       });
+        //     }
+        //   }
+        // }, false);
+
+        // document.addEventListener("resume", function () {
+        //   if (!isInDevMode && bgGeo && !locationServiceRunning) {
+        //     bgGeo.getState(function (state) {
+        //       if (!state.enabled) {
+        //         bgGeo.start(function () {
+        //           locationServiceRunning = true;
+        //         });
         //       }
         //     });
         //   }
-        // });
-
-        // $ionicPlatform.registerBackButtonAction(function (event) {
-        //   fpmUtilitiesFactory.alerts.alert("HELLO", "HIT BACK BUTTON");
-        //   // if ($state.current.name === "app.dashboard") {
-        //   //   fpmUtilitiesFactory.alerts.alert("HELLO", "ON DASHBOARD");
-        //   // } else {
-        //   //   navigator.app.backHistory();
-        //   // }
-        //   event.preventDefault();
-        //   event.stopPropagation();
-        // });
+        // }, false);
       });
       //CHECK CONNECTION
       $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {

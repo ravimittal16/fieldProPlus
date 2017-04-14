@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    function initController($scope, $ionicSideMenuDelegate, $ionicNavBarDelegate, $state,
+    function initController($scope, $ionicSideMenuDelegate, $ionicNavBarDelegate, $state, $rootScope, $stateParams,
         fieldPromaxConfig, localStorageService, authenticationFactory, fpmUtilities) {
         var vm = this;
         var secLevels = fieldPromaxConfig.secLevels;
@@ -23,6 +23,19 @@
         $scope.$on("$ionicView.beforeEnter", function (e, data) {
             $ionicNavBarDelegate.showBackButton(false);
         });
+
+
+
+        $rootScope.$on('$stateChangeSuccess',
+            function (event, toState, toParams, fromState, fromParams) {
+                if (toState.name !== "app.logout" && toState.name !== "login" && toState !== "app.editOrder") {
+                    localStorageService.set("appState", { stateName: toState.name, params: toParams });
+                }
+                if (toState.name === "login" && fromState.name === "app.changePassword") { 
+                    $rootScope.$broadcast("$fpm:onLoginViewLoaded", { clearPassword: true });
+                }
+            });
+
         vm.events = {
             checkMenuItemVisibility: function (menu) {
                 if (angular.isDefined(menu.basedOn)) {
@@ -44,7 +57,7 @@
             }
         };
     }
-    initController.$inject = ["$scope", "$ionicSideMenuDelegate", "$ionicNavBarDelegate", "$state",
+    initController.$inject = ["$scope", "$ionicSideMenuDelegate", "$ionicNavBarDelegate", "$state", "$rootScope", "$stateParams",
         "fieldPromaxConfig", "localStorageService", "authenticationFactory", "fpm-utilities-factory"];
     angular.module("fpm").controller("app-main-controller", initController);
 })();

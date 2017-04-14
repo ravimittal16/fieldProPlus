@@ -5,7 +5,7 @@
 	<ion-header-bar class="bar-subheader item-input-inset">
 		<label class="item-input-wrapper">
 			<i class="icon ion-search placeholder-icon"></i>
-			<input type="search" placeholder="Search" data-on-tap="vm.events.openSearchModal()" readonly />
+			<input type="search" placeholder="Search Work Order..." data-on-tap="vm.events.openSearchModal()" readonly />
 		</label>
 	</ion-header-bar>
 	<ion-content class="has-header" direction="y"> 
@@ -17,7 +17,7 @@
 		<ion-list>
 			<div data-ng-if="!vm.isServiceProvider || vm.havingGroupsAssinged">
 				<div ng-repeat="group in vm.result">
-					<ion-item class="item-stable" ng-click="vm.events.onChildGroupClicked(group,'DD','mainparent')" ng-class="{active: group.isOpen}">
+					<ion-item class="item-stable item-bg-gray" ng-click="vm.events.onChildGroupClicked(group,'DD','mainparent')" ng-class="{active: group.isOpen}">
 						<i class="icon" ng-class="group.isOpen ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>{{::group.heading}}</strong>
 						<span class="badge" data-ng-class="{'badge-balanced':group.count > 0,'badge-dark':group.count == 0}">{{group.count}}</span>
 					</ion-item>
@@ -35,7 +35,7 @@
 			</div>
 			<div data-ng-if="vm.isServiceProvider && !vm.havingGroupsAssinged">
 				<div ng-repeat="group in vm.result">
-					<ion-item class="item-stable" ng-click="vm.events.onChildGroupClicked(group,'SP','mainparent')" ng-class="{active: group.isOpen}">
+					<ion-item class="item-stable item-bg-gray" ng-click="vm.events.onChildGroupClicked(group,'SP','mainparent')" ng-class="{active: group.isOpen}">
 						<i class="icon" ng-class="group.isOpen ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>{{::group.heading}}</strong>
 						<span class="badge" data-ng-class="{'badge-balanced':group.count > 0,'badge-dark':group.count == 0}">{{group.count}}</span>
 					</ion-item>

@@ -308,16 +308,15 @@ customer-search-header-component {
 }
 
 .k-upload-button {
-        width: 150px !important;
         margin-left: 0px !important;
         width: 100% !important;
-        font-size:78%;
+        font-size:74%;
         background-color: #f0ad4e;
         border: 1px solid #f0ad4e;
         background-image: none;
         color:#FFF;
         font-weight: normal;
-        padding: 3px;
+        padding: 5px;
     }
 
     .k-upload-button:hover {
@@ -351,3 +350,51 @@ customer-search-header-component {
     .text-italic{
       font-style: italic;
     }
+
+  .header-dark {    
+    /*background-color: #909090 !important;
+    color: #fff !important;*/
+    font-weight: 500;
+}
+.card > .item-divider{
+    background-color: #d4d4d4 !important;
+    color: #404040 !important;
+}
+.list > .item-divider{
+    background-color: #d4d4d4 !important;
+    color: #404040 !important;
+}
+.header-dark>a.item-divider-left-buttion {    
+   /*color:white;*/
+}
+.item-bg-gray{
+ border-color: #b5a9a9 !important;
+    background-color: #d4d4d4 !important;
+}
+.hidden{
+  display:none;
+}
+
+.border-bottom{
+  border-bottom:1px solid #eee;
+}
+.clockin-item{
+  background: rgba(167, 144, 103, 0.89) !important;
+    color: white;
+    padding: 0px !important;
+    text-align: center !important;
+}
+.timecard-checkin-item{
+  padding: 5px;
+    text-align: center;
+}
+.m-t-10{
+
+  margin-top: 10px !important;
+}
+.table>tbody>tr.success>td, .table>tbody>tr.success>th, .table>tbody>tr>td.success, .table>tbody>tr>th.success, .table>tfoot>tr.success>td, .table>tfoot>tr.success>th, .table>tfoot>tr>td.success, .table>tfoot>tr>th.success, .table>thead>tr.success>td, .table>thead>tr.success>th, .table>thead>tr>td.success, .table>thead>tr>th.success{
+  background-color: #dff0d8;
+}
+.table>tbody>tr.danger>td, .table>tbody>tr.danger>th, .table>tbody>tr>td.danger, .table>tbody>tr>th.danger, .table>tfoot>tr.danger>td, .table>tfoot>tr.danger>th, .table>tfoot>tr>td.danger, .table>tfoot>tr>th.danger, .table>thead>tr.danger>td, .table>thead>tr.danger>th, .table>thead>tr>td.danger, .table>thead>tr>th.danger{
+  background-color: #f2dede;
+}

@@ -91,20 +91,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-plugin-ms-azure-mobile-apps/www/MobileServices.Cordova.Ext.js",
-        "id": "cordova-plugin-ms-azure-mobile-apps.AzureMobileServices.Ext",
-        "pluginId": "cordova-plugin-ms-azure-mobile-apps",
-        "runs": true
-    },
-    {
-        "file": "plugins/cordova-plugin-ms-azure-mobile-apps/www/MobileServices.Cordova.js",
-        "id": "cordova-plugin-ms-azure-mobile-apps.AzureMobileServices",
-        "pluginId": "cordova-plugin-ms-azure-mobile-apps",
-        "clobbers": [
-            "WindowsAzure"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
         "id": "cordova-plugin-inappbrowser.inappbrowser",
         "pluginId": "cordova-plugin-inappbrowser",
@@ -158,7 +144,6 @@ module.exports.metadata =
     "cordova-plugin-network-information": "1.3.0",
     "cordova-plugin-camera": "2.2.0",
     "cordova-sqlite-storage": "1.4.8",
-    "cordova-plugin-ms-azure-mobile-apps": "2.0.0",
     "cordova-plugin-inappbrowser": "1.5.0",
     "phonegap-plugin-push": "1.8.4",
     "cordova-plugin-dialogs": "1.3.1",
