@@ -15,6 +15,7 @@
             // { title: "Create Estimate", state: "app.createEstimate", icon: "plus-round", isConfigurationBased: true, configProperty: "allowCreateEstimates", hideFor: "ServiceProvider", basedOn: "" },
             { title: "My Expense", state: "app.expense", icon: "cash", basedOn: "etOn", specialFeature: true },
             { title: "Time Card", state: "app.timecard", icon: "clock", basedOn: "timeCard", specialFeature: true },
+            { title: "Custom Components", state: "app.customcomponents", icon: "fork-repo" },
             { title: "Settings", state: "app.settings", icon: "settings" },
             { title: "Change Password", state: "app.changePassword", icon: "" },
             { title: "Logout", state: "app.logout", icon: "power" }
@@ -31,7 +32,7 @@
                 if (toState.name !== "app.logout" && toState.name !== "login" && toState !== "app.editOrder") {
                     localStorageService.set("appState", { stateName: toState.name, params: toParams });
                 }
-                if (toState.name === "login" && fromState.name === "app.changePassword") { 
+                if (toState.name === "login" && fromState.name === "app.changePassword") {
                     $rootScope.$broadcast("$fpm:onLoginViewLoaded", { clearPassword: true });
                 }
             });

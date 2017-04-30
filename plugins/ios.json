@@ -105,34 +105,19 @@
         }
     },
     "installed_plugins": {
-        "cordova-plugin-device": {
-            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
-        },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
-        },
-        "cordova-plugin-statusbar": {
-            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
-        },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
-        },
         "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
-        },
-        "cordova-plugin-network-information": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
-        "cordova-plugin-camera": {
-            "CAMERA_USAGE_DESCRIPTION": " ",
-            "PHOTOLIBRARY_USAGE_DESCRIPTION": " ",
+        "cordova-plugin-network-information": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
-        "phonegap-plugin-push": {
-            "SENDER_ID": "504804224593",
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
+        "cordova-plugin-cocoalumberjack": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
         "cordova-background-geolocation": {
@@ -141,12 +126,26 @@
             "LOCATION_WHEN_IN_USE_USAGE_DESCRIPTION": "Background location-tracking is required",
             "MOTION_USAGE_DESCRIPTION": "Using the accelerometer increases battery-efficiency by intelligently toggling location-tracking only when the device is detected to be moving",
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
+        "cordova-plugin-camera": {
+            "CAMERA_USAGE_DESCRIPTION": " ",
+            "PHOTOLIBRARY_USAGE_DESCRIPTION": " ",
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         }
     },
     "dependent_plugins": {
-        "cordova-plugin-compat": {
-            "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
-        },
         "cordova-sqlite-storage": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
@@ -156,7 +155,7 @@
         "cordova-plugin-background-fetch": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         },
-        "cordova-plugin-cocoalumberjack": {
+        "cordova-plugin-compat": {
             "PACKAGE_NAME": "com.ionicframework.fieldproionic807801"
         }
     }

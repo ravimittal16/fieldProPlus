@@ -6,7 +6,7 @@
 // "http://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 // "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 //"http://localhost/FieldPromaxApi/"  
-var isInDevMode = false;
+var isInDevMode = true;
 var constants = {
   fieldPromaxApi: isInDevMode ? "http://localhost:51518/" : "https://fieldpromax.azurewebsites.net/",
   localStorageKeys: {
@@ -33,6 +33,7 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
           }
         },
         { state: "app.createCustomer", config: { url: "/createcustomer", controller: "create-customer-controller", controllerAs: "vm", templateUrl: "views/create-customer.html" } },
+        { state: "app.customComponents", config: { url: "/customcomponents", controller: "custom-components-controller", controllerAs: "vm", templateUrl: "views/custom-components.html" } },
         { state: "app.createEstimate", config: { url: "/createestimate", controller: "create-estimate-controller", controllerAs: "vm", templateUrl: "views/create-estimate.html" } },
         { state: "app.expense", config: { url: "/expanses", controller: "expanses-controller", controllerAs: "vm", templateUrl: "views/expanses.html" } },
         { state: "app.timecard", config: { url: "/timecard", controller: "timecard-controller", controllerAs: "vm", templateUrl: "views/timecard.html" } },

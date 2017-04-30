@@ -42,6 +42,7 @@ gulp.task('scripts', function () {
       suffix: '.min'
     }))
     .pipe(uglify())
+    .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
     .pipe(gulp.dest('./www/js/build'));
 });
 
@@ -57,6 +58,11 @@ gulp.task('install', ['git-check'], function () {
       gutil.log('bower', gutil.colors.cyan(data.id), data.message);
     });
 });
+
+// $.uglify().on('error', function (err) {
+//   gutil.log(gutil.colors.red('[Error]'), err.toString());
+//   this.emit('end');
+// })
 
 gulp.task('git-check', function (done) {
   if (!sh.which('git')) {

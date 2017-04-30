@@ -1,0 +1,75 @@
+<ion-view view-title="Custom Components" title="Custom Components">
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+
+    <ion-content>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="vm.events.refreshOnPullDown()" spinner="none">
+        </ion-refresher>
+        <div class="text-center padding-top" data-ng-if="vm.showingLoading">
+            <ion-spinner icon="ripple"></ion-spinner>
+        </div>
+
+        <div class="text-center m-t-30" ng-if="vm.showEmptyMessage">
+            <strong>No Custom Components Found</strong>
+        </div>
+        <ion-list ng-if="!vm.showEmptyMessage">
+            <div>
+                <div ng-repeat="component in ::vm.components">
+                    <ion-item class="item-stable item-bg-gray" ng-click="vm.events.onChildGroupClicked(component)" ng-class="{active: component.isOpen}">
+                        <i class="icon" ng-class="component.isOpen ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>{{::component.componentName}}</strong>
+                    </ion-item>
+                    <div data-ng-if="component.uniqueName == 'TimeWorkedReport' && component.isOpen" class="m-t-10">
+                        <table class="table">
+                            <caption>
+                                <div class="text-center">
+                                    <strong>{{::component.componentName}}</strong>
+                                </div>
+                            </caption>
+
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">Start Date</td>
+                                    <td class="text-center">End Date</td>
+                                    <td class="text-center">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <input type="text" class="transparent-background text-center" style="width:100px;" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}"
+                                            data-ng-model="vm.reportModel.startDate" placeholder="tap here to select..." />
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="text" class="transparent-background  text-center" style="width:100px;" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}"
+                                            data-ng-model="vm.reportModel.endDate" placeholder="tap here to select..." />
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="button button-positive button-small button-block" ng-click="vm.events.runReport()">Run</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <table class="table f-s-11">
+                                            <thead>
+                                                <tr>
+                                                    <th ng-repeat="col in vm.columns">{{::col.colName}}</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <table class="table f-s-11" id="tableReport">
+                                            <tbody></tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </ion-list>
+    </ion-content>
+</ion-view>
