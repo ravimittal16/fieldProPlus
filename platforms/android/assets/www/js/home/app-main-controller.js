@@ -12,10 +12,10 @@
             { title: "Map", state: "app.map", icon: "location" },
             { title: "Create Work Order", state: "app.createWorkOrder", icon: "plus-round", isConfigurationBased: true, configProperty: "allowCreateWorkOrders" },
             { title: "Create Customer", state: "app.createCustomer", icon: "plus-round" },
-            // { title: "Create Estimate", state: "app.createEstimate", icon: "plus-round", isConfigurationBased: true, configProperty: "allowCreateEstimates", hideFor: "ServiceProvider", basedOn: "" },
+            //{ title: "Create Estimate", state: "app.createEstimate", icon: "plus-round", isConfigurationBased: true, configProperty: "allowCreateEstimates", hideFor: "ServiceProvider", basedOn: "" },
             { title: "My Expense", state: "app.expense", icon: "cash", basedOn: "etOn", specialFeature: true },
             { title: "Time Card", state: "app.timecard", icon: "clock", basedOn: "timeCard", specialFeature: true },
-            { title: "Custom Components", state: "app.customcomponents", icon: "fork-repo" },
+            { title: "Custom Components", state: "app.customComponents", icon: "fork-repo" },
             { title: "Settings", state: "app.settings", icon: "settings" },
             { title: "Change Password", state: "app.changePassword", icon: "" },
             { title: "Logout", state: "app.logout", icon: "power" }

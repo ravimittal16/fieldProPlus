@@ -48,19 +48,12 @@
                                 </tr>
                                 <tr>
                                     <td colspan="3">
-                                        <table class="table f-s-11">
+                                        <table class="table f-s-11" id="tableReport">
                                             <thead>
                                                 <tr>
-                                                    <th ng-repeat="col in vm.columns">{{::col.colName}}</th>
+                                                    <th ng-repeat="col in vm.columns" style="width:30%">{{::col.colName}}</th>
                                                 </tr>
                                             </thead>
-                                        </table>
-
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3">
-                                        <table class="table f-s-11" id="tableReport">
                                             <tbody></tbody>
                                         </table>
                                     </td>

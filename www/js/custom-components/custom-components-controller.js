@@ -13,6 +13,7 @@
             },
             refreshOnPullDown: function () {
                 _getComponents();
+                $scope.$broadcast("scroll.refreshComplete");
             },
             runReport: function () {
                 vm.columns = [];
@@ -39,7 +40,16 @@
                                     var tableRow = "<tr class='success'>"
                                 }
                                 angular.forEach(reportColumns, function (col, x) {
-                                    tableRow += "<td>" + (e[col] || "") + "</td>";
+                                    var val = "";
+                                    if (col === "ActualStartDateTime") {
+                                        if (e[col]) {
+                                            val = moment(e[col]).format("MM/DD/YYYY");
+                                        }
+                                    }
+                                    else {
+                                        val = (e[col] || "");
+                                    }
+                                    tableRow += "<td>" + val + "</td>";
                                     if (x === (reportColumns.length - 1)) {
                                         tableRow += "</tr>"
                                         $table.find("tbody").append(tableRow);
@@ -53,7 +63,6 @@
         }
 
         function _getComponents() {
-            vm.showEmptyMessage = false;
             customComponentsFactory.getComponents().then(function (response) {
                 vm.showEmptyMessage = response === null;
                 if (angular.isArray(response)) {
