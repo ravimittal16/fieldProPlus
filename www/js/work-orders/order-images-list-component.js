@@ -14,7 +14,7 @@
 
         vm.upload = {
           control: null,
-          uploadImage: function (rawImage, imageName, take) {
+          uploadImage: function (rawImage, imageName, take, isLast) {
             fpmUtilitiesFactory.showLoading().then(function () {
               workOrdersFactory.uploadFile({
                 Barcode: vm.barcode,
@@ -27,7 +27,9 @@
                   imageURL: "/" + imageName + (take ? ".jpg" : ""),
                   num: response
                 });
-                alerts.alert("Uploaded", "File Uploaded successfully");
+                if (isLast) {
+                  alerts.alert("Uploaded", "File(s) Uploaded successfully");
+                }
               }, function (e) {
                 alerts.alert("ERROR WHILE UPLOADING", "Please try again");
               }).finally(fpmUtilitiesFactory.hideLoading);
@@ -41,21 +43,23 @@
             },
             select: function (e) {
               e.isDefaultPrevented = true;
-              var exts = ["tif", "tiff", "gif", "jpeg", "jpg", "jif", "jfif", "jp2", "jpx", "j2k", "j2c", "pcd", "png", "bmp"];
-              angular.forEach(e.files, function (file) {
-                var extension = file.name.split(".");
-                var getExt = extension.reverse();
-                if (file.size < (20 * 1024 * 1024)) {
-                  var filterResult = _.filter(exts, function (e) {
-                    return getExt[0].toLowerCase() === e;
-                  });
-                  if (filterResult.length > 0) {
-                    var fileReader = new FileReader();
-                    fileReader.onload = function (event) {
-                      vm.upload.uploadImage(event.target.result, file.name, false);
-                    }
-                    fileReader.readAsDataURL(file.rawFile);
-                  }
+              var exts = [".tif", ".tiff", ".gif", ".jpeg", ".jpg", ".jif", ".jfif", ".jp2", ".jpx", ".j2k", ".j2c", ".pcd", ".png", ".bmp"];
+              var largeFiles = _.filter(e.files, function (f) {
+                return f.size > (20 * 1024 * 1024)
+              });
+              if (largeFiles.length > 0) {
+                alerts.alert("Invalid Selection", "Make sure each selected file size should be less than 20 MB");
+                e.preventDefault();
+                return false;
+              }
+              angular.forEach(e.files, function (file, i) {
+                var fileReader = new FileReader();
+                fileReader.onload = function (event) {
+                  vm.upload.uploadImage(event.target.result, file.name, false, (i === (e.files.length - 1)));
+                }
+                fileReader.readAsDataURL(file.rawFile);
+                if (i === (e.files.length - 1)) {
+                  e.preventDefault();
                 }
               });
             }
@@ -69,7 +73,7 @@
               $timeout(function () {
                 if (imageData) {
                   var name = "Picture" + vm.barcode + kendo.toString(new Date(), "ddffMMss");
-                  vm.upload.uploadImage("data:image/jpeg;base64," + imageData, name, true);
+                  vm.upload.uploadImage("data:image/jpeg;base64," + imageData, name, true, true);
                 }
               }, 500);
             });
