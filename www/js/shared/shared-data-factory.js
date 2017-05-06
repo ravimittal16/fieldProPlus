@@ -4,7 +4,7 @@
         var apibaseurl = "api/Shared/";
         var pushapi = "api/NotificationsHub/";
         var locationapi = "api/Location/";
-
+        var geocoder = new google.maps.Geocoder();
         function updateSettings(settings) {
             return apiBaseFactory.post("api/User/UpdateUserSettings", settings);
         }
@@ -46,7 +46,21 @@
         function postLocation(location) {
             return apiBaseFactory.post(locationapi + "PostLocation", location);
         }
+
+        function getAddressCoorinates(state, zip, city, address) {
+            var defer = $q.defer();
+            var addressf = address + " " + city + " " + state + " " + zip;
+            geocoder.geocode({ 'address': addressf }, function (results, status) {
+                if (status === google.maps.GeocoderStatus.OK) {
+                    return defer.resolve({ log: results[0].geometry.location.lng(), lat: results[0].geometry.location.lat() });
+                } else {
+                    return defer.resolve({ log: 0, lat: 0 });
+                }
+            });
+            return defer.promise;
+        }
         return {
+            getAddressCoorinates: getAddressCoorinates,
             postLocation: postLocation,
             registerUserTemplateForPushNotifications: registerUserTemplateForPushNotifications,
             updateSettings: updateSettings,

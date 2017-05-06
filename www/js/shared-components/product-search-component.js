@@ -30,11 +30,15 @@
                     onProductItemClicked: function (product) {
                         vm.currentProduct = angular.copy(product);
                         vm.currentProduct.qty = 1;
-                        vm.currentProduct.markup = 0;
-                        if (vm.productModal) {
-                            vm.productModal.show().then(function () {
-                                
-                            });
+                        if (vm.openEditProductModalOnProductSelectedFromSearch) {
+                            vm.currentProduct.markup = 0;
+                            if (vm.productModal) {
+                                vm.productModal.show().then(function () {
+
+                                });
+                            }
+                        } else {
+                            $scope.$emit("$fpm:onProductSelected", product);
                         }
                     },
                     closeSearchModal: function () {
@@ -58,6 +62,12 @@
                 fpmUtilitiesFactory.getModal("addProductModal.html", $scope).then(function (modal) {
                     vm.productModal = modal;
                 });
+                vm.openEditProductModalOnProductSelectedFromSearch = true;
+                //When false => this will not open Edit Product Modal on Search
+                //false => In Estimates
+                $scope.$on("$fpm:changeAddModalOpenPriority", function ($event, $args) {
+                    vm.openEditProductModalOnProductSelectedFromSearch = $args;
+                })
             }],
         controllerAs: "vm"
     };

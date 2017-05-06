@@ -1,0 +1,56 @@
+<ion-view title="Estimates">
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-content>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="vm.events.refreshOnPullDown()" spinner="none">
+        </ion-refresher>
+        <div class="text-center padding-top" data-ng-if="vm.processing">
+            <ion-spinner icon="ripple"></ion-spinner>
+        </div>
+        <div class="row">
+            <div class="col">
+                <button class="button button-small button-positive button-block" type="button" data-ng-click="vm.events.onCreateEstimateClicked()">
+            Add New Estimate</button>
+            </div>
+        </div>
+        <div class="list">
+            <div class="item" ng-repeat="(key,value) in vm.estimates">
+                <ion-card>
+                    <div class="item item-text-wrap">
+                        <span class="label label-success">{{::value.estimateName}}</span>
+                        <div class="padding-top">
+                            <h3>{{::value.woDisplayName}}</h3>
+                            <address>
+                                <p>
+                                    <strong>{{::value.woCompanyName}}</strong>
+                                </p>
+                                <p>{{::value.wobStreet}} <strong>{{::value.wosCity}}</strong> <strong>{{::value.wosState}}</strong>                                    <span>{{::value.wosZip}}</span></p>
+                                <p ng-if="value.woPhone">{{::value.woPhone}}</p>
+                                <p data-ng-if="value.woDescription">
+                                    <small class="text-italic text-muted">
+                                        <i><strong>Description : </strong>{{::value.woDescription}}</i>
+                                    </small>
+                                </p>
+                            </address>
+
+                            <span class="label label-success" data-ng-if="value.isApproved"><i class="fa fa-check"></i>Approved By {{::value.approverName}}</span>
+                            <span class="label label-danger" data-ng-if="!value.isApproved">Waiting for Approval</span>
+                        </div>
+                    </div>
+                    <div class="item item-divider">
+                        <div class="pull-right">
+                            <button class="button button-small button-assertive" data-ng-click="vm.events.onDeleteClicked(value)">
+                                   <i class="icon ion-ios-trash-outline"></i> Delete
+                                </button>
+                            <button class="button button-small button-energized" data-ng-click="vm.events.onEditClicked(value)">
+                                <i class="icon ion-edit"></i> Edit
+                                </button>
+                        </div>
+                    </div>
+                </ion-card>
+            </div>
+        </div>
+        </div>
+    </ion-content>
+</ion-view>

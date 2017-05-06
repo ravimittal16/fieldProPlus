@@ -12,7 +12,7 @@
             { title: "Map", state: "app.map", icon: "location" },
             { title: "Create Work Order", state: "app.createWorkOrder", icon: "plus-round", isConfigurationBased: true, configProperty: "allowCreateWorkOrders" },
             { title: "Create Customer", state: "app.createCustomer", icon: "plus-round" },
-            //{ title: "Create Estimate", state: "app.createEstimate", icon: "plus-round", isConfigurationBased: true, configProperty: "allowCreateEstimates", hideFor: "ServiceProvider", basedOn: "" },
+            { title: "Estimates", state: "app.estimates", icon: "ios-list-outline" },
             { title: "My Expense", state: "app.expense", icon: "cash", basedOn: "etOn", specialFeature: true },
             { title: "Time Card", state: "app.timecard", icon: "clock", basedOn: "timeCard", specialFeature: true },
             { title: "Custom Components", state: "app.customComponents", icon: "fork-repo" },
@@ -25,11 +25,12 @@
             $ionicNavBarDelegate.showBackButton(false);
         });
 
-
+        var statesNotToBeSaved = ["app.logout", "login", "app.editOrder", "app.editEstimate"];
 
         $rootScope.$on('$stateChangeSuccess',
             function (event, toState, toParams, fromState, fromParams) {
-                if (toState.name !== "app.logout" && toState.name !== "login" && toState !== "app.editOrder") {
+
+                if (toState.name !== "app.logout" && toState.name !== "login" && toState !== "app.editOrder" && toState !== "app.editEstimate") {
                     localStorageService.set("appState", { stateName: toState.name, params: toParams });
                 }
                 if (toState.name === "login" && fromState.name === "app.changePassword") {

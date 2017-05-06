@@ -146,7 +146,13 @@
             return apiBaseFactory.deleteReq(apibaseurl + "DeleteImage?imageId=" + num + "&barcode=" + barcode);
         }
 
+        function uploadFilesN(files) {
+            return apiBaseFactory.post(apibaseurl + "UploadFilesN", files);
+
+        }
+
         return {
+            uploadFilesN: uploadFilesN,
             deleteImageFromBlob: deleteImageFromBlob,
             updateSchduleTotalTime: updateSchduleTotalTime,
             getWorkOrderResolution: getWorkOrderResolution,

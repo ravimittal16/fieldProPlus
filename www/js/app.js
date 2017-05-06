@@ -6,7 +6,7 @@
 // "http://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 // "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 //"http://localhost/FieldPromaxApi/"  
-var isInDevMode = false;
+var isInDevMode = true;
 var constants = {
   fieldPromaxApi: isInDevMode ? "http://localhost:51518/" : "https://fieldpromax.azurewebsites.net/",
   localStorageKeys: {
@@ -23,6 +23,9 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
       var routes = [
         { state: "login", config: { url: "/", controller: "login-controller", controllerAs: "vm", templateUrl: "views/login.html" } },
         { state: "app", config: { abstract: true, controller: "app-main-controller", controllerAs: "vm", templateUrl: "views/app-main.html" } },
+        { state: "app.estimates", config: { url: "/estimates", controller: "estimates-view-controller", controllerAs: "vm", templateUrl: "views/estimates.html" } },
+        { state: "app.createEstimate", config: { url: "/newEstimate", controller: "create-estimate-controller", controllerAs: "vm", templateUrl: "views/create-estimate.html" } },
+        { state: "app.editEstimate", config: { url: "/editest/:id", controller: "edit-estimate-controller", controllerAs: "vm", templateUrl: "views/edit-estimate.html" } },
         { state: "app.dashboard", config: { url: "/home?refresh", controller: "dashboard-controller", controllerAs: "vm", templateUrl: "views/dashboard.html" } },
         { state: "app.calendar", config: { url: "/calendar", controller: "calendar-controller", controllerAs: "vm", templateUrl: "views/calendar.html" } },
         { state: "app.map", config: { url: "/map", controller: "map-controller", controllerAs: "vm", templateUrl: "views/map.html" } },
@@ -34,7 +37,6 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
         },
         { state: "app.createCustomer", config: { url: "/createcustomer", controller: "create-customer-controller", controllerAs: "vm", templateUrl: "views/create-customer.html" } },
         { state: "app.customComponents", config: { url: "/customcomponents", controller: "custom-components-controller", controllerAs: "vm", templateUrl: "views/custom-components.html" } },
-        { state: "app.createEstimate", config: { url: "/createestimate", controller: "create-estimate-controller", controllerAs: "vm", templateUrl: "views/create-estimate.html" } },
         { state: "app.expense", config: { url: "/expanses", controller: "expanses-controller", controllerAs: "vm", templateUrl: "views/expanses.html" } },
         { state: "app.timecard", config: { url: "/timecard", controller: "timecard-controller", controllerAs: "vm", templateUrl: "views/timecard.html" } },
         { state: "app.settings", config: { url: "/settings", controller: "settings-controller", controllerAs: "vm", templateUrl: "views/settings.html" } },
@@ -82,7 +84,8 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
             if (exception.name) { data.name = exception.name; }
             if (exception.stack) { data.stack = exception.stack; }
           }
-          //console.log("EXCPTION", data);
+          if (isInDevMode)
+            console.log("EXCPTION", data);
         }
       }]);
 

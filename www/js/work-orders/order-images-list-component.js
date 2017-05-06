@@ -12,6 +12,25 @@
         var baseUrl = fieldPromaxConfig.fieldPromaxApi;
         var alerts = fpmUtilitiesFactory.alerts;
 
+
+
+        function _processUploadFile(index) {
+          if (selectedFiles) {
+            if ((index + 1) <= selectedFiles.length) {
+              var fileReader = new FileReader();
+              fileReader.onload = function (event) {
+                vm.upload.uploadImage(event.target.result, file.name, false, (i === (e.files.length - 1)));
+              }
+              fileReader.readAsDataURL(file.rawFile);
+              if (i === (e.files.length - 1)) {
+                e.preventDefault();
+              }
+            }
+          }
+        }
+
+        var selectedFiles = null;
+
         vm.upload = {
           control: null,
           uploadImage: function (rawImage, imageName, take, isLast) {
@@ -39,7 +58,7 @@
             multiple: true,
             showFileList: false,
             localization: {
-              select: "Upload files"
+              select: "Upload images"
             },
             select: function (e) {
               e.isDefaultPrevented = true;
@@ -52,16 +71,19 @@
                 e.preventDefault();
                 return false;
               }
-              angular.forEach(e.files, function (file, i) {
-                var fileReader = new FileReader();
-                fileReader.onload = function (event) {
-                  vm.upload.uploadImage(event.target.result, file.name, false, (i === (e.files.length - 1)));
-                }
-                fileReader.readAsDataURL(file.rawFile);
-                if (i === (e.files.length - 1)) {
-                  e.preventDefault();
-                }
-              });
+              selectedFiles = e.files;
+              _processUploadFile(0);
+              e.preventDefault();
+              // angular.forEach(e.files, function (file, i) {
+              //   var fileReader = new FileReader();
+              //   fileReader.onload = function (event) {
+              //     vm.upload.uploadImage(event.target.result, file.name, false, (i === (e.files.length - 1)));
+              //   }
+              //   fileReader.readAsDataURL(file.rawFile);
+              //   if (i === (e.files.length - 1)) {
+              //     e.preventDefault();
+              //   }
+              // });
             }
           }
         };

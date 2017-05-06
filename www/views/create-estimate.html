@@ -1,8 +1,135 @@
-<ion-view title="Create Estimate">
-    <ion-nav-buttons side="left">
-        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-    </ion-nav-buttons>
+<ion-view title="Create Estimate" cache-view="false">
+
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-header-bar class="bar-subheader item-input-inset">
+    <customer-search-header-component data-on-customer-selected="vm.events.onCustomerSelected(customer)" placeholder="Search Customer and select..."></customer-search-header-component>
+  </ion-header-bar>
+  <form name="formEstimate" novalidate="">
     <ion-content>
-        HELLO WORLD
+      
+      <errors-view errors="vm.errors"></errors-view>
+      <div class="list">
+        <div class="card">
+          <div class="item item-divider header-dark">
+            Customer Details
+          </div>
+          <div class="padding">
+            <div data-ng-if="vm.isCustomerSelected">
+              <h4 data-ng-bind="vm.entity.woDisplayName"></h4>
+              <p class="text-muted text-small">
+                <strong data-ng-bind="vm.entity.woCompanyName"> </strong>
+              </p>
+            </div>
+          </div>
+          <label class="item item-input">
+                <span class="input-label">Email</span>
+                    <input type="email" placeholder="Email" maxlength="500" data-ng-model="vm.entity.woEmail"/>
+                </label>
+        </div>
+
+        <div class="card">
+          <div class="list">
+            <div class="item item-divider header-dark">
+              Billing Address
+            </div>
+            <label class="item item-input">
+                    <textarea type="text" rows="2" placeholder="Street" class="transparent-background" data-ng-model="vm.entity.wobStreet" readonly=""></textarea>
+                </label>
+            <label class="item item-input">
+                    <input type="text" placeholder="City" class="transparent-background" data-ng-model="vm.entity.wobCity" readonly=""/>
+                </label>
+            <label class="item item-input">
+                    <input type="text" placeholder="State" class="transparent-background" data-ng-model="vm.entity.wobState" readonly=""/>
+                </label>
+            <label for="" class="item item-input">
+                    <input type="text" placeholder="Zip" class="transparent-background" data-ng-model="vm.entity.wobZip" readonly=""/>
+                </label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="list">
+            <div class="item item-divider">
+              Service Address
+              <!--<a class="button pull-right button-small button-icon icon ion-android-more-vertical item-divider-left-buttion" data-ng-click="vm.events.onServiceAddressActionClicked()"></a>-->
+
+              <button type="button" class="button button-small button-assertive pull-right" style="margin-left: 5px;" data-ng-click="vm.events.clearServiceAddress()">
+                <i class="icon ion-trash-a"></i>
+              </button>
+              <button type="button" class="button button-small button-positive pull-right" data-ng-click="vm.events.sameAsBilling()">Same as Billing</button>
+            </div>
+            <label class="item item-input">
+                    <textarea type="text" rows="2" placeholder="Street" maxlength="200" data-ng-model="vm.entity.wosStreet"></textarea>
+                </label>
+            <label class="item item-input">
+            <input type="text" placeholder="City" maxlength="50" data-ng-model="vm.entity.sCity"/>
+          </label>
+            <label class="item item-input">
+                    <input type="text" placeholder="State" data-ng-model="vm.entity.wosState" maxlength="50"/>
+                </label>
+            <label for="" class="item item-input">
+                    <input type="text" placeholder="Zip" data-ng-model="vm.entity.wosZip" maxlength="20"/>
+                </label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="item item-divider header-dark">
+            Other Information
+          </div>
+          <div class="item item-input item-select">
+            <div class="input-label">
+              Priority
+            </div>
+            <select data-ng-options="p.name as p.name for p in vm.priorities" data-ng-model="vm.entity.woPriority"></select>
+          </div>
+          <div class="item item-input item-select">
+            <div class="input-label">
+              Job Type
+            </div>
+            <select data-ng-options="job.excptns as job.excptns for job in vm.jobTypes track by job.excptns" data-ng-model="vm.entity.woJobTypeId"></select>
+          </div>
+
+        </div>
+        <div class="card">
+          <div class="item item-divider header-dark">
+            Description
+          </div>
+          <label class="item item-input item-stacked-label">
+                    <textarea cols="30" rows="6" placeholder="please add work description here..." data-ng-model="vm.entity.woDescription"></textarea>
+                </label>
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="button" type="button" data-ng-click="vm.events.backToEstimates()">
+            Go back to Estimates
+        </button>
+      </div>
+      <h1 class="title">
+        &nbsp;
+      </h1>
+      <div class="buttons">
+        <button type="submit" class="button button-balanced" data-ng-click="vm.events.onSubmitButtonClicked(formEstimate.$valid)">
+            Create Estimate 
+        </button>
+      </div>
     </ion-content>
+    <ion-footer-bar align-title="left" class="bar-light">
+      <div class="buttons">
+        <button class="button" type="button" data-ng-click="vm.events.onBackToDashboardClicked()">
+            Go back to Estimates
+        </button>
+      </div>
+      <h1 class="title">
+        &nbsp;
+      </h1>
+      <div class="buttons">
+        <button type="submit" class="button button-balanced" data-ng-click="vm.events.onSubmitButtonClicked(formWorkOrder.$valid)">
+            Create Estimate 
+        </button>
+      </div>
+    </ion-footer-bar>
+  </form>
 </ion-view>

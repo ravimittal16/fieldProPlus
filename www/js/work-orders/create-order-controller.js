@@ -5,6 +5,7 @@
     var vm = this;
     var alerts = fpmUtilitiesFactory.alerts;
     vm.userInfo = authenticationFactory.getLoggedInUserInfo();
+    
     function getBarcodeNumber() {
       workOrderFactory.getBarCodeNumber().then(function (response) {
         vm.woEntity.barCode = response.barcode;
