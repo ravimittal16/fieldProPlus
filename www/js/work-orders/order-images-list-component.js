@@ -5,26 +5,32 @@
       barcode: "<"
     },
     templateUrl: "js/work-orders/order-images-list-component.template.html",
-    controller: ["$scope", "$timeout", "$ionicModal", "$ionicLoading", "work-orders-factory", "fpm-utilities-factory", "fieldPromaxConfig",
-      function ($scope, $timeout, $ionicModal, $ionicLoading, workOrdersFactory, fpmUtilitiesFactory, fieldPromaxConfig) {
+    controller: ["$scope", "$q", "$timeout", "$ionicModal", "$ionicLoading", "work-orders-factory", "fpm-utilities-factory", "fieldPromaxConfig",
+      function ($scope, $q, $timeout, $ionicModal, $ionicLoading, workOrdersFactory, fpmUtilitiesFactory, fieldPromaxConfig) {
         var vm = this;
         vm.isExpanded = false;
         var baseUrl = fieldPromaxConfig.fieldPromaxApi;
         var alerts = fpmUtilitiesFactory.alerts;
 
-
+        var currentIndex = 0;
 
         function _processUploadFile(index) {
           if (selectedFiles) {
             if ((index + 1) <= selectedFiles.length) {
+              currentIndex = index;
+              var file = selectedFiles[index];
               var fileReader = new FileReader();
               fileReader.onload = function (event) {
-                vm.upload.uploadImage(event.target.result, file.name, false, (i === (e.files.length - 1)));
+                vm.upload.uploadImage(event.target.result, file.name, false, (index === (selectedFiles.length - 1))).then(function () {
+                  if (index === (selectedFiles.length - 1)) {
+                    selectedFiles = null;
+                  } else {
+                    var nextindex = index + 1;
+                    _processUploadFile(nextindex)
+                  }
+                });
               }
               fileReader.readAsDataURL(file.rawFile);
-              if (i === (e.files.length - 1)) {
-                e.preventDefault();
-              }
             }
           }
         }
@@ -34,7 +40,8 @@
         vm.upload = {
           control: null,
           uploadImage: function (rawImage, imageName, take, isLast) {
-            fpmUtilitiesFactory.showLoading().then(function () {
+            var defer = $q.defer();
+            fpmUtilitiesFactory.showLoading("Uploading " + (currentIndex + 1) + " of " + selectedFiles.length).then(function () {
               workOrdersFactory.uploadFile({
                 Barcode: vm.barcode,
                 Image: rawImage,
@@ -46,13 +53,16 @@
                   imageURL: "/" + imageName + (take ? ".jpg" : ""),
                   num: response
                 });
+                defer.resolve();
                 if (isLast) {
                   alerts.alert("Uploaded", "File(s) Uploaded successfully");
                 }
               }, function (e) {
                 alerts.alert("ERROR WHILE UPLOADING", "Please try again");
+                defer.reject();
               }).finally(fpmUtilitiesFactory.hideLoading);
             });
+            return defer.promise;
           },
           options: {
             multiple: true,

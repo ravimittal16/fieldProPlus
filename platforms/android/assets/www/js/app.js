@@ -84,7 +84,8 @@ var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ng
             if (exception.name) { data.name = exception.name; }
             if (exception.stack) { data.stack = exception.stack; }
           }
-          //console.log("EXCPTION", data);
+          if (isInDevMode)
+            console.log("EXCPTION", data);
         }
       }]);
 

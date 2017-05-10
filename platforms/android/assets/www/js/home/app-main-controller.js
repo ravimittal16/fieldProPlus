@@ -25,11 +25,12 @@
             $ionicNavBarDelegate.showBackButton(false);
         });
 
-
+        var statesNotToBeSaved = ["app.logout", "login", "app.editOrder", "app.editEstimate"];
 
         $rootScope.$on('$stateChangeSuccess',
             function (event, toState, toParams, fromState, fromParams) {
-                if (toState.name !== "app.logout" && toState.name !== "login" && toState !== "app.editOrder") {
+
+                if (toState.name !== "app.logout" && toState.name !== "login" && toState !== "app.editOrder" && toState !== "app.editEstimate") {
                     localStorageService.set("appState", { stateName: toState.name, params: toParams });
                 }
                 if (toState.name === "login" && fromState.name === "app.changePassword") {

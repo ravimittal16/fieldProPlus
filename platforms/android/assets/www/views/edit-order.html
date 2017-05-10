@@ -1,5 +1,5 @@
-<ion-view title="{{vm.barCodeData.barcodeDetails.barcodeName}}" cache-view="false" hide-back-button="true" align-title="center" 
-view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
+<ion-view title="{{vm.barCodeData.barcodeDetails.barcodeName}}" cache-view="false" hide-back-button="true" align-title="center"
+  view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
   <ion-nav-buttons side="left">
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
@@ -407,9 +407,8 @@ view-title="{{vm.barCodeData.barcodeDetails.barcodeName}}">
             </div>
           </div>
           <order-signature-component data-barcode="vm.barcode"></order-signature-component>
-          <order-email-card-component data-barcode="vm.barcode" data-taxrate="vm.barCodeData.taxRate" 
-          data-default-emails="vm.barCodeData.barcodeDetails.address2_Group" show-price="vm.showPrice" 
-          hide-email-button="vm.uiSettings.hideEmailButton"></order-email-card-component>
+          <order-email-card-component data-barcode="vm.barcode" data-taxrate="vm.barCodeData.taxRate" data-default-emails="vm.barCodeData.barcodeDetails.address2_Group"
+            show-price="vm.showPrice" hide-email-button="vm.uiSettings.hideEmailButton"></order-email-card-component>
           <order-images-list-component data-barcode="vm.barcode"></order-images-list-component>
           <order-documents-list-component data-barcode="vm.barcode"></order-documents-list-component>
           <div class="card">

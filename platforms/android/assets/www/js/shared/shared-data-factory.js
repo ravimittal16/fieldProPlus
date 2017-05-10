@@ -46,7 +46,28 @@
         function postLocation(location) {
             return apiBaseFactory.post(locationapi + "PostLocation", location);
         }
+
+        function getAddressCoorinates(state, zip, city, address) {
+
+
+            var defer = $q.defer();
+            if (window.google) {
+                var geocoder = new google.maps.Geocoder();
+                var addressf = address + " " + city + " " + state + " " + zip;
+                geocoder.geocode({ 'address': addressf }, function (results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        defer.resolve({ log: results[0].geometry.location.lng(), lat: results[0].geometry.location.lat() });
+                    } else {
+                        defer.resolve({ log: 0, lat: 0 });
+                    }
+                });
+            } else {
+                defer.resolve({ log: 0, lat: 0 });
+            }
+            return defer.promise;
+        }
         return {
+            getAddressCoorinates: getAddressCoorinates,
             postLocation: postLocation,
             registerUserTemplateForPushNotifications: registerUserTemplateForPushNotifications,
             updateSettings: updateSettings,

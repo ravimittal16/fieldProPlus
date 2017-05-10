@@ -478,6 +478,9 @@
                     vm.productSearchModal.show();
                 });
             }
+            $timeout(function () {
+                $scope.$broadcast("$fpm:changeAddModalOpenPriority", true);
+            }, 1000)
         }
 
         function openEditProductModal() {
