@@ -41,7 +41,7 @@
           control: null,
           uploadImage: function (rawImage, imageName, take, isLast) {
             var defer = $q.defer();
-            fpmUtilitiesFactory.showLoading("Uploading " + (currentIndex + 1) + " of " + selectedFiles.length).then(function () {
+            fpmUtilitiesFactory.showLoading("Uploading " + (currentIndex + 1) + " of " + (take ? (1) : (selectedFiles.length))).then(function () {
               workOrdersFactory.uploadFile({
                 Barcode: vm.barcode,
                 Image: rawImage,
