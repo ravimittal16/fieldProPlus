@@ -296,7 +296,7 @@
             vm.uiSettings.isTimeCardModuleEnabled = vm.user.timeCard && vm.user.allowPushTime;
             vm.isServiceProvider = !vm.user.isAdminstrator;
             vm.showPrice = vm.user.showPrice;
-            sharedDataFactory.getIniitialData().then(function (response) {
+            sharedDataFactory.getIniitialData(true).then(function (response) {
                 if (response) {
                     vm.uiSettings.milageTrackingEnabled = response.customerNumberEntity.milageTrackingEnabled || false;
                     vm.uiSettings.timerEnabled = response.customerNumberEntity.workOrderTimerEnabled || false;

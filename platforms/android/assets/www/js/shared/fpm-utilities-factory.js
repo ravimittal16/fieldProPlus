@@ -208,17 +208,6 @@
               $ionicPopup.alert({ title: "Failed", template: "Failed to get Image Data" });
               defer.reject();
             });
-            // return $cordovaCamera.getPicture(options).then(function (imageData) {
-            //   $ionicLoading.show({
-            //     template: 'Processing Image',
-            //     duration: 2000
-            //   });
-            //   return imageData;
-            // }, function () {
-            //   return $ionicPopup.alert({ title: "Failed", template: "Failed to get Image Data" }, function () {
-            //     return null;
-            //   });
-            // });
             return defer.promise;
           },
           platforms: platforms,

@@ -13,26 +13,71 @@
         var alerts = fpmUtilitiesFactory.alerts;
 
         var currentIndex = 0;
-
+        var exts = [".tif", ".tiff", ".gif", ".jpeg", ".jpg", ".jif", ".jfif", ".jp2", ".jpx", ".j2k", ".j2c", ".pcd", ".png", ".bmp"];
         function _processUploadFile(index) {
           if (selectedFiles) {
             if ((index + 1) <= selectedFiles.length) {
               currentIndex = index;
               var file = selectedFiles[index];
-              var fileReader = new FileReader();
-              fileReader.onload = function (event) {
-                vm.upload.uploadImage(event.target.result, file.name, false, (index === (selectedFiles.length - 1))).then(function () {
-                  if (index === (selectedFiles.length - 1)) {
-                    selectedFiles = null;
-                  } else {
-                    var nextindex = index + 1;
-                    _processUploadFile(nextindex)
-                  }
+
+              var isValidExtension = _.filter(exts, function (s) {
+                return s === file.extension.toLowerCase();
+              });
+              if (isValidExtension.length === 0) {
+                alerts.alert("Invalid File", "This is not a valid image file", function () {
+                  var nextindex = index + 1;
+                  _processUploadFile(nextindex);
                 });
+                return false;
               }
-              fileReader.readAsDataURL(file.rawFile);
+              if (isAndroid) {
+                //alerts.alert("ANDROID", "THIS IS AN ANDROID DEVICE");
+                var fileReader = new FileReader();
+                fileReader.onload = function (e) {
+                  var img = new Image();
+                  img.onload = function () {
+                    var newImage = resizeInCanvas(img);
+                    vm.upload.uploadImage(newImage, file.name, false, (index === (selectedFiles.length - 1))).then(function () {
+                      if (index === (selectedFiles.length - 1)) {
+                        selectedFiles = null;
+                      } else {
+                        var nextindex = index + 1;
+                        _processUploadFile(nextindex)
+                      }
+                    });
+                  }
+                  img.src = e.target.result;
+                }
+                fileReader.readAsDataURL(file.rawFile);
+              } else {
+                var fileReader = new FileReader();
+                fileReader.onload = function (event) {
+                  vm.upload.uploadImage(event.target.result, file.name, false, (index === (selectedFiles.length - 1))).then(function () {
+                    if (index === (selectedFiles.length - 1)) {
+                      selectedFiles = null;
+                    } else {
+                      var nextindex = index + 1;
+                      _processUploadFile(nextindex)
+                    }
+                  });
+                }
+                fileReader.readAsDataURL(file.rawFile);
+              }
             }
           }
+        }
+
+        function resizeInCanvas(img) {
+          /////////  3-3 manipulate image
+          var perferedWidth = 500;
+          var ratio = perferedWidth / img.width;
+          var canvas = $("<canvas>")[0];
+          canvas.width = img.width * ratio;
+          canvas.height = img.height * ratio;
+          var ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          //////////4. export as dataUrl
+          return canvas.toDataURL();
         }
 
         var selectedFiles = null;
@@ -72,28 +117,21 @@
             },
             select: function (e) {
               e.isDefaultPrevented = true;
-              var exts = [".tif", ".tiff", ".gif", ".jpeg", ".jpg", ".jif", ".jfif", ".jp2", ".jpx", ".j2k", ".j2c", ".pcd", ".png", ".bmp"];
               var largeFiles = _.filter(e.files, function (f) {
-                return f.size > (20 * 1024 * 1024)
+                return f.size > (maxImageSize * 1024 * 1024)
               });
               if (largeFiles.length > 0) {
-                alerts.alert("Invalid Selection", "Make sure each selected file size should be less than 20 MB");
+                alerts.alert("Invalid Selection", "Image size is too large to upload");
                 e.preventDefault();
                 return false;
               }
+
+
+
+
               selectedFiles = e.files;
               _processUploadFile(0);
               e.preventDefault();
-              // angular.forEach(e.files, function (file, i) {
-              //   var fileReader = new FileReader();
-              //   fileReader.onload = function (event) {
-              //     vm.upload.uploadImage(event.target.result, file.name, false, (i === (e.files.length - 1)));
-              //   }
-              //   fileReader.readAsDataURL(file.rawFile);
-              //   if (i === (e.files.length - 1)) {
-              //     e.preventDefault();
-              //   }
-              // });
             }
           }
         };
@@ -130,7 +168,13 @@
             vm.imageViewerModel.hide();
           }
         };
+        var maxImageSize = 8;
+        var isAndroid = false;
         vm.$onInit = function () {
+          isAndroid = fpmUtilitiesFactory.device.isAndroid();
+          if (isAndroid) {
+            maxImageSize = 3.5;
+          }
           if (vm.barcode) {
             workOrdersFactory.getImagesList(vm.barcode).then(function (response) {
               vm.barcodeImages = response;
