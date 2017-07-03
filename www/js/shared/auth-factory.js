@@ -80,7 +80,7 @@
     }
 
     function logout(clearCredentials) {
-      $timeout(function () {
+      $rootScope.$evalAsync(function () {
         timecardFactory.clearTimecardFactoryData();
         $ionicHistory.clearHistory();
         $ionicHistory.clearCache();
@@ -89,7 +89,7 @@
         localStorageService.remove(localStorageKeys.storageKeyName);
         localStorageService.remove(localStorageKeys.configKeyName);
         localStorageService.remove(localStorageKeys.settingsKeyName);
-        //localStorageService.remove("appState");
+        localStorageService.clearAll();
         if (clearCredentials) {
           localStorageService.remove(localStorageKeys.userCredentials);
         }

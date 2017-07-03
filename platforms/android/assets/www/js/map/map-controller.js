@@ -4,7 +4,7 @@
     var defCordinates = { x: 44.31127, y: -92.67851, xcom: -92.67851, ycom: 44.3112679 };
     var mapMarkers = [];
     var markers = [];
-    function initController($scope, $state, $cordovaGeolocation, $ionicActionSheet, $timeout, $ionicPopup, $cordovaNetwork, $rootScope,
+    function initController($scope, $state, $q, $cordovaGeolocation, $ionicActionSheet, $timeout, $ionicPopup, $cordovaNetwork, $rootScope,
         mapFactory, sharedDataFactory, fpmUtilitiesFactory, authenticationFactory) {
         var vm = this;
         vm.user = authenticationFactory.getLoggedInUserInfo();
@@ -33,11 +33,16 @@
         function clearFilters() {
             if (vm.filtersModal) {
                 vm.filterDate = null;
-                var uncheckedUsers = _.where(vm.mapData.users, { isChecked: false });
-                _.forEach(uncheckedUsers, function (u) {
-                    u.isChecked = true;
+                // if (vm.user.isAdminstrator) {
+                //     var uncheckedUsers = _.where(vm.mapData.users, { isChecked: false });
+                //     _.forEach(uncheckedUsers, function (u) {
+                //         u.isChecked = true;
+                //     });
+                // }
+                _.forEach(markers, function (mar) {
+                    setMapToMarker(mar, vm.map, false);
                 });
-                updateMapMarkersView();
+                //updateMapMarkersView(true);
                 vm.filtersModal.hide();
             }
         }
@@ -55,7 +60,7 @@
         vm.filterDate = null;
         var dateFilterApplied = false;
         function applyFilters() {
-            updateMapMarkersView();
+            updateMapMarkersView(false, true);
             vm.filtersModal.hide();
         }
 
@@ -64,22 +69,32 @@
             markerObj.marker.setMap(map);
         }
 
+        function _clearMapFromAllMarkers() {
+            angular.forEach(markers, function (m) {
+                setMapToMarker(m, null);
+            })
+        }
+
         function applyDateFilter() {
             if (markers) {
                 dateFilterApplied = true;
                 var isHavingOrders = false;
+                _clearMapFromAllMarkers();
                 var markersWithDate = _.filter(markers, function (mar) {
-                    return mar.start != null && mar.havingMap === true;
+                    return mar.start !== null;
                 });
                 angular.forEach(markersWithDate, function (m) {
                     setMapToMarker(m, null);
                 });
+
+
                 if (vm.filterDate) {
                     var sDate = kendo.parseDate(vm.filterDate);
                     var filterMarkers = _.filter(markersWithDate, function (item) {
-                        return item.start.getDate() === parseInt(sDate.getDate())
-                            && item.start.getMonth() === parseInt(sDate.getMonth())
-                            && item.start.getFullYear() === parseInt(sDate.getFullYear())
+                        var s = kendo.parseDate(item.start);
+                        return s.getDate() === sDate.getDate()
+                            && s.getMonth() === sDate.getMonth()
+                            && s.getFullYear() === sDate.getFullYear()
                     });
                     if (filterMarkers.length > 0) {
                         _.forEach(filterMarkers, function (fmar) {
@@ -91,26 +106,50 @@
         }
 
         function updateMarkersMap(users, map, hideUnassignedMarkers) {
+            var defer = $q.defer();
             hideUnassignedMarkers = hideUnassignedMarkers || false;
-            angular.forEach(users, function (u) {
-                var userMarkers = _.where(markers, { technician: u.userId });
-                angular.forEach(userMarkers, function (m) {
-                    setMapToMarker(m, map);
-                });
-            });
+            // angular.forEach(users, function (u) {
+            //     var userMarkers = _.where(markers, { technician: u.userId });
+            //     angular.forEach(userMarkers, function (m, i) {
+            //         setMapToMarker(m, map);
+            //         if (i === (userMarkers.length - 1) && !hideUnassignedMarkers) {
+            //             defer.resolve(true);
+            //         }
+            //     });
+            // });
             if (hideUnassignedMarkers === true) {
                 var unassigned = _.where(markers, { isassigned: false });
-                _.forEach(unassigned, function (un) {
+                _.forEach(unassigned, function (un, i) {
                     setMapToMarker(un, null);
+                    if (i === (unassigned.length - 1)) {
+                        defer.resolve(true);
+                    }
                 });
             }
+            return defer.promise;
         }
         var dateFilterTimer = null;
-        function updateMapMarkersView() {
-            updateMarkersMap(_.where(vm.mapData.users, { isChecked: true }), vm.map);
-            updateMarkersMap(_.where(vm.mapData.users, { isChecked: false }), null);
+        function updateMapMarkersView(fromClearFilters, hideUnassignedMarkers) {
+            // if (vm.user.isAdminstrator) {
+            //     updateMarkersMap(_.where(vm.mapData.users, { isChecked: true }), vm.map, hideUnassignedMarkers).then(function () {
+            //         if (fromClearFilters) {
+            //         }
+            //     });
+
+            //     if (!fromClearFilters) {
+            //         updateMarkersMap(_.where(vm.mapData.users, { isChecked: false }), null, hideUnassignedMarkers);
+            //     }
+            //     if (vm.filterDate) {
+            //         dateFilterTimer = $timeout(applyDateFilter, 1000);
+            //     }
+            // } else {
+            //     if (vm.filterDate) {
+            //         dateFilterTimer = $timeout(applyDateFilter, 1000);
+            //     }
+            // }
+
             if (vm.filterDate) {
-                dateFilterTimer = $timeout(applyDateFilter, 1000);
+                applyDateFilter(true);
             }
         }
 
@@ -163,7 +202,7 @@
                 cancelText: 'Cancel',
                 destructiveButtonClicked: function () {
                     vm.filterDate = null;
-                    updateMapMarkersView();
+                    updateMapMarkersView(true, false);
                     return true;
                 },
                 cancel: function () {
@@ -270,24 +309,19 @@
                         addHandler(marker, l);
                     }
                     if ((mapMarkers.length - 1) === i) {
-
+                        vm.filterDate = new Date();
+                        applyFilters();
                     }
                 });
             }
         }
 
-        function updateMapMarkersArray() {
+        function updateMapMarkersArray(firstLoad) {
             mapMarkers = [];
             $.each(vm.mapData.orders, function (i, e) {
-                var color = defaultColor;
-                if (vm.mapData.users && e.technicianNum != null) {
-                    var cRecd = _.findWhere(vm.mapData.users, { userId: e.technicianNum });
-                    if (cRecd) {
-                        color = cRecd.userColor || defaultColor;
-                    }
-                }
+                var color = e.userColor || defaultColor;
                 var isWorkAssigned = e.scheduledStartDateTime !== null && e.scheduledFinishDateTime !== null;
-                if ((Math.abs(e.coordinateX + 98.908) > 0.1) && (Math.abs(e.coordinateY - 39.45) > 0.1)) {
+                if (e.coordinateY && e.coordinateX) {
                     mapMarkers.push({
                         x: e.coordinateX, y: e.coordinateY, barCode: e.barcode, isHome: false, color: color,
                         scale: color === defaultColor ? 4 : 6, isAssigned: isWorkAssigned,
@@ -309,7 +343,7 @@
                         vm.mapData.users = response.users;
                         vm.mapData.orders = response.orders;
                         if (angular.isDefined(vm.mapData) && vm.mapData.orders.length > 0) {
-                            updateMapMarkersArray();
+                            updateMapMarkersArray(true);
                         }
                     }
                 }).finally(fpmUtilitiesFactory.hideLoading);
@@ -369,7 +403,7 @@
         })
     }
 
-    initController.$inject = ["$scope", "$state", "$cordovaGeolocation", "$ionicActionSheet", "$timeout",
+    initController.$inject = ["$scope", "$state", "$q", "$cordovaGeolocation", "$ionicActionSheet", "$timeout",
         "$ionicPopup", "$cordovaNetwork", "$rootScope", "map-factory", "shared-data-factory", "fpm-utilities-factory", "authenticationFactory"];
     angular.module("fpm").controller("map-controller", initController);
 })();

@@ -80,10 +80,11 @@
               <div class="card">
                 <div class="item item-divider header-dark">
                   WORK DESCRIPTION
+                  <a class="icon ion-ios-browsers-outline pull-right pointer" data-ng-click="vm.tabs.events.popoutTextBox('DESCRIPTION')"></a>
                 </div>
                 <div class="list">
                   <div class="item item-input">
-                    <textarea cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment_1" auto-grow="" data-ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()"
+                    <textarea cols="30" rows="10" data-ng-model="vm.barCodeData.barcodeDetails.comment_1" data-ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()"
                       data-ng-model-options="{debounce:500}" placeholder="enter work description here..."></textarea>
                   </div>
                 </div>
@@ -91,11 +92,14 @@
               <div class="card">
                 <div class="item item-divider header-dark">
                   RESOLUTION
-                  <a class="icon ion-refresh pull-right pointer" data-ng-click="vm.tabs.desc.events.reloadWorkResolution()"></a>
+                  <div class="pull-right">
+                    <a class="icon ion-refresh pointer" data-ng-click="vm.tabs.desc.events.reloadWorkResolution()"></a>
+                    <a class="icon ion-ios-browsers-outline pointer" data-ng-click="vm.tabs.events.popoutTextBox('RESOLUTION')"></a>
+                  </div>
                 </div>
                 <div class="list">
                   <div class="item item-input">
-                    <textarea cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment_2" auto-grow="" data-ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()"
+                    <textarea cols="30" rows="10" data-ng-model="vm.barCodeData.barcodeDetails.comment_2" data-ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()"
                       data-ng-model-options="{debounce:500}" placeholder="enter work resolution here..."></textarea>
                   </div>
                 </div>
@@ -103,10 +107,13 @@
               <div class="card">
                 <div class="item item-divider header-dark">
                   COMMENTS
+                  <div class="pull-right">
+                    <a class="icon ion-ios-browsers-outline pointer" data-ng-click="vm.tabs.events.popoutTextBox('COMMENTS')"></a>
+                  </div>
                 </div>
                 <div class="list">
                   <div class="item item-input">
-                    <textarea cols="30" rows="5" data-ng-model="vm.barCodeData.barcodeDetails.comment_4" auto-grow="" data-ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()"
+                    <textarea cols="30" rows="10" data-ng-model="vm.barCodeData.barcodeDetails.comment_4" data-ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()"
                       data-ng-model-options="{debounce:500}" placeholder="enter comments here..."></textarea>
                   </div>
                 </div>
@@ -437,7 +444,38 @@
     data-enable-markup-orders="vm.enableMarkup"></edit-product-component>
 	</ion-modal-view>
 </script>
-
+<script id="fulltextModal.html" type="text/ng-template">
+  <ion-modal-view>
+    <ion-header-bar>
+      <button type="button"  class="button button-small button-positive" data-ng-click="vm.tabs.events.updateClicked()">
+              Update
+            </button>
+       <h1 class="title">
+                {{vm.popModal.type}} 
+            </h1>
+            <button type="button" class="button button-small button-light" data-ng-click="vm.tabs.events.closePopoutModal()">
+                Close
+            </button>
+    </ion-header-bar>
+     <ion-content has-bouncing="true">
+       <!--<div class="row">
+          <div class="col">
+            <button type="button"  class="button button-block button-small button-positive">
+              Update
+            </button>
+          </div>
+        </div>-->
+        <div class="row">
+          <div class="col">
+            <textarea rows="30" auto-grow="" cols="5" style="width:100%;" 
+            ng-model="vm.popModal.content"
+            placeholder="{{vm.popModal.placeholder}}"></textarea>
+          </div>
+        </div>
+       
+     </ion-content>
+  </ion-modal-view>
+</script>
 <script id="addProductModal.html" type="text/ng-template">
 	<ion-modal-view>
 		<edit-product-component is-estimate="false" data-modal-type="1" 

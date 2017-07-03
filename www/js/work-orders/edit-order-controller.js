@@ -508,7 +508,51 @@
             goourl += " " + d.shipCity + ", " + d.shipState + " " + d.shipZIP;
             $window.open(goourl, '_blank', 'location=yes');
         }
+        vm.popModal = { type: 'DESCRIPTION', modal: null, placeholder: "enter here...", content: "" };
         vm.tabs = {
+            events: {
+                updateClicked: function () {
+                    if (vm.popModal.type === 'DESCRIPTION') {
+                        vm.barCodeData.barcodeDetails.comment_1 = angular.copy(vm.popModal.content);
+                    }
+                    if (vm.popModal.type === 'RESOLUTION') {
+                        vm.barCodeData.barcodeDetails.comment_2 = angular.copy(vm.popModal.content);
+                    }
+                    if (vm.popModal.type === 'COMMENTS') {
+                        vm.barCodeData.barcodeDetails.comment_4 = angular.copy(vm.popModal.content);
+                    }
+                    updateOrder();
+                    vm.popModal.modal.hide();
+                },
+                closePopoutModal: function () {
+                    vm.popModal.modal.hide();
+                },
+                popoutTextBox: function (type) {
+                    if (type === 'DESCRIPTION') {
+                        vm.popModal.content = angular.copy(vm.barCodeData.barcodeDetails.comment_1);
+                    }
+                    if (type === 'RESOLUTION') {
+                        vm.popModal.content = angular.copy(vm.barCodeData.barcodeDetails.comment_2);
+                    }
+                    if (type === 'COMMENTS') {
+                        vm.popModal.content = angular.copy(vm.barCodeData.barcodeDetails.comment_4);
+                    }
+
+
+
+
+
+                    vm.popModal.type = type;
+                    if (vm.popModal.modal) {
+                        vm.popModal.modal.show();
+                    } else {
+                        fpmUtilities.getModal("fulltextModal.html", $scope).then(function (modal) {
+                            vm.popModal.modal = modal;
+                            vm.popModal.modal.show();
+                        });
+                    }
+                }
+            },
             desc: {
                 events: {
                     reloadWorkResolution: function () {
