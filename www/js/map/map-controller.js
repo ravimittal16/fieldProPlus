@@ -43,7 +43,9 @@
                     setMapToMarker(mar, vm.map, false);
                 });
                 //updateMapMarkersView(true);
-                vm.filtersModal.hide();
+                if (vm.filtersModal) {
+                    vm.filtersModal.hide();
+                }
             }
         }
 
@@ -61,7 +63,9 @@
         var dateFilterApplied = false;
         function applyFilters() {
             updateMapMarkersView(false, true);
-            vm.filtersModal.hide();
+            if (vm.filtersModal) {
+                vm.filtersModal.hide();
+            }
         }
 
         function setMapToMarker(markerObj, map) {
@@ -231,6 +235,7 @@
         function addHandler(m, o) {
             window.google.maps.event.addListener(m, "click", function () {
                 vm.currentMarker = o.o;
+                console.log("vm.currentMarker", vm.currentMarker);
                 if (!o.isHome) {
                     var myPopup = $ionicPopup.show({
                         templateUrl: "mapInfoWindow.html",
@@ -394,13 +399,13 @@
             }
         });
 
-        $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
-            fpmUtilitiesFactory.hideLoading();
-        })
+        // $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
+        //     fpmUtilitiesFactory.hideLoading();
+        // })
 
-        $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
-            fpmUtilitiesFactory.showLoading("You must connected to the internet to view this map");
-        })
+        // $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
+        //     fpmUtilitiesFactory.showLoading("You must connected to the internet to view this map");
+        // })
     }
 
     initController.$inject = ["$scope", "$state", "$q", "$cordovaGeolocation", "$ionicActionSheet", "$timeout",
