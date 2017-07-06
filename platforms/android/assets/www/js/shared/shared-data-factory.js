@@ -48,8 +48,6 @@
         }
 
         function getAddressCoorinates(state, zip, city, address) {
-
-
             var defer = $q.defer();
             if (window.google) {
                 var geocoder = new google.maps.Geocoder();
