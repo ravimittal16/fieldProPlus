@@ -40,8 +40,12 @@
                             data-ng-click="vm.events.onDateFilterDotsClicked()"></a>
                     </div>
                     <label class="item item-input">
-				        <span class="input-label">Work order Date</span>
+				        <span class="input-label">Start Date</span>
                         <input type="text" class="transparent-background text-right" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yyyy'}" data-ng-model="vm.filterDate"/>
+                    </label>
+                     <label class="item item-input">
+				        <span class="input-label">End Date</span>
+                        <input type="text" class="transparent-background text-right" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yyyy'}" data-ng-model="vm.filterEndDate"/>
                     </label>
                     <!--<div class="item item-divider" data-ng-if="vm.user.isAdminstrator">
                         Service Provider
@@ -60,6 +64,7 @@
             <div class="list">
                 <h6><span class="text-muted">Display Name</span> <strong data-ng-bind="vm.currentMarker.displayName"></strong></h6>
                 <h6><span class="text-muted">Company</span> <strong data-ng-bind="vm.currentMarker.company_Name"></strong></h6>
+                <h6 data-ng-if="vm.currentMarker.technicianName"><span class="text-muted">Service Provider</span> <strong data-ng-bind="vm.currentMarker.technicianName"></strong></h6>
             </div>
     </script>
 </ion-view>

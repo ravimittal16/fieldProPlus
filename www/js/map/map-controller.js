@@ -33,6 +33,7 @@
         function clearFilters() {
             if (vm.filtersModal) {
                 vm.filterDate = null;
+                vm.filterEndDate = null;
                 // if (vm.user.isAdminstrator) {
                 //     var uncheckedUsers = _.where(vm.mapData.users, { isChecked: false });
                 //     _.forEach(uncheckedUsers, function (u) {
@@ -91,20 +92,29 @@
                     setMapToMarker(m, null);
                 });
 
-
+                var toDate = null, from = null;
+                if (vm.filterEndDate) {
+                    toDate = new Date(vm.filterEndDate.getFullYear(), vm.filterEndDate.getMonth(), vm.filterEndDate.getDate(), 0, 0, 0, 0)
+                }
                 if (vm.filterDate) {
-                    var sDate = kendo.parseDate(vm.filterDate);
-                    var filterMarkers = _.filter(markersWithDate, function (item) {
-                        var s = kendo.parseDate(item.start);
-                        return s.getDate() === sDate.getDate()
-                            && s.getMonth() === sDate.getMonth()
-                            && s.getFullYear() === sDate.getFullYear()
-                    });
-                    if (filterMarkers.length > 0) {
-                        _.forEach(filterMarkers, function (fmar) {
-                            setMapToMarker(fmar, vm.map);
-                        });
+                    from = new Date(vm.filterDate.getFullYear(), vm.filterDate.getMonth(), vm.filterDate.getDate(), 0, 0, 0, 0);//kendo.parseDate(vm.filterDate);
+                }
+
+                var filterMarkers = _.filter(markersWithDate, function (item) {
+                    var s = kendo.parseDate(item.start);
+                    var itemDate = new Date(s.getFullYear(), s.getMonth(), s.getDate(), 0, 0, 0, 0);
+                    if (from !== null && toDate === null) {
+                        return moment(itemDate).isSameOrAfter(from);
+                    } else if (from !== null && toDate !== null) {
+                        return (moment(itemDate).isSameOrAfter(from) && moment(itemDate).isSameOrBefore(toDate));
+                    } else {
+                        return moment(itemDate).isSameOrBefore(toDate);
                     }
+                });
+                if (filterMarkers.length > 0) {
+                    _.forEach(filterMarkers, function (fmar) {
+                        setMapToMarker(fmar, vm.map);
+                    });
                 }
             }
         }
@@ -206,6 +216,7 @@
                 cancelText: 'Cancel',
                 destructiveButtonClicked: function () {
                     vm.filterDate = null;
+                    vm.filterEndDate = null;
                     updateMapMarkersView(true, false);
                     return true;
                 },
@@ -315,6 +326,7 @@
                     }
                     if ((mapMarkers.length - 1) === i) {
                         vm.filterDate = new Date();
+                        vm.filterEndDate = new Date();
                         applyFilters();
                     }
                 });
