@@ -1,4 +1,5 @@
 (function () {
+
     "use strict"
     function _initController($scope, $state, $window, $stateParams, $timeout, estimatesFactory, sharedDataFactory, fpmUtilities, authenticationFactory) {
         var vm = this;
@@ -8,6 +9,45 @@
         //console.log(vm.user);
 
         var alerts = fpmUtilities.alerts;
+
+        function calculateTotals() {
+            vm.totals = {
+                subtotal: 0,
+                totalqty: 0,
+                totalcost: 0,
+                totaltax: 0
+            };
+            if (vm.est.invoice && vm.est.invoice.length > 0) {
+                var taxRate = vm.est.estimate.taxRate || 0;
+                angular.forEach(vm.est.invoice, function (pro) {
+                    if (pro.price && pro.qty) {
+                        var totalPrice = 0;
+                        if (!angular.isDefined(pro.newPriceCalculated)) {
+                            pro.newPriceCalculated = false;
+                        }
+                        console.log(pro);
+                        if (angular.isNumber(parseFloat(pro.price)) && angular.isNumber(parseInt(pro.qty, 10))) {
+                            if (pro.markUpPercent > 0) {
+                                var newPrice = pro.newPriceCalculated ? pro.price : (parseFloat(pro.price) + (parseFloat(((pro.markUpPercent || 0) / 100) * (pro.price))));
+                                pro.price = newPrice;
+                                pro.newPriceCalculated = true;
+                                totalPrice = newPrice * pro.qty;
+                            } else {
+                                totalPrice = pro.price * pro.qty;
+                            }
+                            pro.totalPrice = totalPrice;
+                            var taxAmt = parseFloat(parseFloat(taxRate) > 0 ? parseFloat((taxRate / 100) * (totalPrice)) : 0);
+                            vm.totals.subtotal += parseFloat(totalPrice);
+                            vm.totals.totalqty += parseInt(pro.qty, 10);
+                            if ((pro.taxable || false) === true) {
+                                vm.totals.totaltax += parseFloat(taxAmt);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
         function openEditProductModal() {
             if (vm.currentProduct) {
                 if (vm.productModal) {
@@ -39,6 +79,7 @@
                             if (response && response.entity && response.entity.products) {
                                 vm.est.products = response.entity.products;
                                 vm.est.invoice = response.entity.invoice;
+                                calculateTotals();
                                 alerts.alert("Success", "Product has been deleted successfully.");
                             }
                         }).finally(fpmUtilities.hideLoading)
@@ -74,6 +115,7 @@
         function _getEstimateDetails() {
             estimatesFactory.getEstimateDetails($stateParams.id).then(function (response) {
                 vm.est = response;
+                calculateTotals();
             });
         }
 
@@ -84,6 +126,7 @@
                     if (response && response.entity && response.entity.products) {
                         vm.est.products = response.entity.products;
                         vm.est.invoice = response.entity.invoice;
+                        calculateTotals();
                         vm.productSearchModal.hide();
                     }
                 }).finally(fpmUtilities.hideLoading);
@@ -100,6 +143,7 @@
             if (args) {
                 vm.est.products = args.entity.products;
                 vm.est.invoice = args.entity.invoice;
+                calculateTotals();
                 vm.productModal.hide();
             }
         });
