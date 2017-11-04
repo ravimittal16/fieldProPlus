@@ -12,7 +12,7 @@
             { title: "Map", state: "app.map", icon: "location" },
             { title: "Create Work Order", state: "app.createWorkOrder", icon: "plus-round", isConfigurationBased: true, configProperty: "allowCreateWorkOrders" },
             { title: "Create Customer", state: "app.createCustomer", icon: "plus-round" },
-            // { title: "Estimates", state: "app.estimates", icon: "ios-list-outline" },
+            { title: "Estimates", state: "app.estimates", icon: "ios-list-outline" },
             { title: "My Expense", state: "app.expense", icon: "cash", basedOn: "etOn", specialFeature: true },
             { title: "Time Card", state: "app.timecard", icon: "clock", basedOn: "timeCard", specialFeature: true },
             { title: "Custom Components", state: "app.customComponents", icon: "fork-repo" },

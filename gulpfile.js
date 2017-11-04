@@ -13,7 +13,8 @@ var iife = require("gulp-iife");
 
 var paths = {
   sass: ['./scss/**/*.scss'],
-  appJs: ["!./www/js/app.js", "!./www/js/build/*.js", "./www/js/**/*.js"]
+  appJs: ["!./www/js/app.js", "!./www/js/build/*.js", "./www/js/**/*.js"],
+  codeFilesPath: ["./www/js/estimates/*.js", "./www/js/shared-components/*.js"]
 };
 
 gulp.task('default', ['sass', 'scripts']);
@@ -49,7 +50,7 @@ gulp.task('scripts', function () {
 
 gulp.task('watch', function () {
   gulp.watch(paths.sass, ['sass']);
-  gulp.watch(paths.appJs, ['scripts']);
+  gulp.watch(paths.codeFilesPath, ['scripts']);
 });
 
 gulp.task('install', ['git-check'], function () {

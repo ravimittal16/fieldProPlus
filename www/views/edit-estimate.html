@@ -12,8 +12,10 @@
                             <div class="alert" data-ng-class="{'alert-danger':!vm.est.estimate.isApproved,'alert-success':vm.est.estimate.isApproved}">
                                 <span data-ng-if="!vm.est.estimate.isApproved">Estimate is not approved yet</span>
                                 <span data-ng-if="vm.est.estimate.isApproved">
-                                        <i class="fa fa-check"></i>&nbsp;Estimate approved by <strong ng-bind="vm.est.estimate.approverName"></strong> on <strong>{{vm.est.estimate.approvedDateTime | date}}</strong>
-                                    </span>
+                                    <i class="fa fa-check"></i>&nbsp;Estimate approved by
+                                    <strong ng-bind="vm.est.estimate.approverName"></strong> on
+                                    <strong>{{vm.est.estimate.approvedDateTime | date}}</strong>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -35,11 +37,12 @@
                                             <p>{{::vm.est.estimate.wosCity}},{{::vm.est.estimate.wosState}}&nbsp;{{::vm.est.estimate.wosZip}}
                                             </p>
                                             <p ng-if="vm.barCodeData.barcodeDetails.phone">
-                                                <span><i class="icon ion-android-call"></i>&nbsp;{{::vm.est.estimate.woPhone}}</span>
+                                                <span>
+                                                    <i class="icon ion-android-call"></i>&nbsp;{{::vm.est.estimate.woPhone}}</span>
                                             </p>
                                             <button class="button button-block button-small button-positive" data-ng-click="vm.events.onAddressTapped()">
-                                                    <i class="ion ion-ios-location"></i>&nbsp;Show on Google Map
-                                                </button>
+                                                <i class="ion ion-ios-location"></i>&nbsp;Show on Google Map
+                                            </button>
                                         </address>
                                     </div>
                                 </div>
@@ -73,7 +76,7 @@
                             </div>
                             <div class="list">
                                 <div class="item item-input">
-                                    <textarea cols="30" rows="5" data-ng-model="vm.est.estimate.woDescription" auto-grow="" data-ng-change="vm.events.onDescriptionOrNotesChanged()"
+                                    <textarea cols="30" rows="10" data-ng-model="vm.est.estimate.woDescription" auto-grow="" data-ng-change="vm.events.onDescriptionOrNotesChanged()"
                                         data-ng-model-options="{debounce:500}" placeholder="enter work description here..."></textarea>
                                 </div>
                             </div>
@@ -84,7 +87,7 @@
                             </div>
                             <div class="list">
                                 <div class="item item-input">
-                                    <textarea cols="30" rows="5" data-ng-model="vm.est.estimate.woNotes" auto-grow="" data-ng-change="vm.events.onDescriptionOrNotesChanged()"
+                                    <textarea cols="30" rows="10" data-ng-model="vm.est.estimate.woNotes" auto-grow="" data-ng-change="vm.events.onDescriptionOrNotesChanged()"
                                         data-ng-model-options="{debounce:500}" placeholder="enter notes here..."></textarea>
                                 </div>
                             </div>
@@ -99,32 +102,41 @@
                         <div class="item item-divider">
                             PRODUCTS
                             <button type="button" class="button pull-right button-small button-small button-positive" data-ng-click="vm.events.onProdcutActionButtonClicked()">Add Product</a>
-            </div>
-          <div class="item item-text-wrap text-center" data-ng-if="vm.est.products.length == 0">
-             <h3 class="text-muted">
-                <strong>No product found</strong>
-              </h3>
-          </div>
-            <div data-ng-if="vm.est.products.length" data-ng-repeat="p in vm.est.products">
-              <div class="row n-p-b n-m-b">
-                <div class="col col-50">
-                  <h5>{{::p.productName}}</h5>
-                </div>
-                <div class="col col-25">
-                  <h5 class="pull-right"><strong>{{p.qty}}</strong></h5>
-                </div>
-                <div class="col col-25 text-right">
-                  <h5 class="pull-right" data-ng-if="vm.user.showPrice"><strong>{{p.price | currency:'$':2}}</strong></h5>
-                </div>
-              </div>
-              <div class="row n-p-t row-top border-bottom">
-                <div class="col">
-                  <button type="button" class="button icon ion-edit button-small text-energized" style="margin-top: -5px;float: left;" data-ng-if="!vm.isServiceProvider || sch.technicianNum == vm.user.userEmail" ng-click="vm.events.onEditProductClicked(p)"></button>
-                            <button type="button" class="button icon ion-trash-b button-small text-assertive" style="margin-top: -5px;float: left;margin-left: 5px;"
-                                ng-click="vm.events.onDeleteProductClicked(p)"></button>
                         </div>
-                    </div>
-                    </div>
+                        <div class="item item-text-wrap text-center" data-ng-if="vm.est.products.length == 0">
+                            <h3 class="text-muted">
+                                <strong>No product found</strong>
+                            </h3>
+                        </div>
+                        <div data-ng-if="vm.est.products.length" data-ng-repeat="p in vm.est.products">
+                            <div class="row n-p-b n-m-b">
+                                <div class="col col-50">
+                                    <h5>{{::p.productName}}</h5>
+                                </div>
+                                <div class="col col-25">
+                                    <h5 class="pull-right">
+                                        <strong>{{p.qty}}</strong>
+                                    </h5>
+                                </div>
+                                <div class="col col-25 text-right">
+                                    <h5 class="pull-right" data-ng-if="vm.user.showPrice">
+                                        <strong>{{p.price | currency:'$':2}}</strong>
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="row n-p-t row-top border-bottom">
+                                <div class="col">
+                                    <small class="text-muted text-small">{{p.productDescription}}
+                                        <small>
+                                </div>
+                                <div class="col">
+                                    <button type="button" class="button icon ion-edit button-small text-energized" style="margin-top: -5px;float: left;" data-ng-if="!vm.isServiceProvider || sch.technicianNum == vm.user.userEmail"
+                                        ng-click="vm.events.onEditProductClicked(p)"></button>
+                                    <button type="button" class="button icon ion-trash-b button-small text-assertive" style="margin-top: -5px;float: left;margin-left: 5px;"
+                                        ng-click="vm.events.onDeleteProductClicked(p)"></button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </ion-content>
             </ion-tab>
@@ -160,7 +172,8 @@
                                             </div>
                                             <div class="col col-20">
                                                 <h3 class="pull-right" data-ng-if="vm.user.showPrice">
-                                                    <span data-ng-bind="inv.totalPrice | currency:'$':2">  </span></h3>
+                                                    <span data-ng-bind="inv.totalPrice | currency:'$':2"> </span>
+                                                </h3>
                                             </div>
                                         </div>
                                     </div>

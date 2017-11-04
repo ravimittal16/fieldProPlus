@@ -9,7 +9,9 @@
         vm.userInfo = authenticationFactory.getLoggedInUserInfo();
         vm.priorities = [{ name: "Normal" }, { name: "High" }];
         vm.events = {
-            backToEstimates: function () { },
+            onBackToDashboardClicked: function () {
+                $state.go("app.estimates")
+            },
             onSubmitButtonClicked: function (isValid) {
                 vm.errors = [];
                 if (!vm.isCustomerSelected) {

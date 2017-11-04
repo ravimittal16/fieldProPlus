@@ -8,7 +8,7 @@
   </ion-header-bar>
   <form name="formEstimate" novalidate="">
     <ion-content>
-      
+
       <errors-view errors="vm.errors"></errors-view>
       <div class="list">
         <div class="card">
@@ -24,9 +24,9 @@
             </div>
           </div>
           <label class="item item-input">
-                <span class="input-label">Email</span>
-                    <input type="email" placeholder="Email" maxlength="500" data-ng-model="vm.entity.woEmail"/>
-                </label>
+            <span class="input-label">Email</span>
+            <input type="email" placeholder="Email" maxlength="500" data-ng-model="vm.entity.woEmail" />
+          </label>
         </div>
 
         <div class="card">
@@ -35,17 +35,17 @@
               Billing Address
             </div>
             <label class="item item-input">
-                    <textarea type="text" rows="2" placeholder="Street" class="transparent-background" data-ng-model="vm.entity.wobStreet" readonly=""></textarea>
-                </label>
+              <textarea type="text" rows="2" placeholder="Street" class="transparent-background" data-ng-model="vm.entity.wobStreet" readonly=""></textarea>
+            </label>
             <label class="item item-input">
-                    <input type="text" placeholder="City" class="transparent-background" data-ng-model="vm.entity.wobCity" readonly=""/>
-                </label>
+              <input type="text" placeholder="City" class="transparent-background" data-ng-model="vm.entity.wobCity" readonly="" />
+            </label>
             <label class="item item-input">
-                    <input type="text" placeholder="State" class="transparent-background" data-ng-model="vm.entity.wobState" readonly=""/>
-                </label>
+              <input type="text" placeholder="State" class="transparent-background" data-ng-model="vm.entity.wobState" readonly="" />
+            </label>
             <label for="" class="item item-input">
-                    <input type="text" placeholder="Zip" class="transparent-background" data-ng-model="vm.entity.wobZip" readonly=""/>
-                </label>
+              <input type="text" placeholder="Zip" class="transparent-background" data-ng-model="vm.entity.wobZip" readonly="" />
+            </label>
           </div>
         </div>
 
@@ -61,17 +61,17 @@
               <button type="button" class="button button-small button-positive pull-right" data-ng-click="vm.events.sameAsBilling()">Same as Billing</button>
             </div>
             <label class="item item-input">
-                    <textarea type="text" rows="2" placeholder="Street" maxlength="200" data-ng-model="vm.entity.wosStreet"></textarea>
-                </label>
+              <textarea type="text" rows="2" placeholder="Street" maxlength="200" data-ng-model="vm.entity.wosStreet"></textarea>
+            </label>
             <label class="item item-input">
-            <input type="text" placeholder="City" maxlength="50" data-ng-model="vm.entity.sCity"/>
-          </label>
+              <input type="text" placeholder="City" maxlength="50" data-ng-model="vm.entity.sCity" />
+            </label>
             <label class="item item-input">
-                    <input type="text" placeholder="State" data-ng-model="vm.entity.wosState" maxlength="50"/>
-                </label>
+              <input type="text" placeholder="State" data-ng-model="vm.entity.wosState" maxlength="50" />
+            </label>
             <label for="" class="item item-input">
-                    <input type="text" placeholder="Zip" data-ng-model="vm.entity.wosZip" maxlength="20"/>
-                </label>
+              <input type="text" placeholder="Zip" data-ng-model="vm.entity.wosZip" maxlength="20" />
+            </label>
           </div>
         </div>
 
@@ -98,13 +98,15 @@
             Description
           </div>
           <label class="item item-input item-stacked-label">
-                    <textarea cols="30" rows="6" placeholder="please add work description here..." data-ng-model="vm.entity.woDescription"></textarea>
-                </label>
+            <textarea cols="30" rows="6" placeholder="please add work description here..." data-ng-model="vm.entity.woDescription"></textarea>
+          </label>
         </div>
       </div>
+    </ion-content>
+    <ion-footer-bar align-title="left" class="bar-light">
       <div class="buttons">
-        <button class="button" type="button" data-ng-click="vm.events.backToEstimates()">
-            Go back to Estimates
+        <button class="button" type="button" data-ng-click="vm.events.onBackToDashboardClicked()">
+          Go back to Estimates
         </button>
       </div>
       <h1 class="title">
@@ -112,22 +114,7 @@
       </h1>
       <div class="buttons">
         <button type="submit" class="button button-balanced" data-ng-click="vm.events.onSubmitButtonClicked(formEstimate.$valid)">
-            Create Estimate 
-        </button>
-      </div>
-    </ion-content>
-    <ion-footer-bar align-title="left" class="bar-light">
-      <div class="buttons">
-        <button class="button" type="button" data-ng-click="vm.events.onBackToDashboardClicked()">
-            Go back to Estimates
-        </button>
-      </div>
-      <h1 class="title">
-        &nbsp;
-      </h1>
-      <div class="buttons">
-        <button type="submit" class="button button-balanced" data-ng-click="vm.events.onSubmitButtonClicked(formWorkOrder.$valid)">
-            Create Estimate 
+          Create Estimate
         </button>
       </div>
     </ion-footer-bar>

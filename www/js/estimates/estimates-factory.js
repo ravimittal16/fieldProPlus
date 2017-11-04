@@ -26,7 +26,27 @@
             return apiContext.get(apibase + "GetEstimateDetails?estimateId=" + id + "&fromMobile=true");
         }
 
+        function deleteEstimate(estimateId) {
+            return apiContext.deleteReq(apibase + "DeleteEstimate?estimateId=" + estimateId)
+        }
+
+        function addProductToEstimate(productNum, barcode, estimateId) {
+            return apiContext.get(apibase + "AddProductToEstimate?productNum=" + productNum + "&barcode=" + barcode + "&estimateId=" + estimateId);
+        }
+
+        function deleteProduct(num, estimateId) {
+            return apiContext.deleteReq(apibase + "DeleteProductFromOrder?productNum=" + num + "&estimateId=" + estimateId);
+        }
+
+        function updateProduct(product) {
+            return apiContext.post(apibase + "UpdateProduct", product);
+        }
+
         return {
+            updateProduct: updateProduct,
+            deleteProduct: deleteProduct,
+            addProductToEstimate: addProductToEstimate,
+            deleteEstimate: deleteEstimate,
             getEstimateDetails: getEstimateDetails,
             getAllEstimates: getAllEstimates,
             createWorkOrderEstimate: createWorkOrderEstimate,

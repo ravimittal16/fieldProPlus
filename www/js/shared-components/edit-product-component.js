@@ -9,21 +9,22 @@
         },
         templateUrl: "js/shared-components/edit-product-component-template.html",
         controller: ["$scope", "$stateParams", "$rootScope", "work-orders-factory", "authenticationFactory", "fpm-utilities-factory",
-            "shared-data-factory", function ($scope, $stateParams, $rootScope, workOrdersFactory, authenticationFactory, fpmUtilitiesFactory,
-                sharedDataFactory) {
+            "shared-data-factory", "estimates-factory", function ($scope, $stateParams, $rootScope, workOrdersFactory, authenticationFactory, fpmUtilitiesFactory,
+                sharedDataFactory, estimatesFactory) {
                 var vm = this;
                 vm.user = authenticationFactory.getLoggedInUserInfo();
-
+                var alerts = fpmUtilitiesFactory.alerts;
                 vm.events = {
                     closeProductEditModal: function () {
                         $rootScope.$broadcast("$fpm:closeEditProductModal");
                     },
                     updateProductClick: function () {
                         if (vm.modalType === 0) {
-                            var promise = vm.isEstimate ? null : workOrdersFactory.updateProduct;
+                            var promise = vm.isEstimate ? estimatesFactory.updateProduct : workOrdersFactory.updateProduct;
                             fpmUtilitiesFactory.showLoading("updating product...").then(function () {
                                 promise(vm.product).then(function (response) {
                                     $scope.$emit("$fpm:operation:updateProduct", response);
+                                    alerts.alert("Success", "Product has been deleted successfully.");
                                 }).finally(fpmUtilitiesFactory.hideLoading);
                             });
                         } else {
@@ -49,6 +50,7 @@
                     sharedDataFactory.getIniitialData().then(function (response) {
                         vm.enableMarkupOrders = response.customerNumberEntity.enableMarkupForWorkOrders || false;
                     });
+                    vm.user.showPrice = true;
                 }
             }],
         controllerAs: "vm"
