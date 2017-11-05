@@ -2,11 +2,14 @@
   "use strict";
   var componentConfig = {
     bindings: {
-      barcode: "<"
+      barcode: "<",
+      isEstimate: "<"
     },
     templateUrl: "js/work-orders/order-images-list-component.template.html",
-    controller: ["$scope", "$q", "$timeout", "$ionicModal", "$ionicLoading", "work-orders-factory", "fpm-utilities-factory", "fieldPromaxConfig",
-      function ($scope, $q, $timeout, $ionicModal, $ionicLoading, workOrdersFactory, fpmUtilitiesFactory, fieldPromaxConfig) {
+    controller: ["$scope", "$stateParams", "$q", "$timeout", "$ionicModal", "$ionicLoading"
+      , "work-orders-factory", "fpm-utilities-factory", "estimates-factory", "fieldPromaxConfig",
+      function ($scope, $stateParams, $q, $timeout, $ionicModal, $ionicLoading, workOrdersFactory, fpmUtilitiesFactory,
+        estimateFactory, fieldPromaxConfig) {
         var vm = this;
         vm.isExpanded = false;
         var baseUrl = fieldPromaxConfig.fieldPromaxApi;
@@ -88,16 +91,20 @@
             var defer = $q.defer();
             fpmUtilitiesFactory.showLoading("Uploading " + (currentIndex + 1) + " of " + (take ? (1) : (selectedFiles.length))).then(function () {
               workOrdersFactory.uploadFile({
-                Barcode: vm.barcode,
-                Image: rawImage,
-                Name: imageName
+                barcode: vm.barcode,
+                image: rawImage,
+                name: imageName,
+                estimateId: estimateId
               }).then(function (response) {
-                vm.barcodeImages.push({
-                  barcode: vm.barcode,
-                  fileName: imageName,
-                  imageURL: "/" + imageName + (take ? ".jpg" : ""),
-                  num: response
-                });
+                if (response && response.entity) {
+                  vm.barcodeImages.push({
+                    barcode: vm.barcode,
+                    fileName: imageName,
+                    estimateId: estimateId,
+                    imageURL: "/" + imageName + (take ? ".jpg" : ""),
+                    num: response.entity.newIdentity
+                  });
+                }
                 defer.resolve();
                 if (isLast) {
                   alerts.alert("Uploaded", "File(s) Uploaded successfully");
@@ -125,10 +132,6 @@
                 e.preventDefault();
                 return false;
               }
-
-
-
-
               selectedFiles = e.files;
               _processUploadFile(0);
               e.preventDefault();
@@ -170,13 +173,21 @@
         };
         var maxImageSize = 8;
         var isAndroid = false;
+        var estimateId = 0;
         vm.$onInit = function () {
           isAndroid = fpmUtilitiesFactory.device.isAndroid();
           if (isAndroid) {
             maxImageSize = 3.5;
           }
-          if (vm.barcode) {
+          if (vm.isEstimate) {
+            estimateId = $stateParams.id;
+          }
+          if (vm.barcode && !vm.isEstimate) {
             workOrdersFactory.getImagesList(vm.barcode).then(function (response) {
+              vm.barcodeImages = response;
+            });
+          } else {
+            estimateFactory.getEstimateImages(estimateId).then(function (response) {
               vm.barcodeImages = response;
             });
           }

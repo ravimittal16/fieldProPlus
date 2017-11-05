@@ -6,7 +6,6 @@
         vm.estimateId = $stateParams.id;
         vm.enableMarkup = true;
         vm.user = authenticationFactory.getLoggedInUserInfo();
-        //console.log(vm.user);
 
         var alerts = fpmUtilities.alerts;
 
@@ -25,7 +24,6 @@
                         if (!angular.isDefined(pro.newPriceCalculated)) {
                             pro.newPriceCalculated = false;
                         }
-                        console.log(pro);
                         if (angular.isNumber(parseFloat(pro.price)) && angular.isNumber(parseInt(pro.qty, 10))) {
                             if (pro.markUpPercent > 0) {
                                 var newPrice = pro.newPriceCalculated ? pro.price : (parseFloat(pro.price) + (parseFloat(((pro.markUpPercent || 0) / 100) * (pro.price))));
@@ -65,7 +63,6 @@
                 openProductSearchModal();
             },
             onAddProductCompleted: function (product) {
-                console.log(product);
             },
             onEditProductClicked: function (prod) {
                 vm.currentProduct = prod;
@@ -158,7 +155,6 @@
 
         function activateController() {
             _getEstimateDetails();
-            vm.user.showPrice = true;
         }
 
         activateController();

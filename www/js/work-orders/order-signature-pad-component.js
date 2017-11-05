@@ -2,7 +2,8 @@
     "use strict";
     var componentConfig = {
         bindings: {
-            padEventsRef: "="
+            padEventsRef: "=",
+            isEstimate: "<"
         },
         templateUrl: "js/work-orders/order-signature-pad-template.html",
         controller: ["$scope", "$stateParams", "$q", "work-orders-factory", "fpm-utilities-factory",
@@ -12,6 +13,7 @@
                 var barcode = $stateParams.barCode;
                 vm.errors = ["Please add customer name before save"];
                 vm.showError = false;
+                var estimateId = 0;
                 vm.events = {
                     onCustomerNameKeyup: function (keyCode) {
                         if (keyCode === 13) {
@@ -22,7 +24,7 @@
                     trySaveSignature: function () {
                         var defer = $q.defer();
                         vm.showError = false;
-                        var isFromEstimates = false;
+                        var isFromEstimates = vm.isEstimate;
                         if ($.trim(vm.customerName) === "") {
                             vm.showError = true;
                             defer.resolve(false);
@@ -30,7 +32,7 @@
                             var sign = $(angular.element("#signature")).jSignature("getData", "image");
                             if ($.trim(vm.customerName) !== "" && angular.isArray(sign)) {
                                 fpmUtilities.showLoading().then(function () {
-                                    workOrdersFactory.saveJsonSignForBarcode({ BaseString: sign[1], Barcode: (isFromEstimates ? "" : barcode), CustomerName: vm.customerName, EstimateId: 0 }).then(function () {
+                                    workOrdersFactory.saveJsonSignForBarcode({ BaseString: sign[1], Barcode: (isFromEstimates ? "" : barcode), CustomerName: vm.customerName, EstimateId: estimateId }).then(function () {
                                         $scope.$emit("$signature:completedEvent");
                                         defer.resolve(true);
                                     }).finally(fpmUtilities.hideLoading);
@@ -48,6 +50,9 @@
 
                         }
                     });
+                    if (vm.isEstimate) {
+                        estimateId = $stateParams.id;
+                    }
                     vm.padEventsRef = vm.events;
                 }
             }],

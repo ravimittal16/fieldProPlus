@@ -42,7 +42,12 @@
             return apiContext.post(apibase + "UpdateProduct", product);
         }
 
+        function getEstimateImages(estimateId) {
+            return apiContext.get(apibase + "GetEstimateImages?estimateId=" + estimateId);
+        }
+
         return {
+            getEstimateImages: getEstimateImages,
             updateProduct: updateProduct,
             deleteProduct: deleteProduct,
             addProductToEstimate: addProductToEstimate,

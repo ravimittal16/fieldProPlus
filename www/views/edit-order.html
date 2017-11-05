@@ -449,10 +449,10 @@
               </p>
             </div>
           </div>
-          <order-signature-component data-barcode="vm.barcode"></order-signature-component>
+          <order-signature-component data-barcode="vm.barcode" is-estimate="false"></order-signature-component>
           <order-email-card-component data-barcode="vm.barcode" data-taxrate="vm.barCodeData.taxRate" data-default-emails="vm.barCodeData.barcodeDetails.address2_Group"
             show-price="vm.showPrice" hide-email-button="vm.uiSettings.hideEmailButton"></order-email-card-component>
-          <order-images-list-component data-barcode="vm.barcode"></order-images-list-component>
+          <order-images-list-component data-barcode="vm.barcode" is-estimate="false"></order-images-list-component>
           <order-documents-list-component data-barcode="vm.barcode"></order-documents-list-component>
           <div class="card">
             <div class="item item-divider header-dark">

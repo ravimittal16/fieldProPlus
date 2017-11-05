@@ -6,7 +6,8 @@
 // "http://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 // "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 //"http://localhost/FieldPromaxApi/"  
-var isInDevMode = true;
+var isInDevMode = false;
+var prodReady = false;
 var constants = {
   fieldPromaxApi: isInDevMode ? "http://localhost:51518/" : "https://fieldpromax.azurewebsites.net/",
   localStorageKeys: {
@@ -14,6 +15,9 @@ var constants = {
     storageKeyName: "authorizationData", configKeyName: "configurations", settingsKeyName: "userSettings", userCredentials: "userCredentials"
   }
 };
+if (!isInDevMode && !prodReady) {
+  constants.fieldPromaxApi = "https://fieldpromax-stagging1.azurewebsites.net/";
+}
 var fpm = angular.module('fpm', ['ionic', 'ui.router', "LocalStorageModule", "ngCordova", "ionic-datepicker",
   "kendo.directives", "mobiscroll-datetime", "mobiscroll-timespan", "mobiscroll-numpad", "ui.rCalendar"])
   .config(["$stateProvider", "$urlRouterProvider", "$compileProvider", "$httpProvider", "$ionicConfigProvider",

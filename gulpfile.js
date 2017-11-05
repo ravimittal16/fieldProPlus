@@ -14,7 +14,7 @@ var iife = require("gulp-iife");
 var paths = {
   sass: ['./scss/**/*.scss'],
   appJs: ["!./www/js/app.js", "!./www/js/build/*.js", "./www/js/**/*.js"],
-  codeFilesPath: ["./www/js/estimates/*.js", "./www/js/shared-components/*.js"]
+  codeFilesPath: ["./www/js/estimates/*.js", "./www/js/shared-components/*.js", "./www/js/work-orders/*.js"]
 };
 
 gulp.task('default', ['sass', 'scripts']);

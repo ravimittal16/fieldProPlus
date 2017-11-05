@@ -95,7 +95,7 @@
         }
         localStorageService.remove("orderState");
         fpmUtilitiesFactory.clearHistory();
-      }, 200)
+      });
     }
 
     function sendPassword(uid) {

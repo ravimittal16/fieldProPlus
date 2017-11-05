@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "504804224593",
+    "firebase_url": "https://fieldpromax-ionic.firebaseio.com",
+    "project_id": "fieldpromax-ionic",
+    "storage_bucket": "fieldpromax-ionic.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504804224593:android:c0a389be89059ba4",
+        "android_client_info": {
+          "package_name": "com.ionicframework.fieldproionic807801"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "504804224593-g8p59ifv316lk7osf7ggk4lbj5a97f8s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhE32guKstEM8wDW7pxia2LBWtlQx7O54"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
