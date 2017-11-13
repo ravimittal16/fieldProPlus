@@ -26,7 +26,7 @@
         totaltax: 0
       };
       if (vm.est.invoice && vm.est.invoice.length > 0) {
-        var taxRate = vm.est.estimate.taxRate || 0;
+        var taxRate = vm.est.estimate.woTaxRate || 0;
         angular.forEach(vm.est.invoice, function(pro) {
           if (pro.price && pro.qty) {
             var totalPrice = 0;
@@ -89,6 +89,11 @@
         });
     }
     vm.events = {
+      refreshOnPullDown: function() {
+        _getEstimateDetails(function() {
+          $scope.$broadcast("scroll.refreshComplete");
+        });
+      },
       onProdcutActionButtonClicked: function() {
         openProductSearchModal();
       },
@@ -151,12 +156,15 @@
       }, 1000);
     }
 
-    function _getEstimateDetails() {
+    function _getEstimateDetails(callback) {
       estimatesFactory
         .getEstimateDetails($stateParams.id)
         .then(function(response) {
           vm.est = response;
           calculateTotals();
+          if (callback && angular.isFunction(callback)) {
+            callback();
+          }
         });
     }
 
@@ -202,6 +210,10 @@
 
     $scope.$on("$fpm:closeProductSearchModal", function() {
       vm.productSearchModal.hide();
+    });
+
+    $scope.$on("$signature:completedEvent", function() {
+      _getEstimateDetails();
     });
 
     function activateController() {
