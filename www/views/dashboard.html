@@ -8,7 +8,7 @@
 			<input type="search" placeholder="Search Work Order..." data-on-tap="vm.events.openSearchModal()" readonly />
 		</label>
 	</ion-header-bar>
-	<ion-content class="has-header" direction="y"> 
+	<ion-content class="has-header" direction="y">
 		<ion-refresher pulling-text="Pull to refresh..." on-refresh="vm.events.refreshOnPullDown()" spinner="none">
 		</ion-refresher>
 		<div class="text-center padding-top" data-ng-if="vm.showingLoading">
@@ -18,7 +18,8 @@
 			<div data-ng-if="!vm.isServiceProvider || vm.havingGroupsAssinged">
 				<div ng-repeat="group in vm.result">
 					<ion-item class="item-stable item-bg-gray" ng-click="vm.events.onChildGroupClicked(group,'DD','mainparent')" ng-class="{active: group.isOpen}">
-						<i class="icon" ng-class="group.isOpen ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>{{::group.heading}}</strong>
+						<i class="icon" ng-class="group.isOpen ? 'ion-minus' : 'ion-plus'"></i> &nbsp;
+						<strong>{{::group.heading}}</strong>
 						<span class="badge" data-ng-class="{'badge-balanced':group.count > 0,'badge-dark':group.count == 0}">{{group.count}}</span>
 					</ion-item>
 					<div data-ng-if="group.dataForAdministrator.length > 0 && group.isOpen">
@@ -28,7 +29,7 @@
 								<span class="badge badge-calm">{{item.childCount}}</span>
 							</ion-item>
 							<workorder-view-component data-ng-if="item.isOpen" data-ng-repeat="odr in item.ordersN" data-odr="odr" track-job-status="vm.trackJobStatus"
-								user-info="vm.userInfo" in-route-clicked="vm.events.inRouteClicked(odr)"></workorder-view-component>
+							 user-info="vm.userInfo" in-route-clicked="vm.events.inRouteClicked(odr)"></workorder-view-component>
 						</div>
 					</div>
 				</div>
@@ -36,12 +37,13 @@
 			<div data-ng-if="vm.isServiceProvider && !vm.havingGroupsAssinged">
 				<div ng-repeat="group in vm.result">
 					<ion-item class="item-stable item-bg-gray" ng-click="vm.events.onChildGroupClicked(group,'SP','mainparent')" ng-class="{active: group.isOpen}">
-						<i class="icon" ng-class="group.isOpen ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>{{::group.heading}}</strong>
+						<i class="icon" ng-class="group.isOpen ? 'ion-minus' : 'ion-plus'"></i> &nbsp;
+						<strong>{{::group.heading}}</strong>
 						<span class="badge" data-ng-class="{'badge-balanced':group.count > 0,'badge-dark':group.count == 0}">{{group.count}}</span>
 					</ion-item>
 					<div data-ng-if="group.dataForServiceProvider.length > 0 && group.isOpen">
 						<workorder-view-component ng-repeat="odr in group.dataForServiceProvider track by $index" data-odr="odr" track-job-status="vm.trackJobStatus"
-							user-info="vm.userInfo" in-route-clicked="vm.events.inRouteClicked(odr)"></workorder-view-component>
+						 user-info="vm.userInfo" in-route-clicked="vm.events.inRouteClicked(odr)"></workorder-view-component>
 					</div>
 				</div>
 

@@ -3,7 +3,7 @@
 		<ion-nav-bar class="bar-stable">
 			<ion-nav-buttons side="left">
 				<button class="button button-icon button-clear ion-navicon" menu-toggle="left">
-        </button>
+				</button>
 			</ion-nav-buttons>
 		</ion-nav-bar>
 		<ion-nav-view>
@@ -17,7 +17,8 @@
 		</ion-header-bar>
 		<ion-content class="has-header">
 			<ion-list>
-				<ion-item data-ui-sref-active="active" menu-close data-ng-repeat="menu in ::vm.sideMenuItems" data-ng-if="vm.events.checkMenuItemVisibility(menu)" ng-click="vm.events.onMenuItemClicked(menu)">
+				<ion-item data-ui-sref-active="active" menu-close data-ng-repeat="menu in ::vm.sideMenuItems" data-ng-if="vm.events.checkMenuItemVisibility(menu)"
+				 ng-click="vm.events.onMenuItemClicked(menu)">
 					<i data-ng-if="menu.icon" class="icon ion-{{menu.icon}}"></i> {{::menu.title}}
 				</ion-item>
 			</ion-list>
