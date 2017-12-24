@@ -18,7 +18,8 @@ var paths = {
     "./www/js/estimates/*.js",
     "./www/js/shared-components/*.js",
     "./www/js/work-orders/*.js",
-    "./www/js/dashboard/*.js"
+    "./www/js/dashboard/*.js",
+    "./www/js/home/*.js"
   ]
 };
 
