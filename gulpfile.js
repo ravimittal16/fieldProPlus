@@ -13,13 +13,19 @@ var iife = require("gulp-iife");
 
 var paths = {
   sass: ["./scss/**/*.scss"],
-  appJs: ["!./www/js/app.js", "!./www/js/build/*.js", "./www/js/**/*.js"],
+  appJs: [
+    "!./www/js/app.js",
+    "!./www/js/realtime/fpm.realtime.module.js",
+    "!./www/js/build/*.js",
+    "./www/js/**/*.js"
+  ],
   codeFilesPath: [
     "./www/js/estimates/*.js",
     "./www/js/shared-components/*.js",
     "./www/js/work-orders/*.js",
     "./www/js/dashboard/*.js",
-    "./www/js/home/*.js"
+    "./www/js/home/*.js",
+    "./www/js/realtime.module/*.js"
   ]
 };
 

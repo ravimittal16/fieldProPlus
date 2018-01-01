@@ -17,7 +17,8 @@
     fpmUtilities,
     sharedDataFactory,
     authenticationFactory,
-    timecardFactory
+    timecardFactory,
+    fpmRealtimeOrdersFactory
   ) {
     var vm = this;
 
@@ -1142,7 +1143,8 @@
     "fpm-utilities-factory",
     "shared-data-factory",
     "authenticationFactory",
-    "timecard-factory"
+    "timecard-factory",
+    "fpm.realtime.workorders.factory"
   ];
   angular.module("fpm").controller("edit-order-controller", initController);
 })();

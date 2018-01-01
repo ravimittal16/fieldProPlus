@@ -35,7 +35,8 @@ var fpm = angular
     "mobiscroll-datetime",
     "mobiscroll-timespan",
     "mobiscroll-numpad",
-    "ui.rCalendar"
+    "ui.rCalendar",
+    "fpm.realtime"
   ])
   .config([
     "$stateProvider",
