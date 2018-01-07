@@ -1,14 +1,23 @@
 (function() {
-  function initFactory($rootScope, fieldPromaxConfig) {
-    console.log("");
+  function initFactory($rootScope, fieldPromaxConfig, authenticationFactory) {
+    var proxy = null;
     var connection = $.hubConnection(
       fieldPromaxConfig.fieldPromaxApi + "signalr/hubs"
     );
-    var proxy = connection.createHubProxy("workOrderHubContext");
-    connection.start().done(function() {
-      console.log("STARTS");
-    });
+    function startConnection() {
+      connection.qs = {
+        Bearer: authenticationFactory.getToken()
+      };
+
+      connection.start().done(function() {});
+    }
+
+    function getProxy() {
+      proxy = connection.createHubProxy("workOrderHubContext");
+    }
+
     function onScheduleMarkCompleted(scheduleNum, barcode, customerNumber) {
+      if (proxy === null) getProxy();
       proxy.invoke(
         "onScheduleMarkCompleted",
         scheduleNum,
@@ -17,6 +26,8 @@
       );
     }
     return {
+      getProxy: getProxy,
+      startConnection: startConnection,
       onScheduleMarkCompleted: onScheduleMarkCompleted
     };
   }
@@ -25,6 +36,7 @@
     .factory("fpm.realtime.workorders.factory", [
       "$rootScope",
       "fieldPromaxConfig",
+      "authenticationFactory",
       initFactory
     ]);
 })();

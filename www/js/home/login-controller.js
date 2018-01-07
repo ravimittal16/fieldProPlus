@@ -12,7 +12,8 @@
     dashboardFactory,
     fpmUtilitiesFactory,
     sharedDataFactory,
-    localStorageService
+    localStorageService,
+    hubConnectionFactory
   ) {
     var vm = this;
     vm.user = { userName: "", password: "" };
@@ -60,14 +61,12 @@
         myPopup.then(function(res) {
           if ($.trim(vm.data.model) !== "") {
             vm.forgotPasswordModalErrors = [];
-            console.log("HELLO WORLD");
             fpmUtilitiesFactory
               .showLoading("sending password...")
               .then(function() {
                 authenticationFactory
                   .sendPassword(res)
                   .then(function(res) {
-                    console.log(res);
                     if (angular.isArray(res) && res.length > 0) {
                       alerts.alert("Oops", res[0]);
                       vm.forgotPasswordModalErrors = res;
@@ -103,6 +102,7 @@
                       );
                       sharedDataFactory.registerUserTemplateForPushNotifications();
                     }
+                    hubConnectionFactory.startConnection();
                     var previousState = localStorageService.get("appState");
                     if (previousState && angular.isDefined(previousState)) {
                       if (previousState.stateName === "app.editOrder") {
@@ -175,7 +175,8 @@
     "dashboard-factory",
     "fpm-utilities-factory",
     "shared-data-factory",
-    "localStorageService"
+    "localStorageService",
+    "fpm.realtime.workorders.factory"
   ];
   angular.module("fpm").controller("login-controller", initController);
 })();

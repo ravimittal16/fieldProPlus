@@ -1,8 +1,21 @@
-(function () {
+(function() {
   "use strict";
 
-  function initFactory($http, $q, $rootScope, $state, $window, $timeout, $ionicHistory, fpmUtilitiesFactory,
-    localStorageService, fieldPromaxConfig, apiContext, workOrdersFactory, timecardFactory) {
+  function initFactory(
+    $http,
+    $q,
+    $rootScope,
+    $state,
+    $window,
+    $timeout,
+    $ionicHistory,
+    fpmUtilitiesFactory,
+    localStorageService,
+    fieldPromaxConfig,
+    apiContext,
+    workOrdersFactory,
+    timecardFactory
+  ) {
     var serviceBase = fieldPromaxConfig.fieldPromaxApi;
     var localStorageKeys = fieldPromaxConfig.localStorageKeys;
     var authentication = {
@@ -31,17 +44,22 @@
           };
           localStorageService.set(localStorageKeys.storageKeyName, userobj);
           if (response.hasOwnProperty(localStorageKeys.configKeyName)) {
-            localStorageService.set(localStorageKeys.configKeyName, JSON.parse(response.configurations));
+            localStorageService.set(
+              localStorageKeys.configKeyName,
+              JSON.parse(response.configurations)
+            );
           }
           if (response.userSettings) {
-            localStorageService.set(localStorageKeys.settingsKeyName, JSON.parse(response.userSettings));
+            localStorageService.set(
+              localStorageKeys.settingsKeyName,
+              JSON.parse(response.userSettings)
+            );
           }
           localStorageService.set(localStorageKeys.userCredentials, loginModel);
           defered.resolve(response);
         } else {
           if (response.data) {
             defered.reject(response.data.error);
-
           } else {
             defered.reject("Invalid Login Details");
           }
@@ -52,20 +70,30 @@
         fpmUtilitiesFactory.hideLoading();
         defered.reject(data);
       }
-      var data = "grant_type=password&username=" + loginModel.userName + "&password=" + loginModel.password + "&clientId=fieldPromaxMob";
+      var data =
+        "grant_type=password&username=" +
+        loginModel.userName +
+        "&password=" +
+        loginModel.password +
+        "&clientId=fieldPromaxMob";
       var defered = $q.defer();
 
-      $http.post(serviceBase + "token", data, {
-        headers: {
-          'Content-Type': "application/x-www-form-urlencoded"
-        }
-      }).success(onLoginSuccess).error(onLoginError);
+      $http
+        .post(serviceBase + "token", data, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        })
+        .success(onLoginSuccess)
+        .error(onLoginError);
       return defered.promise;
     }
 
     function isAuthenticated() {
       var defer = $q.defer();
-      var authenticationData = localStorageService.get(localStorageKeys.storageKeyName);
+      var authenticationData = localStorageService.get(
+        localStorageKeys.storageKeyName
+      );
 
       if (authenticationData) {
         defer.resolve(true);
@@ -80,7 +108,7 @@
     }
 
     function logout(clearCredentials) {
-      $rootScope.$evalAsync(function () {
+      $rootScope.$evalAsync(function() {
         timecardFactory.clearTimecardFactoryData();
         $ionicHistory.clearHistory();
         $ionicHistory.clearCache();
@@ -108,7 +136,12 @@
     function getStoredCredentials() {
       return localStorageService.get(localStorageKeys.userCredentials);
     }
+    function getToken() {
+      var user = localStorageService.get(localStorageKeys.storageKeyName);
+      return user.token;
+    }
     var factory = {
+      getToken: getToken,
       getStoredCredentials: getStoredCredentials,
       login: login,
       isAuthenticated: isAuthenticated,
@@ -121,8 +154,20 @@
     return factory;
   }
 
-  initFactory.$inject = ["$http", "$q", "$rootScope", "$state", "$window", "$timeout", "$ionicHistory", "fpm-utilities-factory",
-    "localStorageService", "fieldPromaxConfig", "api-base-factory", "work-orders-factory", "timecard-factory"
+  initFactory.$inject = [
+    "$http",
+    "$q",
+    "$rootScope",
+    "$state",
+    "$window",
+    "$timeout",
+    "$ionicHistory",
+    "fpm-utilities-factory",
+    "localStorageService",
+    "fieldPromaxConfig",
+    "api-base-factory",
+    "work-orders-factory",
+    "timecard-factory"
   ];
   angular.module("fpm").factory("authenticationFactory", initFactory);
 })();
