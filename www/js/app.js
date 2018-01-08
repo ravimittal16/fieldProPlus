@@ -6,7 +6,7 @@
 // "http://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 // "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 //"http://localhost/FieldPromaxApi/"
-var isInDevMode = true;
+var isInDevMode = false;
 var prodReady = false;
 var constants = {
   fieldPromaxApi: isInDevMode
@@ -165,6 +165,15 @@ var fpm = angular
             controller: "custom-components-controller",
             controllerAs: "vm",
             templateUrl: "views/custom-components.html"
+          }
+        },
+        {
+          state: "app.inventory",
+          config: {
+            url: "/inventory",
+            controller: "inventory-controller",
+            controllerAs: "vm",
+            templateUrl: "views/inventory.html"
           }
         },
         {

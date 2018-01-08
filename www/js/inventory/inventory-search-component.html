@@ -1,0 +1,49 @@
+<ion-header-bar class="item-input-inset">
+  <label class="item-input-wrapper" focus-me="">
+				<i class="icon ion-search placeholder-icon"></i>
+				<input type="search" name="searchBox" placeholder="Search Product"  
+				ng-change="vm.events.applySearch()" data-ng-model-options="{debounce:500}" ng-model="vm.searchValue" />
+			</label>
+  <button class="button" data-ng-click="vm.events.cancelSearch()">
+				Cancel
+			</button>
+</ion-header-bar>
+<ion-content>
+  <div class="text-center padding-top" data-ng-if="vm.runningSearch">
+    <ion-spinner icon="ripple"></ion-spinner>
+  </div>
+  <ion-list data-ng-if="vm.products.length > 0">
+    <ion-item data-ng-repeat="p in vm.products" item="p" data-on-tap="vm.events.onProductItemClicked(p)">
+      {{::p.productName}}
+    </ion-item>
+  </ion-list>
+  <div data-ng-if="vm.containers.length > 0" data-ng-repeat=" p in vm.containers">
+    <div class="row n-p-b n-m-b">
+      <div class="col col-30 ">
+        <h5>{{::p.containerName}}</h5>
+      </div>
+      <div class="col col-10">
+        <h5 class="pull-right">
+          <strong>{{p.qoh}}</strong>
+        </h5>
+      </div>
+      <div class="col col-30">
+        <button type="button" class="button icon ion-edit button-small text-energized" style="margin-left:30px;float:left;" data-ng-if="!vm.isServiceProvider"
+          data-ng-click="vm.events.editContainerClick(p)"></button>
+        <button type="button" class="button icon ion-plus button-small text-balanced" style="margin-left:3px;" data-ng-if="!vm.isServiceProvider"
+          data-ng-click="vm.events.increaseQuantity(p)"></button>
+        <button type="button" class="button icon ion-minus button-small text-assertive" data-ng-if="!vm.isServiceProvider" data-ng-click="vm.events.decreaseQuantity(p)"></button>
+      </div>
+    </div>
+  </div>
+  <div class="list" data-ng-if="vm.containers.length == 0 && vm.searchApplied && vm.searchValue != ''">
+    <li class="item item-text-wrap text-center">
+      <small class="text-muted">no container found with <strong data-ng-bind="vm.searchValue"></strong></small>
+    </li>
+  </div>
+</ion-content>
+<script id="editContainerModal.html" type="text/ng-template">
+  <ion-modal-view>
+    <edit-container-component data-container="vm.currentContainer"></edit-container-component>
+  </ion-modal-view>
+</script>

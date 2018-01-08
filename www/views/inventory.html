@@ -1,0 +1,15 @@
+<ion-view title="Inventory">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header">
+    <inventory-search-component data-ng-if="vm.byProducts"></inventory-search-component>
+    <inventory-container-view-component data-ng-if="vm.byContainers"></inventory-container-view-component>
+  </ion-content>
+  <ion-footer-bar align-title="left" class="bar-dark">
+    <div class="button-bar text-center">
+      <a class="button" data-ng-class="{'active':vm.byProducts===true}" data-ng-click="vm.events.showProductsView()">By Products</a>
+      <a class="button" data-ng-class="{'active':vm.byContainers===true}" data-ng-click="vm.events.showContainersView()">By Containers</a>
+    </div>
+  </ion-footer-bar>
+</ion-view>
