@@ -40,7 +40,8 @@
             timeCard: response.timeCard === "True",
             allowPushTime: response.allowPushTime === "True",
             showPrice: response.showPrice === "True",
-            havingGroupsAssigned: response.havingGroups === "True"
+            havingGroupsAssigned: response.havingGroups === "True",
+            inventoryOn: response.inventoryOn === "True"
           };
           localStorageService.set(localStorageKeys.storageKeyName, userobj);
           if (response.hasOwnProperty(localStorageKeys.configKeyName)) {
