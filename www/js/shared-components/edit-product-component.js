@@ -81,7 +81,6 @@
             vm.enableMarkupOrders =
               response.customerNumberEntity.enableMarkupForWorkOrders || false;
           });
-          vm.user.showPrice = true;
         };
       }
     ],
