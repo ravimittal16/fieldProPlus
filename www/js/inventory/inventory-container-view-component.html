@@ -5,6 +5,9 @@
     </div>
     <select data-ng-options="cont as cont.containerName for cont in vm.containers" data-ng-model="vm.container" data-ng-change="vm.events.onSelectedContainerChange()"></select>
   </div>
+  <div class="text-center padding-top" data-ng-if="vm.loadingContainers">
+    <ion-spinner icon="ripple"></ion-spinner>
+  </div>
   <div data-ng-if="vm.products.length > 0" data-ng-repeat=" p in vm.products ">
     <div class="row n-p-b n-m-b">
       <div class="col col-30 ">
@@ -25,9 +28,11 @@
       </div>
     </div>
   </div>
-  <div class="list" data-ng-if="vm.products.length == 0 && vm.container!=null">
+  <div class="list" data-ng-if="vm.products.length == 0 && vm.container!=null && !vm.loadingContainers">
     <li class="item item-text-wrap text-center">
-      <small class="text-muted">no product found with <strong data-ng-bind="vm.container.containerName"></strong></small>
+      <small class="text-muted">no product found with
+        <strong data-ng-bind="vm.container.containerName"></strong>
+      </small>
     </li>
   </div>
 </ion-content>

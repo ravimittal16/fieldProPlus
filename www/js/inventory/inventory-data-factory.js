@@ -1,8 +1,7 @@
-(function () {
+(function() {
   "use strict";
 
   function initFactory(apiContext) {
-
     var apibase = "api/InventoryContainers/";
 
     function getProductContainers(productId) {
@@ -18,14 +17,19 @@
     }
 
     function getContainerProducts(name) {
-      return apiContext.get(apibase + "GetContainerProducts?containerName=" + name);
+      return apiContext.get(
+        apibase + "GetContainerProducts?containerName=" + name
+      );
     }
-
+    function assignContainerToProduct(container) {
+      return apiContext.post(apibase + "AssignContainerToProduct", container);
+    }
     var factory = {};
     factory.getProductContainers = getProductContainers;
     factory.updateProductQuantity = updateProductQuantity;
     factory.getContainers = getContainers;
     factory.getContainerProducts = getContainerProducts;
+    factory.assignContainerToProduct = assignContainerToProduct;
     return factory;
   }
 

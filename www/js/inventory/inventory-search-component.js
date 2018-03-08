@@ -2,25 +2,60 @@
   "use strict";
   var componentConfig = {
     templateUrl: "js/inventory/inventory-search-component.html",
-    controller: ["$scope", "$timeout", "$ionicModal", "fpm-utilities-factory", "work-orders-factory", "authenticationFactory", "inventory-data-factory",
+    controller: [
+      "$scope",
+      "$timeout",
+      "$ionicModal",
+      "fpm-utilities-factory",
+      "work-orders-factory",
+      "authenticationFactory",
+      "inventory-data-factory",
 
-      function ($scope, $timeout, $ionicModal, fpmUtilitiesFactory, workOrderFactory, authenticationFactory, inventoryDataFactory) {
+      function (
+        $scope,
+        $timeout,
+        $ionicModal,
+        fpmUtilitiesFactory,
+        workOrderFactory,
+        authenticationFactory,
+        inventoryDataFactory
+      ) {
         var vm = this;
+        vm.disabled = false;
         vm.searchValue = "";
         vm.products = [];
         vm.containers = [];
+        vm.productItemClicked = false;
+        vm.runningSearch = false;
         var timer = null;
+        vm.product = null;
         vm.user = authenticationFactory.getLoggedInUserInfo();
         vm.isServiceProvider = !vm.user.isAdminstrator;
+        vm.showButtons = false;
+
+        function openAssignContainerModal() {
+          if (vm.assignContainerModal) {
+            vm.assignContainerModal.show();
+          } else {
+            fpmUtilitiesFactory
+              .getModal("assignContainerModal.html", $scope)
+              .then(function (modal) {
+                vm.assignContainerModal = modal;
+                vm.assignContainerModal.show();
+              });
+          }
+        }
 
         function openContainerModal() {
           if (vm.containerModal) {
             vm.containerModal.show();
           } else {
-            fpmUtilitiesFactory.getModal("editContainerModal.html", $scope).then(function (modal) {
-              vm.containerModal = modal;
-              vm.containerModal.show();
-            });
+            fpmUtilitiesFactory
+              .getModal("editContainerModal.html", $scope)
+              .then(function (modal) {
+                vm.containerModal = modal;
+                vm.containerModal.show();
+              });
           }
         }
         $scope.$on("$fpm:closeEditContainerModal", function () {
@@ -29,11 +64,34 @@
           }
           if (timer) $timeout.cancel(timer);
         });
-        $scope.$on("$fpm:operation:updateProductContainerQuantity", function ($event, args) {
-          inventoryDataFactory.getProductContainers(args.entity.productId).then(function (response) {
-            if (response.collection != null && response.collection.length > 0)
-              vm.containers = response.collection;
-          });
+        $scope.$on("$fpm:closeAssignContainerModal", function () {
+          if (vm.assignContainerModal) {
+            vm.assignContainerModal.hide();
+          }
+          if (timer) $timeout.cancel(timer);
+        });
+        $scope.$on("$fpm:operation:assignContainerToProduct", function (
+          $event,
+          args
+        ) {
+          inventoryDataFactory
+            .getProductContainers(args.entity.productId)
+            .then(function (response) {
+              if (response.collection != null && response.collection.length > 0)
+                vm.containers = response.collection;
+            });
+          vm.assignContainerModal.hide();
+        });
+        $scope.$on("$fpm:operation:updateProductContainerQuantity", function (
+          $event,
+          args
+        ) {
+          inventoryDataFactory
+            .getProductContainers(args.entity.productId)
+            .then(function (response) {
+              if (response.collection != null && response.collection.length > 0)
+                vm.containers = response.collection;
+            });
           vm.containerModal.hide();
         });
         vm.events = {
@@ -41,57 +99,130 @@
             vm.products = [];
             vm.searchApplied = false;
             vm.runningSearch = true;
-            workOrderFactory.searchProduct(vm.searchValue, "").then(function (response) {
-              vm.searchApplied = true;
-              vm.runningSearch = false;
-              if (angular.isArray(response)) {
-                vm.products = response;
-              }
-            });
+            vm.productItemClicked = false;
+            vm.containers = [];
+            workOrderFactory
+              .searchProduct(vm.searchValue, "")
+              .then(function (response) {
+                vm.searchApplied = true;
+                vm.runningSearch = false;
+                if (angular.isArray(response)) {
+                  vm.products = response;
+                }
+              });
           },
           onProductItemClicked: function (product) {
+            vm.runningSearch = true;
+            vm.productItemClicked = true;
+            vm.searchApplied = false;
+            vm.product = product;
             vm.searchValue = product.productName;
             vm.products = [];
-            inventoryDataFactory.getProductContainers(product.num).then(function (response) {
-              if (response.collection != null && response.collection.length > 0)
-                vm.containers = response.collection;
-            });
+            inventoryDataFactory
+              .getProductContainers(product.num)
+              .then(function (response) {
+                if (
+                  response != null &&
+                  response.collection != null &&
+                  response.collection.length > 0
+                ) {
+                  vm.containers = response.collection;
+                  if (vm.isServiceProvider) {
+                    angular.forEach(vm.containers, function (key, value) {
+                      if (key.userId === vm.user.userEmail) {
+                        vm.showButtons = true;
+                      } else {
+                        vm.showButtons = false;
+                      }
+                    });
 
+                  }
+                  vm.runningSearch = false;
+                } else {
+                  vm.runningSearch = false;
+                  vm.containers = [];
+                }
+              });
           },
           cancelSearch: function () {
-            vm.searchValue = '';
+            vm.searchValue = "";
             vm.products = [];
             vm.containers = [];
+            vm.runningSearch = false;
+            vm.productItemClicked = false;
+            vm.searchApplied = false;
           },
           editContainerClick: function (container) {
             vm.currentContainer = angular.copy(container);
             openContainerModal();
           },
+          assignToContainer: function () {
+            openAssignContainerModal();
+          },
           increaseQuantity: function (container) {
+            vm.disabled = true;
             container.qoh += 1;
-            inventoryDataFactory.updateProductQuantity(container).then(function (response) {
-              if (response.errors == null) {
-                inventoryDataFactory.getProductContainers(args.entity.productId).then(function (response) {
-                  if (response.collection != null && response.collection.length > 0)
-                    vm.containers = response.collection;
-                });
-              }
-            });
+            inventoryDataFactory
+              .updateProductQuantity(container)
+              .then(function (response) {
+                if (response.errors == null) {
+                  vm.disabled = false;
+                  inventoryDataFactory
+                    .getProductContainers(args.entity.productId)
+                    .then(function (response) {
+                      if (
+                        response.collection != null &&
+                        response.collection.length > 0
+                      ) {
+                        vm.containers = response.collection;
+                        if (vm.isServiceProvider) {
+                          angular.forEach(vm.containers, function (key, value) {
+                            if (key.userId === vm.user.userEmail) {
+                              vm.showButtons = true;
+                            } else {
+                              vm.showButtons = false;
+                            }
+                          });
+
+                        }
+                      }
+                    });
+                }
+              });
           },
           decreaseQuantity: function (container) {
+            vm.disabled = true;
             if (container.qoh > 0) {
               container.qoh -= 1;
             }
-            inventoryDataFactory.updateProductQuantity(container).then(function (response) {
-              if (response.errors == null) {
-                inventoryDataFactory.getProductContainers(args.entity.productId).then(function (response) {
-                  if (response.collection != null && response.collection.length > 0)
-                    vm.containers = response.collection;
-                });
-              }
-            });
-          }
+            inventoryDataFactory
+              .updateProductQuantity(container)
+              .then(function (response) {
+                if (response.errors == null) {
+                  vm.disabled = false;
+                  inventoryDataFactory
+                    .getProductContainers(args.entity.productId)
+                    .then(function (response) {
+                      if (
+                        response.collection != null &&
+                        response.collection.length > 0
+                      ) {
+                        vm.containers = response.collection;
+                        if (vm.isServiceProvider) {
+                          angular.forEach(vm.containers, function (key, value) {
+                            if (key.userId === vm.user.userEmail) {
+                              vm.showButtons = true;
+                            } else {
+                              vm.showButtons = false;
+                            }
+                          });
 
+                        }
+                      }
+                    });
+                }
+              });
+          }
         };
       }
     ],

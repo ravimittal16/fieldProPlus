@@ -3,8 +3,8 @@
     <span>Edit</span> Quantity
   </h1>
   <button class="button" data-ng-click="vm.events.closeContainerModal()">
-              Cancel
-          </button>
+    Cancel
+  </button>
 </ion-header-bar>
 <ion-content>
   <form action="" name="editProductForm">
@@ -13,16 +13,16 @@
         <h4 ng-bind="vm.product.productName"></h4>
       </div>
       <label class="item item-input">
-                      <div class="input-label">
-                          Quantity
-                      </div>
-                      <input type="number" class="transparent-background" mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal'}"
-                          placeholder="Quantity" ng-model="vm.product.quantity" />
-                  </label>
+        <div class="input-label">
+          Quantity
+        </div>
+        <input type="number" class="transparent-background" mobiscroll-numpad="{display:'bottom',scale:0,min:0,max:9999,preset:'decimal'}"
+          placeholder="Quantity" ng-model="vm.product.quantity" />
+      </label>
       <div class="padding">
         <button class="button button-block button-positive" ng-click="vm.events.updateProductQuantity(vm.product)" type="button">
-                          <span>Update</span>
-              </button>
+          <span>Update</span>
+        </button>
       </div>
     </div>
   </form>

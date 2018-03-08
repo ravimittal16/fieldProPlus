@@ -1,0 +1,44 @@
+<ion-header-bar>
+  <h1 class="title">
+    <span>Dispense</span> To Container
+  </h1>
+  <button class="button" data-ng-click="vm.events.closeContainerModal()">
+    Cancel
+  </button>
+</ion-header-bar>
+<ion-content>
+  <form action="" name="assignContainerForm">
+    <errors-view errors="vm.errors"></errors-view>
+    <div class="list">
+      <div class="item item-input item-select">
+        <div class="input-label">
+          Containers
+        </div>
+        <select data-ng-options="cont as cont.containerName for cont in vm.containers" data-ng-model="vm.container"></select>
+      </div>
+      <div class="text-center padding-top" data-ng-if="vm.loadingContainers">
+        <ion-spinner icon="ripple"></ion-spinner>
+      </div>
+      <label class="item item-input">
+        <div class="input-label">
+          Assigned To
+        </div>
+        <div class="input-label" ng-bind="vm.container.userName">
+
+        </div>
+      </label>
+      <label class="item item-input">
+        <div class="input-label">
+          Quantity
+        </div>
+        <input type="number" class="transparent-background" mobiscroll-numpad="{display: 'bottom',scale:0,min:0,max:9999,preset:'decimal'}"
+          placeholder="Quantity" ng-model="vm.quantity" />
+      </label>
+      <div class="padding">
+        <button class="button button-block button-positive" ng-click="vm.events.assignContainer()" type="button">
+          <span>Done</span>
+        </button>
+      </div>
+    </div>
+  </form>
+</ion-content>
