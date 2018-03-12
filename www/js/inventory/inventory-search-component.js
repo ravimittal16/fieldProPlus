@@ -91,6 +91,16 @@
             .then(function (response) {
               if (response.collection != null && response.collection.length > 0)
                 vm.containers = response.collection;
+              if (vm.isServiceProvider) {
+                angular.forEach(vm.containers, function (key, value) {
+                  if (key.userId === vm.user.userEmail) {
+                    vm.showButtons = true;
+                  } else {
+                    vm.showButtons = false;
+                  }
+                });
+
+              }
             });
           vm.containerModal.hide();
         });

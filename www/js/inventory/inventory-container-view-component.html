@@ -20,11 +20,11 @@
       </div>
       <div class="col col-30">
         <button type="button" class="button icon ion-edit button-small text-energized" style="margin-left:30px;float:left;" data-ng-click="vm.events.editProductClick(p)"
-          data-ng-if="!vm.isServiceProvider"></button>
+          data-ng-if="vm.user.isAdminstrator ||(vm.isServiceProvider && vm.showButtons)"></button>
         <button type="button" class="button icon ion-plus button-small text-balanced" style="margin-left:3px;" data-ng-click="vm.events.increaseQuantity(p)"
-          data-ng-if="!vm.isServiceProvider"></button>
+          data-ng-if="vm.user.isAdminstrator ||(vm.isServiceProvider && vm.showButtons)"></button>
         <button type="button" class="button icon ion-minus button-small text-assertive" data-ng-click="vm.events.decreaseQuantity(p)"
-          data-ng-if="!vm.isServiceProvider"></button>
+          data-ng-if="vm.user.isAdminstrator ||(vm.isServiceProvider && vm.showButtons)"></button>
       </div>
     </div>
   </div>

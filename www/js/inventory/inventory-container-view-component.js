@@ -1,4 +1,4 @@
-(function() {
+(function () {
   "use strict";
   var componentConfig = {
     templateUrl: "js/inventory/inventory-container-view-component.html",
@@ -11,7 +11,7 @@
       "authenticationFactory",
       "inventory-data-factory",
 
-      function(
+      function (
         $scope,
         $timeout,
         $ionicModal,
@@ -28,6 +28,8 @@
         vm.loadingContainers = false;
         vm.user = authenticationFactory.getLoggedInUserInfo();
         vm.isServiceProvider = !vm.user.isAdminstrator;
+        vm.showButtons = false;
+
         vm.productContainer = {
           num: "",
           containerName: "",
@@ -47,7 +49,7 @@
           } else {
             fpmUtilitiesFactory
               .getModal("editProductModal.html", $scope)
-              .then(function(modal) {
+              .then(function (modal) {
                 vm.productModal = modal;
                 vm.productModal.show();
               });
@@ -56,7 +58,7 @@
 
         function getContainers() {
           vm.loadingContainers = true;
-          inventoryDataFactory.getContainers().then(function(response) {
+          inventoryDataFactory.getContainers().then(function (response) {
             if (response) {
               vm.containers = response;
               vm.loadingContainers = false;
@@ -64,32 +66,43 @@
           });
         }
 
-        $scope.$on("$fpm:closeEditProductQuantityModal", function() {
+        $scope.$on("$fpm:closeEditProductQuantityModal", function () {
           if (vm.productModal) {
             vm.productModal.hide();
           }
           if (timer) $timeout.cancel(timer);
         });
-        $scope.$on("$fpm:operation:updateContainerProductQuantity", function(
+        $scope.$on("$fpm:operation:updateContainerProductQuantity", function (
           $event,
           args
         ) {
           inventoryDataFactory
             .getContainerProducts(vm.container.containerName)
-            .then(function(response) {
+            .then(function (response) {
               if (response.collection != null && response.collection.length > 0)
                 vm.products = response.collection;
+              if (vm.isServiceProvider) {
+                angular.forEach(vm.products, function (key, value) {
+                  if (vm.container.userId === vm.user.userEmail) {
+                    vm.showButtons = true;
+                  } else {
+                    vm.showButtons = false;
+                  }
+                });
+
+              }
+
             });
           vm.productModal.hide();
         });
 
         vm.events = {
-          onSelectedContainerChange: function() {
+          onSelectedContainerChange: function () {
             vm.loadingContainers = true;
             vm.products = [];
             inventoryDataFactory
               .getContainerProducts(vm.container.containerName)
-              .then(function(response) {
+              .then(function (response) {
                 if (
                   response != null &&
                   response.collection != null &&
@@ -97,17 +110,28 @@
                 ) {
                   vm.products = response.collection;
                   vm.loadingContainers = false;
+                  if (vm.isServiceProvider) {
+                    angular.forEach(vm.products, function (key, value) {
+                      if (vm.container.userId === vm.user.userEmail) {
+                        vm.showButtons = true;
+                      } else {
+                        vm.showButtons = false;
+                      }
+                    });
+
+                  }
+
                 } else {
                   vm.products = [];
                   vm.loadingContainers = false;
                 }
               });
           },
-          editProductClick: function(product) {
+          editProductClick: function (product) {
             vm.currentProduct = angular.copy(product);
             openEditProductQuantityModal();
           },
-          increaseQuantity: function(container) {
+          increaseQuantity: function (container) {
             container.quantity += 1;
             vm.productContainer = {
               num: container.productContainerNum,
@@ -117,37 +141,59 @@
             };
             inventoryDataFactory
               .updateProductQuantity(container)
-              .then(function(response) {
+              .then(function (response) {
                 if (response.errors == null) {
                   inventoryDataFactory
                     .getContainerProducts(vm.container.containerName)
-                    .then(function(response) {
+                    .then(function (response) {
                       if (
                         response.collection != null &&
                         response.collection.length > 0
                       ) {
                         vm.products = response.collection;
+                        if (vm.isServiceProvider) {
+                          angular.forEach(vm.products, function (key, value) {
+                            if (vm.container.userId === vm.user.userEmail) {
+                              vm.showButtons = true;
+                            } else {
+                              vm.showButtons = false;
+                            }
+                          });
+
+                        }
+
                       }
                     });
                 }
               });
           },
-          decreaseQuantity: function(container) {
+          decreaseQuantity: function (container) {
             if (container.quantity > 0) {
               container.quantity -= 1;
             }
             inventoryDataFactory
               .updateProductQuantity(container)
-              .then(function(response) {
+              .then(function (response) {
                 if (response.errors == null) {
                   inventoryDataFactory
                     .getContainerProducts(vm.container.containerName)
-                    .then(function(response) {
+                    .then(function (response) {
                       if (
                         response.collection != null &&
                         response.collection.length > 0
                       ) {
                         vm.products = response.collection;
+                        if (vm.isServiceProvider) {
+                          angular.forEach(vm.products, function (key, value) {
+                            if (vm.container.userId === vm.user.userEmail) {
+                              vm.showButtons = true;
+                            } else {
+                              vm.showButtons = false;
+                            }
+                          });
+
+                        }
+
                       }
                     });
                 }

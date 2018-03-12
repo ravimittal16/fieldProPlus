@@ -9,6 +9,7 @@
       "$scope",
       "$stateParams",
       "$rootScope",
+      "$filter",
       "authenticationFactory",
       "fpm-utilities-factory",
       "shared-data-factory",
@@ -17,6 +18,7 @@
         $scope,
         $stateParams,
         $rootScope,
+        $filter,
         authenticationFactory,
         fpmUtilitiesFactory,
         sharedDataFactory,
@@ -28,8 +30,11 @@
         vm.container = null;
         vm.errors = [];
         vm.quantity = 0;
+        vm.containerList = [];
         vm.user = authenticationFactory.getLoggedInUserInfo();
+        vm.isServiceProvider = !vm.user.isAdminstrator;
         var alerts = fpmUtilitiesFactory.alerts;
+
         getContainers();
         vm.events = {
           closeContainerModal: function () {
@@ -67,6 +72,14 @@
             if (response) {
               vm.containers = response;
               vm.loadingContainers = false;
+              if (vm.isServiceProvider) {
+                vm.containerList = $filter('filter')(vm.containers, {
+                  userId: vm.user.userEmail
+                });
+                if (vm.containerList.length > 0) {
+                  vm.containers = vm.containerList;
+                }
+              }
             }
           });
         }
