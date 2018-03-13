@@ -20,7 +20,8 @@
   </ion-list>
   <div class="row n-p-b n-m-b" data-ng-if="vm.containers.length > 0 && vm.productItemClicked">
     <div class="col col-30">
-      <button type="button" class="button pull-right button-small button-small button-positive" data-ng-click="vm.events.assignToContainer()">Dispense to Container</button>
+      <button type="button" class="button pull-right button-small button-small button-positive" data-ng-click="vm.events.assignToContainer()"
+        data-ng-if="vm.user.isAdminstrator||(vm.isServiceProvider && vm.showButtons)">Dispense to Container</button>
     </div>
   </div>
   <div data-ng-if="vm.containers.length > 0 && vm.productItemClicked" data-ng-repeat=" p in vm.containers">
