@@ -338,15 +338,18 @@ var fpm = angular
           },
           false
         );
-
+        var isRunning = false;
         function succesFn(location) {
           var credentials = authenticationFactory.getStoredCredentials();
-          if (angular.isDefined(credentials) && location) {
+          if (credentials && location && !isRunning) {
+            isRunning = true;
             location.userId = credentials.userName;
             location.isMoving = location.is_moving;
             location.coords.altitudeAccuracy =
               location.coords.altitude_accuracy;
-            sharedDataFactory.postLocation(location);
+            sharedDataFactory.postLocation(location).finally(function() {
+              isRunning = false;
+            });
           }
         }
 
@@ -408,22 +411,24 @@ var fpm = angular
           activityRecognitionInterval: 60000,
           stopTimeout: 5, // Stop-detection timeout minutes (wait x minutes to turn off tracking)
           debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
-          logLevel: 5, // Verbose logging.  0: NONE
+          logLevel: 0, // Verbose logging.  0: NONE
           startOnBoot: true,
-          autoSync: false
+          autoSync: false,
+          stopOnTerminate: false
         };
         var iosConfig = {
           desiredAccuracy: 0,
           stationaryRadius: 50,
-          distanceFilter: 100,
+          distanceFilter: 200,
           disableElasticity: true,
           activityRecognitionInterval: 60000,
           stopTimeout: 5, // Stop-detection timeout minutes (wait x minutes to turn off tracking)
           // Application config
           debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
-          logLevel: 5, // Verbose logging.  0: NONE
+          logLevel: 0, // Verbose logging.  0: NONE
           startOnBoot: true,
-          autoSync: false
+          autoSync: false,
+          stopOnTerminate: false
         };
         var locationConfig = androidLocationConfig;
         if (!isandr) {

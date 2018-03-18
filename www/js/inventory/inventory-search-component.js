@@ -32,6 +32,28 @@
         vm.user = authenticationFactory.getLoggedInUserInfo();
         vm.isServiceProvider = !vm.user.isAdminstrator;
         vm.showButtons = false;
+        vm.allContainers = [];
+        vm.showDispenseButton = false;
+
+
+
+        function checkAssignedContainer() {
+          //vm.runningSearch = true;
+          inventoryDataFactory.getContainers().then(function (response) {
+            if (response) {
+              vm.allContainers = response;
+
+              if (vm.isServiceProvider) {
+                var assignedContainer = _.filter(vm.allContainers, function (c) {
+                  return c.userId === vm.user.userEmail;
+                });
+                vm.showDispenseButton = assignedContainer.length > 0 ? true : false;
+                //vm.runningSearch = false;
+              }
+            }
+
+          });
+        }
 
         function openAssignContainerModal() {
           if (vm.assignContainerModal) {
@@ -92,14 +114,11 @@
               if (response.collection != null && response.collection.length > 0)
                 vm.containers = response.collection;
               if (vm.isServiceProvider) {
-                angular.forEach(vm.containers, function (key, value) {
-                  if (key.userId === vm.user.userEmail) {
-                    vm.showButtons = true;
-                  } else {
-                    vm.showButtons = false;
-                  }
-                });
-
+                if (vm.containers.length > 0)
+                  var assignedContainer = _.filter(vm.containers, function (c) {
+                    return c.userId === vm.user.userEmail;
+                  });
+                vm.showButtons = assignedContainer.length > 0 ? true : false;
               }
             });
           vm.containerModal.hide();
@@ -122,6 +141,7 @@
               });
           },
           onProductItemClicked: function (product) {
+            checkAssignedContainer();
             vm.runningSearch = true;
             vm.productItemClicked = true;
             vm.searchApplied = false;
@@ -138,15 +158,12 @@
                 ) {
                   vm.containers = response.collection;
                   if (vm.isServiceProvider) {
-                    angular.forEach(vm.containers, function (key, value) {
-                      if (key.userId === vm.user.userEmail) {
-                        vm.showButtons = true;
-                      } else {
-                        vm.showButtons = false;
-                      }
+                    var assignedContainer = _.filter(vm.containers, function (c) {
+                      return c.userId === vm.user.userEmail;
                     });
-
+                    vm.showButtons = assignedContainer.length > 0 ? true : false;
                   }
+
                   vm.runningSearch = false;
                 } else {
                   vm.runningSearch = false;
@@ -186,13 +203,11 @@
                       ) {
                         vm.containers = response.collection;
                         if (vm.isServiceProvider) {
-                          angular.forEach(vm.containers, function (key, value) {
-                            if (key.userId === vm.user.userEmail) {
-                              vm.showButtons = true;
-                            } else {
-                              vm.showButtons = false;
-                            }
+                          var assignedContainer = _.filter(vm.containers, function (c) {
+                            return c.userId === vm.user.userEmail;
                           });
+                          vm.showButtons = assignedContainer.length > 0 ? true : false;
+
 
                         }
                       }
@@ -219,14 +234,10 @@
                       ) {
                         vm.containers = response.collection;
                         if (vm.isServiceProvider) {
-                          angular.forEach(vm.containers, function (key, value) {
-                            if (key.userId === vm.user.userEmail) {
-                              vm.showButtons = true;
-                            } else {
-                              vm.showButtons = false;
-                            }
+                          var assignedContainer = _.filter(vm.containers, function (c) {
+                            return c.userId === vm.user.userEmail;
                           });
-
+                          vm.showButtons = assignedContainer.length > 0 ? true : false;
                         }
                       }
                     });

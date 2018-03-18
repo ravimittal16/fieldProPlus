@@ -43,6 +43,7 @@
             havingGroupsAssigned: response.havingGroups === "True",
             inventoryOn: response.inventoryOn === "True"
           };
+          localStorageService.set(localStorageKeys.userCredentials, loginModel);
           localStorageService.set(localStorageKeys.storageKeyName, userobj);
           if (response.hasOwnProperty(localStorageKeys.configKeyName)) {
             localStorageService.set(
@@ -56,7 +57,6 @@
               JSON.parse(response.userSettings)
             );
           }
-          localStorageService.set(localStorageKeys.userCredentials, loginModel);
           defered.resolve(response);
         } else {
           if (response.data) {
