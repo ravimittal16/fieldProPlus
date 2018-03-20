@@ -428,3 +428,6 @@ customer-search-header-component {
 .m-top-45 {
   margin-top: 45px !important;
 }
+.equipment-customtypes > div:not(:last-child) {
+  border-bottom: 3px solid rgb(204, 204, 204) !important;
+}
