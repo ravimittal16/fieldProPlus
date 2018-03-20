@@ -82,3 +82,22 @@
 		service-providers="vm.serviceProviders" on-add-completed="vm.tabs.sch.events.onAddScheduleCompleted(o)"></add-schedule-modal-component>
 	</ion-modal-view>
 </script>
+<script id="imageViewerModal.html" type="text/ng-template">
+	<ion-modal-view>
+		<ion-header-bar>
+			<h1 class="title">
+
+			</h1>
+			<button class="button" data-ng-click="vm.events.closeImageViewModal()">
+                Cancel
+            </button>
+		</ion-header-bar>
+		<ion-content>
+			<div class="card">
+				<div class="item item-body">
+					<img data-ng-src="{{vm.imageUrl}}" class="full-image" alt="" />
+				</div>
+			</div>
+		</ion-content>
+	</ion-modal-view>
+</script>

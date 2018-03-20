@@ -23,7 +23,8 @@
 </ion-list>-->
 <div class="card">
 	<div class="item item-divider header-dark">
-		IMAGES <small class="badge badge-dark" data-ng-bind="vm.barcodeImages.length"></small>
+		IMAGES
+		<small class="badge badge-dark" data-ng-bind="vm.barcodeImages.length"></small>
 	</div>
 	<div class="item item-body">
 		<div class="row">
@@ -39,27 +40,10 @@
 	<ion-list can-swipe="true">
 		<ion-item class="item-text-wrap" data-ng-repeat="p in vm.barcodeImages">
 			<a data-ng-click="vm.events.onImageTap(p)">
-				<strong><i class="icon ion-plus-circled"></i> </strong>&nbsp;{{p.imageURL | removeExt}}</a>
+				<strong>
+					<i class="icon ion-plus-circled"></i>
+				</strong>&nbsp;{{p.imageURL | removeExt}}</a>
 			<button type="button" class="button icon ion-trash-b button-small text-assertive pull-right" style="margin-top: -5px;" ng-click="vm.events.onDeleteImageClicked(p,$index)"></button>
 		</ion-item>
 	</ion-list>
 </div>
-<script id="imageViewerModal.html" type="text/ng-template">
-	<ion-modal-view>
-		<ion-header-bar>
-			<h1 class="title">
-
-			</h1>
-			<button class="button" data-ng-click="vm.events.closeImageViewModal()">
-                Cancel
-            </button>
-		</ion-header-bar>
-		<ion-content>
-			<div class="card">
-				<div class="item item-body">
-					<img data-ng-src="{{vm.imageUrl}}" class="full-image" alt="" />
-				</div>
-			</div>
-		</ion-content>
-	</ion-modal-view>
-</script>

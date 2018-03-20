@@ -7,20 +7,24 @@
     },
     controller: [
       "$scope",
+      "$ionicModal",
       "$stateParams",
       "$timeout",
       "custom-types-factory",
       "fpm-utilities-factory",
+      "fieldPromaxConfig",
       function(
         $scope,
+        $ionicModal,
         $stateParams,
         $timeout,
         customTypesFactory,
-        fpmUtilitiesFactory
+        fpmUtilitiesFactory,
+        fieldPromaxConfig
       ) {
         var vm = this;
         vm.entity = {};
-        vm.showImageUpload = vm.ctEntity.value === null;
+        var baseUrl = fieldPromaxConfig.fieldPromaxApi;
         var alerts = fpmUtilitiesFactory.alerts;
         function uploadImage(mappedImage, imageName) {
           vm.entity.imageModel = { Image: mappedImage, Name: imageName };
@@ -47,7 +51,22 @@
         }
 
         vm.events = {
-          showImageClick: function() {}
+          showImageClick: function() {
+            if (imageViewerModel !== null && !vm.showImageUpload) {
+              vm.imageUrl =
+                baseUrl +
+                "Handlers/GetImageFromBlob.ashx?imageId=" +
+                vm.ctEntity.id +
+                "&dateStamp=" +
+                new Date();
+              imageViewerModel.show();
+            }
+          },
+          closeImageViewModal: function() {
+            if (imageViewerModel) {
+              imageViewerModel.hide();
+            }
+          }
         };
 
         vm.imageUploader = {
@@ -106,7 +125,20 @@
             multiple: false
           }
         };
-        vm.$onInit = function() {};
+        var imageViewerModel = null;
+        vm.$onInit = function() {
+          vm.showImageUpload = vm.ctEntity.value === null;
+          if (!vm.showImageUpload) {
+            $ionicModal
+              .fromTemplateUrl("imageViewerModal.html", {
+                scope: $scope,
+                animation: "slide-in-up"
+              })
+              .then(function(modal) {
+                imageViewerModel = modal;
+              });
+          }
+        };
       }
     ],
     controllerAs: "vm",
