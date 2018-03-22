@@ -57,6 +57,7 @@
                 baseUrl +
                 "Handlers/GetImageFromBlob.ashx?imageId=" +
                 vm.ctEntity.id +
+                "&entity=custom" +
                 "&dateStamp=" +
                 new Date();
               imageViewerModel.show();
