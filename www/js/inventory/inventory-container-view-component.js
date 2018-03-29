@@ -25,6 +25,7 @@
         vm.containers = [];
         vm.container = null;
         var timer = null;
+        vm.disabled = false;
         vm.loadingContainers = false;
         vm.user = authenticationFactory.getLoggedInUserInfo();
         vm.isServiceProvider = !vm.user.isAdminstrator;
@@ -132,6 +133,7 @@
             openEditProductQuantityModal();
           },
           increaseQuantity: function (container) {
+            vm.disabled = true;
             container.quantity += 1;
             vm.productContainer = {
               num: container.productContainerNum,
@@ -140,9 +142,10 @@
               productId: container.productNumber
             };
             inventoryDataFactory
-              .updateProductQuantity(container)
+              .updateProductQuantity(vm.productContainer)
               .then(function (response) {
                 if (response.errors == null) {
+                  vm.disabled = false;
                   inventoryDataFactory
                     .getContainerProducts(vm.container.containerName)
                     .then(function (response) {
@@ -168,13 +171,21 @@
               });
           },
           decreaseQuantity: function (container) {
+            vm.disabled = true;
             if (container.quantity > 0) {
               container.quantity -= 1;
             }
+            vm.productContainer = {
+              num: container.productContainerNum,
+              customerNumber: container.customerNumber,
+              qoh: container.quantity,
+              productId: container.productNumber
+            };
             inventoryDataFactory
-              .updateProductQuantity(container)
+              .updateProductQuantity(vm.productContainer)
               .then(function (response) {
                 if (response.errors == null) {
+                  vm.disabled = false;
                   inventoryDataFactory
                     .getContainerProducts(vm.container.containerName)
                     .then(function (response) {

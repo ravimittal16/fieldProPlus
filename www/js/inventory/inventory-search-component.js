@@ -31,9 +31,10 @@
         vm.product = null;
         vm.user = authenticationFactory.getLoggedInUserInfo();
         vm.isServiceProvider = !vm.user.isAdminstrator;
-        vm.showButtons = false;
+        //vm.showButtons = false;
         vm.allContainers = [];
         vm.showDispenseButton = false;
+        vm.productsAssigned = false;
 
 
 
@@ -47,11 +48,11 @@
                 var assignedContainer = _.filter(vm.allContainers, function (c) {
                   return c.userId === vm.user.userEmail;
                 });
-                vm.showDispenseButton = assignedContainer.length > 0 ? true : false;
+
+                vm.showDispenseButton = (assignedContainer.length > 0 && !vm.productsAssigned) ? true : false;
                 //vm.runningSearch = false;
               }
             }
-
           });
         }
 
@@ -99,9 +100,21 @@
           inventoryDataFactory
             .getProductContainers(args.entity.productId)
             .then(function (response) {
+              vm.productsAssigned = true;
+              checkAssignedContainer();
               if (response.collection != null && response.collection.length > 0)
                 vm.containers = response.collection;
+              if (vm.isServiceProvider) {
+                angular.forEach(vm.containers, function (key, value) {
+                  if (key.userId === vm.user.userEmail) {
+                    key.showButtons = true;
+                  } else {
+                    key.showButtons = false;
+                  }
+                });
+              }
             });
+
           vm.assignContainerModal.hide();
         });
         $scope.$on("$fpm:operation:updateProductContainerQuantity", function (
@@ -114,11 +127,14 @@
               if (response.collection != null && response.collection.length > 0)
                 vm.containers = response.collection;
               if (vm.isServiceProvider) {
-                if (vm.containers.length > 0)
-                  var assignedContainer = _.filter(vm.containers, function (c) {
-                    return c.userId === vm.user.userEmail;
-                  });
-                vm.showButtons = assignedContainer.length > 0 ? true : false;
+                angular.forEach(vm.containers, function (key, value) {
+                  if (key.userId === vm.user.userEmail) {
+                    key.showButtons = true;
+                  } else {
+                    key.showButtons = false;
+                  }
+                });
+
               }
             });
           vm.containerModal.hide();
@@ -158,10 +174,17 @@
                 ) {
                   vm.containers = response.collection;
                   if (vm.isServiceProvider) {
-                    var assignedContainer = _.filter(vm.containers, function (c) {
+                    angular.forEach(vm.containers, function (key, value) {
+                      if (key.userId === vm.user.userEmail) {
+                        key.showButtons = true;
+                      } else {
+                        key.showButtons = false;
+                      }
+                    });
+                    var productAssigned = _.filter(vm.containers, function (c) {
                       return c.userId === vm.user.userEmail;
                     });
-                    vm.showButtons = assignedContainer.length > 0 ? true : false;
+                    vm.productsAssigned = productAssigned.length > 0 ? true : false;
                   }
 
                   vm.runningSearch = false;
@@ -195,7 +218,7 @@
                 if (response.errors == null) {
                   vm.disabled = false;
                   inventoryDataFactory
-                    .getProductContainers(args.entity.productId)
+                    .getProductContainers(vm.product.num)
                     .then(function (response) {
                       if (
                         response.collection != null &&
@@ -203,11 +226,13 @@
                       ) {
                         vm.containers = response.collection;
                         if (vm.isServiceProvider) {
-                          var assignedContainer = _.filter(vm.containers, function (c) {
-                            return c.userId === vm.user.userEmail;
+                          angular.forEach(vm.containers, function (key, value) {
+                            if (key.userId === vm.user.userEmail) {
+                              key.showButtons = true;
+                            } else {
+                              key.showButtons = false;
+                            }
                           });
-                          vm.showButtons = assignedContainer.length > 0 ? true : false;
-
 
                         }
                       }
@@ -226,7 +251,7 @@
                 if (response.errors == null) {
                   vm.disabled = false;
                   inventoryDataFactory
-                    .getProductContainers(args.entity.productId)
+                    .getProductContainers(vm.product.num)
                     .then(function (response) {
                       if (
                         response.collection != null &&
@@ -234,10 +259,13 @@
                       ) {
                         vm.containers = response.collection;
                         if (vm.isServiceProvider) {
-                          var assignedContainer = _.filter(vm.containers, function (c) {
-                            return c.userId === vm.user.userEmail;
+                          angular.forEach(vm.containers, function (key, value) {
+                            if (key.userId === vm.user.userEmail) {
+                              key.showButtons = true;
+                            } else {
+                              key.showButtons = false;
+                            }
                           });
-                          vm.showButtons = assignedContainer.length > 0 ? true : false;
                         }
                       }
                     });

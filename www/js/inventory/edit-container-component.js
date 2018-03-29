@@ -35,7 +35,7 @@
                 $scope.$emit("$fpm:operation:updateProductContainerQuantity", response);
                 alerts.alert(
                   "Success",
-                  "Quantity has been updated successfully."
+                  ""
                 );
               }
             });

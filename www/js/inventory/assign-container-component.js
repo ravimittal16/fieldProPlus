@@ -38,6 +38,9 @@
         getContainers();
         vm.events = {
           closeContainerModal: function () {
+            vm.errors = [];
+            vm.quantity = 0;
+            getContainers();
             $rootScope.$broadcast("$fpm:closeAssignContainerModal");
           },
           assignContainer: function () {
@@ -61,6 +64,9 @@
                     response
                   );
                   alerts.alert("Success");
+                  vm.errors = [];
+                  vm.quantity = 0;
+                  getContainers();
                 }
               });
           }
