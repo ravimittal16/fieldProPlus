@@ -66,18 +66,26 @@
                       <span class="pull-right">{{::vm.barCodeData.barcodeDetails.priority}}</span>
                     </h5>
                   </p>
-                  <p data-ng-if="vm.barCodeData.barcodeDetails.class_id">
+                  <p data-ng-if="vm.barCodeData.barcodeDetails.classId">
                     <h5>
                       <strong class="text-muted">Class</strong>
-                      <span class="pull-right">{{::vm.barCodeData.barcodeDetails.class_id}}</span>
+                      <span class="pull-right">{{::vm.barCodeData.barcodeDetails.class_Name}}</span>
                     </h5>
                   </p>
-                  <p data-ng-if="vm.barCodeData.barcodeDetails.poNum">
+                  <!-- <p data-ng-if="vm.barCodeData.barcodeDetails.poNum">
                     <h5>
                       <strong class="text-muted">PO Number</strong>
                       <span class="pull-right">{{::vm.barCodeData.barcodeDetails.poNum}}</span>
                     </h5>
-                  </p>
+                  </p> -->
+                </div>
+              </div>
+              <div class="card">
+                <div class="list">
+                  <label class="item item-input">
+                    <span class="input-label" ng-bind="vm.poHeading"></span>
+                    <input type="text" maxlength="50" ng-model="vm.barCodeData.barcodeDetails.poNum" ng-model-options="{debounce:500}" ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()">
+                  </label>
                 </div>
               </div>
               <div class="card">

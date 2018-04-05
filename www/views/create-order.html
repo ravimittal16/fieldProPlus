@@ -12,9 +12,9 @@
       <div class="list">
         <div class="card">
           <label class="item item-input">
-                    <span class="input-label">Order #</span>
-                    <input type="text" data-ng-model="vm.woEntity.barCodeName" required />
-                </label>
+            <span class="input-label">Order #</span>
+            <input type="text" data-ng-model="vm.woEntity.barCodeName" required />
+          </label>
         </div>
         <div class="card">
           <div class="item item-divider header-dark">
@@ -29,9 +29,9 @@
             </div>
           </div>
           <label class="item item-input">
-                <span class="input-label">Email</span>
-                    <input type="text" placeholder="Email" maxlength="500" data-ng-model="vm.woEntity.email"/>
-                </label>
+            <span class="input-label">Email</span>
+            <input type="text" placeholder="Email" maxlength="500" data-ng-model="vm.woEntity.email" />
+          </label>
         </div>
 
         <div class="card">
@@ -40,17 +40,17 @@
               Billing Address
             </div>
             <label class="item item-input">
-                    <textarea type="text" rows="2" placeholder="Street" class="transparent-background" data-ng-model="vm.woEntity.bStreet" readonly=""></textarea>
-                </label>
+              <textarea type="text" rows="2" placeholder="Street" class="transparent-background" data-ng-model="vm.woEntity.bStreet" readonly=""></textarea>
+            </label>
             <label class="item item-input">
-                    <input type="text" placeholder="City" class="transparent-background" data-ng-model="vm.woEntity.bCity" readonly=""/>
-                </label>
+              <input type="text" placeholder="City" class="transparent-background" data-ng-model="vm.woEntity.bCity" readonly="" />
+            </label>
             <label class="item item-input">
-                    <input type="text" placeholder="State" class="transparent-background" data-ng-model="vm.woEntity.bState" readonly=""/>
-                </label>
+              <input type="text" placeholder="State" class="transparent-background" data-ng-model="vm.woEntity.bState" readonly="" />
+            </label>
             <label for="" class="item item-input">
-                    <input type="text" placeholder="Zip" class="transparent-background" data-ng-model="vm.woEntity.bZip" readonly=""/>
-                </label>
+              <input type="text" placeholder="Zip" class="transparent-background" data-ng-model="vm.woEntity.bZip" readonly="" />
+            </label>
           </div>
         </div>
 
@@ -66,17 +66,17 @@
               <button type="button" class="button button-small button-positive pull-right" data-ng-click="vm.events.sameAsBilling()">Same as Billing</button>
             </div>
             <label class="item item-input">
-                    <textarea type="text" rows="2" placeholder="Street" maxlength="200" data-ng-model="vm.woEntity.sStreet"></textarea>
-                </label>
+              <textarea type="text" rows="2" placeholder="Street" maxlength="200" data-ng-model="vm.woEntity.sStreet"></textarea>
+            </label>
             <label class="item item-input">
-            <input type="text" placeholder="City" maxlength="50" data-ng-model="vm.woEntity.sCity"/>
-          </label>
+              <input type="text" placeholder="City" maxlength="50" data-ng-model="vm.woEntity.sCity" />
+            </label>
             <label class="item item-input">
-                    <input type="text" placeholder="State" data-ng-model="vm.woEntity.sState" maxlength="50"/>
-                </label>
+              <input type="text" placeholder="State" data-ng-model="vm.woEntity.sState" maxlength="50" />
+            </label>
             <label for="" class="item item-input">
-                    <input type="text" placeholder="Zip" data-ng-model="vm.woEntity.sZip" maxlength="20"/>
-                </label>
+              <input type="text" placeholder="Zip" data-ng-model="vm.woEntity.sZip" maxlength="20" />
+            </label>
           </div>
         </div>
 
@@ -95,31 +95,39 @@
               Service Provider
             </div>
             <select data-ng-options="pro.userId as pro.last_Name for pro in vm.serviceProviders" data-ng-model="vm.woEntity.serviceProvider">
-                    </select>
+            </select>
+          </div>
+          <div class="item item-input">
+            <div class="input-label">
+              <span ng-bind="vm.poHeading"></span>
+            </div>
+            <input type="text" class="transparent-background text-right" maxlength="30" data-ng-model="vm.woEntity.poNumber" />
           </div>
           <label class="item item-input">
-                    <span class="input-label">Schedule Start</span>
-                    <input type="text" class="transparent-background text-right" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A'}" data-ng-model="vm.dates.startDate" />
-                </label>
+            <span class="input-label">Schedule Start</span>
+            <input type="text" class="transparent-background text-right" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A'}"
+              data-ng-model="vm.dates.startDate" />
+          </label>
           <label class="item item-input">
-                    <span class="input-label">Schedule Finish</span>
-                    <input type="text" class="transparent-background text-right" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A'}" data-ng-model="vm.dates.endDate" />
-                </label>
+            <span class="input-label">Schedule Finish</span>
+            <input type="text" class="transparent-background text-right" data-mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A'}"
+              data-ng-model="vm.dates.endDate" />
+          </label>
         </div>
         <div class="card">
           <div class="item item-divider header-dark">
             Work Description
           </div>
           <label class="item item-input item-stacked-label">
-                    <textarea cols="30" rows="6" placeholder="please add work description here..." data-ng-model="vm.woEntity.description"></textarea>
-                </label>
+            <textarea cols="30" rows="6" placeholder="please add work description here..." data-ng-model="vm.woEntity.description"></textarea>
+          </label>
         </div>
       </div>
     </ion-content>
     <ion-footer-bar align-title="left" class="bar-light">
       <div class="buttons">
         <button class="button" type="button" data-ng-click="vm.events.onBackToDashboardClicked()">
-            Go back to Dashboard
+          Go back to Dashboard
         </button>
       </div>
       <h1 class="title">
@@ -127,7 +135,7 @@
       </h1>
       <div class="buttons">
         <button type="submit" class="button button-balanced" data-ng-click="vm.events.onSubmitButtonClicked(formWorkOrder.$valid)">
-            Create Work Order  
+          Create Work Order
         </button>
       </div>
     </ion-footer-bar>

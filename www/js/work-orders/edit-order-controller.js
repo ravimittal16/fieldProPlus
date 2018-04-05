@@ -438,6 +438,8 @@
               vm.uiSettings.billingOption =
                 response.customerNumberEntity.billingOption;
             }
+            vm.poHeading = "PO Number";
+
             if (vm.uiSettings.billingOption === 0) {
               vm.uiSettings.isRouteTimeOptionChecked =
                 response.customerNumberEntity.isRouteTimeOptionChecked;
@@ -448,6 +450,15 @@
               );
               vm.uiSettings.hideEmailButton =
                 configurations.HideEmailButtonOnMobile || false;
+              if (configurations && configurations.PoBoxLabel) {
+                vm.poHeading = configurations.PoBoxLabel;
+              } else if (
+                response.customerNumberEntity.intuitServiceType === "QBO"
+              ) {
+                vm.poHeading = "Custom 1";
+              } else {
+                vm.poHeading = "PO Number";
+              }
             }
             vm.scheduleStatus = response.secondaryOrderStatus;
             vm.serviceProviders = response.serviceProviders;
