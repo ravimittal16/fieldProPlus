@@ -39,7 +39,7 @@
 
 
         function checkAssignedContainer() {
-          //vm.runningSearch = true;
+          vm.runningSearch = true;
           inventoryDataFactory.getContainers().then(function (response) {
             if (response) {
               vm.allContainers = response;
@@ -50,7 +50,7 @@
                 });
 
                 vm.showDispenseButton = (assignedContainer.length > 0 && !vm.productsAssigned) ? true : false;
-                //vm.runningSearch = false;
+                vm.runningSearch = false;
               }
             }
           });
@@ -157,13 +157,13 @@
               });
           },
           onProductItemClicked: function (product) {
-            checkAssignedContainer();
             vm.runningSearch = true;
             vm.productItemClicked = true;
             vm.searchApplied = false;
             vm.product = product;
             vm.searchValue = product.productName;
             vm.products = [];
+            vm.showDispenseButton = false;
             inventoryDataFactory
               .getProductContainers(product.num)
               .then(function (response) {
@@ -173,6 +173,10 @@
                   response.collection.length > 0
                 ) {
                   vm.containers = response.collection;
+                  var productAssigned = _.filter(vm.containers, function (c) {
+                    return c.userId === vm.user.userEmail;
+                  });
+                  vm.productsAssigned = productAssigned.length > 0 ? true : false;
                   if (vm.isServiceProvider) {
                     angular.forEach(vm.containers, function (key, value) {
                       if (key.userId === vm.user.userEmail) {
@@ -181,17 +185,16 @@
                         key.showButtons = false;
                       }
                     });
-                    var productAssigned = _.filter(vm.containers, function (c) {
-                      return c.userId === vm.user.userEmail;
-                    });
-                    vm.productsAssigned = productAssigned.length > 0 ? true : false;
+
                   }
 
                   vm.runningSearch = false;
                 } else {
+                  vm.productsAssigned = false;
                   vm.runningSearch = false;
                   vm.containers = [];
                 }
+                checkAssignedContainer();
               });
           },
           cancelSearch: function () {
@@ -216,7 +219,6 @@
               .updateProductQuantity(container)
               .then(function (response) {
                 if (response.errors == null) {
-                  vm.disabled = false;
                   inventoryDataFactory
                     .getProductContainers(vm.product.num)
                     .then(function (response) {
@@ -225,6 +227,7 @@
                         response.collection.length > 0
                       ) {
                         vm.containers = response.collection;
+                        vm.disabled = false;
                         if (vm.isServiceProvider) {
                           angular.forEach(vm.containers, function (key, value) {
                             if (key.userId === vm.user.userEmail) {
@@ -249,7 +252,6 @@
               .updateProductQuantity(container)
               .then(function (response) {
                 if (response.errors == null) {
-                  vm.disabled = false;
                   inventoryDataFactory
                     .getProductContainers(vm.product.num)
                     .then(function (response) {
@@ -258,6 +260,7 @@
                         response.collection.length > 0
                       ) {
                         vm.containers = response.collection;
+                        vm.disabled = false;
                         if (vm.isServiceProvider) {
                           angular.forEach(vm.containers, function (key, value) {
                             if (key.userId === vm.user.userEmail) {

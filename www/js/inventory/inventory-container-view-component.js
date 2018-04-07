@@ -145,7 +145,6 @@
               .updateProductQuantity(vm.productContainer)
               .then(function (response) {
                 if (response.errors == null) {
-                  vm.disabled = false;
                   inventoryDataFactory
                     .getContainerProducts(vm.container.containerName)
                     .then(function (response) {
@@ -154,6 +153,7 @@
                         response.collection.length > 0
                       ) {
                         vm.products = response.collection;
+                        vm.disabled = false;
                         if (vm.isServiceProvider) {
                           angular.forEach(vm.products, function (key, value) {
                             if (vm.container.userId === vm.user.userEmail) {
@@ -185,7 +185,7 @@
               .updateProductQuantity(vm.productContainer)
               .then(function (response) {
                 if (response.errors == null) {
-                  vm.disabled = false;
+
                   inventoryDataFactory
                     .getContainerProducts(vm.container.containerName)
                     .then(function (response) {
@@ -194,6 +194,7 @@
                         response.collection.length > 0
                       ) {
                         vm.products = response.collection;
+                        vm.disabled = false;
                         if (vm.isServiceProvider) {
                           angular.forEach(vm.products, function (key, value) {
                             if (vm.container.userId === vm.user.userEmail) {

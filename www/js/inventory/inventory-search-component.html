@@ -18,7 +18,7 @@
       {{::p.productName}}
     </ion-item>
   </ion-list>
-  <div class="row n-p-b n-m-b" data-ng-if="vm.containers.length > 0 && vm.productItemClicked">
+  <div class="row n-p-b n-m-b" data-ng-if="vm.containers.length > 0 && vm.productItemClicked && vm.showDispenseButton">
     <div class="col col-30">
       <button type="button" class="button pull-right button-small button-small button-positive" data-ng-click="vm.events.assignToContainer()"
         data-ng-if="vm.user.isAdminstrator||(vm.isServiceProvider && vm.showDispenseButton)">Dispense to Container</button>
