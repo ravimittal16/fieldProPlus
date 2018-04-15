@@ -413,9 +413,20 @@
         alerts.alert("Warning", "Please select Check In date and time");
       }
     }
+    var currentLoc = null;
+    function _getCurrentUserLocation() {
+      window.BackgroundGeolocation.getCurrentPosition(function(
+        location,
+        taskId
+      ) {
+        window.BackgroundGeolocation.finish(taskId);
+        currentLoc = location;
+      });
+    }
     //================================================================================================
     vm.user = authenticationFactory.getLoggedInUserInfo();
     function activateController() {
+      _getCurrentUserLocation();
       isMapLoaded = false;
       vm.uiSettings.isTimeCardModuleEnabled =
         vm.user.timeCard && vm.user.allowPushTime;
@@ -694,13 +705,22 @@
     vm.map = null;
     var isMapLoaded = false;
     function loadWorkOrderMap() {
-      var goourl = "https://maps.google.com?saddr=Current+Location&daddr=";
-      var d = vm.barCodeData.barcodeDetails;
-      if (d.shipStreet) {
-        goourl += d.shipStreet.replace("::", " ");
+      if (currentLoc) {
+        var goourl = "https://maps.google.com?saddr=";
+        goourl +=
+          currentLoc.coords.latitude +
+          "," +
+          currentLoc.coords.longitude +
+          "&daddr=";
+        var d = vm.barCodeData.barcodeDetails;
+        if (d.shipStreet) {
+          goourl += d.shipStreet.replace("::", " ");
+        }
+        goourl += "%20" + d.shipCity + ",%20" + d.shipState + "%20" + d.shipZIP;
+        $window.open(goourl, "_blank", "location=yes");
+      } else {
+        alerts.alert("Unable to fetch your current location");
       }
-      goourl += " " + d.shipCity + ", " + d.shipState + " " + d.shipZIP;
-      $window.open(goourl, "_blank", "location=yes");
     }
     vm.popModal = {
       type: "DESCRIPTION",
