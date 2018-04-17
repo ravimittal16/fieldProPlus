@@ -98,5 +98,6 @@
         <variable name="SENDER_ID" value="504804224593" />
     </plugin>
     <preference name="SplashShowOnlyFirstTime" value="false" />
+    <plugin name="cordova-plugin-geolocation" spec="^4.0.1" />
     <engine name="android" spec="~6.3.0" />
 </widget>

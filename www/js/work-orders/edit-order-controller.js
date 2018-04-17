@@ -4,6 +4,7 @@
   function initController(
     $scope,
     $state,
+    $rootScope,
     $q,
     $timeout,
     $window,
@@ -415,13 +416,17 @@
     }
     var currentLoc = null;
     function _getCurrentUserLocation() {
-      window.BackgroundGeolocation.getCurrentPosition(function(
-        location,
-        taskId
-      ) {
-        window.BackgroundGeolocation.finish(taskId);
-        currentLoc = location;
-      });
+      if ($rootScope.currentLocation) {
+        currentLoc = $rootScope.currentLocation;
+      } else {
+        window.BackgroundGeolocation.getCurrentPosition(function(
+          location,
+          taskId
+        ) {
+          window.BackgroundGeolocation.finish(taskId);
+          currentLoc = location;
+        });
+      }
     }
     //================================================================================================
     vm.user = authenticationFactory.getLoggedInUserInfo();
@@ -705,6 +710,12 @@
     vm.map = null;
     var isMapLoaded = false;
     function loadWorkOrderMap() {
+      var daddr = "";
+      var d = vm.barCodeData.barcodeDetails;
+      if (d.shipStreet) {
+        daddr += d.shipStreet.replace("::", " ");
+      }
+      daddr += "%20" + d.shipCity + ",%20" + d.shipState + "%20" + d.shipZIP;
       if (currentLoc) {
         var goourl = "https://maps.google.com?saddr=";
         goourl +=
@@ -712,14 +723,11 @@
           "," +
           currentLoc.coords.longitude +
           "&daddr=";
-        var d = vm.barCodeData.barcodeDetails;
-        if (d.shipStreet) {
-          goourl += d.shipStreet.replace("::", " ");
-        }
-        goourl += "%20" + d.shipCity + ",%20" + d.shipState + "%20" + d.shipZIP;
+        goourl += daddr;
         $window.open(goourl, "_blank", "location=yes");
       } else {
-        alerts.alert("Unable to fetch your current location");
+        goourl = "https://www.google.com/maps/dir/?api=1&destination=" + daddr;
+        $window.open(goourl, "_blank", "location=yes");
       }
     }
     vm.popModal = {
@@ -1161,6 +1169,7 @@
   initController.$inject = [
     "$scope",
     "$state",
+    "$rootScope",
     "$q",
     "$timeout",
     "$window",

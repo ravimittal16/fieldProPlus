@@ -341,6 +341,7 @@ var fpm = angular
         var isRunning = false;
         function succesFn(location) {
           var credentials = authenticationFactory.getStoredCredentials();
+          $rootScope.currentLocation = location;
           if (credentials && location && !isRunning) {
             isRunning = true;
             location.userId = credentials.userName;
