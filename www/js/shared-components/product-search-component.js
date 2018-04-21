@@ -26,22 +26,27 @@
           closeProductEditModal: function() {
             if (vm.productModal) {
               vm.searchValue = "";
+              vm.vm.searchApplied = false;
               vm.productModal.hide();
             }
           },
-          applySearch: function() {
-            vm.products = [];
-            vm.searchApplied = false;
-            vm.runningSearch = true;
-            workOrderFactory
-              .searchProduct(vm.searchValue, "")
-              .then(function(response) {
-                vm.searchApplied = true;
-                vm.runningSearch = false;
-                if (angular.isArray(response)) {
-                  vm.products = response;
-                }
-              });
+          applySearch: function(fromInput) {
+            if (vm.searchValue !== "") {
+              vm.products = [];
+              vm.searchApplied = false;
+              vm.runningSearch = true;
+              workOrderFactory
+                .searchProduct(vm.searchValue, "")
+                .then(function(response) {
+                  vm.searchApplied = true;
+                  if (angular.isArray(response)) {
+                    vm.products = response;
+                  }
+                })
+                .finally(function() {
+                  vm.runningSearch = false;
+                });
+            }
           },
           onProductItemClicked: function(product) {
             vm.currentProduct = angular.copy(product);
@@ -90,6 +95,11 @@
         $scope.$on("$fpm:changeAddModalOpenPriority", function($event, $args) {
           vm.openEditProductModalOnProductSelectedFromSearch = $args;
         });
+
+        vm.$onInit = function() {};
+        vm.$onDestroy = function() {
+          console.log("HELLLLL");
+        };
       }
     ],
     controllerAs: "vm"

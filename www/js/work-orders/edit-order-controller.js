@@ -431,7 +431,9 @@
     //================================================================================================
     vm.user = authenticationFactory.getLoggedInUserInfo();
     function activateController() {
-      _getCurrentUserLocation();
+      if (!$rootScope.isInDevMode) {
+        _getCurrentUserLocation();
+      }
       isMapLoaded = false;
       vm.uiSettings.isTimeCardModuleEnabled =
         vm.user.timeCard && vm.user.allowPushTime;
@@ -1070,7 +1072,7 @@
           onDeleteProductClicked: function(product) {
             alerts.confirmDelete(function() {
               workOrderFactory
-                .deleteProduct(vm.barcode, product.num)
+                .deleteProduct(vm.barcode, product.num, product.qty)
                 .then(function(response) {
                   if (response) {
                     vm.barCodeData.products = response.products;

@@ -1,57 +1,58 @@
 <ion-header-bar>
-    <h1 class="title">
-        <span ng-if="vm.modalType==1">Add</span>
-        <span ng-if="vm.modalType==0">Edit</span> Product
-    </h1>
-    <button class="button" ng-click="vm.events.closeProductEditModal()">
-        Cancel
-    </button>
+  <h1 class="title">
+    <span ng-if="vm.modalType==1">Add</span>
+    <span ng-if="vm.modalType==0">Edit</span> Product
+  </h1>
+  <button class="button" ng-click="vm.events.closeProductEditModal()">
+    Cancel
+  </button>
 </ion-header-bar>
 <ion-content>
-    <form action="" name="editProductForm">
-        <div class="list">
-            <div class="padding">
-                <h4 ng-bind="vm.product.productName"></h4>
-            </div>
-            <label class="item item-input">
-                <textarea type="text" rows="5" ng-model="vm.product.productDescription" placeholder="product description..."></textarea>
-            </label>
-            <label class="item item-input">
-                <div class="input-label">
-                    Quantity
-                </div>
-                <input type="number" class="transparent-background" mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal'}"
-                    placeholder="Quantity" ng-model="vm.product.qty" />
-            </label>
-            <label class="item item-input">
-                <div class="input-label">
-                    Price
-                </div>
-                <input type="number" class="transparent-background" ng-if="!vm.user.showPrice" placeholder="Price" value="0.0" disabled/>
-                <input type="number" ng-if="vm.user.showPrice" class="transparent-background" placeholder="Price" ng-model="vm.product.price"
-                    mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal'}" />
-            </label>
-            <label class="item item-input" ng-if="vm.enableMarkupOrders && !vm.isEstimate">
-                <div class="input-label">
-                    Markup
-                </div>
-                <input type="number" class="transparent-background" ng-if="!vm.user.showPrice" placeholder="Markup" value="0.0" disabled/>
-                <input type="number" class="transparent-background" ng-if="vm.user.showPrice" mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal'}"
-                    placeholder="Markup" ng-model="vm.product.markup" />
-            </label>
-            <label class="item item-input" ng-if="vm.isEstimate">
-                <div class="input-label">
-                    Markup
-                </div>
-                <input type="number" placeholder="Markup" mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal'}"
-                    ng-model="vm.product.markUpPercent" />
-            </label>
-            <div class="padding">
-                <button class="button button-block button-positive" ng-click="vm.events.updateProductClick()" type="button">
-                    <span ng-if="vm.modalType == 0">Update</span>
-                    <span ng-if="vm.modalType == 1">Add</span> Product
-                </button>
-            </div>
+  <form action="" name="editProductForm">
+    <errors-view errors="vm.errors"></errors-view>
+    <div class="list">
+      <div class="padding">
+        <h4 ng-bind="vm.product.productName"></h4>
+      </div>
+      <label class="item item-input">
+        <textarea type="text" rows="5" ng-model="vm.product.productDescription" placeholder="product description..."></textarea>
+      </label>
+      <label class="item item-input">
+        <div class="input-label">
+          Quantity
         </div>
-    </form>
+        <input type="number" class="transparent-background" mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal'}"
+          placeholder="Quantity" ng-model="vm.product.qty" />
+      </label>
+      <label class="item item-input">
+        <div class="input-label">
+          Price
+        </div>
+        <input type="number" class="transparent-background" ng-if="!vm.user.showPrice" placeholder="Price" value="0.0" disabled/>
+        <input type="number" ng-if="vm.user.showPrice" class="transparent-background" placeholder="Price" ng-model="vm.product.price"
+          mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal'}" />
+      </label>
+      <label class="item item-input" ng-if="vm.enableMarkupOrders && !vm.isEstimate">
+        <div class="input-label">
+          Markup
+        </div>
+        <input type="number" class="transparent-background" ng-if="!vm.user.showPrice" placeholder="Markup" value="0.0" disabled/>
+        <input type="number" class="transparent-background" ng-if="vm.user.showPrice" mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal'}"
+          placeholder="Markup" ng-model="vm.product.markup" />
+      </label>
+      <label class="item item-input" ng-if="vm.isEstimate">
+        <div class="input-label">
+          Markup
+        </div>
+        <input type="number" placeholder="Markup" mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal'}"
+          ng-model="vm.product.markUpPercent" />
+      </label>
+      <div class="padding">
+        <button class="button button-block button-positive" ng-click="vm.events.updateProductClick()" type="button">
+          <span ng-if="vm.modalType == 0">Update</span>
+          <span ng-if="vm.modalType == 1">Add</span> Product
+        </button>
+      </div>
+    </div>
+  </form>
 </ion-content>

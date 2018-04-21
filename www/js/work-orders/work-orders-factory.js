@@ -35,7 +35,13 @@
 
     function deleteProduct(barcode, num) {
       return apiBaseFactory.get(
-        apibaseurl + "DeleteProduct?barcode=" + barcode + "&productNum=" + num
+        apibaseurl +
+          "DeleteProduct?barcode=" +
+          barcode +
+          "&productNum=" +
+          num +
+          "&qty=" +
+          qty
       );
     }
 
