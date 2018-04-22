@@ -36,7 +36,9 @@
                         </p>
                         <p ng-if="vm.barCodeData.barcodeDetails.phone">
                           <span>
-                            <i class="icon ion-android-call"></i>&nbsp;{{::vm.barCodeData.barcodeDetails.phone}}</span>
+                            <i class="icon ion-android-call"></i>&nbsp;
+                            <a href="tel:{{::vm.barCodeData.barcodeDetails.phone}}">{{::vm.barCodeData.barcodeDetails.phone}}</a>
+                          </span>
                         </p>
                         <p data-ng-if="vm.barCodeData.barcodeDetails.contactInfo">Contact Info :
                           <span>{{::vm.barCodeData.barcodeDetails.contactInfo}}</span>
