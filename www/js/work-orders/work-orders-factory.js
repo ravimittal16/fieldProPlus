@@ -35,13 +35,7 @@
 
     function deleteProduct(barcode, num) {
       return apiBaseFactory.get(
-        apibaseurl +
-          "DeleteProduct?barcode=" +
-          barcode +
-          "&productNum=" +
-          num +
-          "&qty=" +
-          qty
+        apibaseurl + "DeleteProduct?barcode=" + barcode + "&productNum=" + num
       );
     }
 
@@ -58,7 +52,8 @@
           "GetProductsLists?searchPattern=" +
           searchValue +
           "&alphabet=" +
-          alphabet
+          alphabet +
+          "&fromMobile=true"
       );
     }
 

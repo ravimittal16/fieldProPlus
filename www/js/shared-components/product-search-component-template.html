@@ -32,3 +32,12 @@
 		</li>
 	</div>
 </ion-content>
+<ion-footer-bar class="bar bar-footer bar-dark" align-title="center" ng-if="vm.showingLessCount">
+	<div class="title" style="display: flex;flex: 1;justify-content: center;">
+		<small>total
+			<strong ng-bind="vm.totalCount"></strong>
+			products found,
+			<strong>showing</strong>&nbsp;200
+		</small>
+	</div>
+</ion-footer-bar>

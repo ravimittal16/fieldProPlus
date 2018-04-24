@@ -31,6 +31,7 @@
             }
           },
           applySearch: function(fromInput) {
+            vm.showingLessCount = false;
             if (vm.searchValue !== "") {
               vm.products = [];
               vm.searchApplied = false;
@@ -41,6 +42,10 @@
                   vm.searchApplied = true;
                   if (angular.isArray(response)) {
                     vm.products = response;
+                    if (response.length > 0) {
+                      vm.totalCount = response[0].totalCount;
+                      vm.showingLessCount = totalCount > 200;
+                    }
                   }
                 })
                 .finally(function() {
