@@ -43,8 +43,13 @@
                   if (angular.isArray(response)) {
                     vm.products = response;
                     if (response.length > 0) {
-                      vm.totalCount = response[0].totalCount;
-                      vm.showingLessCount = totalCount > 200;
+                      var totalCounts = _.filter(response, function(s) {
+                        return s.totalCount !== null;
+                      });
+                      if (totalCounts.length > 0) {
+                        vm.totalCount = totalCounts[0].totalCount;
+                        vm.showingLessCount = vm.totalCount > 200;
+                      }
                     }
                   }
                 })
