@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="71" id="com.ionicframework.fieldproionic807801" version="0.0.71" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="72" id="com.ionicframework.fieldproionic807801" version="0.0.72" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>FieldPromax</name>
     <description>
       Newly updated version for Field Promax  

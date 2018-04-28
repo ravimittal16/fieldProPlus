@@ -88,6 +88,16 @@
                     <span class="input-label" ng-bind="vm.poHeading"></span>
                     <input type="text" maxlength="50" ng-model="vm.barCodeData.barcodeDetails.poNum" ng-model-options="{debounce:500}" ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()">
                   </label>
+                  <label class="item item-input">
+                    <span class="input-label" ng-bind="vm.uiSettings.customField2Label"></span>
+                    <input type="text" maxlength="50" ng-model="vm.barCodeData.barcodeDetails.customType2Val" ng-model-options="{debounce:500}"
+                      ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()">
+                  </label>
+                  <label class="item item-input">
+                    <span class="input-label" ng-bind="vm.uiSettings.customField3Label"></span>
+                    <input type="text" maxlength="50" ng-model="vm.barCodeData.barcodeDetails.customType3Val" ng-model-options="{debounce:500}"
+                      ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()">
+                  </label>
                 </div>
               </div>
               <div class="card">
@@ -396,7 +406,7 @@
           <jobtype-list-component data-barcode="vm.barcode" data-jobtype="vm.barCodeData.barcodeDetails.excptns"></jobtype-list-component>
           <equipments-list-component data-ng-if="vm.uiSettings.showEquipmentTabControl" data-barcode="vm.barcode" uin="vm.barCodeData.barcodeDetails.uin"
             display-name="vm.barCodeData.barcodeDetails.displayName"></equipments-list-component>
-          <expanse-expander-component data-barcode="vm.barcode"></expanse-expander-component>
+          <expanse-expander-component ng-if="vm.uiSettings.expenseTrackingEnabled" data-barcode="vm.barcode"></expanse-expander-component>
         </ion-content>
       </ion-tab>
       <ion-tab title="SUMMARY" icon-on="ion-ios-calculator" icon-off="ion-ios-calculator-outline">

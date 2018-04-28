@@ -49,7 +49,10 @@
       billingOption: 0,
       isRouteTimeOptionChecked: false,
       enableMarkup: false,
-      hideEmailButton: false
+      hideEmailButton: false,
+      customField2Label: "Custom Field 2",
+      customField3Label: "Custom Field 3",
+      expenseTrackingEnabled: true
     };
 
     vm.errors = [];
@@ -319,7 +322,6 @@
 
     function checkAuthorizationIfServiceProvider(co, cb, fromAddSchedule) {
       if (vm.schedule) {
-        // console.log("vm.user", vm.user);
         var havingGroupsAssigned = vm.user.havingGroupsAssigned;
         if (vm.isServiceProvider === false) {
           return true;
@@ -332,7 +334,7 @@
           fromAddSchedule === true
         ) {
           var checkifBelongToAssinedUser = _.findWhere(vm.serviceProviders, {
-            UserId: vm.schedule.TechnicianNum
+            UserId: vm.schedule.technicianNum
           });
           if (angular.isDefined(checkifBelongToAssinedUser)) {
             return true;
@@ -462,6 +464,8 @@
               vm.uiSettings.isRouteTimeOptionChecked =
                 response.customerNumberEntity.isRouteTimeOptionChecked;
             }
+            vm.uiSettings.expenseTrackingEnabled =
+              response.customerNumberEntity.expenseTrackingEnabled;
             if (response.customerNumberEntity.configurationJson) {
               var configurations = JSON.parse(
                 response.customerNumberEntity.configurationJson
@@ -476,6 +480,20 @@
                 vm.poHeading = "Custom 1";
               } else {
                 vm.poHeading = "PO Number";
+              }
+              if (
+                configurations.CustomField2Label &&
+                configurations.CustomField2Label !== ""
+              ) {
+                vm.uiSettings.customField2Label =
+                  configurations.CustomField2Label;
+              }
+              if (
+                configurations.CustomField3Label &&
+                configurations.CustomField3Label !== ""
+              ) {
+                vm.uiSettings.customField3Label =
+                  configurations.CustomField3Label;
               }
             }
             vm.scheduleStatus = response.secondaryOrderStatus;
