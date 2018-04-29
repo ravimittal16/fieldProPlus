@@ -67,7 +67,7 @@
           workOrderFactory.getBarcodeDetails(vm.barcode).then(
             function(response) {
               vm.gettingBarcodeDetails = false;
-              vm.barCodeData = response;
+              vm.barCodeData = angular.copy(response);
               vm.uiSettings.woData = angular.copy(response);
               vm.taxCheckboxVisibility = (vm.barCodeData.taxRate || 0) > 0;
               if (
@@ -551,8 +551,9 @@
       }
     }
 
-    function updateOrder() {
-      if (checkAuthorizationIfServiceProvider(null, null, false)) {
+    function updateOrder(type) {
+      console.log(type);
+      function _processUpdateOrder() {
         workOrderFactory
           .updateWorkOrderMobile({
             barcodeAssay: vm.barCodeData.barcodeDetails,
@@ -563,6 +564,13 @@
               vm.errors = response;
             }
           });
+      }
+      if (type && type === "desc") {
+        _processUpdateOrder();
+      } else {
+        if (checkAuthorizationIfServiceProvider(null, null, false)) {
+          _processUpdateOrder();
+        }
       }
     }
 
@@ -760,9 +768,24 @@
       events: {
         updateClicked: function() {
           if (vm.popModal.type === "DESCRIPTION") {
-            vm.barCodeData.barcodeDetails.comment_1 = angular.copy(
-              vm.popModal.content
-            );
+            var oldDesc = vm.uiSettings.woData.barcodeDetails.comment_1;
+            var newDesc = vm.popModal.content;
+            if (!vm.user.allowUserToEditWoDescription && oldDesc !== newDesc) {
+              alerts.alert(
+                "Unauthorized",
+                "You are not authorized to change the description.",
+                function() {
+                  $timeout(function() {
+                    vm.barCodeData.barcodeDetails.comment_1 = oldDesc;
+                  }, 400);
+                }
+              );
+              return false;
+            } else {
+              vm.barCodeData.barcodeDetails.comment_1 = angular.copy(
+                vm.popModal.content
+              );
+            }
           }
           if (vm.popModal.type === "RESOLUTION") {
             vm.barCodeData.barcodeDetails.comment_2 = angular.copy(
@@ -774,7 +797,7 @@
               vm.popModal.content
             );
           }
-          updateOrder();
+          updateOrder(vm.popModal.type === "DESCRIPTION" ? "desc" : null);
           vm.popModal.modal.hide();
         },
         closePopoutModal: function() {
@@ -849,8 +872,27 @@
             // });
             loadWorkOrderMap();
           },
-          onDescriptionOrResolutionChanged: function() {
-            updateOrder();
+          onDescriptionOrResolutionChanged: function(type) {
+            if (type && type === "desc") {
+              var oldDesc = vm.uiSettings.woData.barcodeDetails.comment_1;
+              var newDesc = vm.barCodeData.barcodeDetails.comment_1;
+              if (
+                !vm.user.allowUserToEditWoDescription &&
+                oldDesc !== newDesc
+              ) {
+                alerts.alert(
+                  "Unauthorized",
+                  "You are not authorized to change the description.",
+                  function() {
+                    $timeout(function() {
+                      vm.barCodeData.barcodeDetails.comment_1 = oldDesc;
+                    }, 400);
+                  }
+                );
+                return false;
+              }
+            }
+            updateOrder(type);
           }
         }
       },

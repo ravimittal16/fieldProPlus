@@ -41,7 +41,9 @@
             allowPushTime: response.allowPushTime === "True",
             showPrice: response.showPrice === "True",
             havingGroupsAssigned: response.havingGroups === "True",
-            inventoryOn: response.inventoryOn === "True"
+            inventoryOn: response.inventoryOn === "True",
+            allowUserToEditWoDescription:
+              response.allowUserToEditWoDescription === "True"
           };
           localStorageService.set(localStorageKeys.userCredentials, loginModel);
           localStorageService.set(localStorageKeys.storageKeyName, userobj);
