@@ -103,12 +103,12 @@
               <div class="card">
                 <div class="item item-divider header-dark">
                   WORK DESCRIPTION
-                  <a class="icon ion-ios-browsers-outline pull-right pointer" data-ng-click="vm.tabs.events.popoutTextBox('DESCRIPTION')"></a>
+                  <a class="icon ion-ios-browsers-outline pull-right pointer" ng-if="vm.user.allowUserToEditWoDescription" data-ng-click="vm.tabs.events.popoutTextBox('DESCRIPTION')"></a>
                 </div>
                 <div class="list">
                   <div class="item item-input">
                     <textarea cols="30" rows="10" data-ng-model="vm.barCodeData.barcodeDetails.comment_1" data-ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged('desc')"
-                      data-ng-model-options="{debounce:500}" placeholder="enter work description here..."></textarea>
+                      ng-disabled="!vm.user.allowUserToEditWoDescription" data-ng-model-options="{debounce:500}" placeholder="enter work description here..."></textarea>
                   </div>
                 </div>
               </div>

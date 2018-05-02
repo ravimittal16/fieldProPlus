@@ -880,15 +880,15 @@
                 !vm.user.allowUserToEditWoDescription &&
                 oldDesc !== newDesc
               ) {
-                alerts.alert(
-                  "Unauthorized",
-                  "You are not authorized to change the description.",
-                  function() {
-                    $timeout(function() {
-                      vm.barCodeData.barcodeDetails.comment_1 = oldDesc;
-                    }, 400);
-                  }
-                );
+                // alerts.alert(
+                //   "Unauthorized",
+                //   "You are not authorized to change the description.",
+                //   function() {
+                //     $timeout(function() {
+                //       vm.barCodeData.barcodeDetails.comment_1 = oldDesc;
+                //     }, 400);
+                //   }
+                // );
                 return false;
               }
             }
