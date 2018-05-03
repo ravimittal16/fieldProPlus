@@ -72,6 +72,8 @@
           },
           closeSearchModal: function() {
             vm.searchValue = "";
+            vm.products = [];
+            vm.searchApplied = false;
             $scope.$emit("$fpm:closeProductSearchModal", {
               fromProductAdd: false
             });

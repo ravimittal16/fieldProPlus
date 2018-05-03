@@ -50,8 +50,8 @@
       isRouteTimeOptionChecked: false,
       enableMarkup: false,
       hideEmailButton: false,
-      customField2Label: "Custom Field 2",
-      customField3Label: "Custom Field 3",
+      customField2Label: "Custom 2",
+      customField3Label: "Custom 3",
       expenseTrackingEnabled: true
     };
 
