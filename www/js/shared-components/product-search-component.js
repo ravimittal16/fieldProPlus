@@ -74,6 +74,7 @@
             vm.searchValue = "";
             vm.products = [];
             vm.searchApplied = false;
+            vm.showingLessCount = false;
             $scope.$emit("$fpm:closeProductSearchModal", {
               fromProductAdd: false
             });
