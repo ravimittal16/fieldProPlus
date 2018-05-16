@@ -30,9 +30,17 @@
       {
         title: "Create Customer",
         state: "app.createCustomer",
-        icon: "plus-round"
+        icon: "plus-round",
+        isConfigurationBased: true,
+        configProperty: "allowCreateWorkOrders"
       },
-      { title: "Estimates", state: "app.estimates", icon: "ios-list-outline" },
+      {
+        title: "Estimates",
+        state: "app.estimates",
+        icon: "ios-list-outline",
+        isConfigurationBased: true,
+        configProperty: "allowCreateEstimates"
+      },
       {
         title: "My Expense",
         state: "app.expense",
@@ -50,7 +58,9 @@
       {
         title: "Custom Components",
         state: "app.customComponents",
-        icon: "fork-repo"
+        icon: "fork-repo",
+        configProperty: "customComponentsAvail",
+        isConfigurationBased: true
       },
       {
         title: "Inventory",
@@ -58,8 +68,11 @@
         icon: "fork-repo",
         basedOn: "inventoryOn"
       },
-      { title: "Settings", state: "app.settings", icon: "settings" },
-      { title: "Change Password", state: "app.changePassword", icon: "" },
+      {
+        title: "Change Password",
+        state: "app.changePassword",
+        icon: "person"
+      },
       { title: "Logout", state: "app.logout", icon: "power" }
     ];
     $scope.$on("$ionicView.beforeEnter", function(e, data) {

@@ -17,9 +17,9 @@
 		</ion-header-bar>
 		<ion-content class="has-header">
 			<ion-list>
-				<ion-item data-ui-sref-active="active" menu-close data-ng-repeat="menu in ::vm.sideMenuItems" data-ng-if="vm.events.checkMenuItemVisibility(menu)"
+				<ion-item ui-sref-active="active" menu-close ng-repeat="menu in ::vm.sideMenuItems" ng-if="vm.events.checkMenuItemVisibility(menu)"
 				 ng-click="vm.events.onMenuItemClicked(menu)">
-					<i data-ng-if="menu.icon" class="icon ion-{{menu.icon}}"></i> {{::menu.title}}
+					<i ng-if="menu.icon" class="icon ion-{{menu.icon}} app-title-promax"></i> {{::menu.title}}
 				</ion-item>
 			</ion-list>
 		</ion-content>
@@ -34,15 +34,15 @@
 			<label class="item-input-wrapper">
 				<i class="icon ion-search placeholder-icon"></i>
 				<input type="search" name="searchBox" autofocus="" placeholder="Search"  
-				ng-change="vm.events.applySearch()" data-ng-model-options="{debounce:500}" ng-model="vm.searchValue" />
+				ng-change="vm.events.applySearch()" ng-model-options="{debounce:500}" ng-model="vm.searchValue" />
 			</label>
-			<button class="button" data-ng-click="vm.events.closeSearchModal()">
+			<button class="button" ng-click="vm.events.closeSearchModal()">
 				Cancel
 			</button>
 		</ion-header-bar>
 		<ion-content>
-				<ion-list data-ng-if="!vm.isServiceProvider || vm.havingGroupsAssigned">
-					<ion-item ng-repeat="item in vm.matchedOrders" data-ng-click="vm.events.onSearchItemClick(item)">
+				<ion-list ng-if="!vm.isServiceProvider || vm.havingGroupsAssigned">
+					<ion-item ng-repeat="item in vm.matchedOrders" ng-click="vm.events.onSearchItemClick(item)">
 						<span class="label label-success">{{::item.BarcodeName}}</span>
 						<div class="padding-top">
 							<h3>{{::item.DisplayName}}</h3>
@@ -54,8 +54,8 @@
 						</div>
 					</ion-item>
 				</ion-list>
-				<ion-list data-ng-if="vm.isServiceProvider && !vm.havingGroupsAssigned">
-					<ion-item ng-repeat="item in vm.matchedOrders" data-ng-click="vm.events.onSearchItemClick(item)">
+				<ion-list ng-if="vm.isServiceProvider && !vm.havingGroupsAssigned">
+					<ion-item ng-repeat="item in vm.matchedOrders" ng-click="vm.events.onSearchItemClick(item)">
 						<span class="label label-success">{{::item.barcodeName}}</span>
 						<div class="padding-top">
 							<h3>{{::item.displayName}}</h3>
@@ -78,7 +78,7 @@
 </script>
 <script id="addScheduleModal.html" type="text/ng-template">
 	<ion-modal-view>
-		<add-schedule-modal-component data-barcode="vm.barcode" on-cancel-clicked="vm.tabs.sch.events.onModalCancelClicked()"
+		<add-schedule-modal-component barcode="vm.barcode" on-cancel-clicked="vm.tabs.sch.events.onModalCancelClicked()"
 		service-providers="vm.serviceProviders" on-add-completed="vm.tabs.sch.events.onAddScheduleCompleted(o)"></add-schedule-modal-component>
 	</ion-modal-view>
 </script>
@@ -88,14 +88,14 @@
 			<h1 class="title">
 
 			</h1>
-			<button class="button" data-ng-click="vm.events.closeImageViewModal()">
+			<button class="button" ng-click="vm.events.closeImageViewModal()">
                 Cancel
             </button>
 		</ion-header-bar>
 		<ion-content>
 			<div class="card">
 				<div class="item item-body">
-					<img data-ng-src="{{vm.imageUrl}}" class="full-image" alt="" />
+					<img ng-src="{{vm.imageUrl}}" class="full-image" alt="" />
 				</div>
 			</div>
 		</ion-content>
