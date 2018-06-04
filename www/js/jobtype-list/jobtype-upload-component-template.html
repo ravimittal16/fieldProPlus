@@ -2,6 +2,6 @@
     <input type="file" name="file" data-kendo-upload="vm.imageUploader.control" data-k-options="vm.imageUploader.config" style="background-color: #5BC0DE; color: white; border: 1px solid #5BC0DE; font-size: 13px !important;"
         accept="image/*" />
 </div>
-<li class="item" data-ng-if="!vm.showImageUpload">
-    <a data-ng-click="vm.events.showImageClick()">{{vm.ctEntity.value}}</a>
+<li class="item" data-ng-if="!vm.showImageUpload" style="border: none;padding-left: 0px;">
+    <a on-tap="vm.events.showImageClick()">{{vm.ctEntity.value}}</a>
 </li>

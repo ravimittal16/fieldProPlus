@@ -312,19 +312,19 @@ customer-search-header-component {
   margin-left: 0px !important;
   width: 100% !important;
   font-size: 74%;
-  background-color: #f0ad4e;
-  border: 1px solid #f0ad4e;
+  background-color: #c5d6d6;
+  border: 1px solid #c5d6d6;
   background-image: none;
-  color: #fff;
+  color: rgb(22, 21, 21);
   font-weight: normal;
   padding: 5px;
 }
 
 .k-upload-button:hover {
-  background-color: #f0ad4e;
-  border: 1px solid #f0ad4e;
+  background-color: #c5d6d6;
+  border: 1px solid #c5d6d6;
   background-image: none;
-  color: #fff;
+  color: rgb(22, 21, 21);
   font-weight: normal;
 }
 
@@ -363,9 +363,7 @@ customer-search-header-component {
   background-color: #d4d4d4 !important;
   color: #404040 !important;
 }
-.header-dark > a.item-divider-left-buttion {
-  /*color:white;*/
-}
+
 .item-bg-gray {
   border-color: #b5a9a9 !important;
   background-color: #d4d4d4 !important;

@@ -3,7 +3,8 @@
     bindings: {
       ctEntity: "=",
       fromEquipments: "=",
-      useEntityId: "="
+      useEntityId: "=",
+      type: "<"
     },
     controller: [
       "$scope",
@@ -34,6 +35,8 @@
             vm.entity.view.dataEntityType = 102;
             vm.entity.view.entityKey = vm.useEntityId;
             vm.entity.view.barcode = $stateParams.barCode;
+          } else if (vm.type) {
+            vm.entity.view.dataEntityType = vm.type;
           }
           vm.ctEntity.value = imageName;
           customTypesFactory
@@ -47,10 +50,26 @@
               }, 100);
               alerts.alert("Uploaded", "File uploaded successfully");
             })
-            .finally(fpmUtilitiesFactory.hideLoading);
+            .finally(function() {
+              fpmUtilitiesFactory.hideLoading();
+              loadModal();
+            });
         }
 
         vm.events = {
+          deleteImageClicked: function() {
+            alerts.confirmDelete(function() {
+              customTypesFactory
+                .deleteCustomTypesData(vm.ctEntity.id)
+                .then(function() {
+                  alerts.alert("Image delete successfully");
+                })
+                .finally(function() {
+                  imageViewerModel.hide();
+                  vm.showImageUpload = true;
+                });
+            });
+          },
           showImageClick: function() {
             if (imageViewerModel !== null && !vm.showImageUpload) {
               vm.imageUrl =
@@ -69,6 +88,17 @@
             }
           }
         };
+
+        function loadModal() {
+          $ionicModal
+            .fromTemplateUrl("imageViewerModal.html", {
+              scope: $scope,
+              animation: "slide-in-up"
+            })
+            .then(function(modal) {
+              imageViewerModel = modal;
+            });
+        }
 
         vm.imageUploader = {
           control: null,
@@ -130,14 +160,7 @@
         vm.$onInit = function() {
           vm.showImageUpload = vm.ctEntity.value === null;
           if (!vm.showImageUpload) {
-            $ionicModal
-              .fromTemplateUrl("imageViewerModal.html", {
-                scope: $scope,
-                animation: "slide-in-up"
-              })
-              .then(function(modal) {
-                imageViewerModel = modal;
-              });
+            loadModal();
           }
         };
       }

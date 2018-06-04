@@ -30,12 +30,14 @@
                     </span>
                     <label class="item item-input" data-ng-switch-when="4">
                         <span class="input-label" data-ng-bind="ct.title"></span>
-                        <input type="text" readonly="" placeholder="select date" class="transparent-background text-right" data-ng-change="vm.events.onValueChanged(ct)"
-                            data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}" data-ng-model="ct.value" />
+                        <input type="text" readonly="" placeholder="select date" class="transparent-background text-right" style="text-align: start;"
+                            data-ng-change="vm.events.onValueChanged(ct)" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}"
+                            data-ng-model="ct.value" />
                     </label>
-                    <span data-ng-switch-when="5">
-                        <jobtype-upload-component data-ct-entity="ct" from-equipments="false"></jobtype-upload-component>
-                    </span>
+                    <label class="item item-input" data-ng-switch-when="5">
+                        <span class="input-label" data-ng-bind="ct.title"></span>
+                        <jobtype-upload-component data-ct-entity="ct" type="1" from-equipments="false"></jobtype-upload-component>
+                    </label>
                     <label class="item item-input" data-ng-switch-when="6">
                         <textarea data-ng-model="ct.value" maxlength="100" placeholder="{{ct.title}}" rows="3" data-ng-change="vm.events.onValueChanged(ct)"
                             data-ng-model-options="{debounce:500}"></textarea>
