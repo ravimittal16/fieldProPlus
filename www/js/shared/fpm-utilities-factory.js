@@ -247,11 +247,7 @@
                 defer.resolve(imageData);
               },
               function() {
-                $ionicPopup.alert({
-                  title: "Failed",
-                  template: "Failed to get Image Data"
-                });
-                defer.reject();
+                defer.reject(null);
               }
             );
             return defer.promise;

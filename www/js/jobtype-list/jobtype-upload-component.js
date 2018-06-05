@@ -1,5 +1,8 @@
 (function() {
   var componentConfig = {
+    require: {
+      parentController: "?^^jobtypeListComponent"
+    },
     bindings: {
       ctEntity: "=",
       fromEquipments: "=",
@@ -25,10 +28,13 @@
       ) {
         var vm = this;
         vm.entity = {};
+        var uploadTimeout = null;
+        var takePictureTimer = null;
         var baseUrl = fieldPromaxConfig.fieldPromaxApi;
         var alerts = fpmUtilitiesFactory.alerts;
         function uploadImage(mappedImage, imageName) {
           vm.entity.imageModel = { Image: mappedImage, Name: imageName };
+          vm.ctEntity.value = imageName;
           vm.entity.view = vm.ctEntity;
           vm.entity.view.entityKey = $stateParams.barCode;
           if (vm.fromEquipments) {
@@ -38,14 +44,15 @@
           } else if (vm.type) {
             vm.entity.view.dataEntityType = vm.type;
           }
-          vm.ctEntity.value = imageName;
+
           customTypesFactory
             .uploadFile(vm.entity)
             .then(function(response) {
-              $timeout(function() {
+              uploadTimeout = $timeout(function() {
                 if (response && response.success) {
                   vm.ctEntity = response.entity;
                   vm.showImageUpload = false;
+                  vm.ctEntity.value = response.entity.value;
                 }
               }, 100);
               alerts.alert("Uploaded", "File uploaded successfully");
@@ -57,6 +64,24 @@
         }
 
         vm.events = {
+          takePictureClicked: function() {
+            fpmUtilitiesFactory.device.getPicture().then(function(imageData) {
+              takePictureTimer = $timeout(function() {
+                if (imageData) {
+                  var name =
+                    "Picture" +
+                    vm.barcode +
+                    kendo.toString(new Date(), "ddffMMss");
+                  uploadImage("data:image/jpeg;base64," + imageData, name);
+                }
+              }, 500);
+            });
+          },
+          uploadImageClicked: function() {
+            vm.imageUploader.control.wrapper
+              .find("#upload-image")
+              .trigger("click");
+          },
           deleteImageClicked: function() {
             alerts.confirmDelete(function() {
               customTypesFactory
@@ -67,6 +92,10 @@
                 .finally(function() {
                   imageViewerModel.hide();
                   vm.showImageUpload = true;
+                  vm.ctEntity.value = null;
+                  if (vm.parentController) {
+                    vm.parentController.events.makeValueAsNull(vm.ctEntity.id);
+                  }
                 });
             });
           },
@@ -157,6 +186,16 @@
           }
         };
         var imageViewerModel = null;
+        vm.$onDestroy = function() {
+          vm.showImageUpload = false;
+          vm.ctEntity = null;
+          if (uploadTimeout) {
+            $timeout.cancel(uploadTimeout);
+          }
+          if (takePictureTimer) {
+            $timeout.cancel(takePictureTimer);
+          }
+        };
         vm.$onInit = function() {
           vm.showImageUpload = vm.ctEntity.value === null;
           if (!vm.showImageUpload) {
