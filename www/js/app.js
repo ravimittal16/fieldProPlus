@@ -388,16 +388,22 @@ var fpm = angular
         function errorFn(errorCode) {
           switch (errorCode) {
             case 0:
-              //fpmUtilitiesFactory.alerts.alert("ERROR 0", 'Failed to retrieve location');
+              // fpmUtilitiesFactory.alerts.alert(
+              //   "ERROR 0",
+              //   "Failed to retrieve location"
+              // );
               break;
             case 1:
-              //fpmUtilitiesFactory.alerts.alert('ERROR 1', 'You must enable location services in Settings');
+              // fpmUtilitiesFactory.alerts.alert(
+              //   "ERROR 1",
+              //   "You must enable location services in Settings"
+              // );
               break;
             case 2:
-              //fpmUtilitiesFactory.alerts.alert('ERROR 2', 'Network Error');
+              //fpmUtilitiesFactory.alerts.alert("ERROR 2", "Network Error");
               break;
             case 408:
-              //fpmUtilitiesFactory.alerts.alert('ERROR 408', 'Location timeout');
+              //fpmUtilitiesFactory.alerts.alert("ERROR 408", "Location timeout");
               break;
           }
         }
@@ -407,11 +413,11 @@ var fpm = angular
         var androidLocationConfig = {
           desiredAccuracy: 0,
           stationaryRadius: 50,
-          distanceFilter: 0,
+          distanceFilter: 50,
           disableElasticity: true,
-          locationUpdateInterval: 120000,
+          locationUpdateInterval: 60000,
           activityRecognitionInterval: 60000,
-          stopTimeout: 5, // Stop-detection timeout minutes (wait x minutes to turn off tracking)
+          stopTimeout: 0, // Stop-detection timeout minutes (wait x minutes to turn off tracking)
           debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
           logLevel: 0, // Verbose logging.  0: NONE
           startOnBoot: true,

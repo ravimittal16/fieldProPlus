@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="80" id="com.ionicframework.fieldproionic807801" version="0.0.80" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="83" id="com.ionicframework.fieldproionic807801" version="0.0.83" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>FieldPromax</name>
     <description>
       Newly updated version for Field Promax  
@@ -14,6 +14,7 @@
     <allow-intent href="tel:*" />
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
+    <allow-navigation href="*" />
     <allow-intent href="geo:*" />
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />

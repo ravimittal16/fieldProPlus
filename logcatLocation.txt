@@ -1,0 +1,86 @@
+--------- beginning of system
+--------- beginning of crash
+--------- beginning of main
+06-07 00:14:56.340 22626 22799 I TSLocationManager: [c.t.l.util.Sensors print] 
+06-07 00:14:56.340 22626 22799 I TSLocationManager: ╔═════════════════════════════════════════════
+06-07 00:14:56.340 22626 22799 I TSLocationManager: ║ DEVICE SENSORS
+06-07 00:14:56.340 22626 22799 I TSLocationManager: ╠═════════════════════════════════════════════
+06-07 00:14:56.340 22626 22799 I TSLocationManager: ╟─ ✅  ACCELEROMETER: {Sensor name="LSM6DS3 Accelerometer", vendor="STMicroelectronics", version=1, type=1, maxRange=78.4532, resolution=0.0023956299, power=0.9, minDelay=5000}
+06-07 00:14:56.340 22626 22799 I TSLocationManager: ╟─ ✅  GYROSCOPE: {Sensor name="LSM6DS3 Gyroscope", vendor="STMicroelectronics", version=1, type=4, maxRange=17.453293, resolution=0.0012207031, power=0.9, minDelay=5000}
+06-07 00:14:56.340 22626 22799 I TSLocationManager: ╟─ ✅  MAGNETOMETER: {Sensor name="MMC3416PJ Magnetometer", vendor="MEMSIC", version=1, type=2, maxRange=1600.0, resolution=0.048828125, power=0.14, minDelay=19230}
+06-07 00:14:56.340 22626 22799 I TSLocationManager: ╟─ ✅  SIGNIFICANT_MOTION: {Sensor name="Significant Motion Detector", vendor="QTI", version=2, type=17, maxRange=1.0, resolution=1.0, power=0.1, minDelay=-1}
+06-07 00:14:56.340 22626 22799 I TSLocationManager: ╚═════════════════════════════════════════════
+06-07 00:14:56.370 22626 22799 I TSLocationManager: [c.t.l.a.BackgroundGeolocation <init>] 
+06-07 00:14:56.370 22626 22799 I TSLocationManager: ╔═════════════════════════════════════════════
+06-07 00:14:56.370 22626 22799 I TSLocationManager: ║ BackgroundGeolocation adapter
+06-07 00:14:56.370 22626 22799 I TSLocationManager: ╠═════════════════════════════════════════════
+06-07 00:14:56.380 22626 22799 I TSLocationManager: [c.t.l.a.BackgroundGeolocation <init>] 
+06-07 00:14:56.380 22626 22799 I TSLocationManager:   ✅  Google Play Services: connected (version code:11717000)
+06-07 00:14:56.417 22626 22799 D TSLocationManager: [c.t.l.data.sqlite.a onCreate] CREATE TABLE IF NOT EXISTS locations (id INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT NOT NULL DEFAULT '', timestamp TEXT, json TEXT, locked BOOLEAN);
+06-07 00:14:56.428 22626 22799 D TSLocationManager: [c.t.l.data.sqlite.a onCreate] CREATE TABLE IF NOT EXISTS geofences (id INTEGER PRIMARY KEY AUTOINCREMENT, identifier TEXT NOT NULL UNIQUE, latitude DOUBLE NOT NULL, sin_latitude DOUBLE NOT NULL, cos_latitude DOUBLE NOT NULL, longitude DOUBLE NOT NULL, sin_longitude DOUBLE NOT NULL, cos_longitude DOUBLE NOT NULL, radius DOUBLE NOT NULL, notifyOnEntry BOOLEAN NOT NULL DEFAULT 0, notifyOnExit BOOLEAN NOT NULL DEFAULT 0, notifyOnDwell BOOLEAN NOT NULL DEFAULT 0, loiteringDelay INTEGER NOT NULL DEFAULT 0, extras TEXT);
+06-07 00:14:56.445 22626 22799 D TSLocationManager: [c.t.l.d.s.SQLiteLocationDAO dbh] 
+06-07 00:14:56.445 22626 22799 D TSLocationManager:   ✅  Opened database
+06-07 00:14:56.459 22626 22799 D TSLocationManager: [c.t.l.d.s.SQLiteLocationDAO prune] 
+06-07 00:14:56.459 22626 22799 D TSLocationManager:   ℹ️  PRUNE -1 days
+06-07 00:14:56.510 22626 22799 D TSLocationManager: [c.t.l.data.sqlite.GeofenceDAO dbh] 
+06-07 00:14:56.510 22626 22799 D TSLocationManager:   ✅  Opened database
+06-07 00:14:56.534 22626 22799 I TSLocationManager: [c.t.l.a.BackgroundGeolocation <init>] 
+06-07 00:14:56.534 22626 22799 I TSLocationManager:   🔵  Connecting to GooglePlayServices...
+06-07 00:14:56.544 22626 22799 D TSLocationManager: $ addLocationListener()
+06-07 00:14:56.548 22626 22799 D TSLocationManager: $ addMotionChangeListener()
+06-07 00:15:04.696 22626 22626 I TSLocationManager: - onPause
+06-07 00:15:22.836 22626 22626 I TSLocationManager: CDVBackgroundGeolocation#onDestoy
+06-07 00:15:27.332 22860 22943 I TSLocationManager: [c.t.l.util.Sensors print] 
+06-07 00:15:27.332 22860 22943 I TSLocationManager: ╔═════════════════════════════════════════════
+06-07 00:15:27.332 22860 22943 I TSLocationManager: ║ DEVICE SENSORS
+06-07 00:15:27.332 22860 22943 I TSLocationManager: ╠═════════════════════════════════════════════
+06-07 00:15:27.332 22860 22943 I TSLocationManager: ╟─ ✅  ACCELEROMETER: {Sensor name="LSM6DS3 Accelerometer", vendor="STMicroelectronics", version=1, type=1, maxRange=78.4532, resolution=0.0023956299, power=0.9, minDelay=5000}
+06-07 00:15:27.332 22860 22943 I TSLocationManager: ╟─ ✅  GYROSCOPE: {Sensor name="LSM6DS3 Gyroscope", vendor="STMicroelectronics", version=1, type=4, maxRange=17.453293, resolution=0.0012207031, power=0.9, minDelay=5000}
+06-07 00:15:27.332 22860 22943 I TSLocationManager: ╟─ ✅  MAGNETOMETER: {Sensor name="MMC3416PJ Magnetometer", vendor="MEMSIC", version=1, type=2, maxRange=1600.0, resolution=0.048828125, power=0.14, minDelay=19230}
+06-07 00:15:27.332 22860 22943 I TSLocationManager: ╟─ ✅  SIGNIFICANT_MOTION: {Sensor name="Significant Motion Detector", vendor="QTI", version=2, type=17, maxRange=1.0, resolution=1.0, power=0.1, minDelay=-1}
+06-07 00:15:27.332 22860 22943 I TSLocationManager: ╚═════════════════════════════════════════════
+06-07 00:15:27.373 22860 22943 I TSLocationManager: [c.t.l.a.BackgroundGeolocation <init>] 
+06-07 00:15:27.373 22860 22943 I TSLocationManager: ╔═════════════════════════════════════════════
+06-07 00:15:27.373 22860 22943 I TSLocationManager: ║ BackgroundGeolocation adapter
+06-07 00:15:27.373 22860 22943 I TSLocationManager: ╠═════════════════════════════════════════════
+06-07 00:15:27.388 22860 22943 I TSLocationManager: [c.t.l.a.BackgroundGeolocation <init>] 
+06-07 00:15:27.388 22860 22943 I TSLocationManager:   ✅  Google Play Services: connected (version code:11717000)
+06-07 00:15:27.413 22860 22943 D TSLocationManager: [c.t.l.d.s.SQLiteLocationDAO dbh] 
+06-07 00:15:27.413 22860 22943 D TSLocationManager:   ✅  Opened database
+06-07 00:15:27.424 22860 22943 D TSLocationManager: [c.t.l.d.s.SQLiteLocationDAO prune] 
+06-07 00:15:27.424 22860 22943 D TSLocationManager:   ℹ️  PRUNE -1 days
+06-07 00:15:27.464 22860 22943 D TSLocationManager: [c.t.l.data.sqlite.GeofenceDAO dbh] 
+06-07 00:15:27.464 22860 22943 D TSLocationManager:   ✅  Opened database
+06-07 00:15:27.488 22860 22943 I TSLocationManager: [c.t.l.a.BackgroundGeolocation <init>] 
+06-07 00:15:27.488 22860 22943 I TSLocationManager:   🔵  Connecting to GooglePlayServices...
+06-07 00:15:27.503 22860 22943 D TSLocationManager: $ addLocationListener()
+06-07 00:15:27.508 22860 22943 D TSLocationManager: $ addMotionChangeListener()
+06-07 00:17:29.669 22860 22860 I TSLocationManager: - onPause
+06-07 00:18:02.789 22860 22860 I TSLocationManager: - onResume
+06-07 00:19:11.220 22860 22860 I TSLocationManager: - onPause
+06-07 00:19:17.110 23163 23281 I TSLocationManager: [c.t.l.util.Sensors print] 
+06-07 00:19:17.110 23163 23281 I TSLocationManager: ╔═════════════════════════════════════════════
+06-07 00:19:17.110 23163 23281 I TSLocationManager: ║ DEVICE SENSORS
+06-07 00:19:17.110 23163 23281 I TSLocationManager: ╠═════════════════════════════════════════════
+06-07 00:19:17.110 23163 23281 I TSLocationManager: ╟─ ✅  ACCELEROMETER: {Sensor name="LSM6DS3 Accelerometer", vendor="STMicroelectronics", version=1, type=1, maxRange=78.4532, resolution=0.0023956299, power=0.9, minDelay=5000}
+06-07 00:19:17.110 23163 23281 I TSLocationManager: ╟─ ✅  GYROSCOPE: {Sensor name="LSM6DS3 Gyroscope", vendor="STMicroelectronics", version=1, type=4, maxRange=17.453293, resolution=0.0012207031, power=0.9, minDelay=5000}
+06-07 00:19:17.110 23163 23281 I TSLocationManager: ╟─ ✅  MAGNETOMETER: {Sensor name="MMC3416PJ Magnetometer", vendor="MEMSIC", version=1, type=2, maxRange=1600.0, resolution=0.048828125, power=0.14, minDelay=19230}
+06-07 00:19:17.110 23163 23281 I TSLocationManager: ╟─ ✅  SIGNIFICANT_MOTION: {Sensor name="Significant Motion Detector", vendor="QTI", version=2, type=17, maxRange=1.0, resolution=1.0, power=0.1, minDelay=-1}
+06-07 00:19:17.110 23163 23281 I TSLocationManager: ╚═════════════════════════════════════════════
+06-07 00:19:17.148 23163 23281 I TSLocationManager: [c.t.l.a.BackgroundGeolocation <init>] 
+06-07 00:19:17.148 23163 23281 I TSLocationManager: ╔═════════════════════════════════════════════
+06-07 00:19:17.148 23163 23281 I TSLocationManager: ║ BackgroundGeolocation adapter
+06-07 00:19:17.148 23163 23281 I TSLocationManager: ╠═════════════════════════════════════════════
+06-07 00:19:17.166 23163 23281 I TSLocationManager: [c.t.l.a.BackgroundGeolocation <init>] 
+06-07 00:19:17.166 23163 23281 I TSLocationManager:   ✅  Google Play Services: connected (version code:11717000)
+06-07 00:19:17.189 23163 23281 D TSLocationManager: [c.t.l.d.s.SQLiteLocationDAO dbh] 
+06-07 00:19:17.189 23163 23281 D TSLocationManager:   ✅  Opened database
+06-07 00:19:17.204 23163 23281 D TSLocationManager: [c.t.l.d.s.SQLiteLocationDAO prune] 
+06-07 00:19:17.204 23163 23281 D TSLocationManager:   ℹ️  PRUNE -1 days
+06-07 00:19:17.244 23163 23281 D TSLocationManager: [c.t.l.data.sqlite.GeofenceDAO dbh] 
+06-07 00:19:17.244 23163 23281 D TSLocationManager:   ✅  Opened database
+06-07 00:19:17.271 23163 23281 I TSLocationManager: [c.t.l.a.BackgroundGeolocation <init>] 
+06-07 00:19:17.271 23163 23281 I TSLocationManager:   🔵  Connecting to GooglePlayServices...
+06-07 00:19:17.284 23163 23281 D TSLocationManager: $ addLocationListener()
+06-07 00:19:17.287 23163 23281 D TSLocationManager: $ addMotionChangeListener()
+06-07 00:21:21.822 23163 23163 I TSLocationManager: - onPause

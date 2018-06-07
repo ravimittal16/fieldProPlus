@@ -429,3 +429,9 @@ customer-search-header-component {
 .equipment-customtypes > div:not(:last-child) {
   border-bottom: 3px solid rgb(204, 204, 204) !important;
 }
+.button-gray {
+  border-color: #939191;
+  background-color: #d3d2d2;
+  color: #3c3c3c;
+  line-height: 25px;
+}

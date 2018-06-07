@@ -32,7 +32,7 @@
         var takePictureTimer = null;
         var baseUrl = fieldPromaxConfig.fieldPromaxApi;
         var alerts = fpmUtilitiesFactory.alerts;
-        function uploadImage(mappedImage, imageName) {
+        function uploadImage(mappedImage, imageName, bytes) {
           vm.entity.imageModel = { Image: mappedImage, Name: imageName };
           vm.ctEntity.value = imageName;
           vm.entity.view = vm.ctEntity;
@@ -44,7 +44,6 @@
           } else if (vm.type) {
             vm.entity.view.dataEntityType = vm.type;
           }
-
           customTypesFactory
             .uploadFile(vm.entity)
             .then(function(response) {
@@ -66,6 +65,7 @@
         vm.events = {
           takePictureClicked: function() {
             fpmUtilitiesFactory.device.getPicture().then(function(imageData) {
+              fpmUtilitiesFactory.showLoading();
               takePictureTimer = $timeout(function() {
                 if (imageData) {
                   var name =
