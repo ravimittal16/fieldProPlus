@@ -9,5 +9,5 @@
     </button>
 </div>
 <li class="item" data-ng-if="!vm.showImageUpload" style="border: none;padding-left: 0px;">
-    <a on-tap="vm.events.showImageClick()">{{vm.ctEntity.value}}</a>
+    <a on-tap="vm.events.showImageClick()">{{vm.ctEntity.value | removeExt}}</a>
 </li>

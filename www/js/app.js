@@ -6,7 +6,7 @@
 // "http://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 // "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 //"http://localhost/FieldPromaxApi/"
-var isInDevMode = false;
+var isInDevMode = true;
 var prodReady = false;
 var constants = {
   fieldPromaxApi: isInDevMode
@@ -417,7 +417,7 @@ var fpm = angular
           disableElasticity: true,
           locationUpdateInterval: 60000,
           activityRecognitionInterval: 60000,
-          stopTimeout: 0, // Stop-detection timeout minutes (wait x minutes to turn off tracking)
+          stopTimeout: 5, // Stop-detection timeout minutes (wait x minutes to turn off tracking)
           debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
           logLevel: 0, // Verbose logging.  0: NONE
           startOnBoot: true,

@@ -85,7 +85,7 @@
 <script id="imageViewerModal.html" type="text/ng-template">
 	<ion-modal-view>
 		<ion-header-bar>
-				<button class="button button-assertive" on-tap="vm.events.deleteImageClicked()">
+				<button class="button button-assertive" ng-if="vm.showDeleteImageOnModal" on-tap="vm.events.deleteImageClicked()">
 						Delete
 					  </button>
 			<h1 class="title">

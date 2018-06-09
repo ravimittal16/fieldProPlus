@@ -28,6 +28,8 @@
       ) {
         var vm = this;
         vm.entity = {};
+        vm.show;
+        vm.showDeleteImageOnModal = true;
         var uploadTimeout = null;
         var takePictureTimer = null;
         var baseUrl = fieldPromaxConfig.fieldPromaxApi;

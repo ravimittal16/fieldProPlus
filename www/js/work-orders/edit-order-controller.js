@@ -10,16 +10,12 @@
     $window,
     $stateParams,
     $ionicActionSheet,
-    $ionicNavBarDelegate,
     $ionicLoading,
-    $ionicPopup,
-    $ionicModal,
     workOrderFactory,
     fpmUtilities,
     sharedDataFactory,
     authenticationFactory,
-    timecardFactory,
-    fpmRealtimeOrdersFactory
+    timecardFactory
   ) {
     var vm = this;
 
@@ -527,7 +523,7 @@
                 var newPrice = pro.newPriceCalculated
                   ? pro.price
                   : parseFloat(pro.price) +
-                    parseFloat((pro.markup || 0) / 100 * pro.price);
+                    parseFloat(((pro.markup || 0) / 100) * pro.price);
                 pro.price = newPrice;
                 pro.newPriceCalculated = true;
                 totalPrice = newPrice * pro.qty;
@@ -537,7 +533,7 @@
               pro.totalPrice = totalPrice;
               var taxAmt = parseFloat(
                 parseFloat(taxRate) > 0
-                  ? parseFloat(taxRate / 100 * totalPrice)
+                  ? parseFloat((taxRate / 100) * totalPrice)
                   : 0
               );
               vm.totals.subtotal += parseFloat(totalPrice);
@@ -1237,16 +1233,12 @@
     "$window",
     "$stateParams",
     "$ionicActionSheet",
-    "$ionicNavBarDelegate",
     "$ionicLoading",
-    "$ionicPopup",
-    "$ionicModal",
     "work-orders-factory",
     "fpm-utilities-factory",
     "shared-data-factory",
     "authenticationFactory",
-    "timecard-factory",
-    "fpm.realtime.workorders.factory"
+    "timecard-factory"
   ];
   angular.module("fpm").controller("edit-order-controller", initController);
 })();

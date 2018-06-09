@@ -3,7 +3,8 @@
   var componentConfig = {
     bindings: {
       barcode: "<",
-      isEstimate: "<"
+      isEstimate: "<",
+      showDeleteImageOnModal: "<"
     },
     templateUrl: "js/work-orders/order-images-list-component.template.html",
     controller: [
@@ -12,7 +13,6 @@
       "$q",
       "$timeout",
       "$ionicModal",
-      "$ionicLoading",
       "work-orders-factory",
       "fpm-utilities-factory",
       "estimates-factory",
@@ -23,7 +23,6 @@
         $q,
         $timeout,
         $ionicModal,
-        $ionicLoading,
         workOrdersFactory,
         fpmUtilitiesFactory,
         estimateFactory,
@@ -33,7 +32,7 @@
         vm.isExpanded = false;
         var baseUrl = fieldPromaxConfig.fieldPromaxApi;
         var alerts = fpmUtilitiesFactory.alerts;
-
+        vm.showDeleteImageOnModal = false;
         var currentIndex = 0;
         var exts = [
           ".tif",
@@ -156,6 +155,7 @@
                   .then(
                     function(response) {
                       if (response && response.entity) {
+                        imageName = response.entity.name;
                         vm.barcodeImages.push({
                           barcode: vm.barcode,
                           fileName: imageName,

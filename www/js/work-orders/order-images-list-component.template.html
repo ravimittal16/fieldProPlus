@@ -1,26 +1,3 @@
-<!--<ion-list>
-	<div>
-		<ion-item class="item-stable" ng-click="vm.isExpanded = !vm.isExpanded" ng-class="{active: vm.isExpanded}">
-			<i class="icon" ng-class="vm.isExpanded ? 'ion-minus' : 'ion-plus'"></i> &nbsp; <strong>Images</strong>
-			<span class="badge badge-dark">{{vm.barcodeImages.length}}</span>
-		</ion-item>
-		<div data-ng-if="vm.isExpanded">
-			<div class="card">
-				<div class="item item-body">
-					<input type="file" data-kendo-upload="vm.upload.control" data-k-options="vm.upload.options" />
-				</div>
-			</div>
-			<ion-list can-swipe="true">
-				<ion-item class="item-text-wrap" data-ng-repeat="p in vm.barcodeImages" data-ng-click="vm.events.onImageTap(p)">
-					{{p.imageURL | removeExt}}
-					<ion-option-button class="button-assertive" ng-click="vm.events.onDeleteImageClicked(p)">
-						Delete
-					</ion-option-button>
-				</ion-item>
-			</ion-list>
-		</div>
-	</div>
-</ion-list>-->
 <div class="card">
 	<div class="item item-divider header-dark">
 		IMAGES
