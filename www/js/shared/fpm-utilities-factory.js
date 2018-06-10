@@ -320,6 +320,9 @@
 
   function initRemoveExtension() {
     return function(i) {
+      if (i.lastIndexOf(".") <= 0) {
+        return imageName;
+      }
       var o = i.substr(i.lastIndexOf("/") + 1);
       var imageName = o.substr(0, o.lastIndexOf(".")) || "";
       return imageName;
