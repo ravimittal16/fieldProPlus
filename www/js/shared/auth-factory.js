@@ -75,9 +75,9 @@
       }
       var data =
         "grant_type=password&username=" +
-        loginModel.userName +
+        encodeURIComponent(loginModel.userName) +
         "&password=" +
-        loginModel.password +
+        encodeURIComponent(loginModel.password) +
         "&clientId=fieldPromaxMob";
       var defered = $q.defer();
 
