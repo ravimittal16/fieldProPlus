@@ -353,8 +353,20 @@
           }
         };
 
+        function getDefaultCustomTypes() {
+          equipmentFactory.getCustomDefaultTypes().then(function(response) {
+            if (response && angular.isArray(response)) {
+              defaultCustomTypes = response;
+              angular.forEach(defaultCustomTypes, function(e) {
+                e.typeId = 0;
+              });
+            }
+          });
+        }
+
         vm.$onInit = function() {
           vm.userInfo = authenticationFactory.getLoggedInUserInfo();
+          getDefaultCustomTypes();
           getEquipmentsByBarcode();
         };
         vm.$onDestroy = function() {

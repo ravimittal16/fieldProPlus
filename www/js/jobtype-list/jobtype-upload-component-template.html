@@ -1,11 +1,11 @@
-<div data-ng-if="vm.showImageUpload">
+<div data-ng-if="vm.showImageUpload" style="margin-top: 10px;">
     <div style="display: none;">
         <input type="file" name="file" data-kendo-upload="vm.imageUploader.control" id="upload-image" data-k-options="vm.imageUploader.config"
             accept="image/*" />
     </div>
     <button class="button button-small button-gray" on-tap="vm.events.uploadImageClicked()">Upload Picture</button>
     <button class="button button-small button-gray" on-tap="vm.events.takePictureClicked()">
-        <i class="icon ion-camera"></i> Take Picture
+        <i class="icon ion-camera" style="padding: 0px 0 0 0px;"></i> Take Picture
     </button>
 </div>
 <li class="item" data-ng-if="!vm.showImageUpload" style="border: none;padding-left: 0px;">

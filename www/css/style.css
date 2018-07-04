@@ -427,11 +427,29 @@ customer-search-header-component {
   margin-top: 45px !important;
 }
 .equipment-customtypes > div:not(:last-child) {
-  border-bottom: 3px solid rgb(204, 204, 204) !important;
+  border-bottom: 2px solid rgb(204, 204, 204) !important;
 }
 .button-gray {
   border-color: #939191;
   background-color: #d3d2d2;
   color: #3c3c3c;
   line-height: 25px;
+}
+
+.search-product-description {
+  color: #b1b0b0;
+  font-size: 82%;
+}
+.item-note {
+  color: #2a748f;
+  font-weight: 600;
+}
+.custom-type-radio {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  min-height: 30px;
+  background-color: white;
+  color: #222;
+  font-weight: 500;
+  font-size: 13px;
 }

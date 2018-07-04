@@ -18,12 +18,21 @@
 	<div class="text-center padding-top" data-ng-if="vm.runningSearch">
 		<ion-spinner icon="ripple"></ion-spinner>
 	</div>
-	<ion-list data-ng-if="vm.products.length > 0">
+	<!-- <ion-list data-ng-if="vm.products.length > 0">
 		<ion-item data-ng-repeat="p in vm.products" item="p" data-on-tap="vm.events.onProductItemClicked(p)">
 			{{::p.productName}}
 			<strong style="float:right;" data-ng-if="vm.user.showPrice">{{p.price | currency:'$':2}}</strong>
 		</ion-item>
-	</ion-list>
+	</ion-list> -->
+	<div class="list" id="searchProductsList" data-ng-if="vm.products.length > 0">
+		<div class="item" ng-repeat="p in vm.products" on-tap="vm.events.onProductItemClicked(p)">
+			{{::p.productName}}
+			<span class="item-note" data-ng-if="vm.user.showPrice">
+				{{p.price | currency:'$':2}}
+			</span>
+			<p class="search-product-description" ng-bind="p.productDescription"></p>
+		</div>
+	</div>
 	<div class="list" data-ng-if="vm.products.length == 0 && vm.searchApplied  && !vm.runningSearch">
 		<li class="item item-text-wrap text-center">
 			<small class="text-muted">no product found with
