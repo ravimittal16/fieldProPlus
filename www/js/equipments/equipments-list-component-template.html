@@ -48,6 +48,16 @@
 				Cancel
 			</button>
         </ion-header-bar>
+        <ion-header-bar class="bar-subheader item-input-inset">
+                <label class="item-input-wrapper">
+                    <i class="icon ion-search placeholder-icon"></i>
+                    <input type="search" name="searchBox" autofocus="" placeholder="Search Equipment..."  
+                    ng-change="vm.events.applySearch()" ng-model-options="{debounce:500}" ng-model="vm.searchValue" />
+                </label>
+                <button class="button button-positive" ng-click="vm.events.clearSearch()">
+                    Clear
+                </button>
+            </ion-header-bar>
         <ion-content>
             <div class="list" ng-if="vm.view.errors.length > 0">
                 <div class="error">
@@ -56,14 +66,30 @@
                     </ui>
                 </div>
             </div>
-            <ion-list>
-                <ion-item ng-repeat="item in vm.view.equipments" ng-click="vm.events.onAttachEquipmentItemClicked(item)">
-                    <h4>{{::item.equipmentNumber}}
-                        <span class="pull-right label label-danger" ng-if="item.isOnRent">Rented</span>
-                    </h4>
-                    <h6 class="text-muted">{{::item.description}}</h6>
-                </ion-item>
-            </ion-list>
+            <ion-tabs class="tabs-stable">
+                <ion-tab title="Equipment">
+                    <ion-content>
+                        <ion-list>
+                            <ion-item ng-repeat="item in vm.view.equipments" ng-click="vm.events.onAttachEquipmentItemClicked(item)">
+                                <h4>{{::item.equipmentNumber}}</h4>
+                                <h6 class="text-muted">{{::item.description}}</h6>
+                            </ion-item>
+                        </ion-list>
+                    </ion-content>
+                </ion-tab>
+                <ion-tab title="Rentable Equipment">
+                        <ion-content>
+                                <ion-list>
+                                    <ion-item ng-repeat="item in vm.view.rentableEquipments" ng-click="vm.events.onAttachEquipmentItemClicked(item)">
+                                        <h4>{{::item.equipmentNumber}}
+                                            <span class="pull-right label label-danger" ng-if="item.isOnRent">Rented</span>
+                                        </h4>
+                                        <h6 class="text-muted">{{::item.description}}</h6>
+                                    </ion-item>
+                                </ion-list>
+                            </ion-content>
+                </ion-tab>
+            </ion-tabs>
         </ion-content>
     </ion-modal-view>
 </script>

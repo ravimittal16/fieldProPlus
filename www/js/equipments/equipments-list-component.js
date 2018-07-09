@@ -37,7 +37,9 @@
           equipments: [],
           newEquipmentModal: null,
           newEquipmentEntity: null,
-          equipmentHistoryModal: null
+          equipmentHistoryModal: null,
+          rentableEquipments: [],
+          allEquipments: []
         };
         function getEquipmentByIndex(index, saveFields) {
           if (saveFields === true) {
@@ -129,7 +131,11 @@
                   fpmUtilitiesFactory.hideLoading();
                   return;
                 }
-                vm.view.equipments = response;
+                vm.view.allEquipments = response;
+                vm.view.equipments = _.where(response, { isRentable: false });
+                vm.view.rentableEquipments = _.where(response, {
+                  isRentable: true
+                });
                 fpmUtilitiesFactory
                   .getModal("attachEquipmentModal.html", $scope)
                   .then(function(modal) {
@@ -243,7 +249,44 @@
             Type: 4
           }
         ];
+        vm.searchValue = "";
         vm.events = {
+          onTabChanged: function($event, index) {
+            return true;
+          },
+          clearSearch: function() {
+            vm.searchValue = "";
+            vm.view.equipments = _.where(vm.view.allEquipments, {
+              isRentable: false
+            });
+            vm.view.rentableEquipments = _.where(vm.view.allEquipments, {
+              isRentable: true
+            });
+          },
+          applySearch: function() {
+            if (vm.searchValue && vm.searchValue !== "") {
+              var searchResult = _.filter(vm.view.allEquipments, function(
+                equip
+              ) {
+                return (
+                  equip.equipmentNumber
+                    .toLowerCase()
+                    .indexOf(vm.searchValue.toLowerCase()) > -1
+                );
+              });
+              vm.view.equipments = _.where(searchResult, { isRentable: false });
+              vm.view.rentableEquipments = _.where(searchResult, {
+                isRentable: true
+              });
+            } else {
+              vm.view.equipments = _.where(vm.view.allEquipments, {
+                isRentable: false
+              });
+              vm.view.rentableEquipments = _.where(vm.view.allEquipments, {
+                isRentable: true
+              });
+            }
+          },
           tryAttachEquipment: function() {
             //link button clicked
             openAttachEquipmentModal();
@@ -305,6 +348,7 @@
                 .then(function(response) {
                   if (response !== null && angular.isArray(response)) {
                     vm.view.errors = response;
+                    alerts.alert("Warning", vm.view.errors[0], function() {});
                   } else {
                     alerts.alert(
                       "Success",
