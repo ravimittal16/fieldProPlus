@@ -186,7 +186,18 @@
       return apiBaseFactory.post(apibaseurl + "UploadFilesN", files);
     }
 
+    function addProductFromBarcodeScanner(skuCode, barcode) {
+      return apiBaseFactory.get(
+        apibaseurl +
+          "AddProductFromBarcodeScanner?skuCode=" +
+          skuCode +
+          "&barcode=" +
+          barcode
+      );
+    }
+
     return {
+      addProductFromBarcodeScanner: addProductFromBarcodeScanner,
       uploadFilesN: uploadFilesN,
       deleteImageFromBlob: deleteImageFromBlob,
       updateSchduleTotalTime: updateSchduleTotalTime,

@@ -360,7 +360,10 @@
           <div class="card">
             <div class="item item-divider">
               PRODUCTS
-              <button type="button" class="button pull-right button-small button-small button-positive" ng-click="vm.tabs.prod.events.onProdcutActionButtonClicked()">Add Product</a>
+              <div class="pull-right">
+                <scanner barcode="vm.barcode"></scanner>
+                <button type="button" class="button button-small button-positive" ng-click="vm.tabs.prod.events.onProdcutActionButtonClicked()">Add Product</button>
+              </div>
             </div>
             <div class="item item-text-wrap text-center" ng-if="vm.barCodeData.products.length == 0 && !vm.gettingBarcodeDetails">
               <h3 class="text-muted">

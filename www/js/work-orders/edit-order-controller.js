@@ -20,8 +20,6 @@
     var vm = this;
 
     vm.barcode = $stateParams.barCode;
-    var platforms = fpmUtilities.device.platforms;
-    var platform = fpmUtilities.device.getPlatformInfo();
     vm.taxCheckboxVisibility = true;
     var alerts = fpmUtilities.alerts;
     var jobStatus = {
@@ -1165,16 +1163,26 @@
       }
     });
 
+    function getBarcodeProducts(closeModal) {
+      workOrderFactory
+        .getBarcodeInvoiceAndProductDetails(vm.barcode)
+        .then(function(response) {
+          vm.barCodeData.products = response.products;
+          vm.barCodeData.invoice = response.invoice;
+          calculateTotals();
+        })
+        .finally(function() {
+          if (closeModal) {
+            fpmUtilities.hideLoading();
+            vm.productModal.hide();
+          }
+        });
+    }
+
     $scope.$on("$fpm:closeProductSearchModal", function($event, args) {
       if (vm.productSearchModal) {
         if (args && args.fromProductAdd === true) {
-          workOrderFactory
-            .getBarcodeInvoiceAndProductDetails(vm.barcode)
-            .then(function(response) {
-              vm.barCodeData.products = response.products;
-              vm.barCodeData.invoice = response.invoice;
-              calculateTotals();
-            });
+          getBarcodeProducts(false);
         }
         vm.productSearchModal.hide();
       }
@@ -1185,17 +1193,7 @@
     $scope.$on("$fpm:operation:updateProduct", function($event, agrs) {
       uProductTimer = $timeout(function() {
         fpmUtilities.showLoading().then(function() {
-          workOrderFactory
-            .getBarcodeInvoiceAndProductDetails(vm.barcode)
-            .then(function(response) {
-              vm.barCodeData.products = response.products;
-              vm.barCodeData.invoice = response.invoice;
-              calculateTotals();
-            })
-            .finally(function() {
-              vm.productModal.hide();
-              fpmUtilities.hideLoading();
-            });
+          getBarcodeProducts(true);
         });
       }, 300);
     });

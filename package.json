@@ -26,6 +26,7 @@
     "ionic-plugin-keyboard": "^2.2.1",
     "jquery.ns-autogrow": "^1.1.6",
     "me.tonny.cordova.plugins.multidex": "https://github.com/jwall149/cordova-multidex",
+    "phonegap-plugin-barcodescanner": "git+https://github.com/wildabeast/BarcodeScanner.git",
     "phonegap-plugin-push": "^1.10.5"
   },
   "devDependencies": {
@@ -95,7 +96,8 @@
       "phonegap-plugin-push": {
         "SENDER_ID": "504804224593"
       },
-      "cordova-plugin-geolocation": {}
+      "cordova-plugin-geolocation": {},
+      "phonegap-plugin-barcodescanner": {}
     },
     "platforms": [
       "android"
