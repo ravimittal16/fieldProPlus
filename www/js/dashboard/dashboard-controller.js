@@ -229,7 +229,6 @@
         "g"
       );
       timecardFactory.getTimeCardByDate(dt).then(function(response) {
-        console.log(response);
         if (response) {
           timeCardInfo.todaysClockIns = _.where(response.timeCardDetails, {
             jobCode: jobCodes.CLOCK_IN

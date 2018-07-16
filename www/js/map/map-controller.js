@@ -246,7 +246,6 @@
         function addHandler(m, o) {
             window.google.maps.event.addListener(m, "click", function () {
                 vm.currentMarker = o.o;
-                console.log("vm.currentMarker", vm.currentMarker);
                 if (!o.isHome) {
                     var myPopup = $ionicPopup.show({
                         templateUrl: "mapInfoWindow.html",

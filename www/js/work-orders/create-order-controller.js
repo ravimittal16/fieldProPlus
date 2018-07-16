@@ -2,10 +2,8 @@
   "use strict";
 
   function initController(
-    $scope,
     $state,
     $timeout,
-    $ionicActionSheet,
     workOrderFactory,
     sharedDataFactory,
     fpmUtilitiesFactory,
@@ -14,6 +12,7 @@
     var vm = this;
     var alerts = fpmUtilitiesFactory.alerts;
     vm.userInfo = authenticationFactory.getLoggedInUserInfo();
+    var companyConfiguration = null;
 
     function getBarcodeNumber() {
       workOrderFactory
@@ -23,6 +22,17 @@
           vm.woEntity.barCodeName = response.barcodeName;
         })
         .finally(fpmUtilitiesFactory.hideLoading);
+    }
+
+    function adjustScheduleFinishTime() {
+      if (vm.dates && vm.dates.startDate && companyConfiguration) {
+        vm.dates.endDate = new Date(
+          moment(vm.dates.startDate).add(
+            "minutes",
+            companyConfiguration.IntervalForDateTimePicker
+          )
+        );
+      }
     }
 
     function createEntity() {
@@ -38,6 +48,7 @@
                 $timeout.cancel(timer);
               }, 100);
             }
+
             initDates();
           })
           .finally(getBarcodeNumber);
@@ -46,10 +57,22 @@
 
     vm.errors = [];
 
+    function viewScrollTop() {}
+
     function onSubmitButtonClicked(isValid) {
       vm.errors = [];
       if (vm.isCustomerSelected === false) {
-        vm.errors.push("Please select a customer first");
+        vm.errors.push("Please select a customer first.");
+        alerts.alert("Warning", vm.errors[0], function() {
+          // taking the customer search component reference
+          if (
+            vm.customerSearchComponent &&
+            vm.customerSearchComponent !== undefined
+          ) {
+            vm.customerSearchComponent.events.onSearchBoxTapped();
+          }
+        });
+        viewScrollTop();
         return false;
       }
       fpmUtilitiesFactory
@@ -78,6 +101,8 @@
                     if (response) {
                       if (response.errors.length > 0) {
                         vm.errors = response.errors;
+                        alerts.alert("Warning", response.errors[0], null);
+                        // viewScrollTop();
                       } else {
                         alerts.alert(
                           "Success",
@@ -90,7 +115,7 @@
                     }
                   },
                   function() {
-                    vm.errors = ["Error while creating work order"];
+                    vm.errors = ["Error while creating work order."];
                   }
                 )
                 .finally(fpmUtilitiesFactory.hideLoading);
@@ -103,6 +128,7 @@
         startDate: new Date(),
         endDate: new Date(moment().add(1, "hours"))
       };
+      adjustScheduleFinishTime();
     }
     initDates();
 
@@ -113,6 +139,11 @@
     vm.isCustomerSelected = false;
 
     vm.events = {
+      onStartDateChanged: function() {
+        $timeout(function() {
+          adjustScheduleFinishTime();
+        }, 100);
+      },
       sameAsBilling: function() {
         vm.woEntity.sStreet = vm.woEntity.bStreet;
         vm.woEntity.sState = vm.woEntity.bState;
@@ -152,7 +183,6 @@
       onSubmitButtonClicked: onSubmitButtonClicked,
       onBackToDashboardClicked: onBackToDashboardClicked
     };
-
     function activateController() {
       sharedDataFactory
         .getIniitialData()
@@ -164,11 +194,11 @@
             vm.isServiceProvider = !vm.userInfo.isAdminstrator;
 
             if (response.customerNumberEntity.configurationJson) {
-              var configurations = JSON.parse(
+              companyConfiguration = JSON.parse(
                 response.customerNumberEntity.configurationJson
               );
-              if (configurations && configurations.PoBoxLabel) {
-                vm.poHeading = configurations.PoBoxLabel;
+              if (companyConfiguration && companyConfiguration.PoBoxLabel) {
+                vm.poHeading = companyConfiguration.PoBoxLabel;
               } else if (
                 response.customerNumberEntity.intuitServiceType === "QBO"
               ) {
@@ -184,10 +214,8 @@
     activateController();
   }
   initController.$inject = [
-    "$scope",
     "$state",
     "$timeout",
-    "$ionicActionSheet",
     "work-orders-factory",
     "shared-data-factory",
     "fpm-utilities-factory",

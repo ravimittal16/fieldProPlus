@@ -546,7 +546,6 @@
     }
 
     function updateOrder(type) {
-      console.log(type);
       function _processUpdateOrder() {
         workOrderFactory
           .updateWorkOrderMobile({
@@ -596,20 +595,26 @@
         fpmUtilities.showLoading().then(function() {
           workOrderFactory
             .updateSchedule(sch)
-            .then(function() {
-              if (showSuccessAlert) {
-                alerts.alert(
-                  "Success",
-                  "Schedule information updated successfully",
-                  function() {
-                    if (angular.isFunction(callback)) {
-                      callback();
-                    }
-                  }
-                );
+            .then(function(response) {
+              if (response && response !== "") {
+                alerts.alert("Warning", response, function() {
+                  vm.schedule.workComplete = false;
+                });
               } else {
-                if (angular.isFunction(callback)) {
-                  callback();
+                if (showSuccessAlert) {
+                  alerts.alert(
+                    "Success",
+                    "Schedule information updated successfully",
+                    function() {
+                      if (angular.isFunction(callback)) {
+                        callback();
+                      }
+                    }
+                  );
+                } else {
+                  if (angular.isFunction(callback)) {
+                    callback();
+                  }
                 }
               }
             })
@@ -1143,6 +1148,22 @@
       currentDetails: []
     };
 
+    vm.onBarcodeScanned = function(skuCode) {
+      workOrderFactory
+        .addProductFromBarcodeScanner(skuCode, vm.barcode)
+        .then(function(response) {
+          if (response) {
+            getBarcodeProducts(true);
+          } else {
+            alerts.alert(
+              "Not Found",
+              "No product found with this code..",
+              null
+            );
+          }
+        });
+    };
+
     function _getTodaysTimeCardEntries() {
       if (vm.user.timeCard === true) {
         var cdt = new Date();
@@ -1213,14 +1234,6 @@
     getBarcodeDetails();
 
     activateController();
-
-    // $scope.$watch("vm.barCodeData.schedules", function() {
-    //   console.log("SCHEDULES LENGTH : ", vm.barCodeData.schedules);
-    // });
-
-    // $scope.$on("$ionicView.beforeEnter", function(e, data) {
-    //   //console.log("HEHEHEHEHEHE");
-    // });
   }
   initController.$inject = [
     "$scope",

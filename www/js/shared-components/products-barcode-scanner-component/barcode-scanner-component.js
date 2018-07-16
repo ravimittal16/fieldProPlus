@@ -2,44 +2,24 @@
   "use strict";
   var componentConfig = {
     bindings: {
-      barcode: "<"
+      onScanned: "&",
+      buttonLabel: "@"
     },
     template:
-      '<button class="button button-default button-small" ng-click="vm.doScan()"><i class="ion-qr-scanner"></i></button>',
+      '<button class="button button-default button-small" ng-click="vm.doScan()">{{vm.buttonLabel}}</button>',
     controller: [
-      "$scope",
       "$cordovaBarcodeScanner",
-      "work-orders-factory",
-      "fpm-utilities-factory",
-      function(
-        $scope,
-        $cordovaBarcodeScanner,
-        workOrdersFactory,
-        fpmUtilities
-      ) {
-        var alerts = fpmUtilities.alerts;
+      function($cordovaBarcodeScanner) {
         var vm = this;
         vm.doScan = function() {
           $cordovaBarcodeScanner.scan().then(function(imageData) {
             if (imageData && imageData.text) {
-              workOrdersFactory
-                .addProductFromBarcodeScanner(imageData.text, vm.barcode)
-                .then(function(response) {
-                  if (response) {
-                    $scope.$emit("$fpm:operation:updateProduct", response);
-                  } else {
-                    alerts.alert(
-                      "Not Found",
-                      "No product found with this code..",
-                      null
-                    );
-                  }
-                });
+              if (angular.isFunction(vm.onScanned)) {
+                vm.onScanned({ skuCode: imageData.text });
+              }
             }
           });
         };
-
-        vm.$onInit = function() {};
       }
     ],
     controllerAs: "vm"

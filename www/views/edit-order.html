@@ -356,12 +356,12 @@
         </ion-content>
       </ion-tab>
       <ion-tab title="PRODUCTS" icon-on="ion-ios-list" icon-off="ion-ios-list-outline">
-        <ion-content>
+        <ion-content direction="y">
           <div class="card">
             <div class="item item-divider">
               PRODUCTS
               <div class="pull-right">
-                <scanner barcode="vm.barcode"></scanner>
+                <scanner on-scanned="vm.onBarcodeScanned(skuCode)" button-label="Scan Product"></scanner>
                 <button type="button" class="button button-small button-positive" ng-click="vm.tabs.prod.events.onProdcutActionButtonClicked()">Add Product</button>
               </div>
             </div>

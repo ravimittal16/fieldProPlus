@@ -111,7 +111,6 @@
 
         vm.$onInit = function() {};
         vm.$onDestroy = function() {
-          console.log("HELLLLL");
         };
       }
     ],
