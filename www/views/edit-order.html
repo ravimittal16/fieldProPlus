@@ -32,12 +32,20 @@
                           <strong>{{::vm.barCodeData.barcodeDetails.company_Name}}</strong>
                         </p>
                         <p>{{::vm.barCodeData.barcodeDetails.shipStreet}}</p>
-                        <p>{{::vm.barCodeData.barcodeDetails.shipCity}},{{::vm.barCodeData.barcodeDetails.shipState}}&nbsp;{{::vm.barCodeData.barcodeDetails.shipZIP}}
+                        <p>{{::vm.barCodeData.barcodeDetails.shipCity}}, {{::vm.barCodeData.barcodeDetails.shipState}}&nbsp;{{::vm.barCodeData.barcodeDetails.shipZIP}}
                         </p>
                         <p ng-if="vm.barCodeData.barcodeDetails.phone">
+                          <span>Phone: </span>
                           <span>
                             <i class="icon ion-android-call"></i>&nbsp;
                             <a href="tel:{{::vm.barCodeData.barcodeDetails.phone}}">{{::vm.barCodeData.barcodeDetails.phone}}</a>
+                          </span>
+                        </p>
+                        <p ng-if="vm.barCodeData.barcodeDetails.mobile">
+                          <span>Mobile: </span>
+                          <span>
+                            <i class="icon ion-android-call"></i>&nbsp;
+                            <a href="tel:{{::vm.barCodeData.barcodeDetails.mobile}}">{{::vm.barCodeData.barcodeDetails.mobile}}</a>
                           </span>
                         </p>
                         <p ng-if="vm.barCodeData.barcodeDetails.contactInfo">Contact Info :

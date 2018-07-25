@@ -11,6 +11,7 @@
     $stateParams,
     $ionicActionSheet,
     $ionicLoading,
+    $cordovaInAppBrowser,
     workOrderFactory,
     fpmUtilities,
     sharedDataFactory,
@@ -741,8 +742,8 @@
       var d = vm.barCodeData.barcodeDetails;
       if (d.shipStreet) {
         daddr += d.shipStreet.replace("::", " ");
+        daddr += "%20" + d.shipCity + ",%20" + d.shipState + "%20" + d.shipZIP;
       }
-      daddr += "%20" + d.shipCity + ",%20" + d.shipState + "%20" + d.shipZIP;
       if (currentLoc) {
         var goourl = "https://maps.google.com?saddr=";
         goourl +=
@@ -751,10 +752,12 @@
           currentLoc.coords.longitude +
           "&daddr=";
         goourl += daddr;
-        $window.open(goourl, "_blank", "location=yes");
+        $window
+          .open(goourl, "_system", "location=yes")
+          .then(function() {}, function(event) {});
       } else {
-        goourl = "https://www.google.com/maps/dir/?api=1&destination=" + daddr;
-        $window.open(goourl, "_blank", "location=yes");
+        goourl = "https://maps.google.com?daddr=" + daddr;
+        $window.open(goourl, "_system", "location=yes");
       }
     }
     vm.popModal = {
@@ -1245,6 +1248,7 @@
     "$stateParams",
     "$ionicActionSheet",
     "$ionicLoading",
+    "$cordovaInAppBrowser",
     "work-orders-factory",
     "fpm-utilities-factory",
     "shared-data-factory",

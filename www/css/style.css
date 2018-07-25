@@ -453,3 +453,6 @@ customer-search-header-component {
   font-weight: 500;
   font-size: 13px;
 }
+.child-badge-right {
+  right: 45px !important;
+}

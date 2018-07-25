@@ -2,18 +2,15 @@
   "use strict";
   function initController(
     $scope,
-    $stateParams,
     $timeout,
     $ionicPopup,
     $ionicLoading,
     authenticationFactory,
     $state,
     $ionicHistory,
-    dashboardFactory,
     fpmUtilitiesFactory,
     sharedDataFactory,
-    localStorageService,
-    hubConnectionFactory
+    localStorageService
   ) {
     var vm = this;
     vm.user = { userName: "", password: "" };
@@ -102,7 +99,6 @@
                       );
                       sharedDataFactory.registerUserTemplateForPushNotifications();
                     }
-                    hubConnectionFactory.startConnection();
                     var previousState = localStorageService.get("appState");
                     if (previousState && angular.isDefined(previousState)) {
                       if (previousState.stateName === "app.editOrder") {
@@ -151,6 +147,7 @@
       $timeout(function() {
         $ionicHistory.clearHistory();
         $ionicHistory.clearCache();
+        alerts.alert("App Alert : State 2");
         tryUserLoginFromStorage();
       }, 200);
     });
@@ -165,18 +162,15 @@
   }
   initController.$inject = [
     "$scope",
-    "$stateParams",
     "$timeout",
     "$ionicPopup",
     "$ionicLoading",
     "authenticationFactory",
     "$state",
     "$ionicHistory",
-    "dashboard-factory",
     "fpm-utilities-factory",
     "shared-data-factory",
-    "localStorageService",
-    "fpm.realtime.workorders.factory"
+    "localStorageService"
   ];
   angular.module("fpm").controller("login-controller", initController);
 })();

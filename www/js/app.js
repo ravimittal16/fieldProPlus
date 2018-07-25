@@ -298,7 +298,6 @@ var fpm = angular
     "$ionicPlatform",
     "$rootScope",
     "$state",
-    "$timeout",
     "fpm-utilities-factory",
     "authenticationFactory",
     "shared-data-factory",
@@ -306,13 +305,13 @@ var fpm = angular
       $ionicPlatform,
       $rootScope,
       $state,
-      $timeout,
       fpmUtilitiesFactory,
       authenticationFactory,
       sharedDataFactory
     ) {
       $rootScope.isInDevMode = isInDevMode;
       $ionicPlatform.ready(function() {
+        fpmUtilitiesFactory.alerts.alert("App Alert : State 1");
         if (window.cordova && window.cordova.plugins.Keyboard) {
           // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
           // for form inputs)
@@ -370,19 +369,6 @@ var fpm = angular
           });
 
           var lastActivity = "";
-
-          // bgGeo.on('activitychange', function (activityName) {
-          //   if (lastActivity !== activityName) {
-          //     lastActivity = activityName;
-          //     BackgroundGeolocation.getCurrentPosition(function (location, taskId) {
-          //       succesFn(location);
-          //     }, errorFn, {
-          //         timeout: 30,
-          //         maximumAge: 5000,
-          //         desiredAccuracy: 10,
-          //       });
-          //   }
-          // });
         }
 
         function errorFn(errorCode) {

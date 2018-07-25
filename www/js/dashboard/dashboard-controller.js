@@ -6,6 +6,7 @@
     $stateParams,
     $timeout,
     $ionicModal,
+    $ionicActionSheet,
     workOrderFactory,
     sharedDataFactory,
     authenticationFactory,
@@ -112,9 +113,29 @@
         _processInRouteClick(job);
       }
     }
+
     vm.isSearchModalOpened = false;
     var timerForonSearchItemClick = null;
+    vm.sortingType = "WorkPerformedDate";
+    vm.sortingOrderDesc = false;
     vm.events = {
+      onDotsClicked: function(item, isForAdmin) {
+        var titleText = isForAdmin
+          ? "Sort " + item.technicianName + "'s work orders"
+          : "Sort " + item.heading;
+        $ionicActionSheet.show({
+          buttons: [{ text: "Sort Ascending" }, { text: "Sort Descending" }],
+          titleText: titleText,
+          cancelText: "Cancel",
+          cancel: function() {
+            // add cancel code..
+          },
+          buttonClicked: function(index) {
+            vm.sortingOrderDesc = index === 1;
+            return true;
+          }
+        });
+      },
       inRouteClicked: function(odr) {
         if (timeCardInfo.enabled === false) {
           _processInRouteClick(odr);
@@ -293,6 +314,7 @@
     "$stateParams",
     "$timeout",
     "$ionicModal",
+    "$ionicActionSheet",
     "work-orders-factory",
     "shared-data-factory",
     "authenticationFactory",
