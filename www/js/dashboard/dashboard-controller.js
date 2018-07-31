@@ -1,3 +1,4 @@
+// added from culture
 (function() {
   "use strict";
   function initController(
