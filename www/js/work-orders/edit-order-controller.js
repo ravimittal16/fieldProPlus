@@ -430,7 +430,6 @@
     }
     //================================================================================================
     vm.user = authenticationFactory.getLoggedInUserInfo();
-    vm.user.allowUserToEditWoDescription = false;
     function activateController() {
       if (!$rootScope.isInDevMode) {
         _getCurrentUserLocation();
@@ -950,14 +949,12 @@
             vm.scheduleAddModal.hide();
           },
           updateMilage: function() {
-            $timeout(function() {
-              if (vm.schedule.startMiles && vm.schedule.endMiles) {
-                vm.schedule.totalMiles = parseFloat(
-                  parseFloat(vm.schedule.endMiles) -
-                    parseFloat(vm.schedule.startMiles)
-                ).toFixed(2);
-              }
-            }, 100);
+            if (vm.schedule.startMiles && vm.schedule.endMiles) {
+              vm.schedule.totalMiles = parseFloat(
+                parseFloat(vm.schedule.endMiles) -
+                  parseFloat(vm.schedule.startMiles)
+              ).toFixed(2);
+            }
             updateSchedule(false, false);
           },
           onTripnoteChanged: function() {
@@ -1153,7 +1150,7 @@
         }
       }
     };
-    
+
     var timeCardInfo = {
       currentDetails: []
     };
