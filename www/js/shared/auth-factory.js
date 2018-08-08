@@ -5,9 +5,6 @@
     $http,
     $q,
     $rootScope,
-    $state,
-    $window,
-    $timeout,
     $ionicHistory,
     fpmUtilitiesFactory,
     localStorageService,
@@ -43,8 +40,10 @@
             havingGroupsAssigned: response.havingGroups === "True",
             inventoryOn: response.inventoryOn === "True",
             allowUserToEditWoDescription:
-              response.allowUserToEditWoDescription === "True"
+              response.allowUserToEditWoDescription === "True",
+            currencySymbol: response.currencySymbol
           };
+          $rootScope.currencySymbol = response.currencySymbol;
           localStorageService.set(localStorageKeys.userCredentials, loginModel);
           localStorageService.set(localStorageKeys.storageKeyName, userobj);
           if (response.hasOwnProperty(localStorageKeys.configKeyName)) {
@@ -161,9 +160,6 @@
     "$http",
     "$q",
     "$rootScope",
-    "$state",
-    "$window",
-    "$timeout",
     "$ionicHistory",
     "fpm-utilities-factory",
     "localStorageService",

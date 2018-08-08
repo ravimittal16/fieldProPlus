@@ -125,7 +125,10 @@
                                     </div>
                                     <div class="col col-25 text-right">
                                         <h5 class="pull-right" ng-if="vm.user.showPrice">
-                                            <strong>{{p.price | currency:'$':2}}</strong>
+                                            <strong>
+                                                <fpcurrency-renderer model-val="p.price">
+                                                    </fpcurrencyRenderer>
+                                            </strong>
                                         </h5>
                                     </div>
                                 </div>
@@ -179,7 +182,8 @@
                                                 </div>
                                                 <div class="col col-20">
                                                     <h3 class="pull-right" ng-if="vm.user.showPrice">
-                                                        <span ng-bind="inv.totalPrice | currency:'$':2"> </span>
+                                                        <fpcurrency-renderer model-val="inv.totalPrice">
+                                                            </fpcurrencyRenderer>
                                                     </h3>
                                                 </div>
                                             </div>
@@ -192,17 +196,26 @@
                             <div class="col">
                                 <p>
                                     <h5>Subtotal
-                                        <span class="pull-right">{{vm.totals.subtotal | currency:'$':2}}</span>
+                                        <span class="pull-right">
+                                            <fpcurrency-renderer model-val="vm.totals.subtotal">
+                                                </fpcurrencyRenderer>
+                                        </span>
                                     </h5>
                                 </p>
                                 <p>
                                     <h5>Total Tax
-                                        <span class="pull-right text-muted">{{vm.totals.totaltax | currency:'$':2}}</span>
+                                        <span class="pull-right text-muted">
+                                            <fpcurrency-renderer model-val="vm.totals.totaltax">
+                                                </fpcurrencyRenderer>
+                                        </span>
                                     </h5>
                                 </p>
                                 <p>
                                     <h5>Total Amount
-                                        <span class="pull-right text-energized">{{vm.totals.subtotal + vm.totals.totaltax | currency:'$':2}}</span>
+                                        <span class="pull-right text-energized">
+                                            <fpcurrency-renderer model-val="vm.totals.subtotal + vm.totals.totaltax">
+                                                </fpcurrencyRenderer>
+                                        </span>
                                     </h5>
                                 </p>
                             </div>

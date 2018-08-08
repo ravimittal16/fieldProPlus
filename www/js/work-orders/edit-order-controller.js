@@ -1,6 +1,6 @@
 (function() {
   "use strict";
-
+  // HELLO WORLD
   function initController(
     $scope,
     $state,
@@ -59,83 +59,86 @@
           template: "loading work order..."
         })
         .then(function() {
-          workOrderFactory.getBarcodeDetails(vm.barcode).then(
-            function(response) {
-              vm.gettingBarcodeDetails = false;
-              vm.barCodeData = angular.copy(response);
-              vm.uiSettings.woData = angular.copy(response);
-              vm.taxCheckboxVisibility = (vm.barCodeData.taxRate || 0) > 0;
-              if (
-                angular.isArray(response.schedules) &&
-                response.schedules.length > 0
-              ) {
-                vm.schedule = angular.copy(
-                  _.findWhere(response.schedules, {
-                    num: parseInt($stateParams.technicianNum, 10)
-                  })
-                );
-                if (angular.isDefined(vm.schedule)) {
-                  if (vm.schedule.actualStartDateTime) {
-                    vm.schedule.actualStartDateTime = kendo.parseDate(
-                      vm.schedule.actualStartDateTime
-                    );
-                    vm.schedule.actualStartDateTimeString = kendo.toString(
-                      kendo.parseDate(vm.schedule.actualStartDateTime),
-                      "g"
-                    );
-                  }
-                  if (vm.schedule.actualFinishDateTime) {
-                    vm.schedule.actualFinishDateTime = kendo.parseDate(
+          workOrderFactory
+            .getBarcodeDetails(vm.barcode)
+            .then(
+              function(response) {
+                vm.gettingBarcodeDetails = false;
+                vm.barCodeData = angular.copy(response);
+                vm.uiSettings.woData = angular.copy(response);
+                vm.taxCheckboxVisibility = (vm.barCodeData.taxRate || 0) > 0;
+                if (
+                  angular.isArray(response.schedules) &&
+                  response.schedules.length > 0
+                ) {
+                  vm.schedule = angular.copy(
+                    _.findWhere(response.schedules, {
+                      num: parseInt($stateParams.technicianNum, 10)
+                    })
+                  );
+                  if (angular.isDefined(vm.schedule)) {
+                    if (vm.schedule.actualStartDateTime) {
+                      vm.schedule.actualStartDateTime = kendo.parseDate(
+                        vm.schedule.actualStartDateTime
+                      );
+                      vm.schedule.actualStartDateTimeString = kendo.toString(
+                        kendo.parseDate(vm.schedule.actualStartDateTime),
+                        "g"
+                      );
+                    }
+                    if (vm.schedule.actualFinishDateTime) {
+                      vm.schedule.actualFinishDateTime = kendo.parseDate(
+                        vm.schedule.actualFinishDateTime
+                      );
+                      vm.schedule.actualFinishDateTimeString = kendo.toString(
+                        kendo.parseDate(vm.schedule.actualFinishDateTime),
+                        "g"
+                      );
+                    }
+                    findTimeDiff(
+                      vm.schedule.actualStartDateTime,
                       vm.schedule.actualFinishDateTime
                     );
-                    vm.schedule.actualFinishDateTimeString = kendo.toString(
-                      kendo.parseDate(vm.schedule.actualFinishDateTime),
-                      "g"
-                    );
+                    if (vm.uiSettings.billingOption === 0) {
+                      vm.schedule.inRouteStartTime = kendo.parseDate(
+                        vm.schedule.inRouteStartTime
+                      );
+                      vm.schedule.inRouteEndTime = kendo.parseDate(
+                        vm.schedule.inRouteEndTime
+                      );
+                    }
+                    if (
+                      vm.uiSettings.billingOption === 0 &&
+                      vm.uiSettings.isRouteTimeOptionChecked
+                    ) {
+                      findTimeDiff(
+                        vm.schedule.inRouteStartTime,
+                        vm.schedule.inRouteEndTime,
+                        true
+                      );
+                    }
+                    vm.uiSettings.orderBelongToCurrentUser =
+                      vm.schedule.technicianNum === vm.userId;
+                    calculateTotals();
+                  } else {
+                    calculateTotals();
                   }
-                  findTimeDiff(
-                    vm.schedule.actualStartDateTime,
-                    vm.schedule.actualFinishDateTime
-                  );
-                  if (vm.uiSettings.billingOption === 0) {
-                    vm.schedule.inRouteStartTime = kendo.parseDate(
-                      vm.schedule.inRouteStartTime
-                    );
-                    vm.schedule.inRouteEndTime = kendo.parseDate(
-                      vm.schedule.inRouteEndTime
-                    );
-                  }
-                  if (
-                    vm.uiSettings.billingOption === 0 &&
-                    vm.uiSettings.isRouteTimeOptionChecked
-                  ) {
-                    findTimeDiff(
-                      vm.schedule.inRouteStartTime,
-                      vm.schedule.inRouteEndTime,
-                      true
-                    );
-                  }
-                  vm.uiSettings.orderBelongToCurrentUser =
-                    vm.schedule.technicianNum === vm.userId;
-                  $ionicLoading.hide();
-                  calculateTotals();
                 } else {
-                  $ionicLoading.hide();
                   calculateTotals();
                 }
-              } else {
-                $ionicLoading.hide();
-                calculateTotals();
+              },
+              function() {
+                alerts.alert(
+                  "Oops",
+                  "ERROR WHILE GETTING WORK ORDER INFORMATION..",
+                  $ionicLoading.hide
+                );
               }
-            },
-            function(data) {
-              alerts.alert(
-                "Oops",
-                "ERROR WHILE GETTING WORK ORDER INFORMATION..",
-                $ionicLoading.hide
-              );
-            }
-          );
+            )
+            .finally(function() {
+              $ionicLoading.hide();
+              $scope.$broadcast("scroll.refreshComplete");
+            });
         });
     }
 
@@ -427,6 +430,7 @@
     }
     //================================================================================================
     vm.user = authenticationFactory.getLoggedInUserInfo();
+    vm.user.allowUserToEditWoDescription = false;
     function activateController() {
       if (!$rootScope.isInDevMode) {
         _getCurrentUserLocation();
@@ -760,6 +764,7 @@
         $window.open(goourl, "_system", "location=yes");
       }
     }
+    vm.popupDescriptionBoxType = "";
     vm.popModal = {
       type: "DESCRIPTION",
       modal: null,
@@ -806,6 +811,7 @@
           vm.popModal.modal.hide();
         },
         popoutTextBox: function(type) {
+          vm.popupDescriptionBoxType = type;
           if (type === "DESCRIPTION") {
             vm.popModal.content = angular.copy(
               vm.barCodeData.barcodeDetails.comment_1
@@ -856,8 +862,8 @@
             }
           },
           refreshOnPullDown: function() {
+            getBarcodeDetails();
             _getTodaysTimeCardEntries();
-            $scope.$broadcast("scroll.refreshComplete");
           },
           closeWorkOrderMapModal: function() {
             isMapLoaded = false;
@@ -950,9 +956,9 @@
                   parseFloat(vm.schedule.endMiles) -
                     parseFloat(vm.schedule.startMiles)
                 ).toFixed(2);
-                updateSchedule(false, false);
               }
             }, 100);
+            updateSchedule(false, false);
           },
           onTripnoteChanged: function() {
             updateSchedule(false, false);
@@ -1147,6 +1153,7 @@
         }
       }
     };
+    
     var timeCardInfo = {
       currentDetails: []
     };

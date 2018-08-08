@@ -147,7 +147,6 @@
       $timeout(function() {
         $ionicHistory.clearHistory();
         $ionicHistory.clearCache();
-        alerts.alert("App Alert : State 2");
         tryUserLoginFromStorage();
       }, 200);
     });

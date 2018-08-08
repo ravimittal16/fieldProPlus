@@ -111,7 +111,7 @@
               <div class="card">
                 <div class="item item-divider header-dark">
                   WORK DESCRIPTION
-                  <a class="icon ion-ios-browsers-outline pull-right pointer" ng-if="vm.user.allowUserToEditWoDescription" ng-click="vm.tabs.events.popoutTextBox('DESCRIPTION')"></a>
+                  <a class="icon ion-ios-browsers-outline pull-right pointer" ng-click="vm.tabs.events.popoutTextBox('DESCRIPTION')"></a>
                 </div>
                 <div class="list">
                   <div class="item item-input">
@@ -310,18 +310,18 @@
                 <div class="input-label">
                   Vehicle Number
                 </div>
-                <select ng-model="vm.schedule.numFromVehicles" ng-change="vm.tabs.sch.events.updateMilage()" ng-options="p.num as p.vehicleNumber for p in vm.vehicles">
+                <select ng-model="vm.schedule.numFromVehicles" ng-options="p.num as p.vehicleNumber for p in vm.vehicles">
                   <select>
               </label>
               <label class="item item-input">
                 <span class="input-label">Start (Miles)</span>
                 <input type="text" class="transparent-background text-right" mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:999999.99,preset:'decimal'}"
-                  ng-model="vm.schedule.startMiles" ng-change="vm.tabs.sch.events.updateMilage()" />
+                  ng-model="vm.schedule.startMiles" />
               </label>
               <label class="item item-input">
                 <span class="input-label">End</span>
                 <input type="text" class="transparent-background text-right" mobiscroll-numpad="{display: 'bottom',min:0,scale: 0,max:999999.99,preset:'decimal'}"
-                  ng-model="vm.schedule.endMiles" ng-change="vm.tabs.sch.events.updateMilage()" />
+                  ng-model="vm.schedule.endMiles" />
               </label>
               <label class="item item-input">
                 <span class="input-label">
@@ -329,6 +329,11 @@
                 </span>
                 <input type="text" readonly="" class="transparent-background text-right" ng-model="vm.schedule.totalMiles" />
               </label>
+            </div>
+            <div class="padding" ng-if="vm.uiSettings.isTimeCardModuleEnabled">
+              <button class="button button-block button-small button-dark" ng-click="vm.tabs.sch.events.updateMilage()">
+                Update Mileage
+              </button>
             </div>
           </div>
           <div class="card">
@@ -390,7 +395,10 @@
                 </div>
                 <div class="col col-25 text-right">
                   <h5 class="pull-right" ng-if="vm.user.showPrice">
-                    <strong>{{p.price | currency:'$':2}}</strong>
+                    <strong>
+                      <fpcurrency-renderer model-val="p.price">
+                        </fpcurrencyRenderer>
+                    </strong>
                   </h5>
                 </div>
               </div>
@@ -450,7 +458,8 @@
                       </div>
                       <div class="col col-20">
                         <h3 class="pull-right" ng-if="vm.user.showPrice">
-                          <span ng-bind="inv.totalPrice | currency:'$':2"> </span>
+                          <fpcurrency-renderer model-val="inv.totalPrice">
+                            </fpcurrencyRenderer>
                         </h3>
                       </div>
                     </div>
@@ -463,17 +472,27 @@
             <div class="col">
               <p>
                 <h5>Subtotal
-                  <span class="pull-right">{{vm.totals.subtotal | currency:'$':2}}</span>
+                  <span class="pull-right">
+                    <fpcurrency-renderer model-val="vm.totals.subtotal">
+                      </fpcurrencyRenderer>
+                  </span>
                 </h5>
               </p>
               <p>
                 <h5>Total Tax
-                  <span class="pull-right text-muted">{{vm.totals.totaltax | currency:'$':2}}</span>
+                  <span class="pull-right text-muted">
+                    <fpcurrency-renderer model-val="vm.totals.totaltax">
+                      </fpcurrencyRenderer>
+                  </span>
                 </h5>
               </p>
               <p>
                 <h5>Total Amount
-                  <span class="pull-right text-energized">{{vm.totals.subtotal + vm.totals.totaltax | currency:'$':2}}</span>
+                  <span class="pull-right text-energized">
+
+                    <fpcurrency-renderer model-val="vm.totals.subtotal + vm.totals.totaltax">
+                      </fpcurrencyRenderer>
+                  </span>
                 </h5>
               </p>
             </div>
@@ -513,7 +532,7 @@
 <script id="fulltextModal.html" type="text/ng-template">
   <ion-modal-view>
     <ion-header-bar>
-      <button type="button"  class="button button-small button-positive" ng-click="vm.tabs.events.updateClicked()">
+      <button type="button" ng-disabled="vm.popupDescriptionBoxType === 'DESCRIPTION' && !vm.user.allowUserToEditWoDescription" class="button button-small button-positive" ng-click="vm.tabs.events.updateClicked()">
               Update
             </button>
        <h1 class="title">
