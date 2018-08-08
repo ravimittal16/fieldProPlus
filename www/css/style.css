@@ -456,3 +456,12 @@ customer-search-header-component {
 .child-badge-right {
   right: 45px !important;
 }
+input[disabled],
+select[disabled],
+textarea[disabled],
+input[readonly]:not(.cloned-text-input),
+textarea[readonly]:not(.cloned-text-input),
+select[readonly] {
+  background-color: transparent;
+  cursor: not-allowed;
+}
