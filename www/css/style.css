@@ -465,3 +465,8 @@ select[readonly] {
   background-color: transparent;
   cursor: not-allowed;
 }
+.font25 {
+  font-size: 25px;
+  font-weight: 600;
+  color: black;
+}
