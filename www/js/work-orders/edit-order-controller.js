@@ -231,6 +231,40 @@
 
     var onTimespanSeletionChangedTimer = null;
 
+    function onActualTimesChanged(isStartTime) {
+      if (vm.uiSettings.billingOption === 0 && vm.schedule) {
+        if (
+          vm.schedule.actualStartDateTime &&
+          vm.schedule.actualFinishDateTime
+        ) {
+          if (
+            new Date(vm.schedule.actualStartDateTime) >
+            new Date(vm.schedule.actualFinishDateTime)
+          ) {
+            alerts.alert(
+              "Warning",
+              isStartTime
+                ? "Start time cannot be greater than finish time."
+                : "Finish time cannot be less than start time"
+            );
+          } else {
+            findTimeDiff(
+              vm.schedule.actualStartDateTime,
+              vm.schedule.actualFinishDateTime
+            ).then(function(totalMins) {
+              if (!vm.schedule.approve) {
+                updateSchduleTotalTime();
+              }
+            });
+          }
+        } else {
+          updateSchduleTotalTime();
+        }
+      } else {
+        updateSchedule(false, false);
+      }
+    }
+
     vm.scheduleTimeSpan = {
       timeSpan: "",
       inRouteTimeSpan: "",
@@ -257,63 +291,10 @@
         }, 50);
       },
       onStartDateTimeChaged: function() {
-        if (vm.uiSettings.billingOption === 0 && vm.schedule) {
-          if (
-            vm.schedule.actualStartDateTime &&
-            vm.schedule.actualFinishDateTime
-          ) {
-            if (
-              new Date(vm.schedule.actualStartDateTime) >
-              new Date(vm.schedule.actualFinishDateTime)
-            ) {
-              alerts.alert(
-                "Warning",
-                "Start time cannot be greater than finish time."
-              );
-            } else {
-              findTimeDiff(
-                vm.schedule.actualStartDateTime,
-                vm.schedule.actualFinishDateTime
-              ).then(function(totalMins) {
-                if (!vm.schedule.approve) {
-                  updateSchduleTotalTime();
-                }
-              });
-            }
-          }
-        } else {
-          updateSchedule(false, false);
-        }
+        onActualTimesChanged(true);
       },
       onEndDateTimeChanged: function() {
-        if (vm.uiSettings.billingOption === 0 && vm.schedule) {
-          if (
-            vm.schedule &&
-            vm.schedule.actualStartDateTime &&
-            vm.schedule.actualFinishDateTime
-          ) {
-            if (
-              new Date(vm.schedule.actualStartDateTime) >
-              new Date(vm.schedule.actualFinishDateTime)
-            ) {
-              alerts.alert(
-                "Warning",
-                "Finish time cannot be less than start time"
-              );
-            } else {
-              findTimeDiff(
-                vm.schedule.actualStartDateTime,
-                vm.schedule.actualFinishDateTime
-              ).then(function(totalMins) {
-                if (!vm.schedule.approve) {
-                  updateSchduleTotalTime();
-                }
-              });
-            }
-          }
-        } else {
-          updateSchedule(false, false);
-        }
+        onActualTimesChanged(false);
       },
       clearAllDateTimeSelection: function() {}
     };
