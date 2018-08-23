@@ -375,7 +375,9 @@
               PRODUCTS
               <div class="pull-right">
                 <scanner on-scanned="vm.onBarcodeScanned(skuCode)" button-label="Scan Product"></scanner>
-                <button type="button" class="button button-small button-positive" ng-click="vm.tabs.prod.events.onProdcutActionButtonClicked()">Add Product</button>
+                <button type="button" class="button button-small button-positive" ng-click="vm.tabs.prod.events.onProdcutActionButtonClicked()">Add
+                  Product
+                </button>
               </div>
             </div>
             <div class="item item-text-wrap text-center" ng-if="vm.barCodeData.products.length == 0 && !vm.gettingBarcodeDetails">
@@ -397,7 +399,7 @@
                   <h5 class="pull-right" ng-if="vm.user.showPrice">
                     <strong>
                       <fpcurrency-renderer model-val="p.price">
-                        </fpcurrencyRenderer>
+                      </fpcurrency-renderer>
                     </strong>
                   </h5>
                 </div>
@@ -459,7 +461,7 @@
                       <div class="col col-20">
                         <h3 class="pull-right" ng-if="vm.user.showPrice">
                           <fpcurrency-renderer model-val="inv.totalPrice">
-                            </fpcurrencyRenderer>
+                          </fpcurrency-renderer>
                         </h3>
                       </div>
                     </div>
@@ -474,7 +476,7 @@
                 <h5>Subtotal
                   <span class="pull-right">
                     <fpcurrency-renderer model-val="vm.totals.subtotal">
-                      </fpcurrencyRenderer>
+                    </fpcurrency-renderer>
                   </span>
                 </h5>
               </p>
@@ -482,7 +484,7 @@
                 <h5>Total Tax
                   <span class="pull-right text-muted">
                     <fpcurrency-renderer model-val="vm.totals.totaltax">
-                      </fpcurrencyRenderer>
+                    </fpcurrency-renderer>
                   </span>
                 </h5>
               </p>
@@ -491,7 +493,7 @@
                   <span class="pull-right text-energized">
 
                     <fpcurrency-renderer model-val="vm.totals.subtotal + vm.totals.totaltax">
-                      </fpcurrencyRenderer>
+                    </fpcurrency-renderer>
                   </span>
                 </h5>
               </p>
@@ -515,7 +517,9 @@
                   ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()">
                   <select>
               </div>
-              <ion-toggle ng-model="vm.schedule.workComplete" toggle-class="toggle-balanced" ng-change="vm.tabs.sch.events.workCompleteChanged()">Work Complete</ion-toggle>
+              <ion-toggle ng-model="vm.schedule.workComplete" toggle-class="toggle-balanced" ng-change="vm.tabs.sch.events.workCompleteChanged()">Work
+                Complete
+              </ion-toggle>
             </div>
           </div>
         </ion-content>

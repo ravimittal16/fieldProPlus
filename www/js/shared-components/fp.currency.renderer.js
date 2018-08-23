@@ -8,16 +8,23 @@
       function($filter, $rootScope, authenticationFactory) {
         var vm = this;
         vm.currencyValue = "";
-        function renderCurrency(symbol) {
+        function renderCurrency() {
           if (vm.modelVal) {
             vm.currencyValue = $filter("currency")(
               vm.modelVal,
               $rootScope.currencySymbol,
               2
             );
+          } else {
+            vm.currencyValue = $filter("currency")(
+              0,
+              $rootScope.currencySymbol,
+              2
+            );
           }
         }
-        vm.$onInit = function() {
+
+        function _renderFormattedValue() {
           if ($rootScope.currencySymbol) {
             renderCurrency();
           } else {
@@ -30,7 +37,17 @@
               renderCurrency();
             }
           }
+        }
+
+        vm.$onChanges = function() {
+          renderCurrency();
         };
+
+        vm.$onInit = function() {
+          _renderFormattedValue();
+        };
+
+        vm.$onDestroy = function() {};
       }
     ],
     template: '<span ng-bind="vm.currencyValue"></span>',
