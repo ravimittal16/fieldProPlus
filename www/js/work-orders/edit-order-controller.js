@@ -490,51 +490,51 @@
         totalcost: 0,
         totaltax: 0
       };
-      $timeout(function() {
-        if (vm.barCodeData.invoice && vm.barCodeData.invoice.length > 0) {
-          var taxRate = vm.barCodeData.taxRate || 0;
-          var totalTax = 0;
-          angular.forEach(vm.barCodeData.invoice, function(pro, i) {
-            if (pro.price && pro.qty) {
-              var totalPrice = 0;
-              if (!angular.isDefined(pro.newPriceCalculated)) {
-                pro.newPriceCalculated = false;
+      if (vm.barCodeData.invoice && vm.barCodeData.invoice.length > 0) {
+        var taxRate = vm.barCodeData.taxRate || 0;
+        var totalTax = 0;
+        angular.forEach(vm.barCodeData.invoice, function(pro, i) {
+          if (pro.price && pro.qty) {
+            var totalPrice = 0;
+            if (!angular.isDefined(pro.newPriceCalculated)) {
+              pro.newPriceCalculated = false;
+            }
+            if (
+              angular.isNumber(parseFloat(pro.price)) &&
+              angular.isNumber(parseInt(pro.qty, 10))
+            ) {
+              if (pro.markup > 0) {
+                var newPrice = pro.newPriceCalculated
+                  ? pro.price
+                  : parseFloat(pro.price) +
+                    parseFloat(((pro.markup || 0) / 100) * pro.price);
+                pro.price = newPrice;
+                pro.newPriceCalculated = true;
+                totalPrice = newPrice * pro.qty;
+              } else {
+                totalPrice = pro.price * pro.qty;
               }
-              if (
-                angular.isNumber(parseFloat(pro.price)) &&
-                angular.isNumber(parseInt(pro.qty, 10))
-              ) {
-                if (pro.markup > 0) {
-                  var newPrice = pro.newPriceCalculated
-                    ? pro.price
-                    : parseFloat(pro.price) +
-                      parseFloat(((pro.markup || 0) / 100) * pro.price);
-                  pro.price = newPrice;
-                  pro.newPriceCalculated = true;
-                  totalPrice = newPrice * pro.qty;
-                } else {
-                  totalPrice = pro.price * pro.qty;
-                }
-                pro.totalPrice = totalPrice;
-                var taxAmt = parseFloat(
-                  parseFloat(taxRate) > 0
-                    ? parseFloat((taxRate / 100) * totalPrice)
-                    : 0
-                );
-                totals.subtotal += parseFloat(totalPrice);
-                totals.totalqty += parseInt(pro.qty, 10);
-                if (pro.taxable) {
-                  totalTax += parseFloat(taxAmt);
-                }
+              pro.totalPrice = totalPrice;
+              var taxAmt = parseFloat(
+                parseFloat(taxRate) > 0
+                  ? parseFloat((taxRate / 100) * totalPrice)
+                  : 0
+              );
+              totals.subtotal += parseFloat(totalPrice);
+              totals.totalqty += parseInt(pro.qty, 10);
+              if (pro.taxable) {
+                totalTax += parseFloat(taxAmt);
               }
             }
-            if (i === vm.barCodeData.invoice.length - 1) {
-              totals.totaltax = totalTax;
-              vm.totals = totals;
-            }
-          });
-        }
-      }, 100);
+          }
+          if (i === vm.barCodeData.invoice.length - 1) {
+            totals.totaltax = totalTax;
+            vm.totals = totals;
+          }
+        });
+      } else {
+        vm.totals = totals;
+      }
     }
 
     function updateOrder(type) {
