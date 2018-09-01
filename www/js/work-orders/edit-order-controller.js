@@ -1103,8 +1103,10 @@
         events: {
           onTaxCheckboaxChanged: function(i) {
             if (checkAuthorizationIfServiceProvider(i, restoreInvoice)) {
-              calculateTotals();
-              workOrderFactory.updateOrderProduct(i);
+              $timeout(function() {
+                calculateTotals();
+                workOrderFactory.updateOrderProduct(i);
+              }, 200);
             }
           }
         }

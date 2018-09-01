@@ -1,6 +1,5 @@
 {
   "name": "FieldProIonic",
-  "app_id": "",
   "integrations": {
     "cordova": {}
   },
