@@ -1,10 +1,11 @@
 (function () {
     "use strict";
-    function _initController($scope, $state, customComponentsFactory) {
+    function _initController($scope, $state, customComponentsFactory,authenticationFactory) {
 
         var vm = this;
         vm.showingLoading = false;
-
+        vm.userInfo=authenticationFactory.getLoggedInUserInfo();
+        vm.dateFormat= vm.userInfo.dateFormat;
         vm.reportModel = { startDate: null, endDate: null };
         var _staticColumsName = { "BarcodeName": "Wo#", "ActualStartDateTime": "Start Date" }
         vm.events = {
@@ -43,7 +44,7 @@
                                     var val = "";
                                     if (col === "ActualStartDateTime") {
                                         if (e[col]) {
-                                            val = moment(e[col]).format("MM/DD/YYYY");
+                                            val = moment(e[col]).format(vm.dateFormat);
                                         }
                                     }
                                     else {
@@ -84,6 +85,6 @@
             activateController();
         });
     }
-    _initController.$inject = ["$scope", "$state", "custom-components-factory"];
+    _initController.$inject = ["$scope", "$state", "custom-components-factory","authenticationFactory"];
     angular.module("fpm").controller("custom-components-controller", _initController);
 })();

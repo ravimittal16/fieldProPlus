@@ -15,7 +15,7 @@
                 <div class="col">
                     <input data-ng-model="vm.currentDate" data-mobiscroll-date="vm.ui.calendar.settings" data-ng-change="vm.ui.events.onCurrentDateChanged()"
                         data-mobiscroll-instance="vm.ui.calendar.control" class="hidden" />
-                    <strong><a data-ng-click="vm.ui.events.onShowCalenderClick($event)">{{vm.currentDate | date:'fullDate'}}
+                    <strong><a data-ng-click="vm.ui.events.onShowCalenderClick($event)"><fp-date-time-renderer model-val="vm.currentDate" type="date" format="vm.dateFormat"></fp-date-time-renderer>
                         <i class="icon ion-arrow-down-b"></i></a></strong>
                 </div>
             </div>

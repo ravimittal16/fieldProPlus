@@ -106,13 +106,15 @@
           </div>
           <label class="item item-input">
             <span class="input-label">Schedule Start</span>
-            <input type="text" class="transparent-background text-right" mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A',onSelect:vm.events.onStartDateChanged}"
-              ng-model="vm.dates.startDate" />
+            <!-- <input type="text" class="transparent-background text-right" mobiscroll-datetime="vm.mobiscrollDateTimeConfigWithSelectEvent"
+              ng-model="vm.dates.startDate" /> -->
+              <fp-date-time-component model-val="vm.dates.startDate" type="datetime" on-date-changed="vm.events.onStartDateChanged()" format="vm.dateTimeFormat" align-calendar></fp-date-time-component>
           </label>
           <label class="item item-input">
             <span class="input-label">Schedule Finish</span>
-            <input type="text" class="transparent-background text-right" mobiscroll-datetime="{display:'bottom',dateFormat:'mm/dd/yy',timeFormat:'hh:ii A'}"
-              ng-model="vm.dates.endDate" />
+            <!-- <input type="text" class="transparent-background text-right" mobiscroll-datetime="vm.mobiscrollDateTimeConfig"
+              ng-model="vm.dates.endDate" /> -->
+              <fp-date-time-component  model-val="vm.dates.endDate" type="datetime" format="vm.dateTimeFormat" align-calendar></fp-date-time-component>
           </label>
         </div>
         <div class="card">

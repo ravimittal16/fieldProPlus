@@ -35,12 +35,14 @@
                                 </tr>
                                 <tr>
                                     <td class="text-center">
-                                        <input type="text" class="transparent-background text-center" style="width:100px;" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}"
-                                            data-ng-model="vm.reportModel.startDate" placeholder="tap here to select..." />
+                                        <!-- <input type="text" class="transparent-background text-center" style="width:100px;" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}"
+                                            data-ng-model="vm.reportModel.startDate" placeholder="tap here to select..." /> -->
+                                            <fp-date-component class="text-center"  model-val="vm.reportModel.startDate"  type="date" format="vm.dateFormat" default-text="tap here to select..." align-calendar></fp-date-component>
                                     </td>
                                     <td class="text-center">
-                                        <input type="text" class="transparent-background  text-center" style="width:100px;" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}"
-                                            data-ng-model="vm.reportModel.endDate" placeholder="tap here to select..." />
+                                        <!-- <input type="text" class="transparent-background  text-center" style="width:100px;" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}"
+                                            data-ng-model="vm.reportModel.endDate" placeholder="tap here to select..." /> -->
+                                            <fp-date-component class="text-center"  model-val="vm.reportModel.endDate" type="date" format="vm.dateFormat" default-text="tap here to select..." align-calendar></fp-date-component>
                                     </td>
                                     <td class="text-center">
                                         <button class="button button-positive button-small button-block" ng-click="vm.events.runReport()">Run</button>

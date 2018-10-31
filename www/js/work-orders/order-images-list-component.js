@@ -50,93 +50,37 @@
           ".png",
           ".bmp"
         ];
-        function _processUploadFile(index) {
-          if (selectedFiles) {
-            if (index + 1 <= selectedFiles.length) {
-              currentIndex = index;
-              var file = selectedFiles[index];
-
-              var isValidExtension = _.filter(exts, function(s) {
-                return s === file.extension.toLowerCase();
-              });
-              if (isValidExtension.length === 0) {
-                alerts.alert(
-                  "Invalid File",
-                  "This is not a valid image file",
-                  function() {
-                    var nextindex = index + 1;
-                    _processUploadFile(nextindex);
-                  }
-                );
-                return false;
-              }
-              if (isAndroid) {
-                var fileReader = new FileReader();
-                fileReader.onload = function(e) {
-                  var img = new Image();
-                  img.onload = function() {
-                    var newImage = resizeInCanvas(img);
-                    vm.upload
-                      .uploadImage(
-                        newImage,
-                        file.name,
-                        false,
-                        index === selectedFiles.length - 1
-                      )
-                      .then(function() {
-                        if (index === selectedFiles.length - 1) {
-                          selectedFiles = null;
-                        } else {
-                          var nextindex = index + 1;
-                          _processUploadFile(nextindex);
-                        }
-                      });
-                  };
-                  img.src = e.target.result;
-                };
-                fileReader.readAsDataURL(file.rawFile);
-              } else {
-                var fileReader = new FileReader();
-                fileReader.onload = function(event) {
-                  vm.upload
-                    .uploadImage(
-                      event.target.result,
-                      file.name,
-                      false,
-                      index === selectedFiles.length - 1
-                    )
-                    .then(function() {
-                      if (index === selectedFiles.length - 1) {
-                        selectedFiles = null;
-                      } else {
-                        var nextindex = index + 1;
-                        _processUploadFile(nextindex);
-                      }
-                    });
-                };
-                fileReader.readAsDataURL(file.rawFile);
-              }
-            }
-          }
-        }
-
-        function resizeInCanvas(img) {
-          var perferedWidth = 500;
-          var ratio = perferedWidth / img.width;
-          var canvas = $("<canvas>")[0];
-          canvas.width = img.width * ratio;
-          canvas.height = img.height * ratio;
-          var ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          return canvas.toDataURL();
-        }
 
         var selectedFiles = null;
 
         vm.upload = {
           control: null,
+          uploadImages: function(files) {
+            var model = {
+              barcode: vm.barcode,
+              estimateId: estimateId
+            };
+            if (files && files.length > 0) {
+              fpmUtilitiesFactory.showLoading("Uploading");
+              workOrdersFactory
+                .uploadFiles(files, model)
+                .then(function(response) {
+                  _getImages();
+                })
+                .finally(function() {
+                  fpmUtilitiesFactory.hideLoading();
+                  alerts.alert("Uploaded", "File(s) Uploaded successfully");
+                });
+            }
+          },
           uploadImage: function(rawImage, imageName, take, isLast) {
             var defer = $q.defer();
+            model = {
+              barcode: vm.barcode,
+              image: rawImage,
+              name: imageName,
+              estimateId: estimateId
+            };
             fpmUtilitiesFactory
               .showLoading(
                 "Uploading " +
@@ -146,12 +90,7 @@
               )
               .then(function() {
                 workOrdersFactory
-                  .uploadFile({
-                    barcode: vm.barcode,
-                    image: rawImage,
-                    name: imageName,
-                    estimateId: estimateId
-                  })
+                  .uploadFile(model)
                   .then(
                     function(response) {
                       if (response && response.entity) {
@@ -179,6 +118,7 @@
                   )
                   .finally(fpmUtilitiesFactory.hideLoading);
               });
+
             return defer.promise;
           },
           options: {
@@ -190,7 +130,7 @@
             select: function(e) {
               e.isDefaultPrevented = true;
               var largeFiles = _.filter(e.files, function(f) {
-                return f.size > maxImageSize * 1024 * 1024;
+                return f.size > maxImageSize;
               });
               if (largeFiles.length > 0) {
                 alerts.alert(
@@ -201,7 +141,7 @@
                 return false;
               }
               selectedFiles = e.files;
-              _processUploadFile(0);
+              vm.upload.uploadImages(e.files);
               e.preventDefault();
             }
           }
@@ -259,17 +199,7 @@
             vm.imageViewerModel.hide();
           }
         };
-        var maxImageSize = 8;
-        var isAndroid = false;
-        var estimateId = 0;
-        vm.$onInit = function() {
-          isAndroid = fpmUtilitiesFactory.device.isAndroid();
-          if (isAndroid) {
-            maxImageSize = 3.5;
-          }
-          if (vm.isEstimate) {
-            estimateId = $stateParams.id;
-          }
+        function _getImages() {
           if (vm.barcode && !vm.isEstimate) {
             workOrdersFactory
               .getImagesList(vm.barcode)
@@ -283,6 +213,20 @@
                 vm.barcodeImages = response;
               });
           }
+        }
+
+        var maxImageSize = 8 * 1024 * 1024;
+        var isAndroid = false;
+        var estimateId = 0;
+        vm.$onInit = function() {
+          isAndroid = fpmUtilitiesFactory.device.isAndroid();
+          if (isAndroid) {
+            maxImageSize = 5 * 1024 * 1024;
+          }
+          if (vm.isEstimate) {
+            estimateId = $stateParams.id;
+          }
+          _getImages();
         };
 
         $ionicModal

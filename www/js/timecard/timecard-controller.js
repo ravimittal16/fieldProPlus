@@ -5,6 +5,7 @@
         var vm = this;
         var jobCodes = { CLOCK_IN: 5001, CLOCK_OUT: 5002 };
         var toDateString = fpmUtilitiesFactory.toStringDate;
+        vm.dateFormat=$rootScope.dateFormat;
         var statusTypes = {
             NONE: 0,
             SEND_FOR_APPROVAL: 1,
@@ -17,6 +18,7 @@
         vm.factory = timecardFactory;
         var alerts = fpmUtilitiesFactory.alerts;
         vm.currentDate = new Date();
+        
 
         function _updateBindingsForSummaryStatus(details) {
             var anythingPending = _.where(details.timeCardDetails, { finishTime: null });
@@ -481,6 +483,7 @@
             var userInfo = authenticationFactory.getLoggedInUserInfo();
             var havingCustomrNumber = _.findWhere(customerNumberList, { c: userInfo.customerNumber });
             vm.ui.data.enableForCustomer = angular.isDefined(havingCustomrNumber);
+            vm.dateFormat=userInfo.dateFormat;
         }
 
         $scope.$watch("vm.ui.data.timeCards", function (nw) {

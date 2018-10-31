@@ -165,11 +165,13 @@
               <p class="n-m-b">
                 <strong>Schedule Start</strong>
               </p>
-              <p>{{vm.schedule.scheduledStartDateTime | date:'MM/dd/yyyy hh:mm a'}}</p>
+              <!-- <p>{{vm.schedule.scheduledStartDateTime | date:'MM/dd/yyyy hh:mm a'}}</p> -->
+              <fp-date-time-renderer model-val='vm.schedule.scheduledStartDateTime' type="datetime" format='vm.dateTimeFormat'></fp-date-time-renderer>
               <p class="n-m-b">
                 <strong>Schedule End</strong>
               </p>
-              <p>{{vm.schedule.scheduledFinishDateTime | date:'MM/dd/yyyy hh:mm a'}}</p>
+              <!-- <p>{{vm.schedule.scheduledFinishDateTime | date:'MM/dd/yyyy hh:mm a'}}</p> -->
+              <fp-date-time-renderer model-val='vm.schedule.scheduledFinishDateTime' type="datetime" format='vm.dateTimeFormat'></fp-date-time-renderer>
             </div>
           </div>
           <div class="card">
@@ -195,10 +197,12 @@
                 </div>
                 <div class="item" style="border-top:0px !important;padding-top: 0px !important;">
                   <div style="width: 65%;float: left;">
-                    <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onStartDateTimeChaged}"
-                      ng-model="vm.schedule.actualStartDateTime" placeholder="tap here to select..." />
-                    <input type="text" ng-if="vm.schedule.approve" class="transparent-background" disabled ng-model="vm.schedule.actualStartDateTimeString"
-                    />
+                    <!-- <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onStartDateTimeChaged}"
+                      ng-model="vm.schedule.actualStartDateTime" placeholder="tap here to select..." /> -->
+                      <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.actualStartDateTime" type="datetime" on-date-changed="vm.scheduleTimeSpan.onStartDateTimeChaged()" format="vm.dateTimeFormat" default-text="tap here to select..."></fp-date-time-component>
+                    <!-- <input type="text" ng-if="vm.schedule.approve" class="transparent-background" disabled ng-model="vm.schedule.actualStartDateTimeString"
+                    /> -->
+                    <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.actualStartDateTimeString" format='vm.dateTimeFormat' type="datetime"></fp-date-time-renderer>
                   </div>
                   <div style="width: 35%;float: left;">
                     <button class="button button-small button-assertive" ng-disabled="vm.schedule.approve" ng-click="vm.tabs.sch.events.clearAllDateTimeSelection(true)">
@@ -215,10 +219,12 @@
                 </div>
                 <div class="item" style="border-top:0px !important;padding-top: 0px !important;">
                   <div style="width: 65%;float: left;">
-                    <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onEndDateTimeChanged}"
-                      ng-model="vm.schedule.actualFinishDateTime" placeholder="tap here to select..." />
-                    <input type="text" ng-if="vm.schedule.approve" class="transparent-background" disabled ng-model="vm.schedule.actualFinishDateTimeString"
-                    />
+                    <!-- <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onEndDateTimeChanged}"
+                      ng-model="vm.schedule.actualFinishDateTime" placeholder="tap here to select..." /> -->
+                      <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.actualFinishDateTime" type="datetime" on-date-changed="vm.scheduleTimeSpan.onEndDateTimeChanged()" format="vm.dateTimeFormat" default-text="tap here to select..."></fp-date-time-component>
+                    <!-- <input type="text" ng-if="vm.schedule.approve" class="transparent-background" disabled ng-model="vm.schedule.actualFinishDateTimeString"
+                    /> -->
+                    <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.actualFinishDateTimeString" format='vm.dateTimeFormat' type="datetime"></fp-date-time-renderer>
                   </div>
                   <div style="width: 35%;float: left;">
                     <button class="button button-small button-assertive" ng-disabled="vm.schedule.approve" ng-click="vm.tabs.sch.events.clearAllDateTimeSelection(false)">
@@ -253,17 +259,21 @@
                 </div>
                 <div class="item item-input item-stacked-label">
                   <span class="input-label">In Route Start</span>
-                  <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onInRouteTImeChanged}"
-                    ng-model="vm.schedule.inRouteStartTime" />
-                  <input type="text" ng-if="vm.schedule.approve" class="transparent-background" disabled ng-model="vm.schedule.inRouteStartTime"
-                  />
+                  <!-- <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onInRouteTImeChanged}"
+                    ng-model="vm.schedule.inRouteStartTime" /> -->
+                    <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.inRouteStartTime" type="datetime" on-date-changed="vm.scheduleTimeSpan.onInRouteTImeChanged()" format="vm.dateTimeFormat"></fp-date-time-component>
+                  <!-- <input type="text" ng-if="vm.schedule.approve" class="transparent-background" disabled ng-model="vm.schedule.inRouteStartTime"
+                  /> -->
+                  <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.inRouteStartTime" format='vm.dateTimeFormat' type="datetime"></fp-date-time-renderer>
                 </div>
                 <div class="item item-input item-stacked-label">
                   <span class="input-label">In Route End</span>
-                  <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onInRouteTImeChanged}"
-                    ng-model="vm.schedule.inRouteEndTime" />
-                  <input type="text" ng-if="vm.schedule.approve" class="transparent-background" disabled ng-model="vm.schedule.inRouteEndTime"
-                  />
+                  <!-- <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onInRouteTImeChanged}"
+                    ng-model="vm.schedule.inRouteEndTime" />-->
+                    <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.inRouteEndTime" type="datetime" on-date-changed="vm.scheduleTimeSpan.onInRouteTImeChanged()" format="vm.dateTimeFormat"></fp-date-time-component>
+                  <!-- <input type="text" ng-if="vm.schedule.approve" class="transparent-background" disabled ng-model="vm.schedule.inRouteEndTime"
+                  />  -->
+                  <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.inRouteEndTime" format='vm.dateTimeFormat' type="datetime"></fp-date-time-renderer>
                 </div>
                 <label class="item item-input">
                   <span class="input-label">Total Time</span>
@@ -278,10 +288,12 @@
             <div class="list" ng-if="vm.uiSettings.billingOption == 1">
               <label class="item item-input">
                 <span class="input-label">Actual Start Date</span>
-                <input type="text" ng-if="!vm.schedule.approve" class="transparent-background text-right" mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}"
-                  ng-model="vm.schedule.actualStartDateTime" ng-change="vm.scheduleTimeSpan.onStartDateTimeChaged()" />
-                <input type="text" ng-if="vm.schedule.approve" class="transparent-background text-right" disabled ng-model="vm.schedule.actualStartDateTime"
-                />
+                <!-- <input type="text" ng-if="!vm.schedule.approve" class="transparent-background text-right" mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}"
+                  ng-model="vm.schedule.actualStartDateTime" ng-change="vm.scheduleTimeSpan.onStartDateTimeChaged()" /> -->
+                  <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.actualStartDateTime" type="datetime" on-date-changed="vm.scheduleTimeSpan.onStartDateTimeChaged()" format="vm.dateTimeFormat" align-calendar></fp-date-time-component>
+                <!-- <input type="text" ng-if="vm.schedule.approve" class="transparent-background text-right" disabled ng-model="vm.schedule.actualStartDateTime"
+                /> -->
+                <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.actualStartDateTimeString" format='vm.dateTimeFormat' type="datetime" align-calendar></fp-date-time-renderer>
               </label>
 
               <label class="item item-input" ng-repeat="cs in ::vm.schedule.customSchedules">
@@ -355,10 +367,12 @@
                 ng-click="vm.tabs.sch.events.onListScheduleItemTap(sch)" ng-class="{'active':vm.schedule.num === sch.num}">
                 <h4>
                   <span class="text-muted">Sch Date :</span>
-                  <strong>{{::sch.scheduledStartDateTime | date:'MM/dd/yyyy'}}</strong>&nbsp;
+                  <!-- <strong>{{::sch.scheduledStartDateTime | date:'MM/dd/yyyy'}}</strong> -->
+                  <fp-date-time-renderer model-val="sch.scheduledStartDateTime" type="datetime" format="vm.dateTimeFormat"></fp-date-time-renderer>&nbsp;
                   <span class="text-muted" ng-if="sch.actualStartDateTime">Actual Date : </span>
                   <strong ng-if="sch.actualStartDateTime">
-                    {{::sch.actualStartDateTime | date:'MM/dd/yyyy'}}
+                    <!-- {{::sch.actualStartDateTime | date:'MM/dd/yyyy'}} -->
+                    <fp-date-time-renderer model-val="sch.actualStartDateTime" type="datetime" format="vm.dateTimeFormat"></fp-date-time-renderer>&nbsp;
                   </strong>
                   <strong class="text-info">{{::sch.technicianName}}</strong>
                   <span ng-if="sch.tripNote">: Trip Note - {{::sch.tripNote}}</span>

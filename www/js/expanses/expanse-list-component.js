@@ -5,13 +5,15 @@
             barcode: "<",
             refresher: "<"
         },
-        controller: ["$scope", "$timeout", "$ionicActionSheet", "expense-data-factory", "fpm-utilities-factory",
-            function ($scope, $timeout, $ionicActionSheet, expenseDataFactory, fpmUtilitiesFactory) {
+        controller: ["$scope","$rootScope", "$timeout", "$ionicActionSheet", "expense-data-factory","authenticationFactory", "fpm-utilities-factory",
+            function ($scope, $rootScope, $timeout, $ionicActionSheet, expenseDataFactory,authenticationFactory, fpmUtilitiesFactory) {
                 var vm = this;
                 vm.paid = [];
                 vm.unpaid = [];
                 vm.expanses = [];
-                vm.modal = null; var alerts = fpmUtilitiesFactory.alerts;
+                vm.user = authenticationFactory.getLoggedInUserInfo();
+                vm.modal = null; var alerts = fpmUtilitiesFactory.alerts; 
+                vm.dateFormat=vm.user.dateFormat;
                 var schema = { expenseId: 0, title: "", description: "", expenseType: 0, expenseStatus: 0, totalCost: 0, barcode: vm.barcode, expenseDate: new Date(), quantity: 1, imageChanged: false, havingImage: false, isReimbursable: false };
                 vm.image = {
                     name: "",

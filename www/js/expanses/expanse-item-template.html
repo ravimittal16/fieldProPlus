@@ -6,7 +6,8 @@
             <small class="text-small">{{vm.item.description}}</small>
             <br>
             <small class="text-muted text-small">
-                <strong>Added On : </strong>{{vm.item.addedOn | date}}</small>
+                <strong>Added On : </strong>
+                <fp-date-time-renderer model-val="vm.item.addedOn" type="date" format="vm.dateFormat"></fp-date-time-renderer></small>
         </h5>
     </div>
     <div class="col col-25 col-center center">

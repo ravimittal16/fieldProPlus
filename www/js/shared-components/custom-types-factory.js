@@ -54,14 +54,20 @@
       return apicontext.deleteReq(api + "DeleteCustomTypeData?num=" + num);
     }
 
-    var factory = {};
-    factory.uploadFile = uploadFile;
-    factory.controlTypes = controlTypes;
-    factory.getCustomTypesDataByBarcode = getCustomTypesDataByBarcode;
-    factory.entityTypes = entityTypes;
-    factory.typesData = typesData;
-    factory.updateData = updateData;
-    factory.deleteCustomTypesData = deleteCustomTypesData;
+    function uploadFiles(files, model) {
+      return apicontext.upload(api + "TryUploadFile", files, model);
+    }
+
+    var factory = {
+      uploadFiles: uploadFiles,
+      uploadFile: uploadFile,
+      controlTypes: controlTypes,
+      getCustomTypesDataByBarcode: getCustomTypesDataByBarcode,
+      entityTypes: entityTypes,
+      typesData: typesData,
+      updateData: updateData,
+      deleteCustomTypesData: deleteCustomTypesData
+    };
     return factory;
   }
   initFactory.$inject = ["api-base-factory"];

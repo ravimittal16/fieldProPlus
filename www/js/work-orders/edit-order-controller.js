@@ -11,7 +11,6 @@
     $stateParams,
     $ionicActionSheet,
     $ionicLoading,
-    $cordovaInAppBrowser,
     workOrderFactory,
     fpmUtilities,
     sharedDataFactory,
@@ -34,6 +33,7 @@
       CLOCK_OUT: 5002
     };
     vm.invoiceOpen = true;
+
     vm.uiSettings = {
       isTimeCardModuleEnabled: false,
       milageTrackingEnabled: false,
@@ -308,18 +308,18 @@
         var isBeongToCurrentUser =
           vm.schedule.technicianNum === vm.user.userEmail;
         if (
-          havingGroupsAssigned === true &&
+          havingGroupsAssigned &&
           fromAddSchedule &&
           fromAddSchedule === true
         ) {
           var checkifBelongToAssinedUser = _.findWhere(vm.serviceProviders, {
-            UserId: vm.schedule.technicianNum
+            userId: vm.schedule.technicianNum
           });
           if (angular.isDefined(checkifBelongToAssinedUser)) {
             return true;
           }
         }
-        if (vm.isServiceProvider === true && isBeongToCurrentUser === false) {
+        if (vm.isServiceProvider && !isBeongToCurrentUser) {
           alerts.alert(
             "Oops!",
             "you are not authorized to perform this action",
@@ -411,6 +411,8 @@
     }
     //================================================================================================
     vm.user = authenticationFactory.getLoggedInUserInfo();
+    vm.dateTimeFormat = vm.user.dateFormat;
+    vm.placeholder = "tap here to select...";
     function activateController() {
       if (!$rootScope.isInDevMode) {
         _getCurrentUserLocation();
@@ -1229,7 +1231,6 @@
     });
 
     getBarcodeDetails();
-
     activateController();
   }
   initController.$inject = [
@@ -1242,7 +1243,6 @@
     "$stateParams",
     "$ionicActionSheet",
     "$ionicLoading",
-    "$cordovaInAppBrowser",
     "work-orders-factory",
     "fpm-utilities-factory",
     "shared-data-factory",

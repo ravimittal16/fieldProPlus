@@ -268,6 +268,7 @@
       timeCardInfo.enabled = vm.userInfo.timeCard || false;
       vm.havingGroupsAssigned = vm.userInfo.havingGroupsAssigned;
       vm.isServiceProvider = !vm.userInfo.isAdminstrator;
+      sharedDataFactory.updateLocationServiceStatus(vm.userInfo.userEmail);
       if (timeCardInfo.enabled === true) {
         _getTodaysTimeCardEntries();
       }

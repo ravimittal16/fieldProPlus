@@ -57,7 +57,8 @@
                 <div class="list">
                     <label class="item item-input item-stacked-label">
                         <span class="input-label">Date</span>
-                        <input type="text" class="transparent-background" placeholder="Date" readonly="" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}" data-ng-model="vm.entity.expenseDate" />
+                        <!-- <input type="text" class="transparent-background" placeholder="Date" readonly="" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}" data-ng-model="vm.entity.expenseDate" /> -->
+                        <fp-date-component  model-val="vm.entity.expenseDate" readonly="" type="date" format="vm.dateFormat" default-text="Date"></fp-date-component>
                     </label>
                     <label class="item item-input item-stacked-label">
                         <span class="input-label">Title</span>

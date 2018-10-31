@@ -5,9 +5,11 @@
             barcode: "<",
             entityId: "<"
         },
-        controller: ["equipment-factory", "custom-types-factory", function (equipmentFactory, customTypesFactory) {
+        controller: ["equipment-factory", "custom-types-factory", "authenticationFactory",function (equipmentFactory, customTypesFactory,authenticationFactory) {
             var vm = this;
             vm.factory = customTypesFactory;
+            var userInfo = authenticationFactory.getLoggedInUserInfo();
+            vm.dateFormat= userInfo.dateFormat;
             vm.customTypes = {
                 data: []
             };

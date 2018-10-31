@@ -41,11 +41,13 @@
                     </div>
                     <label class="item item-input">
 				        <span class="input-label">Start Date</span>
-                        <input type="text" class="transparent-background text-right" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yyyy'}" data-ng-model="vm.filterDate"/>
+                        <!-- <input type="text" class="transparent-background text-right" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yyyy'}" data-ng-model="vm.filterDate"/> -->
+                        <fp-date-component model-val="vm.filterDate"  type="date" format="vm.dateFormat" default-text="tap here to select..." align-calendar></fp-date-component>
                     </label>
                      <label class="item item-input">
 				        <span class="input-label">End Date</span>
-                        <input type="text" class="transparent-background text-right" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yyyy'}" data-ng-model="vm.filterEndDate"/>
+                        <!-- <input type="text" class="transparent-background text-right" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yyyy'}" data-ng-model="vm.filterEndDate"/> -->
+                        <fp-date-component model-val="vm.filterEndDate"  type="date" format="vm.dateFormat" default-text="tap here to select..." align-calendar></fp-date-component>
                     </label>
                     <!--<div class="item item-divider" data-ng-if="vm.user.isAdminstrator">
                         Service Provider

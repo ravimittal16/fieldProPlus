@@ -8,8 +8,10 @@
             oneditClicked: "&",
             isPaidList: "<"
         },
-        controller: ["$scope", function () {
+        controller: ["$scope","authenticationFactory",function ($scope,authenticationFactory) {
             var vm = this;
+            vm.user = authenticationFactory.getLoggedInUserInfo();
+            vm.dateFormat=vm.user.dateFormat;
             vm.events = {
                 onEditClicked: function () {
                     if (angular.isDefined(vm.oneditClicked)) {

@@ -35,7 +35,7 @@
         var baseUrl = fieldPromaxConfig.fieldPromaxApi;
         var alerts = fpmUtilitiesFactory.alerts;
         function uploadImage(mappedImage, imageName, bytes) {
-          vm.entity.imageModel = { Image: mappedImage, Name: imageName };
+          vm.entity.imageModel = { image: mappedImage, name: imageName };
           vm.ctEntity.value = imageName;
           vm.entity.view = vm.ctEntity;
           vm.entity.view.entityKey = $stateParams.barCode;
@@ -48,6 +48,38 @@
           }
           customTypesFactory
             .uploadFile(vm.entity)
+            .then(function(response) {
+              uploadTimeout = $timeout(function() {
+                if (response && response.success) {
+                  vm.ctEntity = response.entity;
+                  vm.showImageUpload = false;
+                  vm.ctEntity.value = response.entity.value;
+                }
+              }, 100);
+              alerts.alert("Uploaded", "File uploaded successfully");
+            })
+            .finally(function() {
+              fpmUtilitiesFactory.hideLoading();
+              loadModal();
+            });
+        }
+
+        function uploadImages(files) {
+          var imageName = files[0].name;
+          vm.entity.imageModel = { name: imageName };
+          vm.ctEntity.value = imageName;
+          vm.entity.view = vm.ctEntity;
+          vm.entity.view.entityKey = $stateParams.barCode;
+          if (vm.fromEquipments) {
+            vm.entity.view.dataEntityType = 102;
+            vm.entity.view.entityKey = vm.useEntityId;
+            vm.entity.view.barcode = $stateParams.barCode;
+          } else if (vm.type) {
+            vm.entity.view.dataEntityType = vm.type;
+          }
+          fpmUtilitiesFactory.showLoading();
+          customTypesFactory
+            .uploadFiles(files, vm.entity)
             .then(function(response) {
               uploadTimeout = $timeout(function() {
                 if (response && response.success) {
@@ -130,29 +162,14 @@
               imageViewerModel = modal;
             });
         }
-
+        var exts = ["tif", "tiff", "gif", "jpeg", "jpg", "pcd", "png", "bmp"];
         vm.imageUploader = {
           control: null,
           config: {
             select: function(e) {
               e.isDefaultPrevented = true;
               fpmUtilitiesFactory.showLoading();
-              var exts = [
-                "tif",
-                "tiff",
-                "gif",
-                "jpeg",
-                "jpg",
-                "jif",
-                "jfif",
-                "jp2",
-                "jpx",
-                "j2k",
-                "j2c",
-                "pcd",
-                "png",
-                "bmp"
-              ];
+
               var extension = e.files[0].name.split(".");
               var getExt = extension.reverse();
               if (e.files[0].size > 10 * 1024 * 1024) {
@@ -173,12 +190,13 @@
                 );
                 return;
               }
-              var fileReader = new FileReader();
-              fileReader.onload = function(event) {
-                var mapImage = event.target.result;
-                uploadImage(mapImage, e.files[0].name);
-              };
-              fileReader.readAsDataURL(e.files[0].rawFile);
+              uploadImages(e.files);
+              // var fileReader = new FileReader();
+              // fileReader.onload = function(event) {
+              //   var mapImage = event.target.result;
+              //   uploadImage(mapImage, e.files[0].name);
+              // };
+              // fileReader.readAsDataURL(e.files[0].rawFile);
             },
             showFileList: false,
             localization: {

@@ -41,9 +41,11 @@
             inventoryOn: response.inventoryOn === "True",
             allowUserToEditWoDescription:
               response.allowUserToEditWoDescription === "True",
-            currencySymbol: response.currencySymbol
+            currencySymbol: response.currencySymbol,
+            dateFormat:response.dateFormat
           };
           $rootScope.currencySymbol = response.currencySymbol;
+          $rootScope.dateFormat = response.dateFormat;
           localStorageService.set(localStorageKeys.userCredentials, loginModel);
           localStorageService.set(localStorageKeys.storageKeyName, userobj);
           if (response.hasOwnProperty(localStorageKeys.configKeyName)) {

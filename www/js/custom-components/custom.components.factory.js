@@ -9,10 +9,11 @@
 
         function generateReport(model) {
             if (model) {
-                if (model.startDate) model.startDate = kendo.toString(model.startDate, "g");
-                if (model.endDate) model.endDate = kendo.toString(model.endDate, "g");
+                
+                 if (model.startDate) var startDate= kendo.toString(model.startDate, "g");
+                 if (model.endDate) var endDate = kendo.toString(model.endDate, "g");
             }
-            return apiBaseFactory.get(apibaseurl + "GetTimeWorkedReport?startDate=" + model.startDate + "&endDate=" + model.endDate);
+            return apiBaseFactory.get(apibaseurl + "GetTimeWorkedReport?startDate=" + startDate + "&endDate=" + endDate);
         }
 
         return {

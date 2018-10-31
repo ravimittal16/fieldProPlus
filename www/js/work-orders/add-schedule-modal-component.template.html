@@ -24,11 +24,13 @@
             </label>
             <label class="item item-input">
                 <span class="input-label">Schedule Start</span>
-                <input type="text" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A'}" data-ng-model="vm.newSchedule.startDate"/>
+                <!-- <input type="text" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A'}" data-ng-model="vm.newSchedule.startDate"/> -->
+                <fp-date-time-component model-val="vm.newSchedule.startDate" type="datetime" format="vm.dateTimeFormat" align-calendar></fp-date-time-component>
             </label>
             <label class="item item-input">
 			    <span class="input-label">Schedule Finish</span>
-				<input type="text" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A'}" data-ng-model="vm.newSchedule.endTime"/>
+                <!-- <input type="text" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A'}" data-ng-model="vm.newSchedule.endTime"/> -->
+                <fp-date-time-component model-val="vm.newSchedule.endTime" type="datetime" format="vm.dateTimeFormat" align-calendar></fp-date-time-component>
             </label>
             <div class="padding">
                 <button class="button button-block button-positive" data-ng-click="vm.events.addScheduleClicked()" type="button">

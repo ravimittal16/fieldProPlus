@@ -4,9 +4,11 @@
         bindings: {
             onCancelClicked: "&"
         },
-        controller: ["$scope", "$ionicActionSheet", "timecard-factory", "fpm-utilities-factory",
-            function ($scope, $ionicActionSheet, timecardFactory, fpmUtilitiesFactory) {
+        controller: ["$scope", "$ionicActionSheet", "timecard-factory", "fpm-utilities-factory","authenticationFactory",
+            function ($scope, $ionicActionSheet, timecardFactory, fpmUtilitiesFactory,authenticationFactory) {
                 var vm = this;
+                vm.user=authenticationFactory.getLoggedInUserInfo();
+                vm.dateFormat=vm.user.dateFormat;
                 var codes = timecardFactory.data.jobCodes;
                 vm.lists = { clockInOuts: [], payables: [], nonPayables: [] };
                 vm.modal = { startDate: new Date(), endDate: null };
@@ -17,7 +19,7 @@
                 }
                 vm.payableReport = [];
                 vm.totalPayables = { p: 0, np: 0, t: 0 };
-                function showReport() {
+               function showReport() {
                     vm.payableReport = [];
                     var report = [];
                     fpmUtilitiesFactory.showLoading().then(function () {

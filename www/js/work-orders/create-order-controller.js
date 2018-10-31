@@ -4,6 +4,7 @@
   function initController(
     $state,
     $timeout,
+    $rootScope,
     workOrderFactory,
     sharedDataFactory,
     fpmUtilitiesFactory,
@@ -130,6 +131,7 @@
       };
       adjustScheduleFinishTime();
     }
+    vm.dateTimeFormat = vm.userInfo.dateFormat;
     initDates();
 
     function onBackToDashboardClicked() {
@@ -183,6 +185,7 @@
       onSubmitButtonClicked: onSubmitButtonClicked,
       onBackToDashboardClicked: onBackToDashboardClicked
     };
+
     function activateController() {
       sharedDataFactory
         .getIniitialData()
@@ -216,6 +219,7 @@
   initController.$inject = [
     "$state",
     "$timeout",
+    "$rootScope",
     "work-orders-factory",
     "shared-data-factory",
     "fpm-utilities-factory",

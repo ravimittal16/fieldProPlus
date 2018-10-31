@@ -8,6 +8,7 @@
         mapFactory, sharedDataFactory, fpmUtilitiesFactory, authenticationFactory) {
         var vm = this;
         vm.user = authenticationFactory.getLoggedInUserInfo();
+        vm.dateFormat=vm.user.dateFormat;
         var options = { timeout: 10000, enableHighAccuracy: true };
         var mapOptions = {
             center: null,

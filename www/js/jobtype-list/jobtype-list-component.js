@@ -9,9 +9,12 @@
       "$scope",
       "$timeout",
       "custom-types-factory",
-      function($scope, $timeout, customTypesFactory) {
+      "authenticationFactory",
+      function($scope, $timeout, customTypesFactory,authenticationFactory) {
         var vm = this;
         vm.factory = customTypesFactory;
+        vm.userInfo=authenticationFactory.getLoggedInUserInfo();
+        vm.dateFormat= vm.userInfo.dateFormat;
         var controlTypes = customTypesFactory.controlTypes;
         vm.isExpanded = false;
         var counter = 0;

@@ -22,7 +22,7 @@ var constants = {
   }
 };
 if (!isInDevMode && !prodReady) {
-  constants.fieldPromaxApi = "https://fieldpromax-stagging1.azurewebsites.net/";
+  constants.fieldPromaxApi = "https://fieldpromax-culture.azurewebsites.net/"; //"http://192.168.100.42:81/";
 }
 var fpm = angular
   .module("fpm", [

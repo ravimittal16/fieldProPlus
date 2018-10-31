@@ -2,6 +2,7 @@
   "use strict";
   function _initController(
     $scope,
+    $rootScope,
     $state,
     $window,
     $stateParams,
@@ -15,7 +16,10 @@
     vm.estimateId = $stateParams.id;
     vm.enableMarkup = true;
     vm.user = authenticationFactory.getLoggedInUserInfo();
-
+    vm.dateTimeFormat = $rootScope.dateFormat;
+    $timeout(function() {
+      vm.dateTimeFormat = vm.user.dateFormat;
+    }, 100);
     var alerts = fpmUtilities.alerts;
 
     function calculateTotals() {
@@ -41,7 +45,7 @@
                 var newPrice = pro.newPriceCalculated
                   ? pro.price
                   : parseFloat(pro.price) +
-                    parseFloat((pro.markUpPercent || 0) / 100 * pro.price);
+                    parseFloat(((pro.markUpPercent || 0) / 100) * pro.price);
                 pro.price = newPrice;
                 pro.newPriceCalculated = true;
                 totalPrice = newPrice * pro.qty;
@@ -54,7 +58,7 @@
               if ((pro.isTaxable || false) === true) {
                 var taxAmt = parseFloat(
                   parseFloat(taxRate) > 0
-                    ? parseFloat(taxRate / 100 * totalPrice)
+                    ? parseFloat((taxRate / 100) * totalPrice)
                     : 0
                 );
                 vm.totals.totaltax += parseFloat(taxAmt);
@@ -224,6 +228,7 @@
   }
   _initController.$inject = [
     "$scope",
+    "$rootScope",
     "$state",
     "$window",
     "$stateParams",

@@ -1,10 +1,20 @@
 (function() {
   "use strict";
 
-  function initFactory($q, $cacheFactory, apiBaseFactory, sharedDataFactory) {
+  function initFactory($q, $rootScope, $cacheFactory, apiBaseFactory) {
     var apibaseurl = "api/workorders/";
     var cache = $cacheFactory("orderCache");
     var dashboardDataKeyName = "dashboardData";
+
+    function _attachLocationCoordinates(postObj) {
+      var _loction = $rootScope.currentLocation;
+      var _coords = _loction !== undefined ? _loction.coords : {};
+      if (_coords && _coords["latitude"] !== undefined) {
+        postObj["longitude"] = _coords["longitude"];
+        postObj["latitude"] = _coords["latitude"];
+      }
+      return postObj;
+    }
 
     function clearAllCache() {
       cache.remove(dashboardDataKeyName);
@@ -71,6 +81,7 @@
     }
 
     function saveJsonSignForBarcode(obj) {
+      obj = _attachLocationCoordinates(obj);
       return apiBaseFactory.post(apibaseurl + "SaveJsonSignForBarcode", obj);
     }
 
@@ -117,15 +128,18 @@
     }
 
     function updateWorkOrderMobile(model) {
+      model = _attachLocationCoordinates(model);
       return apiBaseFactory.post(apibaseurl + "UpdateWorkOrderMobile", model);
     }
 
     function updateJobStatus(sch) {
       sch.clientTime = kendo.toString(new Date(), "g");
+      sch = _attachLocationCoordinates(sch);
       return apiBaseFactory.post(apibaseurl + "UpdateJobStatus", sch);
     }
 
     function updateSchedule(model) {
+      model = _attachLocationCoordinates(model);
       if (model.customSchedules) {
         model.customSchedules = JSON.stringify(model.customSchedules);
       }
@@ -170,6 +184,7 @@
     }
 
     function updateSchduleTotalTime(schedule) {
+      schedule = _attachLocationCoordinates(schedule);
       return apiBaseFactory.post(
         apibaseurl + "UpdateSchduleTotalTime",
         schedule
@@ -196,7 +211,12 @@
       );
     }
 
+    function uploadFiles(files, model) {
+      return apiBaseFactory.upload(apibaseurl + "TryUpload", files, model);
+    }
+
     return {
+      uploadFiles: uploadFiles,
       addProductFromBarcodeScanner: addProductFromBarcodeScanner,
       uploadFilesN: uploadFilesN,
       deleteImageFromBlob: deleteImageFromBlob,
@@ -229,9 +249,9 @@
   }
   initFactory.$inject = [
     "$q",
+    "$rootScope",
     "$cacheFactory",
-    "api-base-factory",
-    "shared-data-factory"
+    "api-base-factory"
   ];
   angular.module("fpm").factory("work-orders-factory", initFactory);
 })();
