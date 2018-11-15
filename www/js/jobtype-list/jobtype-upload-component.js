@@ -17,6 +17,7 @@
       "custom-types-factory",
       "fpm-utilities-factory",
       "fieldPromaxConfig",
+      "shared-data-factory",
       function(
         $scope,
         $ionicModal,
@@ -24,7 +25,8 @@
         $timeout,
         customTypesFactory,
         fpmUtilitiesFactory,
-        fieldPromaxConfig
+        fieldPromaxConfig,
+        sharedDataFactory
       ) {
         var vm = this;
         vm.entity = {};
@@ -86,9 +88,9 @@
                   vm.ctEntity = response.entity;
                   vm.showImageUpload = false;
                   vm.ctEntity.value = response.entity.value;
+                  alerts.alert("Uploaded", "File uploaded successfully");
                 }
               }, 100);
-              alerts.alert("Uploaded", "File uploaded successfully");
             })
             .finally(function() {
               fpmUtilitiesFactory.hideLoading();
@@ -104,9 +106,19 @@
                 if (imageData) {
                   var name =
                     "Picture" +
-                    vm.barcode +
-                    kendo.toString(new Date(), "ddffMMss");
-                  uploadImage("data:image/jpeg;base64," + imageData, name);
+                    $stateParams.barCode +
+                    kendo.toString(new Date(), "ddffMMss") +
+                    ".jpeg";
+                  sharedDataFactory
+                    .convertToBlob("data:image/jpeg;base64," + imageData, name)
+                    .then(
+                      function(response) {
+                        if (response) {
+                          uploadImages([{ rawFile: response }]);
+                        }
+                      },
+                      function() {}
+                    );
                 }
               }, 500);
             });
@@ -162,7 +174,7 @@
               imageViewerModel = modal;
             });
         }
-        var exts = ["tif", "tiff", "gif", "jpeg", "jpg", "pcd", "png", "bmp"];
+        var exts = ["tif", "tiff", "gif", "jpeg", "jpg", "png"];
         vm.imageUploader = {
           control: null,
           config: {
@@ -191,12 +203,6 @@
                 return;
               }
               uploadImages(e.files);
-              // var fileReader = new FileReader();
-              // fileReader.onload = function(event) {
-              //   var mapImage = event.target.result;
-              //   uploadImage(mapImage, e.files[0].name);
-              // };
-              // fileReader.readAsDataURL(e.files[0].rawFile);
             },
             showFileList: false,
             localization: {

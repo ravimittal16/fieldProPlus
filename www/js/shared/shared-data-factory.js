@@ -13,20 +13,20 @@
     var locationapi = "api/Location/";
 
     function updateLocationServiceStatus(userEmail) {
-      if (!$rootScope.isOnDevMode && cordova) {
-        cordova.plugins.diagnostic.isLocationEnabled(
-          function(enabled) {
-            apiBaseFactory.get(
-              locationapi +
-                "UpdateLocationServiceStatus?userEmail=" +
-                userEmail +
-                "&locationServiceOn=" +
-                enabled
-            );
-          },
-          function() {}
-        );
-      }
+      // if (!$rootScope.isOnDevMode && cordova) {
+      //   cordova.plugins.diagnostic.isLocationEnabled(
+      //     function(enabled) {
+      //       apiBaseFactory.get(
+      //         locationapi +
+      //           "UpdateLocationServiceStatus?userEmail=" +
+      //           userEmail +
+      //           "&locationServiceOn=" +
+      //           enabled
+      //       );
+      //     },
+      //     function() {}
+      //   );
+      // }
     }
 
     function updateSettings(settings) {
@@ -105,7 +105,47 @@
       }
       return defer.promise;
     }
+
+    function convertToBlob(base64Data, name) {
+      var defer = $q.defer();
+      var contentType = "image/jpeg";
+      var sliceSize = 512;
+      base64Data = base64Data.replace(
+        /data\:image\/(jpeg|jpg|png)\;base64\,/gi,
+        ""
+      );
+      var byteCharacters = atob(base64Data);
+      var byteArrays = [];
+      var totalLoopLength = Math.floor(byteCharacters.length / sliceSize) + 1;
+      var loopCount = 0;
+      for (
+        var offset = 0;
+        offset < byteCharacters.length;
+        offset += sliceSize
+      ) {
+        loopCount += 1;
+        var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        var byteNumbers = new Array(slice.length);
+        for (var i = 0; i < slice.length; i++) {
+          byteNumbers[i] = slice.charCodeAt(i);
+        }
+        var byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+        if (loopCount === totalLoopLength) {
+          var file = new File(byteArrays, name, {
+            type: contentType,
+            lastModified: new Date()
+          });
+          defer.resolve(file);
+        }
+      }
+
+      return defer.promise;
+    }
+
     return {
+      convertToBlob: convertToBlob,
       updateLocationServiceStatus: updateLocationServiceStatus,
       getAddressCoorinates: getAddressCoorinates,
       postLocation: postLocation,

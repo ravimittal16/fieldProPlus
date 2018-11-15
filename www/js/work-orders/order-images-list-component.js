@@ -17,6 +17,7 @@
       "fpm-utilities-factory",
       "estimates-factory",
       "fieldPromaxConfig",
+      "shared-data-factory",
       function(
         $scope,
         $stateParams,
@@ -26,7 +27,8 @@
         workOrdersFactory,
         fpmUtilitiesFactory,
         estimateFactory,
-        fieldPromaxConfig
+        fieldPromaxConfig,
+        sharedDataFactory
       ) {
         var vm = this;
         vm.isExpanded = false;
@@ -34,22 +36,7 @@
         var alerts = fpmUtilitiesFactory.alerts;
         vm.showDeleteImageOnModal = false;
         var currentIndex = 0;
-        var exts = [
-          ".tif",
-          ".tiff",
-          ".gif",
-          ".jpeg",
-          ".jpg",
-          ".jif",
-          ".jfif",
-          ".jp2",
-          ".jpx",
-          ".j2k",
-          ".j2c",
-          ".pcd",
-          ".png",
-          ".bmp"
-        ];
+        var exts = [".tif", ".tiff", ".gif", ".jpeg", ".jpg", ".png"];
 
         var selectedFiles = null;
 
@@ -64,12 +51,19 @@
               fpmUtilitiesFactory.showLoading("Uploading");
               workOrdersFactory
                 .uploadFiles(files, model)
-                .then(function(response) {
-                  _getImages();
-                })
+                .then(
+                  function(response) {
+                    if (response) {
+                      _getImages();
+                      alerts.alert("Uploaded", "File(s) Uploaded successfully");
+                    }
+                  },
+                  function() {
+                    alerts.alert("Error", "Not a valid image file.");
+                  }
+                )
                 .finally(function() {
                   fpmUtilitiesFactory.hideLoading();
-                  alerts.alert("Uploaded", "File(s) Uploaded successfully");
                 });
             }
           },
@@ -156,13 +150,18 @@
                   var name =
                     "Picture" +
                     vm.barcode +
-                    kendo.toString(new Date(), "ddffMMss");
-                  vm.upload.uploadImage(
-                    "data:image/jpeg;base64," + imageData,
-                    name,
-                    true,
-                    true
-                  );
+                    kendo.toString(new Date(), "ddffMMss") +
+                    ".jpeg";
+                  sharedDataFactory
+                    .convertToBlob("data:image/jpeg;base64," + imageData, name)
+                    .then(
+                      function(response) {
+                        if (response) {
+                          vm.upload.uploadImages([{ rawFile: response }]);
+                        }
+                      },
+                      function() {}
+                    );
                 }
               }, 500);
             });

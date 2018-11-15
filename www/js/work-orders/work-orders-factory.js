@@ -212,6 +212,7 @@
     }
 
     function uploadFiles(files, model) {
+      console.log(files[0]);
       return apiBaseFactory.upload(apibaseurl + "TryUpload", files, model);
     }
 
