@@ -11,7 +11,7 @@
           vm.mobiscrollDateConfig = {
             display: "bottom",
             dateFormat:
-              vm.format != ""
+              vm.format !== undefined && vm.format !== ""
                 ? vm.format.toLowerCase().replace("yy", "")
                 : "mm/dd/yy",
             onSelect: function(e) {

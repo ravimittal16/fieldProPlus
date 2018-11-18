@@ -11,7 +11,7 @@
           vm.mobiscrollDateTimeConfig = {
             display: "bottom",
             dateFormat:
-              vm.format != ""
+              vm.format !== undefined && vm.format !== ""
                 ? vm.format.toLowerCase().replace("yy", "")
                 : "mm/dd/yy",
             timeFormat: "hh:ii A",

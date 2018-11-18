@@ -1,17 +1,26 @@
 <div class="row" data-ng-if="vm.showError">
-  <div class="col">
-    <errors-view errors="vm.errors"></errors-view>
-  </div>
+  <div class="col"><errors-view errors="vm.errors"></errors-view></div>
 </div>
 <div class="row">
   <div class="col">
-    <div id="signature">
-      <div>
-      </div>
+    <div
+      id="signature"
+      style="border: 1px solid #d4d4d4;
+    margin-bottom: 5px;
+    border-radius: 4px;"
+    >
+      <div></div>
     </div>
 
-    <div class="list">
+    <div class="list" style="border: 1px solid #d4d4d4;border-radius: 4px;">
       <label class="item item-input">
-    <input type="text" placeholder="Customer Name" data-ng-model="vm.customerName" data-ng-keyUp="vm.events.onCustomerNameKeyup($event.keyCode)" />
-  </label>
+        <input
+          type="text"
+          placeholder="Customer Name"
+          data-ng-model="vm.customerName"
+          data-ng-keyUp="vm.events.onCustomerNameKeyup($event.keyCode)"
+        />
+      </label>
     </div>
+  </div>
+</div>

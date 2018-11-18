@@ -9,13 +9,13 @@
     controller: [
       "$scope",
       "$stateParams",
-      "$ionicActionSheet",
+      "$timeout",
       "authenticationFactory",
       "fieldPromaxConfig",
       function(
         $scope,
         $stateParams,
-        $ionicActionSheet,
+        $timeout,
         authenticationFactory,
         fieldPromaxConfig
       ) {
@@ -26,45 +26,43 @@
         var user = authenticationFactory.getLoggedInUserInfo();
         vm.signPadEvents = null;
         vm.showEmptySignatureMessage = false;
+
+        function tryLoadImage() {
+          vm.imageUrl =
+            baseUrl +
+            "Handlers/GetBarcodeSignature.ashx?barcode=" +
+            vm.barcode +
+            "&dateStamp=" +
+            new Date() +
+            "&customernumber=" +
+            user.customerNumber +
+            "&estimate=" +
+            vm.isEstimate +
+            "&estimateId=" +
+            estimateId;
+        }
+
         vm.events = {
           closeSignaturePad: function() {
             vm.showingSignaturePad = false;
+
+            $timeout(function() {
+              tryLoadImage();
+            }, 100);
           },
           saveSignature: function() {
             if (vm.signPadEvents) {
               vm.signPadEvents.trySaveSignature().then(function(response) {
                 if (response === true) {
                   vm.showingSignaturePad = false;
-                  vm.imageUrl =
-                    baseUrl +
-                    "Handlers/GetBarcodeSignature.ashx?barcode=" +
-                    vm.barcode +
-                    "&dateStamp=" +
-                    new Date() +
-                    "&customernumber=" +
-                    user.customerNumber +
-                    "&estimate=" +
-                    vm.isEstimate +
-                    "&estimateId=" +
-                    estimateId;
+                  tryLoadImage();
                 }
               });
             }
           },
           onSignatureActionButtonClicked: function() {
             vm.showingSignaturePad = true;
-            vm.imageUrl =
-              baseUrl +
-              "Handlers/GetBarcodeSignature.ashx?barcode=" +
-              vm.barcode +
-              "&dateStamp=" +
-              new Date() +
-              "&customernumber=" +
-              user.customerNumber +
-              "&estimate=" +
-              vm.isEstimate +
-              "&estimateId=" +
-              estimateId;
+            tryLoadImage();
           }
         };
         $scope.$on("fpm:showEmptyImageMessage", function(event, value) {

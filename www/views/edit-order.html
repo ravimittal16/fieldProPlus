@@ -451,7 +451,7 @@
               </div>
               <div>
                 <div class="list">
-                  <div class="item item-stable">
+                  <div class="item item-stable" style="padding: 5px;">
                     <div class="row">
                       <div class="col col-50">Name</div>
                       <div class="col col-10" ng-if="vm.taxCheckboxVisibility">Tax</div>
@@ -461,7 +461,7 @@
                       </div>
                     </div>
                   </div>
-                  <div ng-repeat="inv in vm.barCodeData.invoice" class="item item-text-wrap">
+                  <div ng-repeat="inv in vm.barCodeData.invoice" class="item item-text-wrap" style="padding:5px;">
                     <div class="row">
                       <div class="col col-50">
                         <h3>{{::inv.productName}}</h3>
@@ -485,7 +485,7 @@
             </div>
           </ion-list>
           <div class="row" ng-if="vm.user.showPrice">
-            <div class="col">
+            <div class="col" style="padding-left: 10px;padding-right: 15px;">
               <p>
                 <h5>Subtotal
                   <span class="pull-right">
@@ -504,7 +504,7 @@
               </p>
               <p>
                 <h5>Total Amount
-                  <span class="pull-right text-energized">
+                  <span class="pull-right text-energized" style="color:#2e61b9;">
 
                     <fpcurrency-renderer model-val="vm.totals.subtotal + vm.totals.totaltax">
                     </fpcurrency-renderer>

@@ -3,13 +3,11 @@
   function initDirective($timeout) {
     return {
       link: function(scope, element, attrs) {
-        $timeout(function() {
-          scope.$emit("fpm:showEmptyImageMessage", false);
-          $(element).on("error", function() {
-            $(element).hide();
-            scope.$emit("fpm:showEmptyImageMessage", true);
-          });
-        }, 200);
+        scope.$emit("fpm:showEmptyImageMessage", false);
+        $(element).on("error", function() {
+          $(element).hide();
+          scope.$emit("fpm:showEmptyImageMessage", true);
+        });
       }
     };
   }
