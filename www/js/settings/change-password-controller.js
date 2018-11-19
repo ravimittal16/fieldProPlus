@@ -14,7 +14,7 @@
               if (response.success) {
                 fpmUtilitiesFactory.alerts.alert(
                   "Success",
-                  response.msg,
+                  "Password has been changed successfully.",
                   function() {
                     authenticationFactory.logout();
                     $state.go("login");

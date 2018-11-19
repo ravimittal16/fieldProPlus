@@ -36,35 +36,6 @@
         var takePictureTimer = null;
         var baseUrl = fieldPromaxConfig.fieldPromaxApi;
         var alerts = fpmUtilitiesFactory.alerts;
-        function uploadImage(mappedImage, imageName, bytes) {
-          vm.entity.imageModel = { image: mappedImage, name: imageName };
-          vm.ctEntity.value = imageName;
-          vm.entity.view = vm.ctEntity;
-          vm.entity.view.entityKey = $stateParams.barCode;
-          if (vm.fromEquipments) {
-            vm.entity.view.dataEntityType = 102;
-            vm.entity.view.entityKey = vm.useEntityId;
-            vm.entity.view.barcode = $stateParams.barCode;
-          } else if (vm.type) {
-            vm.entity.view.dataEntityType = vm.type;
-          }
-          customTypesFactory
-            .uploadFile(vm.entity)
-            .then(function(response) {
-              uploadTimeout = $timeout(function() {
-                if (response && response.success) {
-                  vm.ctEntity = response.entity;
-                  vm.showImageUpload = false;
-                  vm.ctEntity.value = response.entity.value;
-                }
-              }, 100);
-              alerts.alert("Uploaded", "File uploaded successfully");
-            })
-            .finally(function() {
-              fpmUtilitiesFactory.hideLoading();
-              loadModal();
-            });
-        }
 
         function uploadImages(files) {
           var imageName = files[0].name;
