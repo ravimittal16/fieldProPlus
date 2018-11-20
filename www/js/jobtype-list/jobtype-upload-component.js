@@ -53,16 +53,21 @@
           fpmUtilitiesFactory.showLoading();
           customTypesFactory
             .uploadFiles(files, vm.entity)
-            .then(function(response) {
-              uploadTimeout = $timeout(function() {
-                if (response && response.success) {
-                  vm.ctEntity = response.entity;
-                  vm.showImageUpload = false;
-                  vm.ctEntity.value = response.entity.value;
-                  alerts.alert("Uploaded", "File uploaded successfully");
-                }
-              }, 100);
-            })
+            .then(
+              function(response) {
+                uploadTimeout = $timeout(function() {
+                  if (response && response.success) {
+                    vm.ctEntity = response.entity;
+                    vm.showImageUpload = false;
+                    vm.ctEntity.value = response.entity.value;
+                    alerts.alert("Uploaded", "File uploaded successfully");
+                  }
+                }, 100);
+              },
+              function() {
+                alerts.alert("Error", "Not a valid image file.");
+              }
+            )
             .finally(function() {
               fpmUtilitiesFactory.hideLoading();
               loadModal();
