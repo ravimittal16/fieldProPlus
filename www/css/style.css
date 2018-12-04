@@ -135,7 +135,7 @@ a {
   color: #fff;
 }
 
-address > p {
+address>p {
   margin-bottom: 0px;
 }
 
@@ -155,7 +155,7 @@ address > p {
 white-space: normal;
 }*/
 
-.p-10 > div {
+.p-10>div {
   padding-top: 0px !important;
   padding-bottom: 0px !important;
   padding-right: 0px !important;
@@ -218,6 +218,7 @@ white-space: normal;
 customer-search-header-component {
   width: 100%;
 }
+
 .alert {
   padding: 15px;
   /*margin-bottom: 20px;*/
@@ -226,21 +227,25 @@ customer-search-header-component {
   box-sizing: border-box;
   display: block;
 }
+
 .alert-danger {
   color: #a94442;
   background-color: #f2dede;
   border-color: #ebccd1;
 }
+
 .alert-success {
   color: #3c763d;
   background-color: #dff0d8;
   border-color: #d6e9c6;
 }
+
 .alert-info {
   color: #31708f;
   background-color: #d9edf7;
   border-color: #bce8f1;
 }
+
 .timer-red {
   border-color: #a94442 !important;
   color: #a94442;
@@ -249,6 +254,7 @@ customer-search-header-component {
 .timer-red-h4 {
   color: #a94442 !important;
 }
+
 .bg-white {
   background-color: #ffffff;
 }
@@ -262,6 +268,7 @@ customer-search-header-component {
 .timecard-table {
   background-color: transparent;
 }
+
 .timecard-table {
   display: table;
   border-collapse: collapse;
@@ -274,33 +281,39 @@ customer-search-header-component {
   vertical-align: inherit;
   border-color: inherit;
 }
+
 .timecard-table {
   display: table;
   border-collapse: separate;
   border-spacing: 2px;
   border-color: grey;
 }
-.timecard-table > thead > tr > th {
+
+.timecard-table>thead>tr>th {
   vertical-align: bottom;
   border-bottom: 2px solid #ddd;
 }
-.timecard-table > tbody > tr > td,
-.timecard-table > tbody > tr > th,
-.timecard-table > tfoot > tr > td,
-.timecard-table > tfoot > tr > th,
-.timecard-table > thead > tr > td,
-.timecard-table > thead > tr > th {
+
+.timecard-table>tbody>tr>td,
+.timecard-table>tbody>tr>th,
+.timecard-table>tfoot>tr>td,
+.timecard-table>tfoot>tr>th,
+.timecard-table>thead>tr>td,
+.timecard-table>thead>tr>th {
   padding: 8px;
   line-height: 1.42857143;
   vertical-align: top;
   border-top: 1px solid #ddd;
 }
+
 .timecard-table th {
   text-align: left;
 }
+
 .f-z-15 {
   font-size: 15px;
 }
+
 .spinner svg {
   width: 40px;
   height: 40px;
@@ -333,19 +346,24 @@ customer-search-header-component {
   border: 0px;
   width: 100%;
 }
+
 .button-bar-with-margin {
   background: transparent;
 }
+
 .button-bar-with-margin button {
   border-radius: 5px !important;
 }
+
 .button-bar-with-margin button:not(:first-child) {
   margin-left: 5px;
 }
+
 .input-label {
   font-size: 13px;
   font-weight: 600;
 }
+
 .text-italic {
   font-style: italic;
 }
@@ -355,11 +373,13 @@ customer-search-header-component {
     color: #fff !important;*/
   font-weight: 500;
 }
-.card > .item-divider {
+
+.card>.item-divider {
   background-color: #d4d4d4 !important;
   color: #404040 !important;
 }
-.list > .item-divider {
+
+.list>.item-divider {
   background-color: #d4d4d4 !important;
   color: #404040 !important;
 }
@@ -368,6 +388,7 @@ customer-search-header-component {
   border-color: #b5a9a9 !important;
   background-color: #d4d4d4 !important;
 }
+
 .hidden {
   display: none;
 }
@@ -375,16 +396,19 @@ customer-search-header-component {
 .border-bottom {
   border-bottom: 1px solid #eee;
 }
+
 .clockin-item {
   background: rgba(167, 144, 103, 0.89) !important;
   color: white;
   padding: 0px !important;
   text-align: center !important;
 }
+
 .timecard-checkin-item {
   padding: 5px;
   text-align: center;
 }
+
 .m-t-10 {
   margin-top: 10px !important;
 }
@@ -392,43 +416,49 @@ customer-search-header-component {
 .m-t-30 {
   margin-top: 30px !important;
 }
-.table > tbody > tr.success > td,
-.table > tbody > tr.success > th,
-.table > tbody > tr > td.success,
-.table > tbody > tr > th.success,
-.table > tfoot > tr.success > td,
-.table > tfoot > tr.success > th,
-.table > tfoot > tr > td.success,
-.table > tfoot > tr > th.success,
-.table > thead > tr.success > td,
-.table > thead > tr.success > th,
-.table > thead > tr > td.success,
-.table > thead > tr > th.success {
+
+.table>tbody>tr.success>td,
+.table>tbody>tr.success>th,
+.table>tbody>tr>td.success,
+.table>tbody>tr>th.success,
+.table>tfoot>tr.success>td,
+.table>tfoot>tr.success>th,
+.table>tfoot>tr>td.success,
+.table>tfoot>tr>th.success,
+.table>thead>tr.success>td,
+.table>thead>tr.success>th,
+.table>thead>tr>td.success,
+.table>thead>tr>th.success {
   background-color: #dff0d8;
 }
-.table > tbody > tr.danger > td,
-.table > tbody > tr.danger > th,
-.table > tbody > tr > td.danger,
-.table > tbody > tr > th.danger,
-.table > tfoot > tr.danger > td,
-.table > tfoot > tr.danger > th,
-.table > tfoot > tr > td.danger,
-.table > tfoot > tr > th.danger,
-.table > thead > tr.danger > td,
-.table > thead > tr.danger > th,
-.table > thead > tr > td.danger,
-.table > thead > tr > th.danger {
+
+.table>tbody>tr.danger>td,
+.table>tbody>tr.danger>th,
+.table>tbody>tr>td.danger,
+.table>tbody>tr>th.danger,
+.table>tfoot>tr.danger>td,
+.table>tfoot>tr.danger>th,
+.table>tfoot>tr>td.danger,
+.table>tfoot>tr>th.danger,
+.table>thead>tr.danger>td,
+.table>thead>tr.danger>th,
+.table>thead>tr>td.danger,
+.table>thead>tr>th.danger {
   background-color: #f2dede;
 }
+
 .f-s-11 {
   font-size: 11px !important;
 }
+
 .m-top-45 {
   margin-top: 45px !important;
 }
-.equipment-customtypes > div:not(:last-child) {
+
+.equipment-customtypes>div:not(:last-child) {
   border-bottom: 2px solid rgb(204, 204, 204) !important;
 }
+
 .button-gray {
   border-color: #939191;
   background-color: #d3d2d2;
@@ -440,10 +470,12 @@ customer-search-header-component {
   color: #b1b0b0;
   font-size: 82%;
 }
+
 .item-note {
   color: #2a748f;
   font-weight: 600;
 }
+
 .custom-type-radio {
   padding-top: 8px;
   padding-bottom: 8px;
@@ -453,9 +485,11 @@ customer-search-header-component {
   font-weight: 500;
   font-size: 13px;
 }
+
 .child-badge-right {
   right: 45px !important;
 }
+
 input[disabled],
 select[disabled],
 textarea[disabled],
@@ -465,8 +499,13 @@ select[readonly] {
   background-color: transparent;
   cursor: not-allowed;
 }
+
 .font25 {
   font-size: 25px;
   font-weight: 600;
   color: black;
+}
+
+.color-disable-light {
+  color: #efefef;
 }

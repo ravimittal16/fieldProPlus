@@ -1,51 +1,59 @@
 <ion-list>
-    <div>
-        <ion-item class="item-stable  item-bg-gray" ng-click="vm.events.onExpandClicked()" ng-class="{active: vm.isExpanded}">
-            <i class="icon" ng-class="vm.isExpanded ? 'ion-minus' : 'ion-plus'"></i> &nbsp;
-            <strong>Job Type List</strong>
-        </ion-item>
-        <div data-ng-if="vm.isExpanded">
-            <div class="list">
-                <div class="item item-text-wrap text-center" ng-if="vm.customTypes.data.length == 0 && !vm.gettingCustomTypes">
-                    <h3 class="text-muted">
-                        <strong>No Job Types defined</strong>
-                    </h3>
-                </div>
-                <div data-ng-repeat="ct in vm.customTypes.data" ng-if="vm.customTypes.data.length != 0 && !vm.gettingCustomTypes" data-ng-switch="ct.type">
-                    <label class="item item-input item-stacked-label" data-ng-switch-when="1">
-                        <span class="input-label" data-ng-bind="ct.title"></span>
-                        <input type="text" data-ng-model="ct.value" maxlength="100" placeholder="enter text here" data-ng-change="vm.events.onValueChanged(ct)"
-                            data-ng-model-options="{debounce:500}" />
-                    </label>
-                    <ion-list data-ng-switch-when="2">
-                        <div class="item custom-type-radio">
-                            <span data-ng-bind="ct.title"></span>
-                        </div>
-                        <ion-radio name="{{ct.title}}" ng-model="ct.value" data-ng-change="vm.events.onValueChanged(ct)" ng-value="'Yes'">Yes</ion-radio>
-                        <ion-radio name="{{ct.title}}" ng-model="ct.value" data-ng-change="vm.events.onValueChanged(ct)" ng-value="'No'">No</ion-radio>
-                    </ion-list>
-                    <span data-ng-switch-when="3">
-                        <ion-checkbox data-ng-model="ct.value" data-ng-change="vm.events.onValueChanged(ct)">
-                            {{::ct.title}}</ion-checkbox>
-                    </span>
-                    <label class="item item-input item-stacked-label" data-ng-switch-when="4">
-                        <span class="input-label" data-ng-bind="ct.title"></span>
-                        <!-- <input type="text" readonly="" placeholder="select date" class="transparent-background text-right" style="text-align: start;"
-                            data-ng-change="vm.events.onValueChanged(ct)" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}"
-                            data-ng-model="ct.value" /> -->
-                            <fp-date-component  model-val="ct.value" readonly="" type="date" format="vm.dateFormat" default-text="Select Date" on-date-changed="vm.events.onValueChanged(ct)"></fp-date-component>
-                    </label>
-                    <label class="item item-input item-stacked-label" data-ng-switch-when="5">
-                        <span class="input-label" data-ng-bind="ct.title"></span>
-                        <jobtype-upload-component data-ct-entity="ct" type="1" from-equipments="false"></jobtype-upload-component>
-                    </label>
-                    <label class="item item-input item-stacked-label" data-ng-switch-when="6">
-                        <span class="input-label" data-ng-bind="ct.title"></span>
-                        <textarea data-ng-model="ct.value" maxlength="100" placeholder="{{ct.title}}" rows="3" data-ng-change="vm.events.onValueChanged(ct)"
-                            data-ng-model-options="{debounce:500}"></textarea>
-                    </label>
-                </div>
-            </div>
+  <div>
+    <ion-item class="item-stable  item-bg-gray" ng-click="vm.events.onExpandClicked()" ng-class="{active: vm.isExpanded}">
+      <i class="icon" ng-class="vm.isExpanded ? 'ion-minus' : 'ion-plus'"></i> &nbsp;
+      <strong>Job Type List</strong>
+    </ion-item>
+    <div data-ng-if="vm.isExpanded">
+      <div class="list">
+        <div class="item item-text-wrap text-center" ng-if="vm.customTypes.data.length === 0 && !vm.gettingCustomTypes">
+          <h3 class="text-muted">
+            <strong>No Job Types defined</strong>
+          </h3>
         </div>
+        <div data-ng-repeat="ct in vm.customTypes.data" ng-if="vm.customTypes.data.length !== 0 && !vm.gettingCustomTypes"
+          data-ng-switch="ct.type">
+          <label class="item item-input item-stacked-label" data-ng-switch-when="1">
+            <span class="input-label" data-ng-bind="ct.title"></span>
+            <input type="text" data-ng-model="ct.value" maxlength="100" placeholder="enter text here" data-ng-change="vm.events.onValueChanged(ct)"
+              data-ng-model-options="{debounce:500}" />
+          </label>
+          <ion-list data-ng-switch-when="2">
+            <div class="item custom-type-radio">
+              <span data-ng-bind="ct.title"></span>
+            </div>
+            <ion-radio name="{{ct.title}}" ng-model="ct.value" data-ng-change="vm.events.onValueChanged(ct)" ng-value="'Yes'">Yes</ion-radio>
+            <ion-radio name="{{ct.title}}" ng-model="ct.value" data-ng-change="vm.events.onValueChanged(ct)" ng-value="'No'">No</ion-radio>
+          </ion-list>
+          <span data-ng-switch-when="3">
+            <ion-checkbox data-ng-model="ct.value" data-ng-change="vm.events.onValueChanged(ct)">
+              {{::ct.title}}</ion-checkbox>
+          </span>
+          <label class="item item-input item-stacked-label" data-ng-switch-when="4">
+            <span class="input-label" data-ng-bind="ct.title"></span>
+            <fp-date-component model-val="ct.value" readonly="" type="date" format="vm.dateFormat" default-text="Select Date"
+              on-date-changed="vm.events.onValueChanged(ct)"></fp-date-component>
+          </label>
+          <label class="item item-input item-stacked-label" data-ng-switch-when="5">
+            <span class="input-label" data-ng-bind="ct.title"></span>
+            <jobtype-upload-component data-ct-entity="ct" type="1" from-equipments="false"></jobtype-upload-component>
+          </label>
+          <label class="item item-input item-stacked-label" data-ng-switch-when="6">
+            <span class="input-label" data-ng-bind="ct.title"></span>
+            <textarea data-ng-model="ct.value" maxlength="100" placeholder="{{ct.title}}" rows="3" data-ng-change="vm.events.onValueChanged(ct)"
+              data-ng-model-options="{debounce:500}"></textarea>
+          </label>
+        </div>
+        <div class="button-bar" ng-if="vm.customTypes.data.length > 0 && !vm.gettingCustomTypes">
+          <a class="button button-icon icon ion-chevron-left" ng-class="{'color-disable-light':vm.clones.clones.length === 0}"
+            ng-click="vm.events.toolbar.previousClicked()"></a>
+          <a class="button button-icon icon ion-chevron-right" ng-class="{'color-disable-light':vm.clones.clones.length === 0}"
+            ng-click="vm.events.toolbar.nextClicked()">
+          </a> <a class="button button-icon icon ion-trash-b" ng-click="vm.events.toolbar.deleteClicked()" ng-class="{'color-disable-light':vm.clones.toolbar.currentIndex === -1,'timer-red-h4':vm.clones.toolbar.currentIndex > -1}">
+          </a>
+          <a class="button button-icon icon ion-plus-round" ng-click="vm.events.toolbar.addAnotherList()"> </a>
+        </div>
+      </div>
     </div>
+  </div>
 </ion-list>

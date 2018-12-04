@@ -9,9 +9,8 @@
 var isInDevMode = false;
 var prodReady = false;
 var constants = {
-  fieldPromaxApi: isInDevMode
-    ? "http://localhost:51518/"
-    : "https://fieldpromax.azurewebsites.net/",
+  fieldPromaxApi: isInDevMode ?
+    "http://localhost:51518/" : "https://fieldpromax.azurewebsites.net/",
   localStorageKeys: {
     authorizationDataKey: "authorizationData",
     initialData: "initialData",
@@ -21,8 +20,10 @@ var constants = {
     userCredentials: "userCredentials"
   }
 };
+//https://fieldpromax-stagging1.azurewebsites.net/
+//https://fieldpromax-culture.azurewebsites.net/
 if (!isInDevMode && !prodReady) {
-  constants.fieldPromaxApi = "https://fieldpromax-culture.azurewebsites.net/"; //"http://192.168.100.42:81/";
+  constants.fieldPromaxApi = "https://fieldpromax-stagging1.azurewebsites.net/"; //"http://192.168.100.42:81/";
 }
 var fpm = angular
   .module("fpm", [
@@ -47,7 +48,7 @@ var fpm = angular
     "ionicDatePickerProvider",
     "$provide",
     "fpm-utilities-factoryProvider",
-    function(
+    function (
       $stateProvider,
       $urlRouterProvider,
       $compileProvider,
@@ -58,8 +59,7 @@ var fpm = angular
       fpmUtilitiesFactoryProvider
     ) {
       fpmUtilitiesFactoryProvider.setApplicationModel(isInDevMode);
-      var routes = [
-        {
+      var routes = [{
           state: "login",
           config: {
             url: "/",
@@ -223,7 +223,7 @@ var fpm = angular
         }
       ];
 
-      angular.forEach(routes, function(route) {
+      angular.forEach(routes, function (route) {
         $stateProvider.state(route.state, route.config);
       });
       $urlRouterProvider.otherwise("/");
@@ -267,8 +267,8 @@ var fpm = angular
       $provide.decorator("$exceptionHandler", [
         "$delegate",
         "$injector",
-        function($delegate, $injector) {
-          return function(exception, cause) {
+        function ($delegate, $injector) {
+          return function (exception, cause) {
             var data = {
               type: "angular",
               url: window.location.hash,
@@ -301,7 +301,7 @@ var fpm = angular
     "fpm-utilities-factory",
     "authenticationFactory",
     "shared-data-factory",
-    function(
+    function (
       $ionicPlatform,
       $rootScope,
       $state,
@@ -310,7 +310,7 @@ var fpm = angular
       sharedDataFactory
     ) {
       $rootScope.isInDevMode = isInDevMode;
-      $ionicPlatform.ready(function() {
+      $ionicPlatform.ready(function () {
         if (window.cordova && window.cordova.plugins.Keyboard) {
           // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
           // for form inputs)
@@ -329,7 +329,7 @@ var fpm = angular
 
         document.addEventListener(
           "backbutton",
-          function(event) {
+          function (event) {
             if ($state.current.name === "app.dashboard") {
               //authenticationFactory.logout(false);
               if (navigator) navigator.app.exitApp();
@@ -338,6 +338,7 @@ var fpm = angular
           false
         );
         var isRunning = false;
+
         function succesFn(location) {
           var credentials = authenticationFactory.getStoredCredentials();
           $rootScope.currentLocation = location;
@@ -347,7 +348,7 @@ var fpm = angular
             location.isMoving = location.is_moving;
             location.coords.altitudeAccuracy =
               location.coords.altitude_accuracy;
-            sharedDataFactory.postLocation(location).finally(function() {
+            sharedDataFactory.postLocation(location).finally(function () {
               isRunning = false;
             });
           }
@@ -356,12 +357,12 @@ var fpm = angular
         if (!isInDevMode) {
           var bgGeo = window.BackgroundGeolocation;
 
-          bgGeo.on("location", function(location, taskId) {
+          bgGeo.on("location", function (location, taskId) {
             succesFn(location);
             bgGeo.finish(taskId);
           });
 
-          bgGeo.on("motionchange", function(isMoving, location, taskId) {
+          bgGeo.on("motionchange", function (isMoving, location, taskId) {
             location.is_moving = isMoving;
             succesFn(location);
             bgGeo.finish(taskId);
@@ -429,9 +430,9 @@ var fpm = angular
         }
         //TRY TO READ location
         function readLocation() {
-          bgGeo.configure(locationConfig, function(state) {
+          bgGeo.configure(locationConfig, function (state) {
             if (!state.enabled) {
-              bgGeo.start(function() {
+              bgGeo.start(function () {
                 locationServiceRunning = true;
               });
             }
@@ -465,10 +466,10 @@ var fpm = angular
         // }, false);
       });
       //CHECK CONNECTION
-      $rootScope.$on("$cordovaNetwork:online", function(event, networkState) {
+      $rootScope.$on("$cordovaNetwork:online", function (event, networkState) {
         fpmUtilitiesFactory.hideNetworkDialog();
       });
-      $rootScope.$on("$cordovaNetwork:offline", function(event, networkState) {
+      $rootScope.$on("$cordovaNetwork:offline", function (event, networkState) {
         fpmUtilitiesFactory.showNetworkDialog();
       });
     }

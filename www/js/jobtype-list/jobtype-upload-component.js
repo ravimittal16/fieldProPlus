@@ -1,10 +1,10 @@
-(function() {
+(function () {
   var componentConfig = {
     require: {
       parentController: "?^^jobtypeListComponent"
     },
     bindings: {
-      ctEntity: "=",
+      ctEntity: "<",
       fromEquipments: "=",
       useEntityId: "=",
       type: "<"
@@ -18,7 +18,7 @@
       "fpm-utilities-factory",
       "fieldPromaxConfig",
       "shared-data-factory",
-      function(
+      function (
         $scope,
         $ionicModal,
         $stateParams,
@@ -39,7 +39,9 @@
 
         function uploadImages(files) {
           var imageName = files[0].name;
-          vm.entity.imageModel = { name: imageName };
+          vm.entity.imageModel = {
+            name: imageName
+          };
           vm.ctEntity.value = imageName;
           vm.entity.view = vm.ctEntity;
           vm.entity.view.entityKey = $stateParams.barCode;
@@ -54,31 +56,32 @@
           customTypesFactory
             .uploadFiles(files, vm.entity)
             .then(
-              function(response) {
-                uploadTimeout = $timeout(function() {
+              function (response) {
+                uploadTimeout = $timeout(function () {
                   if (response && response.success) {
-                    vm.ctEntity = response.entity;
                     vm.showImageUpload = false;
                     vm.ctEntity.value = response.entity.value;
+                    vm.ctEntity.id = response.entity.id;
                     alerts.alert("Uploaded", "File uploaded successfully");
+                    vm.parentController.events.assignValue(response.entity);
                   }
                 }, 100);
               },
-              function() {
+              function () {
                 alerts.alert("Error", "Not a valid image file.");
               }
             )
-            .finally(function() {
+            .finally(function () {
               fpmUtilitiesFactory.hideLoading();
               loadModal();
             });
         }
 
         vm.events = {
-          takePictureClicked: function() {
-            fpmUtilitiesFactory.device.getPicture().then(function(imageData) {
+          takePictureClicked: function () {
+            fpmUtilitiesFactory.device.getPicture().then(function (imageData) {
               fpmUtilitiesFactory.showLoading();
-              takePictureTimer = $timeout(function() {
+              takePictureTimer = $timeout(function () {
                 if (imageData) {
                   var name =
                     "Picture" +
@@ -88,30 +91,32 @@
                   sharedDataFactory
                     .convertToBlob("data:image/jpeg;base64," + imageData, name)
                     .then(
-                      function(response) {
+                      function (response) {
                         if (response) {
-                          uploadImages([{ rawFile: response }]);
+                          uploadImages([{
+                            rawFile: response
+                          }]);
                         }
                       },
-                      function() {}
+                      function () {}
                     );
                 }
               }, 500);
             });
           },
-          uploadImageClicked: function() {
+          uploadImageClicked: function () {
             vm.imageUploader.control.wrapper
               .find("#upload-image")
               .trigger("click");
           },
-          deleteImageClicked: function() {
-            alerts.confirmDelete(function() {
+          deleteImageClicked: function () {
+            alerts.confirmDelete(function () {
               customTypesFactory
                 .deleteCustomTypesData(vm.ctEntity.id)
-                .then(function() {
+                .then(function () {
                   alerts.alert("Image delete successfully");
                 })
-                .finally(function() {
+                .finally(function () {
                   imageViewerModel.hide();
                   vm.showImageUpload = true;
                   vm.ctEntity.value = null;
@@ -121,7 +126,7 @@
                 });
             });
           },
-          showImageClick: function() {
+          showImageClick: function () {
             if (imageViewerModel !== null && !vm.showImageUpload) {
               vm.imageUrl =
                 baseUrl +
@@ -133,7 +138,7 @@
               imageViewerModel.show();
             }
           },
-          closeImageViewModal: function() {
+          closeImageViewModal: function () {
             if (imageViewerModel) {
               imageViewerModel.hide();
             }
@@ -146,7 +151,7 @@
               scope: $scope,
               animation: "slide-in-up"
             })
-            .then(function(modal) {
+            .then(function (modal) {
               imageViewerModel = modal;
             });
         }
@@ -154,7 +159,7 @@
         vm.imageUploader = {
           control: null,
           config: {
-            select: function(e) {
+            select: function (e) {
               e.isDefaultPrevented = true;
               fpmUtilitiesFactory.showLoading();
 
@@ -173,8 +178,8 @@
                 alerts.alert(
                   "Warning",
                   "Invalid image file extension ( ." +
-                    getExt[0] +
-                    " ). Please upload only image file."
+                  getExt[0] +
+                  " ). Please upload only image file."
                 );
                 return;
               }
@@ -188,7 +193,7 @@
           }
         };
         var imageViewerModel = null;
-        vm.$onDestroy = function() {
+        vm.$onDestroy = function () {
           vm.showImageUpload = false;
           vm.ctEntity = null;
           if (uploadTimeout) {
@@ -198,11 +203,20 @@
             $timeout.cancel(takePictureTimer);
           }
         };
-        vm.$onInit = function() {
+
+
+        function _initShowImage() {
           vm.showImageUpload = vm.ctEntity.value === null;
           if (!vm.showImageUpload) {
             loadModal();
           }
+        }
+
+        $scope.$watch('vm.ctEntity', _initShowImage, true)
+
+
+        vm.$onInit = function () {
+          _initShowImage();
         };
       }
     ],

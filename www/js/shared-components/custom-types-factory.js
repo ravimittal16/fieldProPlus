@@ -1,4 +1,4 @@
-(function() {
+(function () {
   function initFactory(apicontext) {
     var api = "api/CustomTypes/";
 
@@ -36,16 +36,17 @@
     function getCustomTypesDataByBarcode(barcode, jobTypeName) {
       return apicontext.get(
         api +
-          "GetCustomTypesDataByBarcode?jobTypeName=" +
-          jobTypeName +
-          "&barcode=" +
-          barcode
+        "GetCustomTypesDataByBarcode?jobTypeName=" +
+        jobTypeName +
+        "&barcode=" +
+        barcode
       );
     }
 
     function uploadFile(model) {
       return apicontext.post(api + "UploadFile", model);
     }
+
     function updateData(model, val) {
       return apicontext.post(api + "UpdateData?checkBoxValue=" + val, model);
     }
@@ -58,7 +59,25 @@
       return apicontext.upload(api + "TryUploadFile", files, model);
     }
 
+
+    function createClone(cloneModel) {
+      return apicontext.post(api + "AddCustomeTypeClone", cloneModel);
+    }
+
+    function getWorkOrderClones(barcode, jobType) {
+      return apicontext.get(
+        api + "GetWorkOrderClones?barcode=" + barcode + "&jobType=" + jobType
+      );
+    }
+
+    function deleteClone(num) {
+      return apicontext.deleteReq(api + "DeleteCustomTypeClone?num=" + num);
+    }
+
     var factory = {
+      deleteClone: deleteClone,
+      getWorkOrderClones: getWorkOrderClones,
+      createClone: createClone,
       uploadFiles: uploadFiles,
       uploadFile: uploadFile,
       controlTypes: controlTypes,
