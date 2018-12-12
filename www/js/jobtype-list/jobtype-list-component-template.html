@@ -44,7 +44,10 @@
               data-ng-model-options="{debounce:500}"></textarea>
           </label>
         </div>
-        <div class="button-bar" ng-if="vm.customTypes.data.length > 0 && !vm.gettingCustomTypes">
+        <div class="button-bar" ng-if="vm.showCloneToolbar && vm.customTypes.data.length > 0 && !vm.gettingCustomTypes">
+          <div class="clone-count">
+            <span>#{{vm.clones.toolbar.currentIndex + 2}}</span>
+          </div>
           <a class="button button-icon icon ion-chevron-left" ng-class="{'color-disable-light':vm.clones.clones.length === 0}"
             ng-click="vm.events.toolbar.previousClicked()"></a>
           <a class="button button-icon icon ion-chevron-right" ng-class="{'color-disable-light':vm.clones.clones.length === 0}"

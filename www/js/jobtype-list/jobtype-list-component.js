@@ -25,7 +25,6 @@
         vm.dateFormat = vm.userInfo.dateFormat;
         var controlTypes = customTypesFactory.controlTypes;
         vm.isExpanded = false;
-        var counter = 0;
         vm.customTypes = {
           data: []
         };
@@ -179,6 +178,10 @@
                   vm.clones.toolbar.currentIndex -= 1;
                 }
                 _updateFormData();
+              } else {
+                vm.clones.toolbar.currentIndex = -1;
+                vm.clones.toolbar.preIndex = null;
+                _updateFormData();
               }
             },
             nextClicked: function () {
@@ -219,16 +222,7 @@
             vm.isExpanded = !vm.isExpanded;
           },
           onValueChanged: function (type) {
-            if (type.type === 4) {
-              if (counter === 0) {
-                updateToDatabase(type, true);
-                counter++;
-              } else {
-                counter = 0;
-              }
-            } else {
-              updateToDatabase(type);
-            }
+            updateToDatabase(type, type.type === 4);
           }
         };
 
@@ -252,6 +246,16 @@
             refEntityType: 1
           };
           getClones();
+        }
+        vm.showCloneToolbar = false;
+
+        function getJobTypeDetails() {
+          customTypesFactory.getJobTypeByName(vm.jobtype).then(function (response) {
+            vm.showCloneToolbar = response && response.allowClone;
+            if (response && response.allowClone) {
+              _initCloneModel(false);
+            }
+          });
         }
 
         function loadTypesData() {
@@ -281,13 +285,15 @@
             });
         }
 
+
+
+
         vm.$onInit = function () {
           vm.customTypes.data = [];
           vm.factory.viewData = [];
           vm.factory.requestDataCompleted = false;
           loadTypesData();
-
-          _initCloneModel(false);
+          getJobTypeDetails();
         };
       }
     ],

@@ -74,7 +74,13 @@
       return apicontext.deleteReq(api + "DeleteCustomTypeClone?num=" + num);
     }
 
+    function getJobTypeByName(jobTypeName) {
+      return apicontext.get(
+        "api/JobTypes/GetJobTypeByName?jobTypeName=" + jobTypeName);
+    }
+
     var factory = {
+      getJobTypeByName: getJobTypeByName,
       deleteClone: deleteClone,
       getWorkOrderClones: getWorkOrderClones,
       createClone: createClone,
