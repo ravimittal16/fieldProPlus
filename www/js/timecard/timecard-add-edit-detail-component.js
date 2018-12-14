@@ -221,8 +221,6 @@
             if (eventParams && eventParams.currentDate !== undefined) {
               selectedDate = eventParams.currentDate;
             }
-
-
             if (fromPto === true) {
               setInitialStartDateForPto();
             }

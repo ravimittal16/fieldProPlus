@@ -1,14 +1,15 @@
-(function() {
+(function () {
   "use strict";
   angular.module("fpm").component("fpDateTimeRenderer", {
     controller: [
       "dateFilter",
-      function(dateFilter) {
+      function (dateFilter) {
         var vm = this;
         vm.formattedValue = "";
+
         function renderFormattedValue() {
           if (vm.modelVal && !_.isDate(vm.modelVal)) {
-            vm.modelVal = new Date(vm.modelVal);
+            vm.modelVal = kendo.parseDate(vm.modelVal);
           }
           if (vm.modelVal && vm.modelVal !== "") {
             var formattedVal = "";
@@ -25,15 +26,15 @@
           }
         }
 
-        vm.$onChanges = function() {
+        vm.$onChanges = function () {
           renderFormattedValue();
         };
 
-        vm.$onInit = function() {
+        vm.$onInit = function () {
           renderFormattedValue();
         };
 
-        vm.$onDestroy = function() {};
+        vm.$onDestroy = function () {};
       }
     ],
     template: '<span ng-bind="vm.formattedValue"></span>',
