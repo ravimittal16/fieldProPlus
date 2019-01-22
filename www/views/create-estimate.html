@@ -4,7 +4,8 @@
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
   <ion-header-bar class="bar-subheader item-input-inset">
-    <customer-search-header-component data-on-customer-selected="vm.events.onCustomerSelected(customer)" placeholder="Search Customer and select..."></customer-search-header-component>
+    <customer-search-header-component data-on-customer-selected="vm.events.onCustomerSelected(customer)" placeholder="Search Customer and select..."
+      component-ref="vm.customerSearchComponent"></customer-search-header-component>
   </ion-header-bar>
   <form name="formEstimate" novalidate="">
     <ion-content>
@@ -25,7 +26,7 @@
           </div>
           <label class="item item-input">
             <span class="input-label">Email</span>
-            <input type="email" placeholder="Email" maxlength="500" data-ng-model="vm.entity.woEmail" />
+            <input type="text" placeholder="Email" required maxlength="500" data-ng-model="vm.entity.woEmail" />
           </label>
         </div>
 
@@ -35,16 +36,20 @@
               Billing Address
             </div>
             <label class="item item-input">
-              <textarea type="text" rows="2" placeholder="Street" class="transparent-background" data-ng-model="vm.entity.wobStreet" readonly=""></textarea>
+              <textarea type="text" rows="2" placeholder="Street" class="transparent-background" data-ng-model="vm.entity.wobStreet"
+                readonly=""></textarea>
             </label>
             <label class="item item-input">
-              <input type="text" placeholder="City" class="transparent-background" data-ng-model="vm.entity.wobCity" readonly="" />
+              <input type="text" placeholder="City" class="transparent-background" data-ng-model="vm.entity.wobCity"
+                readonly="" />
             </label>
             <label class="item item-input">
-              <input type="text" placeholder="State" class="transparent-background" data-ng-model="vm.entity.wobState" readonly="" />
+              <input type="text" placeholder="State" class="transparent-background" data-ng-model="vm.entity.wobState"
+                readonly="" />
             </label>
             <label for="" class="item item-input">
-              <input type="text" placeholder="Zip" class="transparent-background" data-ng-model="vm.entity.wobZip" readonly="" />
+              <input type="text" placeholder="Zip" class="transparent-background" data-ng-model="vm.entity.wobZip"
+                readonly="" />
             </label>
           </div>
         </div>
@@ -55,10 +60,12 @@
               Service Address
               <!--<a class="button pull-right button-small button-icon icon ion-android-more-vertical item-divider-left-buttion" data-ng-click="vm.events.onServiceAddressActionClicked()"></a>-->
 
-              <button type="button" class="button button-small button-assertive pull-right" style="margin-left: 5px;" data-ng-click="vm.events.clearServiceAddress()">
+              <button type="button" class="button button-small button-assertive pull-right" style="margin-left: 5px;"
+                data-ng-click="vm.events.clearServiceAddress()">
                 <i class="icon ion-trash-a"></i>
               </button>
-              <button type="button" class="button button-small button-positive pull-right" data-ng-click="vm.events.sameAsBilling()">Same as Billing</button>
+              <button type="button" class="button button-small button-positive pull-right" data-ng-click="vm.events.sameAsBilling()">Same
+                as Billing</button>
             </div>
             <label class="item item-input">
               <textarea type="text" rows="2" placeholder="Street" maxlength="200" data-ng-model="vm.entity.wosStreet"></textarea>
@@ -89,7 +96,8 @@
             <div class="input-label">
               Job Type
             </div>
-            <select data-ng-options="job.excptns as job.excptns for job in vm.jobTypes track by job.excptns" data-ng-model="vm.entity.woJobTypeId"></select>
+            <select data-ng-options="job.excptns as job.excptns for job in vm.jobTypes track by job.excptns"
+              data-ng-model="vm.entity.woJobTypeId"></select>
           </div>
 
         </div>

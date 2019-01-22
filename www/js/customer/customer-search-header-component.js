@@ -1,4 +1,4 @@
-(function() {
+(function () {
   "use strict";
   var componentConfig = {
     bindings: {
@@ -10,16 +10,17 @@
       "$scope",
       "$ionicModal",
       "customers-file-factory",
-      function($scope, $ionicModal, customerFileFactory) {
+      function ($scope, $ionicModal, customerFileFactory) {
         var vm = this;
         vm.componentRef = this;
         vm.searchValue = "";
         vm.searchApplied = false;
         vm.runningSearch = false;
+
         function onSearchBoxTapped() {
           vm.searchValue = "";
           vm.customers = [];
-          vm.customerModal.show().then(function() {});
+          vm.customerModal.show().then(function () {});
         }
 
         function applySearch() {
@@ -28,7 +29,7 @@
           vm.runningSearch = true;
           customerFileFactory
             .searchCustomers(vm.searchValue)
-            .then(function(response) {
+            .then(function (response) {
               vm.searchApplied = true;
               vm.runningSearch = false;
               if (angular.isArray(response)) {
@@ -64,7 +65,7 @@
             scope: $scope,
             animation: "slide-in-up"
           })
-          .then(function(modal) {
+          .then(function (modal) {
             vm.customerModal = modal;
           });
       }
