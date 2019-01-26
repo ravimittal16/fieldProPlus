@@ -4,12 +4,10 @@
   function _initController(
     $scope,
     $rootScope,
-    $state,
     $window,
     $stateParams,
     $timeout,
     estimatesFactory,
-    sharedDataFactory,
     fpmUtilities,
     authenticationFactory
   ) {
@@ -22,6 +20,7 @@
       vm.dateTimeFormat = vm.user.dateFormat;
     }, 100);
     var alerts = fpmUtilities.alerts;
+    var selectedImagesForMail = [];
 
     function calculateTotals() {
       vm.totals = {
@@ -78,8 +77,10 @@
         }
       }
     }
+    vm.sendingEmail = false;
 
     function updateEstimate(showSuccessAlert) {
+
       estimatesFactory
         .updateWorkOrderEstimate(vm.est.estimate)
         .then(function (response) {
@@ -89,6 +90,23 @@
         });
     }
     vm.events = {
+      sendEstimateMail: function (mails) {
+        if (mails && mails.length > 0) {
+          vm.sendingEmail = true;
+          var model = {
+            estimateId: vm.estimateId,
+            selectedImages: selectedImagesForMail,
+            emailAddresses: mails
+          }
+          estimatesFactory.emailEstimateAsPdf(model).then(function (response) {
+            if (response) {
+              alerts.alert("Success", "Estimate mail has been sent.");
+            }
+          }, function () {}).finally(function () {
+            vm.sendingEmail = false;
+          })
+        }
+      },
       refreshOnPullDown: function () {
         _getEstimateDetails(function () {
           $scope.$broadcast("scroll.refreshComplete");
@@ -204,6 +222,10 @@
       }
     });
 
+    $scope.$on("fpm:imageSelectionChanged", function ($eve, $args) {
+      selectedImagesForMail = $args;
+    });
+
     $scope.$on("$fpm:closeEditProductModal", function () {
       vm.productModal.hide();
     });
@@ -225,12 +247,10 @@
   _initController.$inject = [
     "$scope",
     "$rootScope",
-    "$state",
     "$window",
     "$stateParams",
     "$timeout",
     "estimates-factory",
-    "shared-data-factory",
     "fpm-utilities-factory",
     "authenticationFactory"
   ];

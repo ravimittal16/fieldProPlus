@@ -1,26 +1,33 @@
 <div class="card">
-	<div class="item item-divider header-dark">
-		IMAGES
-		<small class="badge badge-dark" data-ng-bind="vm.barcodeImages.length"></small>
-	</div>
-	<div class="item item-body">
-		<div class="row">
-			<div class="col">
-				<input type="file" data-kendo-upload="vm.upload.control" data-k-options="vm.upload.options" />
-			</div>
-			<div class="col">
-				<button class="button button-block button-small button-positive" data-ng-click="vm.events.takePictureClicked()">
-					<i class="icon ion-camera"></i> Take Picture</button>
-			</div>
-		</div>
-	</div>
-	<ion-list can-swipe="true">
-		<ion-item class="item-text-wrap" data-ng-repeat="p in vm.barcodeImages">
-			<a data-ng-click="vm.events.onImageTap(p)">
-				<strong>
-					<i class="icon ion-plus-circled"></i>
-				</strong>&nbsp;{{p.imageURL | removeExt}}</a>
-			<button type="button" class="button icon ion-trash-b button-small text-assertive pull-right" style="margin-top: -5px;" ng-click="vm.events.onDeleteImageClicked(p,$index)"></button>
-		</ion-item>
-	</ion-list>
+  <div class="item item-divider header-dark">
+    IMAGES
+    <small class="badge badge-dark" ng-bind="vm.barcodeImages.length"></small>
+  </div>
+
+  <div class="item item-body">
+    <div class="row">
+      <div class="col">
+        <input type="file" kendo-upload="vm.upload.control" k-options="vm.upload.options" />
+      </div>
+      <div class="col">
+        <button class="button button-block button-small button-positive" ng-click="vm.events.takePictureClicked()">
+          <i class="icon ion-camera"></i> Take Picture</button>
+      </div>
+    </div>
+  </div>
+
+  <div ng-if="vm.allowSelection && vm.selectedImagesCount > 0" style="padding: 10px;padding-left: 15px;">
+    <span class="label label-default text-normal">you have selected {{vm.selectedImagesCount}} image(s) </span>
+  </div>
+  <ion-list can-swipe="true">
+    <ion-item class="item-text-wrap" ng-repeat="p in vm.barcodeImages" on-tap="vm.events.onImageTapped($event,p)"
+      ng-class="{'item-checked':p.isChecked && vm.allowSelection}">
+      <a>
+        {{p.imageURL | removeExt}}</a>
+      <button type="button" class="button icon ion-trash-b button-small text-assertive pull-right" style="margin-top: -5px;"
+        ng-click="vm.events.onDeleteImageClicked($event,p,$index)"></button>
+      <button type="button" class="button icon ion-arrow-expand button-small  pull-right" style="margin-top: -5px;margin-right: 5px;"
+        ng-click="vm.events.zoomImage($event,p)"></button>
+    </ion-item>
+  </ion-list>
 </div>

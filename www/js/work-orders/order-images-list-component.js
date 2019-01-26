@@ -1,10 +1,11 @@
-(function() {
+(function () {
   "use strict";
   var componentConfig = {
     bindings: {
       barcode: "<",
       isEstimate: "<",
-      showDeleteImageOnModal: "<"
+      showDeleteImageOnModal: "<",
+      allowSelection: "<"
     },
     templateUrl: "js/work-orders/order-images-list-component.template.html",
     controller: [
@@ -18,7 +19,7 @@
       "estimates-factory",
       "fieldPromaxConfig",
       "shared-data-factory",
-      function(
+      function (
         $scope,
         $stateParams,
         $q,
@@ -36,13 +37,12 @@
         var alerts = fpmUtilitiesFactory.alerts;
         vm.showDeleteImageOnModal = false;
         var currentIndex = 0;
-        var exts = [".tif", ".tiff", ".gif", ".jpeg", ".jpg", ".png"];
 
         var selectedFiles = null;
 
         vm.upload = {
           control: null,
-          uploadImages: function(files) {
+          uploadImages: function (files) {
             var model = {
               barcode: vm.barcode,
               estimateId: estimateId
@@ -52,22 +52,22 @@
               workOrdersFactory
                 .uploadFiles(files, model)
                 .then(
-                  function(response) {
+                  function (response) {
                     if (response) {
                       _getImages();
                       alerts.alert("Uploaded", "File(s) Uploaded successfully");
                     }
                   },
-                  function() {
+                  function () {
                     alerts.alert("Error", "Not a valid image file.");
                   }
                 )
-                .finally(function() {
+                .finally(function () {
                   fpmUtilitiesFactory.hideLoading();
                 });
             }
           },
-          uploadImage: function(rawImage, imageName, take, isLast) {
+          uploadImage: function (rawImage, imageName, take, isLast) {
             var defer = $q.defer();
             model = {
               barcode: vm.barcode,
@@ -78,15 +78,15 @@
             fpmUtilitiesFactory
               .showLoading(
                 "Uploading " +
-                  (currentIndex + 1) +
-                  " of " +
-                  (take ? 1 : selectedFiles.length)
+                (currentIndex + 1) +
+                " of " +
+                (take ? 1 : selectedFiles.length)
               )
-              .then(function() {
+              .then(function () {
                 workOrdersFactory
                   .uploadFile(model)
                   .then(
-                    function(response) {
+                    function (response) {
                       if (response && response.entity) {
                         imageName = response.entity.name;
                         vm.barcodeImages.push({
@@ -105,7 +105,7 @@
                         );
                       }
                     },
-                    function(e) {
+                    function (e) {
                       alerts.alert("ERROR WHILE UPLOADING", "Please try again");
                       defer.reject();
                     }
@@ -121,9 +121,9 @@
             localization: {
               select: "Upload images"
             },
-            select: function(e) {
+            select: function (e) {
               e.isDefaultPrevented = true;
-              var largeFiles = _.filter(e.files, function(f) {
+              var largeFiles = _.filter(e.files, function (f) {
                 return f.size > maxImageSize;
               });
               if (largeFiles.length > 0) {
@@ -140,12 +140,34 @@
             }
           }
         };
-
+        vm.selectedImagesCount = 0;
         vm.currentImage = null;
+
+        function updateSelctedImagesCount() {
+          var images = _.where(vm.barcodeImages, {
+            isChecked: true
+          });
+          vm.selectedImagesCount = images.length;
+          var imagesNums = _.pluck(images, "num");
+          $scope.$emit("fpm:imageSelectionChanged", imagesNums);
+        }
         vm.events = {
-          takePictureClicked: function() {
-            fpmUtilitiesFactory.device.getPicture().then(function(imageData) {
-              $timeout(function() {
+          onImageTapped: function ($event, image) {
+            if ($event.target && $event.target.toString().toLowerCase().indexOf('button') <= -1) {
+              if (vm.allowSelection) {
+                if (image['isChecked'] === undefined) {
+                  image.isChecked = true;
+                } else {
+                  image.isChecked = !image.isChecked;
+                }
+                updateSelctedImagesCount();
+              }
+            }
+            $event.stopPropagation();
+          },
+          takePictureClicked: function () {
+            fpmUtilitiesFactory.device.getPicture().then(function (imageData) {
+              $timeout(function () {
                 if (imageData) {
                   var name =
                     "Picture" +
@@ -155,27 +177,30 @@
                   sharedDataFactory
                     .convertToBlob("data:image/jpeg;base64," + imageData, name)
                     .then(
-                      function(response) {
+                      function (response) {
                         if (response) {
-                          vm.upload.uploadImages([{ rawFile: response }]);
+                          vm.upload.uploadImages([{
+                            rawFile: response
+                          }]);
                         }
                       },
-                      function() {}
+                      function () {}
                     );
                 }
               }, 500);
             });
           },
-          onDeleteImageClicked: function(img, index) {
-            alerts.confirmDelete(function() {
-              fpmUtilitiesFactory.showLoading().then(function() {
+          onDeleteImageClicked: function ($e, img, index) {
+            $e.stopPropagation();
+            alerts.confirmDelete(function () {
+              fpmUtilitiesFactory.showLoading().then(function () {
                 workOrdersFactory
                   .deleteImageFromBlob(img.num, vm.barcode)
-                  .then(function() {
+                  .then(function () {
                     alerts.alert(
                       "Success",
                       "Image has been removed",
-                      function() {
+                      function () {
                         vm.barcodeImages.splice(index, 1);
                       }
                     );
@@ -184,7 +209,8 @@
               });
             });
           },
-          onImageTap: function(p) {
+          zoomImage: function ($e, p) {
+            $e.stopPropagation();
             vm.currentImage = p;
             vm.imageUrl =
               baseUrl +
@@ -194,21 +220,22 @@
               new Date();
             vm.imageViewerModel.show();
           },
-          closeImageViewModal: function() {
+          closeImageViewModal: function () {
             vm.imageViewerModel.hide();
           }
         };
+
         function _getImages() {
           if (vm.barcode && !vm.isEstimate) {
             workOrdersFactory
               .getImagesList(vm.barcode)
-              .then(function(response) {
+              .then(function (response) {
                 vm.barcodeImages = response;
               });
           } else {
             estimateFactory
               .getEstimateImages(estimateId)
-              .then(function(response) {
+              .then(function (response) {
                 vm.barcodeImages = response;
               });
           }
@@ -217,7 +244,7 @@
         var maxImageSize = 8 * 1024 * 1024;
         var isAndroid = false;
         var estimateId = 0;
-        vm.$onInit = function() {
+        vm.$onInit = function () {
           isAndroid = fpmUtilitiesFactory.device.isAndroid();
           if (isAndroid) {
             maxImageSize = 5 * 1024 * 1024;
@@ -233,7 +260,7 @@
             scope: $scope,
             animation: "slide-in-up"
           })
-          .then(function(modal) {
+          .then(function (modal) {
             vm.imageViewerModel = modal;
           });
       }

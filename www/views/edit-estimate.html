@@ -1,246 +1,249 @@
 <ion-view title="Edit Estimate" cache-view="false" hide-back-button="true" align-title="center" view-title="Edit Estimate">
-    <ion-nav-buttons side="left">
-        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-    </ion-nav-buttons>
-    <ion-content scroll="false">
-        <errors-view errors="vm.errors"></errors-view>
-        <ion-tabs class="tabs-dark tabs-icon-top">
-            <ion-tab title="DESCRIPTION" icon-on="ion-ios-paper" icon-off="ion-ios-paper-outline">
-                <ion-content>
-                    <ion-refresher pulling-text="Pull to refresh..." on-refresh="vm.events.refreshOnPullDown()">
-                    </ion-refresher>
-                    <div class="m-top-45">
-                        <div class="row">
-                            <div class="col">
-                                <div class="alert" ng-class="{'alert-danger':!vm.est.estimate.isApproved,'alert-success':vm.est.estimate.isApproved}">
-                                    <span ng-if="!vm.est.estimate.isApproved">Estimate is not approved yet</span>
-                                    <span ng-if="vm.est.estimate.isApproved">
-                                        <i class="fa fa-check"></i>&nbsp;Estimate approved by
-                                        <strong ng-bind="vm.est.estimate.approverName"></strong> on
-                                        <!-- <strong>{{vm.est.estimate.approvedDateTime | date}}</strong> -->
-                                        <fp-date-time-renderer model-val="vm.est.estimate.approvedDateTime" type="date" format="vm.dateTimeFormat"></fp-date-time-renderer>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="card">
-                                <div class="list">
-                                    <div class="item item-divider header-dark">
-                                        SERVICE ADDRESS
-                                    </div>
-                                    <div class="item">
-                                        <span class="label label-success">{{::vm.est.estimate.estimateName}}</span>
-                                        <div class="padding-top">
-                                            <h2 class="n-m-b">{{::vm.est.estimate.woDisplayName}}</h2>
-                                            <address>
-                                                <p>
-                                                    <strong>{{::vm.est.estimate.woCompanyName}}</strong>
-                                                </p>
-                                                <p>{{::vm.est.estimate.wosStreet}}</p>
-                                                <p>{{::vm.est.estimate.wosCity}},{{::vm.est.estimate.wosState}}&nbsp;{{::vm.est.estimate.wosZip}}
-                                                </p>
-                                                <p ng-if="vm.barCodeData.barcodeDetails.phone">
-                                                    <span>
-                                                        <i class="icon ion-android-call"></i>&nbsp;{{::vm.est.estimate.woPhone}}</span>
-                                                </p>
-                                                <button class="button button-block button-small button-positive" ng-click="vm.events.onAddressTapped()">
-                                                    <i class="ion ion-ios-location"></i>&nbsp;Show on Google Map
-                                                </button>
-                                            </address>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="padding">
-                                    <p ng-if="vm.barCodeData.barcodeDetails.excptns">
-                                        <h5>
-                                            <strong class="text-muted">Estimate Create Date</strong>
-                                            <!-- <span class="pull-right">{{::vm.est.estimate.createdOn | date:'MM/dd/yyyy'}}</span>  -->
-                                            <fp-date-time-renderer model-val="vm.est.estimate.createdOn" type="date" format="vm.dateTimeFormat" class="pull-right"></fp-date-time-renderer>
-                                        </h5>
-                                    </p>
-                                    <p ng-if="vm.est.estimate.woJobTypeId">
-                                        <h5>
-                                            <strong class="text-muted">Job Type</strong>
-                                            <span class="pull-right">{{::vm.est.estimate.woJobTypeId}}</span>
-                                        </h5>
-                                    </p>
-                                    <p ng-if="vm.barCodeData.barcodeDetails.class_id">
-                                        <h5>
-                                            <strong class="text-muted">Priority</strong>
-                                            <span class="pull-right">{{::vm.est.estimate.woPriority}}</span>
-                                        </h5>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="item item-divider header-dark">
-                                    WORK DESCRIPTION
-                                </div>
-                                <div class="list">
-                                    <div class="item item-input">
-                                        <textarea cols="30" rows="10" ng-model="vm.est.estimate.woDescription" auto-grow="" ng-change="vm.events.onDescriptionOrNotesChanged()"
-                                            ng-model-options="{debounce:500}" placeholder="enter work description here..."></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="item item-divider header-dark">
-                                    NOTES
-                                </div>
-                                <div class="list">
-                                    <div class="item item-input">
-                                        <textarea cols="30" rows="10" ng-model="vm.est.estimate.woNotes" auto-grow="" ng-change="vm.events.onDescriptionOrNotesChanged()"
-                                            ng-model-options="{debounce:500}" placeholder="enter notes here..."></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content scroll="false">
+    <errors-view errors="vm.errors"></errors-view>
+    <ion-tabs class="tabs-dark tabs-icon-top">
+      <ion-tab title="DESCRIPTION" icon-on="ion-ios-paper" icon-off="ion-ios-paper-outline">
+        <ion-content>
+          <ion-refresher pulling-text="Pull to refresh..." on-refresh="vm.events.refreshOnPullDown()">
+          </ion-refresher>
+          <div>
+            <div class="row m-top-45">
+              <div class="col">
+                <div class="alert" ng-class="{'alert-danger':!vm.est.estimate.isApproved,'alert-success':vm.est.estimate.isApproved}">
+                  <span ng-if="!vm.est.estimate.isApproved">Estimate is not approved yet</span>
+                  <span ng-if="vm.est.estimate.isApproved">
+                    <i class="fa fa-check"></i>&nbsp;Estimate approved by
+                    <strong ng-bind="vm.est.estimate.approverName"></strong> on
+                    <!-- <strong>{{vm.est.estimate.approvedDateTime | date}}</strong> class="m-top-45"-->
+                    <fp-date-time-renderer model-val="vm.est.estimate.approvedDateTime" type="date" format="vm.dateTimeFormat"></fp-date-time-renderer>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="card">
+                <div class="list">
+                  <div class="item item-divider header-dark">
+                    SERVICE ADDRESS
+                  </div>
+                  <div class="item">
+                    <span class="label label-success">{{::vm.est.estimate.estimateName}}</span>
+                    <div class="padding-top">
+                      <h2 class="n-m-b">{{::vm.est.estimate.woDisplayName}}</h2>
+                      <address>
+                        <p>
+                          <strong>{{::vm.est.estimate.woCompanyName}}</strong>
+                        </p>
+                        <p>{{::vm.est.estimate.wosStreet}}</p>
+                        <p>{{::vm.est.estimate.wosCity}},{{::vm.est.estimate.wosState}}&nbsp;{{::vm.est.estimate.wosZip}}
+                        </p>
+                        <p ng-if="vm.barCodeData.barcodeDetails.phone">
+                          <span>
+                            <i class="icon ion-android-call"></i>&nbsp;{{::vm.est.estimate.woPhone}}</span>
+                        </p>
+                        <button class="button button-block button-small button-positive" ng-click="vm.events.onAddressTapped()">
+                          <i class="ion ion-ios-location"></i>&nbsp;Show on Google Map
+                        </button>
+                      </address>
                     </div>
-                </ion-content>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="padding">
+                  <p ng-if="vm.barCodeData.barcodeDetails.excptns">
+                    <h5 class="text-muted">
+                      Estimate Create Date
+                      <!-- <span class="pull-right">{{::vm.est.estimate.createdOn | date:'MM/dd/yyyy'}}</span>  -->
+                      <fp-date-time-renderer model-val="vm.est.estimate.createdOn" type="date" format="vm.dateTimeFormat"
+                        class="pull-right"></fp-date-time-renderer>
+                    </h5>
+                  </p>
+                  <p ng-if="vm.est.estimate.woJobTypeId">
+                    <h5 class="text-muted">
+                      Job Type
+                      <span class="pull-right">{{::vm.est.estimate.woJobTypeId}}</span>
+                    </h5>
+                  </p>
+                  <p ng-if="vm.barCodeData.barcodeDetails.class_id">
+                    <h5 class="text-muted">
+                      Priority
+                      <span class="pull-right">{{::vm.est.estimate.woPriority}}</span>
+                    </h5>
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="item item-divider header-dark">
+                  WORK DESCRIPTION
+                </div>
+                <div class="list">
+                  <div class="item item-input">
+                    <textarea cols="30" rows="10" ng-model="vm.est.estimate.woDescription" auto-grow="" ng-change="vm.events.onDescriptionOrNotesChanged()"
+                      ng-model-options="{debounce:500}" placeholder="enter work description here..."></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="item item-divider header-dark">
+                  NOTES
+                </div>
+                <div class="list">
+                  <div class="item item-input">
+                    <textarea cols="30" rows="10" ng-model="vm.est.estimate.woNotes" auto-grow="" ng-change="vm.events.onDescriptionOrNotesChanged()"
+                      ng-model-options="{debounce:500}" placeholder="enter notes here..."></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-content>
 
-            </ion-tab>
-            <ion-tab title="PRODUCTS" icon-on="ion-ios-list" icon-off="ion-ios-list-outline">
-                <ion-content>
-                    <div class="brand-margin">
-                        <div class="card">
-                            <div class="item item-divider">
-                                PRODUCTS
-                                <button type="button" class="button pull-right button-small button-small button-positive" ng-click="vm.events.onProdcutActionButtonClicked()">Add
-                                    Product
-                                    </a>
-                            </div>
-                            <div class="item item-text-wrap text-center" ng-if="vm.est.products.length == 0">
-                                <h3 class="text-muted">
-                                    <strong>No product found</strong>
-                                </h3>
-                            </div>
-                            <div ng-if="vm.est.products.length" ng-repeat="p in vm.est.products">
-                                <div class="row n-p-b n-m-b">
-                                    <div class="col col-50">
-                                        <h5>{{::p.productName}}</h5>
-                                    </div>
-                                    <div class="col col-25">
-                                        <h5 class="pull-right">
-                                            <strong>{{p.qty}}</strong>
-                                        </h5>
-                                    </div>
-                                    <div class="col col-25 text-right">
-                                        <h5 class="pull-right" ng-if="vm.user.showPrice">
-                                            <strong>
-                                                <fpcurrency-renderer model-val="p.price">
-                                                </fpcurrency-renderer>
-                                            </strong>
-                                        </h5>
-                                    </div>
-                                </div>
-                                <div class="row n-p-t row-top border-bottom">
-                                    <div class="col">
-                                        <small class="text-muted text-small">{{p.productDescription}}
-                                            <small>
-                                    </div>
-                                    <div class="col">
-                                        <button type="button" class="button icon ion-edit button-small text-energized" style="margin-top: -5px;float: left;" ng-if="!vm.isServiceProvider || sch.technicianNum == vm.user.userEmail"
-                                            ng-click="vm.events.onEditProductClicked(p)"></button>
-                                        <button type="button" class="button icon ion-trash-b button-small text-assertive" style="margin-top: -5px;float: left;margin-left: 5px;"
-                                            ng-click="vm.events.onDeleteProductClicked(p)"></button>
-                                    </div>
-                                </div>
-                            </div>
+      </ion-tab>
+      <ion-tab title="PRODUCTS" icon-on="ion-ios-list" icon-off="ion-ios-list-outline">
+        <ion-content>
+          <div class="brand-margin">
+            <div class="card">
+              <div class="item item-divider">
+                PRODUCTS
+                <button type="button" class="button pull-right button-small button-small button-positive" ng-click="vm.events.onProdcutActionButtonClicked()">Add
+                  Product
+                  </a>
+              </div>
+              <div class="item item-text-wrap text-center" ng-if="vm.est.products.length == 0">
+                <h3 class="text-muted">
+                  <strong>No product found</strong>
+                </h3>
+              </div>
+              <div ng-if="vm.est.products.length" ng-repeat="p in vm.est.products">
+                <div class="row n-p-b n-m-b">
+                  <div class="col col-50">
+                    <h5>{{::p.productName}}</h5>
+                  </div>
+                  <div class="col col-25">
+                    <h5 class="pull-right">
+                      <strong>{{p.qty}}</strong>
+                    </h5>
+                  </div>
+                  <div class="col col-25 text-right">
+                    <h5 class="pull-right" ng-if="vm.user.showPrice">
+                      <strong>
+                        <fpcurrency-renderer model-val="p.price">
+                        </fpcurrency-renderer>
+                      </strong>
+                    </h5>
+                  </div>
+                </div>
+                <div class="row n-p-t row-top border-bottom">
+                  <div class="col">
+                    <small class="text-muted text-small">{{p.productDescription}}
+                      <small>
+                  </div>
+                  <div class="col">
+                    <button type="button" class="button icon ion-edit button-small text-energized" style="margin-top: -5px;float: left;"
+                      ng-if="!vm.isServiceProvider || sch.technicianNum == vm.user.userEmail" ng-click="vm.events.onEditProductClicked(p)"></button>
+                    <button type="button" class="button icon ion-trash-b button-small text-assertive" style="margin-top: -5px;float: left;margin-left: 5px;"
+                      ng-click="vm.events.onDeleteProductClicked(p)"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-content>
+      </ion-tab>
+      <ion-tab title="SUMMARY" icon-on="ion-ios-calculator" icon-off="ion-ios-calculator-outline">
+        <ion-content direction="y">
+          <div class="m-top-45">
+            <ion-list>
+              <div class="card">
+                <div class="item item-divider header-dark">
+                  <strong>INVOICE DETAILS</strong>
+                </div>
+                <div>
+                  <div class="list">
+                    <div class="item item-stable" style="padding: 5px;">
+                      <div class="row">
+                        <div class="col col-50">Name</div>
+                        <div class="col col-10">Tax</div>
+                        <div class="col col-20 text-center">Qty</div>
+                        <div class="col col-20">
+                          <span class="pull-right">Total</span>
                         </div>
+                      </div>
                     </div>
-                </ion-content>
-            </ion-tab>
-            <ion-tab title="SUMMARY" icon-on="ion-ios-calculator" icon-off="ion-ios-calculator-outline">
-                <ion-content direction="y">
-                    <div class="m-top-45">
-                        <ion-list>
-                            <div class="card">
-                                <div class="item item-divider header-dark">
-                                    <strong>INVOICE DETAILS</strong>
-                                </div>
-                                <div>
-                                    <div class="list">
-                                        <div class="item item-stable">
-                                            <div class="row">
-                                                <div class="col col-50">Name</div>
-                                                <div class="col col-10">Tax</div>
-                                                <div class="col col-20 text-center">Qty</div>
-                                                <div class="col col-20">
-                                                    <span class="pull-right">Total</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div ng-repeat="inv in vm.est.invoice" class="item item-text-wrap">
-                                            <div class="row">
-                                                <div class="col col-50">
-                                                    <h3>{{::inv.productName}}</h3>
-                                                </div>
-                                                <div class="col col-10">
-                                                    <input type="checkbox" ng-model="inv.isTaxable" ng-change="vm.events.onTaxCheckboaxChanged(inv)" />
-                                                </div>
-                                                <div class="col col-20 text-center">
-                                                    <h3>{{inv.qty || 0}}</h3>
-                                                </div>
-                                                <div class="col col-20">
-                                                    <h3 class="pull-right" ng-if="vm.user.showPrice">
-                                                        <fpcurrency-renderer model-val="inv.totalPrice">
-                                                        </fpcurrency-renderer>
-                                                    </h3>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </ion-list>
-                        <div class="row" ng-if="vm.user.showPrice">
-                            <div class="col">
-                                <p>
-                                    <h5>Subtotal
-                                        <span class="pull-right">
-                                            <fpcurrency-renderer model-val="vm.totals.subtotal">
-                                            </fpcurrency-renderer>
-                                        </span>
-                                    </h5>
-                                </p>
-                                <p>
-                                    <h5>Total Tax
-                                        <span class="pull-right text-muted">
-                                            <fpcurrency-renderer model-val="vm.totals.totaltax">
-                                            </fpcurrency-renderer>
-                                        </span>
-                                    </h5>
-                                </p>
-                                <p>
-                                    <h5>Total Amount
-                                        <span class="pull-right text-energized">
-                                            <fpcurrency-renderer model-val="vm.totals.subtotal + vm.totals.totaltax">
-                                            </fpcurrency-renderer>
-                                        </span>
-                                    </h5>
-                                </p>
-                            </div>
+                    <div ng-repeat="inv in vm.est.invoice" class="item item-text-wrap" style="padding: 5px;">
+                      <div class="row">
+                        <div class="col col-50">
+                          <h3>{{::inv.productName}}</h3>
                         </div>
-                        <order-signature-component barcode="vm.barcode" is-estimate="true"></order-signature-component>
-                        <order-images-list-component barcode="vm.barcode" is-estimate="true"></order-images-list-component>
+                        <div class="col col-10">
+                          <input type="checkbox" ng-model="inv.isTaxable" ng-change="vm.events.onTaxCheckboaxChanged(inv)" />
+                        </div>
+                        <div class="col col-20 text-center">
+                          <h3>{{inv.qty || 0}}</h3>
+                        </div>
+                        <div class="col col-20">
+                          <h3 class="pull-right" ng-if="vm.user.showPrice">
+                            <fpcurrency-renderer model-val="inv.totalPrice">
+                            </fpcurrency-renderer>
+                          </h3>
+                        </div>
+                      </div>
                     </div>
-                </ion-content>
-            </ion-tab>
-        </ion-tabs>
-    </ion-content>
+                  </div>
+                </div>
+              </div>
+            </ion-list>
+            <div class="row" ng-if="vm.user.showPrice">
+              <div class="col" style="padding-left: 10px;padding-right: 15px;">
+                <p>
+                  <h5>Subtotal
+                    <span class="pull-right">
+                      <fpcurrency-renderer model-val="vm.totals.subtotal">
+                      </fpcurrency-renderer>
+                    </span>
+                  </h5>
+                </p>
+                <p>
+                  <h5>Total Tax
+                    <span class="pull-right text-muted">
+                      <fpcurrency-renderer model-val="vm.totals.totaltax">
+                      </fpcurrency-renderer>
+                    </span>
+                  </h5>
+                </p>
+                <p>
+                  <h5>Total Amount
+                    <span class="pull-right text-energized" style="color:#2e61b9;">
+                      <fpcurrency-renderer model-val="vm.totals.subtotal + vm.totals.totaltax">
+                      </fpcurrency-renderer>
+                    </span>
+                  </h5>
+                </p>
+              </div>
+            </div>
+            <order-signature-component barcode="vm.barcode" is-estimate="true"></order-signature-component>
+            <order-email-card-component default-emails="vm.est.estimate.woEmail" on-send-email-clicked="vm.events.sendEstimateMail(mails)"
+              is-busy="vm.sendingEmail" is-estimate="true"></order-email-card-component>
+            <order-images-list-component barcode="vm.barcode" is-estimate="true" allow-selection="true"></order-images-list-component>
+          </div>
+        </ion-content>
+      </ion-tab>
+    </ion-tabs>
+  </ion-content>
 </ion-view>
 <script id="editProductModal.html" type="text/ng-template">
-    <ion-modal-view>
+  <ion-modal-view>
         <edit-product-component is-estimate="true" modal-type="0" product="vm.currentProduct"
          enable-markup-orders="vm.enableMarkup"></edit-product-component>
     </ion-modal-view>
 </script>
 
 <script id="addProductModal.html" type="text/ng-template">
-    <ion-modal-view>
+  <ion-modal-view>
         <edit-product-component is-estimate="true" modal-type="1" product="vm.currentProduct" on-add-product-completed="vm.events.onAddProductCompleted(product)"
             enable-markup-orders="vm.enableMarkup"></edit-product-component>
     </ion-modal-view>

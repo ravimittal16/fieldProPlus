@@ -62,7 +62,7 @@
   display: inline;
   padding: 0.2em 0.6em 0.3em;
   font-size: 75%;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   color: #fff;
   text-align: center;
@@ -135,7 +135,7 @@ a {
   color: #fff;
 }
 
-address > p {
+address>p {
   margin-bottom: 0px;
 }
 
@@ -155,7 +155,7 @@ address > p {
 white-space: normal;
 }*/
 
-.p-10 > div {
+.p-10>div {
   padding-top: 0px !important;
   padding-bottom: 0px !important;
   padding-right: 0px !important;
@@ -289,17 +289,17 @@ customer-search-header-component {
   border-color: grey;
 }
 
-.timecard-table > thead > tr > th {
+.timecard-table>thead>tr>th {
   vertical-align: bottom;
   border-bottom: 2px solid #ddd;
 }
 
-.timecard-table > tbody > tr > td,
-.timecard-table > tbody > tr > th,
-.timecard-table > tfoot > tr > td,
-.timecard-table > tfoot > tr > th,
-.timecard-table > thead > tr > td,
-.timecard-table > thead > tr > th {
+.timecard-table>tbody>tr>td,
+.timecard-table>tbody>tr>th,
+.timecard-table>tfoot>tr>td,
+.timecard-table>tfoot>tr>th,
+.timecard-table>thead>tr>td,
+.timecard-table>thead>tr>th {
   padding: 8px;
   line-height: 1.42857143;
   vertical-align: top;
@@ -374,12 +374,12 @@ customer-search-header-component {
   font-weight: 500;
 }
 
-.card > .item-divider {
+.card>.item-divider {
   background-color: #d4d4d4 !important;
   color: #404040 !important;
 }
 
-.list > .item-divider {
+.list>.item-divider {
   background-color: #d4d4d4 !important;
   color: #404040 !important;
 }
@@ -417,33 +417,33 @@ customer-search-header-component {
   margin-top: 30px !important;
 }
 
-.table > tbody > tr.success > td,
-.table > tbody > tr.success > th,
-.table > tbody > tr > td.success,
-.table > tbody > tr > th.success,
-.table > tfoot > tr.success > td,
-.table > tfoot > tr.success > th,
-.table > tfoot > tr > td.success,
-.table > tfoot > tr > th.success,
-.table > thead > tr.success > td,
-.table > thead > tr.success > th,
-.table > thead > tr > td.success,
-.table > thead > tr > th.success {
+.table>tbody>tr.success>td,
+.table>tbody>tr.success>th,
+.table>tbody>tr>td.success,
+.table>tbody>tr>th.success,
+.table>tfoot>tr.success>td,
+.table>tfoot>tr.success>th,
+.table>tfoot>tr>td.success,
+.table>tfoot>tr>th.success,
+.table>thead>tr.success>td,
+.table>thead>tr.success>th,
+.table>thead>tr>td.success,
+.table>thead>tr>th.success {
   background-color: #dff0d8;
 }
 
-.table > tbody > tr.danger > td,
-.table > tbody > tr.danger > th,
-.table > tbody > tr > td.danger,
-.table > tbody > tr > th.danger,
-.table > tfoot > tr.danger > td,
-.table > tfoot > tr.danger > th,
-.table > tfoot > tr > td.danger,
-.table > tfoot > tr > th.danger,
-.table > thead > tr.danger > td,
-.table > thead > tr.danger > th,
-.table > thead > tr > td.danger,
-.table > thead > tr > th.danger {
+.table>tbody>tr.danger>td,
+.table>tbody>tr.danger>th,
+.table>tbody>tr>td.danger,
+.table>tbody>tr>th.danger,
+.table>tfoot>tr.danger>td,
+.table>tfoot>tr.danger>th,
+.table>tfoot>tr>td.danger,
+.table>tfoot>tr>th.danger,
+.table>thead>tr.danger>td,
+.table>thead>tr.danger>th,
+.table>thead>tr>td.danger,
+.table>thead>tr>th.danger {
   background-color: #f2dede;
 }
 
@@ -455,7 +455,7 @@ customer-search-header-component {
   margin-top: 45px !important;
 }
 
-.equipment-customtypes > div:not(:last-child) {
+.equipment-customtypes>div:not(:last-child) {
   border-bottom: 2px solid rgb(204, 204, 204) !important;
 }
 
@@ -517,4 +517,8 @@ select[readonly] {
   color: #387ef5;
   font-weight: 600;
   font-size: 15px;
+}
+
+.item-checked {
+  background-color: #c6d6f1;
 }

@@ -32,7 +32,8 @@
                           <strong>{{::vm.barCodeData.barcodeDetails.company_Name}}</strong>
                         </p>
                         <p>{{::vm.barCodeData.barcodeDetails.shipStreet}}</p>
-                        <p>{{::vm.barCodeData.barcodeDetails.shipCity}}, {{::vm.barCodeData.barcodeDetails.shipState}}&nbsp;{{::vm.barCodeData.barcodeDetails.shipZIP}}
+                        <p>{{::vm.barCodeData.barcodeDetails.shipCity}},
+                          {{::vm.barCodeData.barcodeDetails.shipState}}&nbsp;{{::vm.barCodeData.barcodeDetails.shipZIP}}
                         </p>
                         <p ng-if="vm.barCodeData.barcodeDetails.phone">
                           <span>Phone: </span>
@@ -94,17 +95,18 @@
                 <div class="list">
                   <label class="item item-input">
                     <span class="input-label" ng-bind="vm.poHeading"></span>
-                    <input type="text" maxlength="50" ng-model="vm.barCodeData.barcodeDetails.poNum" ng-model-options="{debounce:500}" ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()">
+                    <input type="text" maxlength="50" ng-model="vm.barCodeData.barcodeDetails.poNum" ng-model-options="{debounce:500}"
+                      ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()">
                   </label>
                   <label class="item item-input">
                     <span class="input-label" ng-bind="vm.uiSettings.customField2Label"></span>
-                    <input type="text" maxlength="50" ng-model="vm.barCodeData.barcodeDetails.customType2Val" ng-model-options="{debounce:500}"
-                      ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()">
+                    <input type="text" maxlength="50" ng-model="vm.barCodeData.barcodeDetails.customType2Val"
+                      ng-model-options="{debounce:500}" ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()">
                   </label>
                   <label class="item item-input">
                     <span class="input-label" ng-bind="vm.uiSettings.customField3Label"></span>
-                    <input type="text" maxlength="50" ng-model="vm.barCodeData.barcodeDetails.customType3Val" ng-model-options="{debounce:500}"
-                      ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()">
+                    <input type="text" maxlength="50" ng-model="vm.barCodeData.barcodeDetails.customType3Val"
+                      ng-model-options="{debounce:500}" ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()">
                   </label>
                 </div>
               </div>
@@ -188,7 +190,8 @@
               </div>
             </div>
             <div class="col" ng-if="vm.uiSettings.timerEnabled && vm.uiSettings.billingOption == 0">
-              <work-order-timer-component is-checked-in="vm.schedule.checkInStatus" is-checked-out="vm.schedule.checkOutStatus" schedule="vm.schedule"></work-order-timer-component>
+              <work-order-timer-component is-checked-in="vm.schedule.checkInStatus" is-checked-out="vm.schedule.checkOutStatus"
+                schedule="vm.schedule"></work-order-timer-component>
             </div>
             <div class="list" ng-if="vm.uiSettings.billingOption == 0">
               <div>
@@ -199,10 +202,13 @@
                   <div style="width: 65%;float: left;">
                     <!-- <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onStartDateTimeChaged}"
                       ng-model="vm.schedule.actualStartDateTime" placeholder="tap here to select..." /> -->
-                      <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.actualStartDateTime" type="datetime" on-date-changed="vm.scheduleTimeSpan.onStartDateTimeChaged()" format="vm.dateTimeFormat" default-text="tap here to select..."></fp-date-time-component>
+                    <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.actualStartDateTime"
+                      type="datetime" on-date-changed="vm.scheduleTimeSpan.onStartDateTimeChaged()" format="vm.dateTimeFormat"
+                      default-text="tap here to select..."></fp-date-time-component>
                     <!-- <input type="text" ng-if="vm.schedule.approve" class="transparent-background" disabled ng-model="vm.schedule.actualStartDateTimeString"
                     /> -->
-                    <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.actualStartDateTimeString" format='vm.dateTimeFormat' type="datetime"></fp-date-time-renderer>
+                    <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.actualStartDateTimeString"
+                      format='vm.dateTimeFormat' type="datetime"></fp-date-time-renderer>
                   </div>
                   <div style="width: 35%;float: left;">
                     <button class="button button-small button-assertive" ng-disabled="vm.schedule.approve" ng-click="vm.tabs.sch.events.clearAllDateTimeSelection(true)">
@@ -221,10 +227,13 @@
                   <div style="width: 65%;float: left;">
                     <!-- <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onEndDateTimeChanged}"
                       ng-model="vm.schedule.actualFinishDateTime" placeholder="tap here to select..." /> -->
-                      <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.actualFinishDateTime" type="datetime" on-date-changed="vm.scheduleTimeSpan.onEndDateTimeChanged()" format="vm.dateTimeFormat" default-text="tap here to select..."></fp-date-time-component>
+                    <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.actualFinishDateTime"
+                      type="datetime" on-date-changed="vm.scheduleTimeSpan.onEndDateTimeChanged()" format="vm.dateTimeFormat"
+                      default-text="tap here to select..."></fp-date-time-component>
                     <!-- <input type="text" ng-if="vm.schedule.approve" class="transparent-background" disabled ng-model="vm.schedule.actualFinishDateTimeString"
                     /> -->
-                    <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.actualFinishDateTimeString" format='vm.dateTimeFormat' type="datetime"></fp-date-time-renderer>
+                    <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.actualFinishDateTimeString"
+                      format='vm.dateTimeFormat' type="datetime"></fp-date-time-renderer>
                   </div>
                   <div style="width: 35%;float: left;">
                     <button class="button button-small button-assertive" ng-disabled="vm.schedule.approve" ng-click="vm.tabs.sch.events.clearAllDateTimeSelection(false)">
@@ -238,14 +247,15 @@
                 </div>
                 <label class="item item-input">
                   <span class="input-label">Total Time</span>
-                  <input type="text" ng-if="!vm.schedule.approve" class="transparent-background text-right" placeholder="Total Time" mobiscroll-timespan="{display: 'bottom',preset:'timespan',wheelOrder: 'hhii',onSelect:vm.scheduleTimeSpan.onTimespanSeletionChanged}"
+                  <input type="text" ng-if="!vm.schedule.approve" class="transparent-background text-right" placeholder="Total Time"
+                    mobiscroll-timespan="{display: 'bottom',preset:'timespan',wheelOrder: 'hhii',onSelect:vm.scheduleTimeSpan.onTimespanSeletionChanged}"
                     ng-model="vm.scheduleTimeSpan.timeSpan" />
-                  <input type="text" ng-if="vm.schedule.approve" class="transparent-background text-right" disabled placeholder="Total Time"
-                    ng-model="vm.scheduleTimeSpan.timeSpan" />
+                  <input type="text" ng-if="vm.schedule.approve" class="transparent-background text-right" disabled
+                    placeholder="Total Time" ng-model="vm.scheduleTimeSpan.timeSpan" />
                 </label>
                 <label class="item item-input">
-                  <textarea name="" id="" rows="6" placeholder="enter trip note here..." ng-model="vm.schedule.tripNote" ng-change="vm.tabs.sch.events.onTripnoteChanged()"
-                    ng-model-options="{debounce:500}"></textarea>
+                  <textarea name="" id="" rows="6" placeholder="enter trip note here..." ng-model="vm.schedule.tripNote"
+                    ng-change="vm.tabs.sch.events.onTripnoteChanged()" ng-model-options="{debounce:500}"></textarea>
                 </label>
                 <div class="padding" ng-if="vm.uiSettings.isTimeCardModuleEnabled">
                   <button class="button button-block button-small button-dark" ng-click="vm.tabs.sch.events.pushToTimecard()">
@@ -261,26 +271,31 @@
                   <span class="input-label">In Route Start</span>
                   <!-- <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onInRouteTImeChanged}"
                     ng-model="vm.schedule.inRouteStartTime" /> -->
-                    <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.inRouteStartTime" type="datetime" on-date-changed="vm.scheduleTimeSpan.onInRouteTImeChanged()" format="vm.dateTimeFormat"></fp-date-time-component>
+                  <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.inRouteStartTime" type="datetime"
+                    on-date-changed="vm.scheduleTimeSpan.onInRouteTImeChanged()" format="vm.dateTimeFormat"></fp-date-time-component>
                   <!-- <input type="text" ng-if="vm.schedule.approve" class="transparent-background" disabled ng-model="vm.schedule.inRouteStartTime"
                   /> -->
-                  <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.inRouteStartTime" format='vm.dateTimeFormat' type="datetime"></fp-date-time-renderer>
+                  <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.inRouteStartTime" format='vm.dateTimeFormat'
+                    type="datetime"></fp-date-time-renderer>
                 </div>
                 <div class="item item-input item-stacked-label">
                   <span class="input-label">In Route End</span>
                   <!-- <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onInRouteTImeChanged}"
                     ng-model="vm.schedule.inRouteEndTime" />-->
-                    <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.inRouteEndTime" type="datetime" on-date-changed="vm.scheduleTimeSpan.onInRouteTImeChanged()" format="vm.dateTimeFormat"></fp-date-time-component>
+                  <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.inRouteEndTime" type="datetime"
+                    on-date-changed="vm.scheduleTimeSpan.onInRouteTImeChanged()" format="vm.dateTimeFormat"></fp-date-time-component>
                   <!-- <input type="text" ng-if="vm.schedule.approve" class="transparent-background" disabled ng-model="vm.schedule.inRouteEndTime"
                   />  -->
-                  <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.inRouteEndTime" format='vm.dateTimeFormat' type="datetime"></fp-date-time-renderer>
+                  <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.inRouteEndTime" format='vm.dateTimeFormat'
+                    type="datetime"></fp-date-time-renderer>
                 </div>
                 <label class="item item-input">
                   <span class="input-label">Total Time</span>
-                  <input type="text" ng-if="!vm.schedule.approve" class="transparent-background text-right" placeholder="Total Time" mobiscroll-timespan="{display: 'bottom',preset:'timespan',wheelOrder: 'hhii',onSelect:vm.scheduleTimeSpan.onInRouteTimespanChanged}"
+                  <input type="text" ng-if="!vm.schedule.approve" class="transparent-background text-right" placeholder="Total Time"
+                    mobiscroll-timespan="{display: 'bottom',preset:'timespan',wheelOrder: 'hhii',onSelect:vm.scheduleTimeSpan.onInRouteTimespanChanged}"
                     ng-model="vm.scheduleTimeSpan.inRouteTimeSpan" />
-                  <input type="text" ng-if="vm.schedule.approve" class="transparent-background text-right" disabled placeholder="Total Time"
-                    ng-model="vm.scheduleTimeSpan.inRouteTimeSpan" />
+                  <input type="text" ng-if="vm.schedule.approve" class="transparent-background text-right" disabled
+                    placeholder="Total Time" ng-model="vm.scheduleTimeSpan.inRouteTimeSpan" />
                 </label>
               </div>
 
@@ -290,24 +305,28 @@
                 <span class="input-label">Actual Start Date</span>
                 <!-- <input type="text" ng-if="!vm.schedule.approve" class="transparent-background text-right" mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}"
                   ng-model="vm.schedule.actualStartDateTime" ng-change="vm.scheduleTimeSpan.onStartDateTimeChaged()" /> -->
-                  <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.actualStartDateTime" type="datetime" on-date-changed="vm.scheduleTimeSpan.onStartDateTimeChaged()" format="vm.dateTimeFormat" align-calendar></fp-date-time-component>
+                <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.actualStartDateTime" type="datetime"
+                  on-date-changed="vm.scheduleTimeSpan.onStartDateTimeChaged()" format="vm.dateTimeFormat"
+                  align-calendar></fp-date-time-component>
                 <!-- <input type="text" ng-if="vm.schedule.approve" class="transparent-background text-right" disabled ng-model="vm.schedule.actualStartDateTime"
                 /> -->
-                <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.actualStartDateTimeString" format='vm.dateTimeFormat' type="datetime" align-calendar></fp-date-time-renderer>
+                <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.actualStartDateTimeString"
+                  format='vm.dateTimeFormat' type="datetime" align-calendar></fp-date-time-renderer>
               </label>
 
               <label class="item item-input" ng-repeat="cs in ::vm.schedule.customSchedules">
                 <span class="input-label">{{::cs.fieldGivenName}}</span>
-                <input type="text" ng-if="!vm.schedule.approve" class="transparent-background text-right" mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal'}"
-                  ng-model="cs.totalHours" ng-change="vm.tabs.sch.events.onCustomScheduleChanged(cs)" />
-                <input type="text" ng-if="vm.schedule.approve" class="transparent-background text-right" disabled ng-model="cs.totalHours"
-                />
+                <input type="text" ng-if="!vm.schedule.approve" class="transparent-background text-right"
+                  mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal'}" ng-model="cs.totalHours"
+                  ng-change="vm.tabs.sch.events.onCustomScheduleChanged(cs)" />
+                <input type="text" ng-if="vm.schedule.approve" class="transparent-background text-right" disabled
+                  ng-model="cs.totalHours" />
               </label>
 
 
               <label class="item item-input">
-                <textarea name="" id="" rows="6" placeholder="enter trip note here..." ng-model="vm.schedule.tripNote" ng-change="vm.tabs.sch.events.onTripnoteChanged()"
-                  ng-model-options="{debounce:500}"></textarea>
+                <textarea name="" id="" rows="6" placeholder="enter trip note here..." ng-model="vm.schedule.tripNote"
+                  ng-change="vm.tabs.sch.events.onTripnoteChanged()" ng-model-options="{debounce:500}"></textarea>
               </label>
             </div>
           </div>
@@ -424,8 +443,8 @@
                     <small>
                 </div>
                 <div class="col">
-                  <button type="button" class="button icon ion-edit button-small text-energized" style="margin-top: -5px;float: left;" ng-if="!vm.isServiceProvider || sch.technicianNum == vm.userId"
-                    ng-click="vm.tabs.prod.events.onEditProductClicked(p)"></button>
+                  <button type="button" class="button icon ion-edit button-small text-energized" style="margin-top: -5px;float: left;"
+                    ng-if="!vm.isServiceProvider || sch.technicianNum == vm.userId" ng-click="vm.tabs.prod.events.onEditProductClicked(p)"></button>
                   <button type="button" class="button icon ion-trash-b button-small text-assertive" style="margin-top: -5px;float: left;margin-left: 5px;"
                     ng-click="vm.tabs.prod.events.onDeleteProductClicked(p)"></button>
                 </div>
@@ -515,7 +534,7 @@
           </div>
           <order-signature-component barcode="vm.barcode" is-estimate="false"></order-signature-component>
           <order-email-card-component barcode="vm.barcode" taxrate="vm.barCodeData.taxRate" default-emails="vm.barCodeData.barcodeDetails.address2_Group"
-            show-price="vm.showPrice" hide-email-button="vm.uiSettings.hideEmailButton"></order-email-card-component>
+            show-price="vm.showPrice" hide-email-button="vm.uiSettings.hideEmailButton" is-estimate="false"></order-email-card-component>
           <order-images-list-component barcode="vm.barcode" is-estimate="false"></order-images-list-component>
           <order-documents-list-component barcode="vm.barcode"></order-documents-list-component>
           <div class="card">
@@ -542,7 +561,7 @@
   </ion-content>
 </ion-view>
 <script id="editProductModal.html" type="text/ng-template">
-	<ion-modal-view>
+  <ion-modal-view>
 		<edit-product-component is-estimate="false" modal-type="0" product="vm.currentProduct" 
     enable-markup-orders="vm.enableMarkup"></edit-product-component>
 	</ion-modal-view>
@@ -573,14 +592,14 @@
   </ion-modal-view>
 </script>
 <script id="addProductModal.html" type="text/ng-template">
-	<ion-modal-view>
+  <ion-modal-view>
 		<edit-product-component is-estimate="false" modal-type="1" 
 		product="vm.currentProduct" on-add-product-completed="vm.events.onAddProductCompleted(product)" 
     enable-markup-orders="vm.enableMarkup"></edit-product-component>
 	</ion-modal-view>
 </script>
 <script id="workOrderMap.html" type="text/ng-template">
-    <ion-modal-view>
+  <ion-modal-view>
       <ion-header-bar>
             <h1 class="title">
                 {{::vm.barCodeData.barcodeDetails.barcodeName}} 

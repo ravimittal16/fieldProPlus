@@ -1,13 +1,15 @@
-(function() {
+(function () {
   "use strict";
+
   function _initFactory($q, apiContext, localStorageService) {
     var apibase = "api/Estimates/";
+
     function createEntity() {
       var entityFromStorage = localStorageService.get("estimateEntitySchema");
       if (entityFromStorage) {
         return $q.when(entityFromStorage);
       } else {
-        return apiContext.get(apibase + "CreateEntity").then(function(entity) {
+        return apiContext.get(apibase + "CreateEntity").then(function (entity) {
           localStorageService.set("estimateEntitySchema", entity);
           return entity;
         });
@@ -37,22 +39,22 @@
     function addProductToEstimate(productNum, barcode, estimateId) {
       return apiContext.get(
         apibase +
-          "AddProductToEstimate?productNum=" +
-          productNum +
-          "&barcode=" +
-          barcode +
-          "&estimateId=" +
-          estimateId
+        "AddProductToEstimate?productNum=" +
+        productNum +
+        "&barcode=" +
+        barcode +
+        "&estimateId=" +
+        estimateId
       );
     }
 
     function deleteProduct(num, estimateId) {
       return apiContext.deleteReq(
         apibase +
-          "DeleteProductFromOrder?productNum=" +
-          num +
-          "&estimateId=" +
-          estimateId
+        "DeleteProductFromOrder?productNum=" +
+        num +
+        "&estimateId=" +
+        estimateId
       );
     }
 
@@ -69,6 +71,7 @@
     function updateWorkOrderEstimate(estimate) {
       return apiContext.post(apibase + "UpdateWorkOrderEstimate", estimate);
     }
+
     function updateProductsForBarcodeEstimate(estimateProduct) {
       return apiContext.post(
         apibase + "UpdateProductsForBarcodeEstimate",
@@ -76,7 +79,15 @@
       );
     }
 
+    function emailEstimateAsPdf(model) {
+      return apiContext.post(
+        apibase + "EmailEstimateAsPdf",
+        model
+      );
+    }
+
     return {
+      emailEstimateAsPdf: emailEstimateAsPdf,
       updateProductsForBarcodeEstimate: updateProductsForBarcodeEstimate,
       updateWorkOrderEstimate: updateWorkOrderEstimate,
       getEstimateImages: getEstimateImages,
