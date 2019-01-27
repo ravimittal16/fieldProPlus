@@ -92,6 +92,7 @@
     vm.events = {
       sendEstimateMail: function (mails) {
         if (mails && mails.length > 0) {
+          fpmUtilities.showLoading("Sending email...");
           vm.sendingEmail = true;
           var model = {
             estimateId: vm.estimateId,
@@ -104,6 +105,7 @@
             }
           }, function () {}).finally(function () {
             vm.sendingEmail = false;
+            fpmUtilities.hideLoading();
           })
         }
       },

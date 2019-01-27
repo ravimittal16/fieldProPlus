@@ -2,17 +2,18 @@
   <ion-nav-buttons side="left">
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
-  <ion-content scroll="false">
+  <ion-content has-header="true">
     <errors-view errors="vm.errors"></errors-view>
     <ion-tabs class="tabs-dark tabs-icon-top">
       <ion-tab title="DESCRIPTION" icon-on="ion-ios-paper" icon-off="ion-ios-paper-outline">
         <ion-content>
           <ion-refresher pulling-text="Pull to refresh..." on-refresh="vm.events.refreshOnPullDown()">
           </ion-refresher>
-          <div>
-            <div class="row m-top-45">
+          <div class="padding-top">
+            <div class="row">
               <div class="col">
-                <div class="alert" ng-class="{'alert-danger':!vm.est.estimate.isApproved,'alert-success':vm.est.estimate.isApproved}">
+                <div class="alert" ng-class="{'alert-danger':!vm.est.estimate.isApproved,'alert-success':vm.est.estimate.isApproved}"
+                  style="padding: 7px;">
                   <span ng-if="!vm.est.estimate.isApproved">Estimate is not approved yet</span>
                   <span ng-if="vm.est.estimate.isApproved">
                     <i class="fa fa-check"></i>&nbsp;Estimate approved by
@@ -24,7 +25,7 @@
               </div>
             </div>
             <div>
-              <div class="card">
+              <div class="card" style="margin-top: 0px;">
                 <div class="list">
                   <div class="item item-divider header-dark">
                     SERVICE ADDRESS
@@ -105,7 +106,7 @@
       </ion-tab>
       <ion-tab title="PRODUCTS" icon-on="ion-ios-list" icon-off="ion-ios-list-outline">
         <ion-content>
-          <div class="brand-margin">
+          <div>
             <div class="card">
               <div class="item item-divider">
                 PRODUCTS
@@ -156,7 +157,7 @@
       </ion-tab>
       <ion-tab title="SUMMARY" icon-on="ion-ios-calculator" icon-off="ion-ios-calculator-outline">
         <ion-content direction="y">
-          <div class="m-top-45">
+          <div class="padding-top">
             <ion-list>
               <div class="card">
                 <div class="item item-divider header-dark">

@@ -2,18 +2,16 @@
   "use strict";
 
   function initController(
-    $scope,
     $state,
-    $timeout,
     estimatesFactory,
     sharedDataFactory,
     fpmUtilities,
     authenticationFactory
   ) {
     var vm = this;
+    var alerts = fpmUtilities.alerts;
     vm.errors = [];
     vm.isCustomerSelected = false;
-    var alerts = fpmUtilities.alerts;
     vm.issameaddress === false;
     vm.userInfo = authenticationFactory.getLoggedInUserInfo();
     vm.priorities = [{
@@ -48,8 +46,8 @@
                       "Success",
                       "Estimate created successfully",
                       function () {
-                        $state.go("app.estimates", {
-                          refresh: true
+                        $state.go("app.editEstimate", {
+                          id: response.entity.estimateId
                         });
                       }
                     );
@@ -120,9 +118,7 @@
     activateController();
   }
   initController.$inject = [
-    "$scope",
     "$state",
-    "$timeout",
     "estimates-factory",
     "shared-data-factory",
     "fpm-utilities-factory",

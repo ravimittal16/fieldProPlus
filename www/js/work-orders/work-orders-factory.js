@@ -1,4 +1,4 @@
-(function() {
+(function () {
   "use strict";
 
   function initFactory($q, $rootScope, $cacheFactory, apiBaseFactory) {
@@ -20,6 +20,7 @@
       cache.remove(dashboardDataKeyName);
       cache.removeAll();
     }
+
     function getMobileDashboard(forceGet, initialData) {
       if (angular.isDefined(forceGet) && forceGet) {
         cache.remove(dashboardDataKeyName);
@@ -30,7 +31,7 @@
       } else {
         return apiBaseFactory
           .get(apibaseurl + "GetMobileDashboard")
-          .then(function(response) {
+          .then(function (response) {
             cache.put(dashboardDataKeyName, response);
             return response;
           });
@@ -59,11 +60,11 @@
     function searchProduct(searchValue, alphabet) {
       return apiBaseFactory.get(
         apibaseurl +
-          "GetProductsLists?searchPattern=" +
-          searchValue +
-          "&alphabet=" +
-          alphabet +
-          "&fromMobile=true"
+        "GetProductsLists?searchPattern=" +
+        searchValue +
+        "&alphabet=" +
+        alphabet +
+        "&fromMobile=true"
       );
     }
 
@@ -112,7 +113,7 @@
       } else {
         return apiBaseFactory
           .get(apibaseurl + "CreateEntity")
-          .then(function(response) {
+          .then(function (response) {
             cache.put("workOrderEntity", response);
             return response;
           });
@@ -157,6 +158,7 @@
       return apiBaseFactory.post(apibaseurl + "UpdateOrderProduct", product);
     }
     var workOrderCalendarKeyName = "workorder:calendar";
+
     function getDatewiseEvents(forceGet) {
       forceGet = forceGet === null ? false : forceGet;
       if (forceGet === true) {
@@ -168,7 +170,7 @@
       } else {
         return apiBaseFactory
           .get("api/Scheduler/GetMyCalender?fromMobile=true")
-          .then(function(response) {
+          .then(function (response) {
             cache.put(workOrderCalendarKeyName, response);
             return response;
           });
@@ -204,15 +206,14 @@
     function addProductFromBarcodeScanner(skuCode, barcode) {
       return apiBaseFactory.get(
         apibaseurl +
-          "AddProductFromBarcodeScanner?skuCode=" +
-          skuCode +
-          "&barcode=" +
-          barcode
+        "AddProductFromBarcodeScanner?skuCode=" +
+        skuCode +
+        "&barcode=" +
+        barcode
       );
     }
 
     function uploadFiles(files, model) {
-      console.log(files[0]);
       return apiBaseFactory.upload(apibaseurl + "TryUpload", files, model);
     }
 

@@ -6,9 +6,11 @@
       link: function (scope, element, attrs) {
         scope.$emit("fpm:showEmptyImageMessage", false);
         $(element).on("error", function () {
-          $(element).hide();
-          $(element).parent().hide();
-          scope.$emit("fpm:showEmptyImageMessage", true);
+          $timeout(function () {
+            $(element).hide();
+            $(element).parent().hide();
+            scope.$emit("fpm:showEmptyImageMessage", true);
+          }, 20);
         });
       }
     };

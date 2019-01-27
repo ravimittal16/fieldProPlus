@@ -6,7 +6,7 @@
 // "http://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 // "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 //"http://localhost/FieldPromaxApi/"
-var isInDevMode = false;
+var isInDevMode = true;
 var prodReady = false;
 var constants = {
   fieldPromaxApi: isInDevMode ?
