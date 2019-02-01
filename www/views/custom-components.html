@@ -51,7 +51,8 @@
                     </div>
                   </td>
                   <td class="text-center">
-                    <button class="button button-positive button-small button-block" ng-click="vm.events.runReport()">Run</button>
+                    <button class="button button-positive button-small button-block" ng-disabled="vm.showingLoading"
+                      ng-click="vm.events.runReport()">Run</button>
                   </td>
                 </tr>
                 <tr>

@@ -26,7 +26,8 @@
       onSubmitButtonClicked: function (isValid) {
         vm.errors = [];
         if (!vm.isCustomerSelected) {
-          vm.errors.push("Please select a customer before save");
+          vm.errors.push("Select a customer before save");
+          return false;
         }
         if (isValid) {
           var e = vm.entity;
@@ -54,6 +55,8 @@
                   }
                 });
             });
+        } else {
+          vm.errors.push("Enter a valid email address.");
         }
       },
       sameAsBilling: function () {
@@ -71,6 +74,7 @@
         vm.issameaddress === false;
       },
       onCustomerSelected: function (customer) {
+        vm.errors = [];
         vm.entity.woDisplayName = customer.name;
         vm.entity.woFirstName = customer.firstName;
         vm.entity.woLastName = customer.lastName;

@@ -37,15 +37,15 @@
         var alerts = fpmUtilitiesFactory.alerts;
         vm.showDeleteImageOnModal = false;
         var currentIndex = 0;
-
+        var isIos = fpmUtilitiesFactory.device.isIOS();
         var selectedFiles = null;
-
         vm.upload = {
           control: null,
-          uploadImages: function (files) {
+          uploadImages: function (files, take) {
             var model = {
               barcode: vm.barcode,
-              estimateId: estimateId
+              estimateId: estimateId,
+              rotate: (isIos === true && take === true)
             };
             if (files && files.length > 0) {
               fpmUtilitiesFactory.showLoading("Uploading");
@@ -73,7 +73,8 @@
               barcode: vm.barcode,
               image: rawImage,
               name: imageName,
-              estimateId: estimateId
+              estimateId: estimateId,
+              rotate: (isIos === true && take === true)
             };
             fpmUtilitiesFactory
               .showLoading(
@@ -89,13 +90,17 @@
                     function (response) {
                       if (response && response.entity) {
                         imageName = response.entity.name;
-                        vm.barcodeImages.push({
-                          barcode: vm.barcode,
-                          fileName: imageName,
-                          estimateId: estimateId,
-                          imageURL: "/" + imageName + (take ? ".jpg" : ""),
-                          num: response.entity.newIdentity
-                        });
+                        $timeout(function () {
+                          vm.barcodeImages.push({
+                            barcode: vm.barcode,
+                            fileName: imageName,
+                            estimateId: estimateId,
+                            isChecked: false,
+                            imageURL: "/" + imageName + (take ? ".jpg" : ""),
+                            num: response.entity.newIdentity
+                          });
+                          vm.selectedImagesCount = 0;
+                        }, 20)
                       }
                       defer.resolve();
                       if (isLast) {
@@ -135,7 +140,7 @@
                 return false;
               }
               selectedFiles = e.files;
-              vm.upload.uploadImages(e.files);
+              vm.upload.uploadImages(e.files, false);
               e.preventDefault();
             }
           }
@@ -151,6 +156,7 @@
           var imagesNums = _.pluck(images, "num");
           $scope.$emit("fpm:imageSelectionChanged", imagesNums);
         }
+
         vm.events = {
           onImageTapped: function ($event, image) {
             if ($event.target && $event.target.toString().toLowerCase().indexOf('button') <= -1) {
@@ -181,7 +187,7 @@
                         if (response) {
                           vm.upload.uploadImages([{
                             rawFile: response
-                          }]);
+                          }], true);
                         }
                       },
                       function () {}

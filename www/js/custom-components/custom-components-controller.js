@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  function _initController($scope, $state, customComponentsFactory, authenticationFactory) {
+  function _initController($scope, $timeout, customComponentsFactory, authenticationFactory, fpmUtilities) {
 
     var vm = this;
     vm.showingLoading = false;
@@ -26,50 +26,57 @@
       runReport: function () {
         vm.columns = [];
         var reportColumns = [];
+        fpmUtilities.showLoading('Generating report...');
+        vm.showingLoading = true;
         customComponentsFactory.generateReport(vm.reportModel).then(function (response) {
-          var $table = angular.element("#tableReport");
-          $table.find("tbody").html("");
-          if (response) {
-            vm.result = JSON.parse(response);
-            if (vm.result && vm.result.length > 0) {
-              var firstRow = vm.result[0];
-              for (var s in firstRow) {
-                reportColumns.push(s);
-                if (s === "BarcodeName" || s === "ActualStartDateTime") {
-                  vm.columns.push({
-                    colName: _staticColumsName[s]
-                  })
-                } else {
-                  vm.columns.push({
-                    colName: s
-                  })
-                }
-              }
-
-              angular.forEach(vm.result, function (e, i) {
-                var tableRow = "<tr>"
-                if ((vm.result.length - 1) === i) {
-                  var tableRow = "<tr class='success'>"
-                }
-                var dateFormat = vm.dateFormat.toUpperCase();
-                angular.forEach(reportColumns, function (col, x) {
-                  var val = "";
-                  if (col === "ActualStartDateTime") {
-                    if (e[col] && vm.dateFormat) {
-                      val = moment(e[col]).format(dateFormat);
-                    }
+          $timeout(function () {
+            var $table = angular.element("#tableReport");
+            $table.find("tbody").html("");
+            if (response) {
+              vm.result = JSON.parse(response);
+              if (vm.result && vm.result.length > 0) {
+                var firstRow = vm.result[0];
+                for (var s in firstRow) {
+                  reportColumns.push(s);
+                  if (s === "BarcodeName" || s === "ActualStartDateTime") {
+                    vm.columns.push({
+                      colName: _staticColumsName[s]
+                    })
                   } else {
-                    val = (e[col] || "");
+                    vm.columns.push({
+                      colName: s
+                    })
                   }
-                  tableRow += "<td>" + val + "</td>";
-                  if (x === (reportColumns.length - 1)) {
-                    tableRow += "</tr>"
-                    $table.find("tbody").append(tableRow);
+                }
+
+                angular.forEach(vm.result, function (e, i) {
+                  var tableRow = "<tr>"
+                  if ((vm.result.length - 1) === i) {
+                    var tableRow = "<tr class='success'>"
                   }
-                });
-              })
+                  var dateFormat = vm.dateFormat.toUpperCase();
+                  angular.forEach(reportColumns, function (col, x) {
+                    var val = "";
+                    if (col === "ActualStartDateTime") {
+                      if (e[col] && vm.dateFormat) {
+                        val = moment(new Date(e[col])).format(dateFormat);
+                      }
+                    } else {
+                      val = (e[col] || "");
+                    }
+                    tableRow += "<td>" + val + "</td>";
+                    if (x === (reportColumns.length - 1)) {
+                      tableRow += "</tr>"
+                      $table.find("tbody").append(tableRow);
+                    }
+                  });
+                })
+              }
             }
-          }
+          }, 100);
+        }).finally(function () {
+          fpmUtilities.hideLoading();
+          vm.showingLoading = false;
         });
       }
     }
@@ -97,6 +104,6 @@
       activateController();
     });
   }
-  _initController.$inject = ["$scope", "$state", "custom-components-factory", "authenticationFactory"];
+  _initController.$inject = ["$scope", "$timeout", "custom-components-factory", "authenticationFactory", "fpm-utilities-factory"];
   angular.module("fpm").controller("custom-components-controller", _initController);
 })();
