@@ -1,122 +1,166 @@
 (function () {
-    "use strict";
+  "use strict";
 
-    function initFactory(apicontext, $q, $cacheFactory) {
-        var baseUrl = "api/timecard/";
-        var cache = $cacheFactory("timeCardCache");
-        function getTimeCardByDate(date) {
-            return apicontext.get(baseUrl + "GetTimeCardByDate?date=" + date);
-        }
+  function initFactory(apicontext, $q, $cacheFactory) {
+    var baseUrl = "api/timecard/";
+    var cache = $cacheFactory("timeCardCache");
 
-        function getClockInByDate(date) {
-            return apicontext.get(baseUrl + "GetClockInByDate?date=" + date);
-        }
-
-        function clockInOutUser(details) {
-            return apicontext.post(baseUrl + "ClockInOutUser", details);
-        }
-
-        function getJobCodes(forceGet) {
-            forceGet = forceGet || false;
-            if (forceGet === true) {
-                cache.remove("jobCodes");
-            }
-            var jobCodes = cache.get("jobCodes");
-            if (angular.isDefined(jobCodes) && jobCodes) {
-                return $q.when(jobCodes);
-            } else {
-                return apicontext.get(baseUrl + "GetJobCodes").then(function (response) {
-                    cache.put("jobCodes", response);
-                    return response;
-                });
-            }
-        }
-
-        function getWorkOrdersList(forceGet) {
-            forceGet = forceGet || false;
-            if (forceGet === true) {
-                cache.remove("workorders");
-            }
-            var orders = cache.get("workorders");
-            if (angular.isDefined(orders) && orders) {
-                return $q.when(orders);
-            } else {
-                return apicontext.get(baseUrl + "GetWorkOrdersList").then(function (response) {
-                    cache.put("workorders", response);
-                    return response;
-                });
-            }
-        }
-
-        function addNewDetails(entity) {
-            return apicontext.post(baseUrl + "AddNewDetails", entity);
-        }
-
-        function clearCheckedOutTime(detailId, summaryId) {
-            return apicontext.get(baseUrl + "ClearCheckedOutTime?detailId=" + detailId + "&summaryId=" + summaryId);
-        }
-
-        function sendForApproval(summaryId, status) {
-            return apicontext.get(baseUrl + "SendForApproval?summaryId=" + summaryId + "&status=" + status);
-        }
-
-        function deleteTimeCardDetails(detailId, summaryId) {
-            return apicontext.get(baseUrl + "DeleteTimeCardDetails?detailId=" + detailId + "&summaryId=" + summaryId);
-        }
-
-        function clearTimeCard(summaryId) {
-            return apicontext.get(baseUrl + "ClearTimeCard?summaryId=" + summaryId);
-        }
-
-        function getPendingClockIns() {
-            return apicontext.get(baseUrl + "GetPendingClockIns");
-        }
-
-        function pushCheckInOutTimes(entity) {
-            return apicontext.post(baseUrl + "PushCheckInOutTimes", entity);
-        }
-
-        function certifyUser() {
-            return apicontext.get(baseUrl + "CertifieldUser");
-        }
-
-        function getCertifieldUser() {
-            return apicontext.get(baseUrl + "GetCertifieldUser");
-        }
-
-        function addPtoDetails(details) {
-            return apicontext.post(baseUrl + "AddPtoDetails", details);
-        }
-
-        function getSummaryPayableHours(filters) {
-            return apicontext.post(baseUrl + "GetPayableHoursSummaryView", filters);
-        }
-        function clearTimecardFactoryData() { 
-            factory.data = { details: [], jobCodes: { CLOCK_IN: 5001, CLOCK_OUT: 5002 }, summary: null };
-        }
-        var data = { details: [], jobCodes: { CLOCK_IN: 5001, CLOCK_OUT: 5002 }, summary: null };
-        var factory = {};
-        factory.clearTimecardFactoryData = clearTimecardFactoryData;
-        factory.addPtoDetails = addPtoDetails;
-        factory.getSummaryPayableHours = getSummaryPayableHours;
-        factory.certifyUser = certifyUser;
-        factory.getCertifieldUser = getCertifieldUser;
-        factory.pushCheckInOutTimes = pushCheckInOutTimes;
-        factory.data = data;
-        factory.getPendingClockIns = getPendingClockIns;
-        factory.getJobCodes = getJobCodes;
-        factory.clockInOutUser = clockInOutUser;
-        factory.getClockInByDate = getClockInByDate;
-        factory.getTimeCardByDate = getTimeCardByDate;
-        factory.getWorkOrdersList = getWorkOrdersList;
-        factory.addNewDetails = addNewDetails;
-        factory.clearCheckedOutTime = clearCheckedOutTime;
-        factory.sendForApproval = sendForApproval;
-        factory.deleteTimeCardDetails = deleteTimeCardDetails;
-        factory.clearTimeCard = clearTimeCard;
-        return factory;
+    function getTimeCardByDate(date) {
+      return apicontext.get(baseUrl + "GetTimeCardByDate?date=" + date);
     }
 
-    initFactory.$inject = ["api-base-factory", "$q", "$cacheFactory"];
-    angular.module("fpm").factory("timecard-factory", initFactory);
+    function getClockInByDate(date) {
+      return apicontext.get(baseUrl + "GetClockInByDate?date=" + date);
+    }
+
+    function clockInOutUser(details) {
+      return apicontext.post(baseUrl + "ClockInOutUser", details);
+    }
+
+    function getJobCodes(forceGet) {
+      forceGet = forceGet || false;
+      if (forceGet === true) {
+        cache.remove("jobCodes");
+      }
+      var jobCodes = cache.get("jobCodes");
+      if (angular.isDefined(jobCodes) && jobCodes) {
+        return $q.when(jobCodes);
+      } else {
+        return apicontext.get(baseUrl + "GetJobCodes").then(function (response) {
+          cache.put("jobCodes", response);
+          return response;
+        });
+      }
+    }
+
+    function getWorkOrdersList(forceGet) {
+      forceGet = forceGet || false;
+      if (forceGet === true) {
+        cache.remove("workorders");
+      }
+      var orders = cache.get("workorders");
+      if (angular.isDefined(orders) && orders) {
+        return $q.when(orders);
+      } else {
+        return apicontext.get(baseUrl + "GetWorkOrdersList").then(function (response) {
+          cache.put("workorders", response);
+          return response;
+        });
+      }
+    }
+
+    function addNewDetails(entity) {
+      return apicontext.post(baseUrl + "AddNewDetails", entity);
+    }
+
+    function clearCheckedOutTime(detailId, summaryId) {
+      return apicontext.get(baseUrl + "ClearCheckedOutTime?detailId=" + detailId + "&summaryId=" + summaryId);
+    }
+
+    function sendForApproval(summaryId, status) {
+      return apicontext.get(baseUrl + "SendForApproval?summaryId=" + summaryId + "&status=" + status);
+    }
+
+    function deleteTimeCardDetails(detailId, summaryId) {
+      return apicontext.get(baseUrl + "DeleteTimeCardDetails?detailId=" + detailId + "&summaryId=" + summaryId);
+    }
+
+    function clearTimeCard(summaryId) {
+      return apicontext.get(baseUrl + "ClearTimeCard?summaryId=" + summaryId);
+    }
+
+    function getPendingClockIns() {
+      return apicontext.get(baseUrl + "GetPendingClockIns");
+    }
+
+    function pushCheckInOutTimes(entity) {
+      return apicontext.post(baseUrl + "PushCheckInOutTimes", entity);
+    }
+
+    function certifyUser() {
+      return apicontext.get(baseUrl + "CertifieldUser");
+    }
+
+    function getCertifieldUser() {
+      return apicontext.get(baseUrl + "GetCertifieldUser");
+    }
+
+    function addPtoDetails(details) {
+      return apicontext.post(baseUrl + "AddPtoDetails", details);
+    }
+
+    function getSummaryPayableHours(filters) {
+      return apicontext.post(baseUrl + "GetPayableHoursSummaryView", filters);
+    }
+
+    function clearTimecardFactoryData() {
+      factory.data = {
+        details: [],
+        jobCodes: {
+          CLOCK_IN: 5001,
+          CLOCK_OUT: 5002
+        },
+        summary: null
+      };
+    }
+    var data = {
+      details: [],
+      jobCodes: {
+        CLOCK_IN: 5001,
+        CLOCK_OUT: 5002
+      },
+      summary: null
+    };
+
+
+    function checkoutPending(details) {
+      var defer = $q.defer();
+      var _e = details;
+      var tcd = kendo.parseDate(details.timeCardDate);
+      var _ft = moment(new Date(tcd.getFullYear(), tcd.getMonth(), tcd.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0));
+      var _st = kendo.parseDate(_e.startTime);
+      if (_ft.isBefore(_st)) {
+        defer.resolve({
+          success: false,
+          reason: -1
+        });
+      } else {
+        _e.finishTime = kendo.toString(new Date(tcd.getFullYear(), tcd.getMonth(), tcd.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0), "g");
+        addNewDetails(_e).then(function (response) {
+          if (response) {
+            defer.resolve({
+              success: true,
+              reason: 0
+            });
+          }
+        });
+      }
+      return defer.promise;
+    }
+
+    var factory = {};
+    factory.checkoutPending = checkoutPending;
+    factory.clearTimecardFactoryData = clearTimecardFactoryData;
+    factory.addPtoDetails = addPtoDetails;
+    factory.getSummaryPayableHours = getSummaryPayableHours;
+    factory.certifyUser = certifyUser;
+    factory.getCertifieldUser = getCertifieldUser;
+    factory.pushCheckInOutTimes = pushCheckInOutTimes;
+    factory.data = data;
+    factory.getPendingClockIns = getPendingClockIns;
+    factory.getJobCodes = getJobCodes;
+    factory.clockInOutUser = clockInOutUser;
+    factory.getClockInByDate = getClockInByDate;
+    factory.getTimeCardByDate = getTimeCardByDate;
+    factory.getWorkOrdersList = getWorkOrdersList;
+    factory.addNewDetails = addNewDetails;
+    factory.clearCheckedOutTime = clearCheckedOutTime;
+    factory.sendForApproval = sendForApproval;
+    factory.deleteTimeCardDetails = deleteTimeCardDetails;
+    factory.clearTimeCard = clearTimeCard;
+    return factory;
+  }
+
+  initFactory.$inject = ["api-base-factory", "$q", "$cacheFactory"];
+  angular.module("fpm").factory("timecard-factory", initFactory);
 })();

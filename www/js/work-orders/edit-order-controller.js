@@ -680,7 +680,7 @@
       }
     }
 
-    function processCheckIn() {
+    function processCheckIn(refreshDetails) {
       fpmUtilities.showLoading().then(function () {
         vm.schedule.actualStartDateTime = new Date();
         vm.schedule.actualFinishDateTime = null;
@@ -701,8 +701,8 @@
           })
           .finally(function () {
             fpmUtilities.hideLoading();
-            if (vm.user.timeCard) {
-              _getTodaysTimeCardEntries();
+            if (vm.user.timeCard && refreshDetails) {
+              _getTodaysTimeCardEntries(false);
             }
           });
       });
@@ -865,7 +865,7 @@
           },
           refreshOnPullDown: function () {
             getBarcodeDetails();
-            _getTodaysTimeCardEntries();
+            _getTodaysTimeCardEntries(false);
           },
           closeWorkOrderMapModal: function () {
             isMapLoaded = false;
@@ -1016,7 +1016,7 @@
                       "Confirmation!",
                       "You have not clocked in yet. You will be clocked in automattically \n\n Are you sure?",
                       function () {
-                        processCheckIn();
+                        processCheckIn(true);
                       },
                       function () {
                         //UNBLOCKUI
@@ -1029,22 +1029,73 @@
                         jobCodeName: "On Job"
                       });
                       if (runningCheckIn.length > 0) {
-                        alerts.alert(
-                          "Warning!",
-                          "You have not checked out for previous task.",
-                          function () {
-                            //UNBLOCKUI
+                        var _defaultActions = [{
+                            text: 'Check-out the pending task'
+                          },
+                          {
+                            text: 'Open pending schedule'
+                          },
+                          {
+                            text: "Open Timecard"
                           }
-                        );
+                        ];
+                        $ionicActionSheet.show({
+                          buttons: _defaultActions,
+                          titleText: "Pending Check-out Actions",
+                          cancelText: "Cancel",
+                          cancel: function () {
+                            // add cancel code..
+                          },
+                          buttonClicked: function (index) {
+                            if (index === 0) {
+                              alerts.confirm("Confirmation!", "Are you sure to check-out?", function () {
+                                var _e = angular.copy(runningCheckIn[0]);
+                                fpmUtilities.showLoading().then(function () {
+                                  timecardFactory.checkoutPending(_e).then(function (response) {
+                                    if (response && response.success) {
+                                      alerts.alert("Success!", "Pending task checked out successfully.", function () {
+                                        $timeout(function () {
+                                          processCheckIn(true);
+                                        }, 10);
+                                      });
+                                    } else {
+                                      alerts.alert("Invalid Time", "Go to Timecard and checkout manually.");
+                                    }
+                                  }).finally(function () {
+                                    fpmUtilities.hideLoading();
+
+                                  });
+                                });
+                              });
+                            }
+                            if (index === 1) {
+                              console.log(runningCheckIn[0]);
+                              $state.go($state.current, {
+                                barcode: runningCheckIn[0].barcode,
+                                technicianNum: runningCheckIn[0].scheduleId,
+                                src: "main"
+                              }, {
+                                reload: true
+                              });
+
+                            }
+                            if (index === 2) {
+                              $state.go("app.timecard", {
+                                refresh: true
+                              });
+                            }
+                            return true;
+                          }
+                        });
                       } else {
-                        processCheckIn();
+                        processCheckIn(true);
                       }
                     } else {
-                      processCheckIn();
+                      processCheckIn(true);
                     }
                   }
                 } else {
-                  processCheckIn();
+                  processCheckIn(true);
                 }
               }
               return false;
@@ -1178,7 +1229,7 @@
         });
     };
 
-    function _getTodaysTimeCardEntries() {
+    function _getTodaysTimeCardEntries(runCheckin) {
       if (vm.user.timeCard === true) {
         var cdt = new Date();
         var dt = fpmUtilities.toStringDate(
@@ -1187,6 +1238,10 @@
         timecardFactory.getTimeCardByDate(dt).then(function (response) {
           if (response) {
             timeCardInfo.currentDetails = response.timeCardDetails;
+          }
+        }).finally(function () {
+          if (runCheckin) {
+            processCheckIn(true);
           }
         });
       }

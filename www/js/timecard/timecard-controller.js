@@ -363,13 +363,11 @@
             if (_ft.isBefore(_st)) {
               alerts.alert("Invalid Time", "Please enter finish time manually.", function () {
                 $timeout(function () {
-                  $timeout(function () {
-                    vm.ui.data.currentDetails = _e;
-                    vm.ui.data.isInEditMode = true;
-                    vm.ui.data.isFromPto = _e.isPtoType;
-                    showModal();
-                  }, 100);
-                }, 10);
+                  vm.ui.data.currentDetails = _e;
+                  vm.ui.data.isInEditMode = true;
+                  vm.ui.data.isFromPto = _e.isPtoType;
+                  showModal();
+                }, 100);
               });
             } else {
               _e.finishTime = kendo.toString(new Date(tcd.getFullYear(), tcd.getMonth(), tcd.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0), "g");
