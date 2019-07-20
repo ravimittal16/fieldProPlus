@@ -62,13 +62,17 @@
               }
             }
           }
-          if (vm.entity.jobCode === null || vm.entity.jobCode === 0) {
+
+          var _e = angular.copy(vm.entity)
+          _e.startTime = kendo.toString(kendo.parseDate(vm.entity.startTime), "g");
+          _e.finishTime = kendo.toString(kendo.parseDate(vm.entity.finishTime), "g");
+          if (_e.jobCode === null || _e.jobCode === 0) {
             vm.ui.errors.push("Please select Job code before save");
             return false;
           }
           fpmUtilitiesFactory.showLoading().then(function () {
             var action = vm.isFromPto ? timecardFactory.addPtoDetails : timecardFactory.addNewDetails;
-            action(vm.entity).then(function (response) {
+            action(_e).then(function (response) {
               isConfirmedBefore = false;
               if (angular.isArray(response.errors) && response.errors.length > 0) {
                 vm.ui.errors = response.errors;

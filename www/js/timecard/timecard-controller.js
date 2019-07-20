@@ -208,13 +208,13 @@
       var details = {
         startTime: kendo.toString(clockOutTime, "g"),
         jobCode: jobCodes.CLOCK_OUT,
-        numFromSummary: vm.ui.data.summary.Num,
-        timeCardDate: kendo.parseDate(vm.ui.data.summary.timeCardDate),
+        numFromSummary: vm.ui.data.summary.num,
+        timeCardDate: kendo.toString(kendo.parseDate(vm.ui.data.summary.timeCardDate), "g"),
         uniqueIdentifier: vm.ui.data.currentClockedIn.uniqueIdentifier
       };
       fpmUtilitiesFactory.showLoading().then(function () {
         timecardFactory.clockInOutUser(details).then(function (response) {
-          if (response.errors === null) {
+          if (response && response.errors === null) {
             vm.ui.data.clockOutDateTime = clockOutTime;
             vm.ui.data.isClockedOut = true;
             vm.ui.data.isClockedIn = false;
@@ -223,9 +223,9 @@
             vm.ui.data.ptoButtonVisibility = true;
             vm.ui.data.summary = response.timeCardSummary;
             vm.factory.summary = response.timeCardSummary;
-            var dt = new Date();
+            var dt = vm.currentDate ? vm.currentDate : new Date();
             var cDate = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 0, 0, 0, 0);
-            var tcd = new Date(moment(vm.ui.data.summary.timeCardDate));
+            var tcd = moment(vm.ui.data.summary.timeCardDate).toDate();
             var tcDate = new Date(tcd.getFullYear(), tcd.getMonth(), tcd.getDate(), 0, 0, 0, 0);
             if (moment(tcDate).isSameOrAfter(cDate)) {
               vm.ui.data.disableClockInButton = false;
@@ -233,6 +233,8 @@
             vm.ui.data.approvalStatus = response.timeCardSummary.approveStatus || 0;
             _updateTimeCardsArray(response.timeCardDetails);
             _updateBindingsForSummaryStatus(response);
+          } else {
+            alerts.alert("Error", "Not able to perform clock out");
           }
         }).finally(function () {
           fpmUtilitiesFactory.hideLoading();
@@ -352,6 +354,39 @@
         timecardTutorialModal: null
       },
       events: {
+        checkOutPending: function (details) {
+          alerts.confirm("Confirmation!", "Are you sure to check-out?", function () {
+            var tcd = kendo.parseDate(details.timeCardDate);
+            var _e = angular.copy(details);
+            var _ft = moment(new Date(tcd.getFullYear(), tcd.getMonth(), tcd.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0));
+            var _st = kendo.parseDate(_e.startTime);
+            if (_ft.isBefore(_st)) {
+              alerts.alert("Invalid Time", "Please enter finish time manually.", function () {
+                $timeout(function () {
+                  $timeout(function () {
+                    vm.ui.data.currentDetails = _e;
+                    vm.ui.data.isInEditMode = true;
+                    vm.ui.data.isFromPto = _e.isPtoType;
+                    showModal();
+                  }, 100);
+                }, 10);
+              });
+            } else {
+              _e.finishTime = kendo.toString(new Date(tcd.getFullYear(), tcd.getMonth(), tcd.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0), "g");
+              fpmUtilitiesFactory.showLoading().then(function () {
+                timecardFactory.addNewDetails(_e).then(function (response) {
+                  if (response) {
+                    $timeout(function () {
+                      details.finishTime = kendo.parseDate(_e.finishTime);
+                    });
+                  }
+                }).finally(function () {
+                  fpmUtilitiesFactory.hideLoading();
+                });
+              });
+            }
+          });
+        },
         onShowCalenderClick: onShowCalenderClick,
         onCurrentDateChanged: onCurrentDateChanged,
         onTutorialModalCancel: function () {
@@ -430,7 +465,7 @@
                   vm.ui.data.isInEditMode = true;
                   vm.ui.data.isFromPto = t.isPtoType;
                   showModal();
-                }, 100)
+                }, 100);
               }
               return true;
             }

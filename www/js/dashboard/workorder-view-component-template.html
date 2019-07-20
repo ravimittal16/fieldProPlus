@@ -1,40 +1,46 @@
 <div class="card">
-    <div class="item item-divider">
-        <small style="float:left;"><i class="icon ion-calendar"></i>&nbsp;{{::vm.odr.WorkPerformedDate | date:'EEEE dd
+  <div class="item item-divider">
+    <small style="float:left;"><i class="icon ion-calendar"></i>&nbsp;{{::vm.odr.WorkPerformedDate | date:'EEEE dd
             MMM'}}</small>
-        <small style="float:right;"><i class="icon ion-clock"></i>&nbsp;{{::vm.odr.WorkPerformedDate | date:'hh:mm a'}}</small>
+    <small style="float:right;"><i
+        class="icon ion-clock"></i>&nbsp;{{::vm.odr.WorkPerformedDate | date:'hh:mm a'}}</small>
+  </div>
+  <div class="item item-text-wrap">
+    <span class="label label-success">{{::vm.odr.BarcodeName}}</span>
+    <div class="padding-top">
+      <h3>{{::vm.odr.DisplayName}}</h3>
+      <address>
+        <p>
+          <strong>{{::vm.odr.Company_Name}}</strong>
+        </p>
+        <p>{{::vm.odr.Street}}</p>
+        <p>{{::vm.odr.CityStateZip}}</p>
+        <p data-ng-if="vm.odr.WorkOrderDescription">
+          <small class="text-italic text-muted">
+            <i><strong>Description : </strong>{{::vm.odr.WorkOrderDescription}}</i>
+          </small>
+        </p>
+      </address>
     </div>
-    <div class="item item-text-wrap">
-        <span class="label label-success">{{::vm.odr.BarcodeName}}</span>
-        <div class="padding-top">
-            <h3>{{::vm.odr.DisplayName}}</h3>
-            <address>
-                <p>
-                    <strong>{{::vm.odr.Company_Name}}</strong>
-                </p>
-                <p>{{::vm.odr.Street}}</p>
-                <p>{{::vm.odr.CityStateZip}}</p>
-                <p data-ng-if="vm.odr.WorkOrderDescription">
-                    <small class="text-italic text-muted">
-                        <i><strong>Description : </strong>{{::vm.odr.WorkOrderDescription}}</i>
-                    </small>
-                </p>
-            </address>
-        </div>
-    </div>
-    <div class="item item-divider">
-        <button class="button button-small button-calm" type="button" data-ng-disabled="vm.odr.JobAcceptanceStatus"
-            data-ng-if="vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
-            data-ng-click="vm.events.acceptJob()">
-            Accept Job
-        </button>
-        <button class="button button-small button-calm" type="button" data-ng-disabled="vm.odr.InRoute" data-ng-if="vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
-            data-ng-click="vm.events.inRouteClicked()">
-            In Route
-        </button>
-        <button class="button  button-small button-calm pull-right" data-ng-click="vm.events.onOrderClicked()">
-            <i class="icon ion-chevron-right"></i>
-        </button>
-    </div>
-    </ion-card>
+  </div>
+  <div class="item item-divider">
+    <button class="button button-small button-calm" type="button" data-ng-disabled="vm.odr.JobAcceptanceStatus"
+      data-ng-if="vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
+      data-ng-click="vm.events.acceptJob()">
+      Accept
+    </button>
+    <button class="button button-small button-calm" type="button" data-ng-disabled="vm.odr.InRoute"
+      data-ng-if="vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
+      data-ng-click="vm.events.inRouteClicked()">
+      In Route
+    </button>
+    <button data-ng-if="vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
+      class="button button-small button-dark" data-ng-click="vm.events.saveOrderRefOffline()">
+      <i class="icon ion-android-download"></i>
+    </button>
+    <button class="button  button-small button-calm pull-right" data-ng-click="vm.events.onOrderClicked()">
+      <i class="icon ion-chevron-right"></i>
+    </button>
+  </div>
+  </ion-card>
 </div>
