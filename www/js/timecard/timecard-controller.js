@@ -375,7 +375,7 @@
                 timecardFactory.addNewDetails(_e).then(function (response) {
                   if (response) {
                     $timeout(function () {
-                      details.finishTime = kendo.parseDate(_e.finishTime);
+                      _getTimeCardByDate();
                     });
                   }
                 }).finally(function () {
@@ -458,12 +458,12 @@
             },
             buttonClicked: function (index) {
               if (index === 0) {
+                vm.ui.data.currentDetails = t;
                 $timeout(function () {
-                  vm.ui.data.currentDetails = t;
                   vm.ui.data.isInEditMode = true;
                   vm.ui.data.isFromPto = t.isPtoType;
                   showModal();
-                }, 100);
+                }, 200);
               }
               return true;
             }

@@ -217,7 +217,12 @@
       return apiBaseFactory.upload(apibaseurl + "TryUpload", files, model);
     }
 
+    function checkIfBarcodeClosed(barcode) {
+      return apiBaseFactory.get(apibaseurl + "CheckIfBarcodeClosed?barcode=" + barcode);
+    }
+
     return {
+      checkIfBarcodeClosed: checkIfBarcodeClosed,
       uploadFiles: uploadFiles,
       addProductFromBarcodeScanner: addProductFromBarcodeScanner,
       uploadFilesN: uploadFilesN,

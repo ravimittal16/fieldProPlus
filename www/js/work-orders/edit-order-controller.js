@@ -11,6 +11,7 @@
     $stateParams,
     $ionicActionSheet,
     $ionicLoading,
+    $ionicTabsDelegate,
     workOrderFactory,
     fpmUtilities,
     sharedDataFactory,
@@ -18,7 +19,7 @@
     timecardFactory
   ) {
     var vm = this;
-
+    var _index = $stateParams._i === undefined ? 0 : $stateParams._i;
     vm.barcode = $stateParams.barCode;
     vm.taxCheckboxVisibility = true;
     var alerts = fpmUtilities.alerts;
@@ -773,6 +774,24 @@
       placeholder: "enter here...",
       content: ""
     };
+
+    function _processScheduleCheckout() {
+      vm.schedule.actualFinishDateTime = new Date();
+      vm.scheduleTimeSpan.onEndDateTimeChanged();
+      workOrderFactory
+        .updateJobStatus({
+          scheduleButton: jobStatus.CheckOut,
+          scheduleNum: vm.schedule.num,
+          actualEndTime: fpmUtilities.toStringDate(
+            vm.schedule.actualFinishDateTime
+          ),
+          Barcode: vm.barcode,
+          clientTime: kendo.toString(new Date(), "g")
+        })
+        .then(function () {
+          vm.schedule.checkOutStatus = true;
+        });
+    }
     vm.tabs = {
       events: {
         updateClicked: function () {
@@ -972,7 +991,7 @@
             if (sch.num !== vm.schedule.num) {
               alerts.confirm(
                 "Confirmation",
-                "Are you sure to load this schedule",
+                "Are you sure to load this schedule?",
                 function () {
                   $state.go("app.editOrder", {
                     barCode: vm.barcode,
@@ -1036,7 +1055,7 @@
                             text: 'Open pending schedule'
                           },
                           {
-                            text: "Open Timecard"
+                            text: "Goto Timecard"
                           }
                         ];
                         $ionicActionSheet.show({
@@ -1047,37 +1066,65 @@
                             // add cancel code..
                           },
                           buttonClicked: function (index) {
+                            var _e = angular.copy(runningCheckIn[0]);
                             if (index === 0) {
                               alerts.confirm("Confirmation!", "Are you sure to check-out?", function () {
-                                var _e = angular.copy(runningCheckIn[0]);
                                 fpmUtilities.showLoading().then(function () {
                                   timecardFactory.checkoutPending(_e).then(function (response) {
                                     if (response && response.success) {
-                                      alerts.alert("Success!", "Pending task checked out successfully.", function () {
-                                        $timeout(function () {
-                                          processCheckIn(true);
-                                        }, 10);
-                                      });
+                                      if (_e.scheduleId) {
+                                        workOrderFactory
+                                          .updateJobStatus({
+                                            scheduleButton: jobStatus.CheckOut,
+                                            scheduleNum: _e.scheduleId,
+                                            actualEndTime: fpmUtilities.toStringDate(new Date()),
+                                            Barcode: vm.barcode,
+                                            clientTime: kendo.toString(new Date(), "g")
+                                          }).then(function () {
+                                            alerts.alert("Success!", "Pending task checked out successfully.", function () {
+                                              $timeout(function () {
+                                                processCheckIn(true);
+                                              }, 10);
+                                            });
+                                          }).finally(function () {
+                                            fpmUtilities.hideLoading();
+                                          });
+                                      } else {
+                                        alerts.alert("Success!", "Pending task checked out successfully.", function () {
+                                          $timeout(function () {
+                                            processCheckIn(true);
+                                            fpmUtilities.hideLoading();
+                                          }, 10);
+                                        });
+                                      }
                                     } else {
                                       alerts.alert("Invalid Time", "Go to Timecard and checkout manually.");
                                     }
-                                  }).finally(function () {
+                                  }, function () {
                                     fpmUtilities.hideLoading();
+                                  }).finally(function () {
 
                                   });
                                 });
                               });
                             }
                             if (index === 1) {
-                              console.log(runningCheckIn[0]);
-                              $state.go($state.current, {
-                                barcode: runningCheckIn[0].barcode,
-                                technicianNum: runningCheckIn[0].scheduleId,
-                                src: "main"
-                              }, {
-                                reload: true
-                              });
-
+                              if (_e.scheduleId) {
+                                workOrderFactory.checkIfBarcodeClosed(_e.barcode).then(function (isClosed) {
+                                  if (isClosed !== null && !isClosed) {
+                                    $state.go($state.current, {
+                                      barcode: _e.barcode,
+                                      technicianNum: _e.scheduleId,
+                                      src: "main",
+                                      _i: 1
+                                    }, {
+                                      reload: true
+                                    });
+                                  } else {
+                                    alerts.alert("Alert", "Work order has been closed. Please go to timecard and check-out manually.");
+                                  }
+                                });
+                              }
                             }
                             if (index === 2) {
                               $state.go("app.timecard", {
@@ -1113,21 +1160,7 @@
                   alerts.alert("Warning", "Please check in first");
                   return false;
                 }
-                vm.schedule.actualFinishDateTime = new Date();
-                vm.scheduleTimeSpan.onEndDateTimeChanged();
-                workOrderFactory
-                  .updateJobStatus({
-                    scheduleButton: jobStatus.CheckOut,
-                    scheduleNum: vm.schedule.num,
-                    actualEndTime: fpmUtilities.toStringDate(
-                      vm.schedule.actualFinishDateTime
-                    ),
-                    Barcode: vm.barcode,
-                    clientTime: kendo.toString(new Date(), "g")
-                  })
-                  .then(function () {
-                    vm.schedule.checkOutStatus = true;
-                  });
+                _processScheduleCheckout();
               }
             }
           },
@@ -1136,11 +1169,6 @@
           },
           onScheduleActionButtonClicked: function () {
             var defaultActions = angular.copy(actions);
-            // if (vm.user.allowPushTime) {
-            //     defaultActions.push({
-            //         text: '<b>Push to Timecard</b>'
-            //     });
-            // }
             $ionicActionSheet.show({
               buttons: defaultActions,
               titleText: "Current Schedule",
@@ -1302,6 +1330,13 @@
 
     getBarcodeDetails();
     activateController();
+    var $indexTimeout = $timeout(function () {
+      if (_index > 0) {
+        var _handle = $ionicTabsDelegate.$getByHandle('tabs');
+        _handle.select(Number(_index));
+      }
+      $timeout.cancel($indexTimeout);
+    }, 500);
   }
   initController.$inject = [
     "$scope",
@@ -1313,6 +1348,7 @@
     "$stateParams",
     "$ionicActionSheet",
     "$ionicLoading",
+    "$ionicTabsDelegate",
     "work-orders-factory",
     "fpm-utilities-factory",
     "shared-data-factory",
