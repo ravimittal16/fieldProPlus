@@ -355,7 +355,7 @@
       },
       events: {
         checkOutPending: function (details) {
-          alerts.confirm("Confirmation!", "Are you sure to check-out?", function () {
+          alerts.confirm("Confirmation!", "Are you sure?", function () {
             var tcd = kendo.parseDate(details.timeCardDate);
             var _e = angular.copy(details);
             var _ft = moment(new Date(tcd.getFullYear(), tcd.getMonth(), tcd.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0));
