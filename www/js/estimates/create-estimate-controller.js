@@ -61,7 +61,7 @@
       },
       sameAsBilling: function () {
         vm.issameaddress === true;
-        vm.entity.wosCity = vm.entity.wobbCity;
+        vm.entity.wosCity = vm.entity.wobCity;
         vm.entity.wosState = vm.entity.wobState;
         vm.entity.wosStreet = vm.entity.wobStreet;
         vm.entity.wosZip = vm.entity.wobZip;

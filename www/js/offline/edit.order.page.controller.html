@@ -1,0 +1,223 @@
+<ion-view title="{{vm.barCodeData.barcodeName}}" cache-view="false" hide-back-button="true" align-title="center"
+  view-title="{{vm.barCodeData.barcodeName}}">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content scroll="false">
+    <div class="list padding-top" ng-if="vm.errors.length > 0">
+      <div class="error">
+        <ui class="list-unstyled">
+          <li ng-repeat="error in vm.errors">{{::error}}</li>
+        </ui>
+      </div>
+    </div>
+    <ion-tabs class="tabs-default tabs-icon-top" delegate-handle="tabs">
+      <ion-tab title="DESCRIPTION" icon-on="ion-ios-paper" icon-off="ion-ios-paper-outline">
+        <ion-content>
+          <div>
+            <div class="padding-top">
+              <div class="card">
+                <div class="list">
+                  <div class="item item-divider header-dark">
+                    SERVICE ADDRESS
+                  </div>
+                  <div class="item">
+                    <span class="label label-success">{{vm.barCodeData.barcodeDetails.barcodeName}}</span>
+                    <div class="padding-top">
+                      <h2 class="n-m-b">{{vm.barCodeData.barcodeDetails.displayName}}</h2>
+                      <address>
+                        <p>
+                          <strong>{{::vm.barCodeData.barcodeDetails.company_Name}}</strong>
+                        </p>
+                        <p>{{::vm.barCodeData.barcodeDetails.shipStreet}}</p>
+                        <p>{{::vm.barCodeData.info.CityStateZip}}</p>
+                        <p ng-if="vm.barCodeData.barcodeDetails.phone">
+                          <span>Phone: </span>
+                          <span>
+                            <i class="icon ion-android-call"></i>&nbsp;
+                            <a
+                              href="tel:{{::vm.barCodeData.barcodeDetails.phone}}">{{::vm.barCodeData.barcodeDetails.phone}}</a>
+                          </span>
+                        </p>
+                        <p ng-if="vm.barCodeData.barcodeDetails.mobile">
+                          <span>Mobile: </span>
+                          <span>
+                            <i class="icon ion-android-call"></i>&nbsp;
+                            <a
+                              href="tel:{{::vm.barCodeData.barcodeDetails.mobile}}">{{::vm.barCodeData.barcodeDetails.mobile}}</a>
+                          </span>
+                        </p>
+                        <p ng-if="vm.barCodeData.barcodeDetails.contactInfo">Contact Info :
+                          <span>{{::vm.barCodeData.barcodeDetails.contactInfo}}</span>
+                        </p>
+                      </address>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="item item-divider header-dark">
+                  ORDER INFO
+                </div>
+                <div class="padding">
+                  <p ng-if="vm.barCodeData.barcodeDetails.excptns">
+                    <h5>
+                      <strong class="text-muted">Job Type</strong>
+                      <span class="pull-right">{{::vm.barCodeData.barcodeDetails.excptns}}</span>
+                    </h5>
+                  </p>
+                  <p ng-if="vm.barCodeData.barcodeDetails.priority">
+                    <h5>
+                      <strong class="text-muted">Priority</strong>
+                      <span class="pull-right">{{::vm.barCodeData.barcodeDetails.priority}}</span>
+                    </h5>
+                  </p>
+                  <p ng-if="vm.barCodeData.barcodeDetails.classId">
+                    <h5>
+                      <strong class="text-muted">Class</strong>
+                      <span class="pull-right">{{::vm.barCodeData.barcodeDetails.class_Name}}</span>
+                    </h5>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="item item-divider header-dark">
+              WORK DESCRIPTION
+            </div>
+            <div class="list">
+              <div class="item item-input">
+                <textarea cols="30" rows="10" ng-model="vm.barCodeData.barcodeDetails.comment_1"
+                  ng-change="vm.events.onDescriptionOrResolutionChanged('workDescription')"
+                  ng-model-options="{debounce:500}" placeholder="enter work description here..."></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="item item-divider header-dark">
+              RESOLUTION
+            </div>
+            <div class="list">
+              <div class="item item-input">
+                <textarea cols="30" rows="10" ng-model="vm.barCodeData.barcodeDetails.comment_2"
+                  ng-change="vm.events.onDescriptionOrResolutionChanged('resolution')" ng-model-options="{debounce:500}"
+                  placeholder="enter work resolution here..."></textarea>
+              </div>
+            </div>
+          </div>
+        </ion-content>
+      </ion-tab>
+      <ion-tab title="SCHEDULE" icon-on="ion-ios-clock" icon-off="ion-ios-clock-outline">
+        <ion-content>
+          <div class="card">
+            <div class="item item-divider header-dark">
+              SCHEDULE START AND END
+            </div>
+            <div class="item item-text-wrap">
+              <p class="n-m-b">
+                <strong>Schedule Start</strong>
+              </p>
+              <fp-date-time-renderer model-val='vm.schedule.scheduledStartDateTime' type="datetime"
+                format='vm.dateTimeFormat'></fp-date-time-renderer>
+              <p class="n-m-b">
+                <strong>Schedule End</strong>
+              </p>
+              <fp-date-time-renderer model-val='vm.schedule.scheduledFinishDateTime' type="datetime"
+                format='vm.dateTimeFormat'></fp-date-time-renderer>
+            </div>
+          </div>
+          <div class="card">
+            <div class="item item-divider header-dark">
+              ACTUAL SCHEDULE START AND END
+            </div>
+            <div class="list">
+              <div>
+                <div class="item item-input item-stacked-label" style="border-bottom: 0px !important;">
+                  <span class="input-label">Actual Start Time</span>
+                </div>
+                <div class="item" style="border-top:0px !important;padding-top: 0px !important;">
+                  <div style="width: 65%;float: left;">
+                    <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.actualStartDateTime"
+                      type="datetime" on-date-changed="vm.events.onStartDateTimeChaged()"
+                      default-text="tap here to select...">
+                    </fp-date-time-component>
+                    <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.actualStartDateTimeString"
+                      format='vm.dateTimeFormat' type="datetime"></fp-date-time-renderer>
+                  </div>
+                </div>
+                <div class="item item-input item-stacked-label" style="border-bottom: 0px !important;">
+                  <span class="input-label">Actual Finish Time</span>
+                </div>
+                <div class="item" style="border-top:0px !important;padding-top: 0px !important;">
+                  <div style="width: 65%;float: left;">
+                    <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.actualFinishDateTime"
+                      type="datetime" on-date-changed="vm.events.onEndDateTimeChanged()" format="vm.dateTimeFormat"
+                      default-text="tap here to select..."></fp-date-time-component>
+                    <fp-date-time-renderer ng-if="vm.schedule.approve"
+                      model-val="vm.schedule.actualFinishDateTimeString" format='vm.dateTimeFormat' type="datetime">
+                    </fp-date-time-renderer>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="item item-divider header-dark">
+              WORK STATUS
+            </div>
+            <ion-toggle ng-model="vm.schedule.workComplete" toggle-class="toggle-balanced"
+              ng-change="vm.events.workCompleteChanged()">Work
+              Complete
+            </ion-toggle>
+          </div>
+        </ion-content>
+      </ion-tab>
+      <ion-tab title="PRODUCTS" icon-on="ion-ios-list" icon-off="ion-ios-list-outline">
+        <ion-content direction="y">
+          <div class="card">
+            <div class="item item-divider">
+              PRODUCTS
+            </div>
+            <div class="item item-text-wrap text-center"
+              ng-if="vm.barCodeData.products.length == 0 && !vm.gettingBarcodeDetails">
+              <h3 class="text-muted">
+                <strong>No product found</strong>
+              </h3>
+            </div>
+            <div ng-if="vm.barCodeData.products.length > 0 && !vm.gettingBarcodeDetails"
+              ng-repeat="p in vm.barCodeData.products">
+              <div class="row n-p-b n-m-b">
+                <div class="col col-50">
+                  <h5>{{::p.productName}}</h5>
+                </div>
+                <div class="col col-25">
+                  <h5 class="pull-right">
+                    <strong>{{p.qty}}</strong>
+                  </h5>
+                </div>
+                <div class="col col-25 text-right">
+                  <h5 class="pull-right" ng-if="vm.user.showPrice">
+                    <strong>
+                      &nbsp;
+                    </strong>
+                  </h5>
+                </div>
+              </div>
+              <div class="row n-p-t row-top border-bottom">
+                <div class="col">
+                  <small class="text-muted text-small">{{p.productDescription}}
+                    <small>
+                </div>
+                <div class="col">
+                  <button type="button" class="button icon ion-edit button-small text-energized"
+                    style="margin-top: -5px;float: left;" ng-click="vm.events.onEditProductClicked(p)"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-content>
+      </ion-tab>
+    </ion-tabs>
+  </ion-content>
+</ion-view>

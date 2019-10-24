@@ -398,7 +398,7 @@ customer-search-header-component {
 }
 
 .clockin-item {
-  background: rgba(167, 144, 103, 0.89) !important;
+  background: #DADADA !important;
   color: white;
   padding: 0px !important;
   text-align: center !important;
@@ -521,4 +521,15 @@ select[readonly] {
 
 .item-checked {
   background-color: #c6d6f1;
+}
+
+.offline-status-panel {
+  display: inline;
+  font-size: 11px;
+  border-radius: 3px;
+  background-color: black;
+  color: #efefef;
+  padding: 5px;
+  vertical-align: middle;
+  justify-content: center;
 }

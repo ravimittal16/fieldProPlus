@@ -22,6 +22,14 @@
     var alerts = fpmUtilities.alerts;
     var selectedImagesForMail = [];
 
+    vm.popModal = {
+      type: "DESCRIPTION",
+      modal: null,
+      placeholder: "enter here...",
+      content: ""
+    };
+
+
     function calculateTotals() {
       vm.totals = {
         subtotal: 0,
@@ -89,7 +97,49 @@
           }
         });
     }
+    vm.tabs = {
+      events: {
+        updateClicked: function () {
+          if (vm.popModal.type === "DESCRIPTION") {
+            vm.est.estimate.woDescription = vm.popModal.content;
+          }
+          if (vm.popModal.type === "NOTES") {
+            vm.est.estimate.woNotes = vm.popModal.content;
+          }
+          vm.events.onDescriptionOrNotesChanged();
+          vm.popModal.modal.hide();
+        },
+        closePopoutModal: function () {
+          vm.popModal.modal.hide();
+        }
+      }
+    }
     vm.events = {
+      popoutTextBox: function (type) {
+        switch (type) {
+          case 'DESCRIPTION':
+            vm.popModal.content = angular.copy(
+              vm.est.estimate.woDescription
+            );
+            break;
+          case 'NOTES':
+            vm.popModal.content = angular.copy(
+              vm.est.estimate.woNotes
+            );
+            break;
+        }
+        vm.popModal.type = type;
+        if (vm.popModal.modal) {
+          vm.popModal.modal.show();
+        } else {
+          fpmUtilities
+            .getModal("fulltextModal.html", $scope)
+            .then(function (modal) {
+              vm.popModal.modal = modal;
+              vm.popModal.modal.show();
+            });
+        }
+      },
       sendEstimateMail: function (mails) {
         if (mails && mails.length > 0) {
           fpmUtilities.showLoading("Sending email...");

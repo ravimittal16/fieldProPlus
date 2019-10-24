@@ -7,8 +7,8 @@
       userInfo: "<",
       inRouteClicked: "&"
     },
-    controller: ["$state", "fpm-utilities-factory", "sqlStorageFactory", "work-orders-factory",
-      function ($state, fpmUtilitiesFactory, sqlStorageFactory, workOrdersFactory) {
+    controller: ["$state", "$rootScope", "fpm-utilities-factory", "sqlStorageFactory", "work-orders-factory",
+      function ($state, $rootScope, fpmUtilitiesFactory, sqlStorageFactory, workOrdersFactory) {
         var scheduleButtons = {
           AcceptJob: 0,
           InRoute: 1,
@@ -18,7 +18,44 @@
         var vm = this;
         vm.events = {
           saveOrderRefOffline: function () {
-            sqlStorageFactory.insertWorkOrderRef(vm.odr.Barcode, "Ravi");
+            fpmUtilitiesFactory.alerts.confirm("Confirmation!", "Are you sure?", function () {
+              var _barcode = vm.odr.Barcode;
+              var _scheduleNum = vm.odr.TechnicianScheduleNum;
+              sqlStorageFactory.insertWorkOrderRef({
+                barcode: _barcode,
+                scheduleNum: _scheduleNum,
+                userName: vm.userInfo.userEmail,
+                jsonPayload: JSON.stringify(vm.odr)
+              }).then(function (id) {
+                if (id !== 0 & id !== -1) {
+                  $rootScope.$broadcast("$offline:newOrderSaved", {
+                    barcode: _barcode
+                  });
+                  fpmUtilitiesFactory.alerts.alert("Success!", "Work order saved.", function () {
+                    fpmUtilitiesFactory.showLoading().then(function () {
+                      workOrdersFactory
+                        .getBarcodeDetails(_barcode)
+                        .then(
+                          function (response) {
+                            if (response) {
+                              sqlStorageFactory.insertWorkOrderInfo(response, _scheduleNum);
+                            }
+                          }).finally(function () {
+                          fpmUtilitiesFactory.hideLoading();
+                        });
+                    });
+                  });
+                  //TODO : Download the work order details
+
+                }
+                if (id === -1) {
+                  fpmUtilitiesFactory.alerts.alert("Warning", "This work order already saved.", function () {
+                    fpmUtilitiesFactory.hideLoading();
+                  });
+                }
+
+              });
+            });
           },
           acceptJob: function () {
             fpmUtilitiesFactory.alerts.confirm("Confirmation!", "Are you sure you want to accept this job?", function () {

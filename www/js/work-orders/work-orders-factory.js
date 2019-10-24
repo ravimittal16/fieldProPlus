@@ -221,6 +221,21 @@
       return apiBaseFactory.get(apibaseurl + "CheckIfBarcodeClosed?barcode=" + barcode);
     }
 
+    function getBarcodePayments(barcode) {
+      return apiBaseFactory.get(
+        apibaseurl + "GetWorkOrderPayments?barcode=" + barcode
+      );
+    }
+    function addUpdatePayment(o)
+    {
+      return apiBaseFactory.post(apibaseurl + "AddUpdatePayment", o);
+    }
+    function deletePayment(num) {
+      return apiBaseFactory.get(
+        apibaseurl + "DeletePayment?num=" + num
+      );
+    }
+
     return {
       checkIfBarcodeClosed: checkIfBarcodeClosed,
       uploadFiles: uploadFiles,
@@ -251,7 +266,10 @@
       addWorkOrderSchedule: addWorkOrderSchedule,
       updateOrderProduct: updateOrderProduct,
       getDatewiseEvents: getDatewiseEvents,
-      clearAllCache: clearAllCache
+      clearAllCache: clearAllCache,
+      getBarcodePayments:getBarcodePayments,
+      addUpdatePayment:addUpdatePayment,
+      deletePayment:deletePayment
     };
   }
   initFactory.$inject = [

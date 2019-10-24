@@ -8,7 +8,15 @@
 //"http://localhost/FieldPromaxApi/"
 var isInDevMode = true;
 var prodReady = false;
+
+var runningOnEmulator = false;
+if (runningOnEmulator) {
+  isInDevMode = false;
+  prodReady = true;
+}
+
 var constants = {
+  devEnv: isInDevMode,
   fieldPromaxApi: isInDevMode ?
     "http://localhost:51518/" : "https://fieldpromax.azurewebsites.net/",
   localStorageKeys: {
@@ -18,13 +26,15 @@ var constants = {
     configKeyName: "configurations",
     settingsKeyName: "userSettings",
     userCredentials: "userCredentials"
-  }
+  },
+  mapApiUrl: "https://dataservicefp.azurewebsites.net/"
 };
 //https://fieldpromax-stagging1.azurewebsites.net/
 //https://fieldpromax-culture.azurewebsites.net/
 if (!isInDevMode && !prodReady) {
   constants.fieldPromaxApi = "https://fieldpromax-stagging1.azurewebsites.net/"; //"http://192.168.100.42:81/";
 }
+var db = null;
 var fpm = angular
   .module("fpm", [
     "ionic",
@@ -143,10 +153,19 @@ var fpm = angular
         {
           state: "app.editOrder",
           config: {
-            url: "/editOrder?barCode&technicianNum&src",
+            url: "/editOrder?barCode&technicianNum&src&_i",
             controller: "edit-order-controller",
             controllerAs: "vm",
             templateUrl: "views/edit-order.html"
+          }
+        },
+        {
+          state: "app.editOrderOffline",
+          config: {
+            url: "/editOrder_offline?barCode&technicianNum&src&_i",
+            controller: "edit-order-page-offline-controller",
+            controllerAs: "vm",
+            templateUrl: "js/offline/edit.order.page.controller.html"
           }
         },
         {
@@ -298,16 +317,20 @@ var fpm = angular
     "$ionicPlatform",
     "$rootScope",
     "$state",
+    "$cordovaSQLite",
     "fpm-utilities-factory",
     "authenticationFactory",
     "shared-data-factory",
+    "sqlStorageFactory",
     function (
       $ionicPlatform,
       $rootScope,
       $state,
+      $cordovaSQLite,
       fpmUtilitiesFactory,
       authenticationFactory,
-      sharedDataFactory
+      sharedDataFactory,
+      sqlStorageFactory
     ) {
       $rootScope.isInDevMode = isInDevMode;
       $ionicPlatform.ready(function () {
@@ -324,8 +347,37 @@ var fpm = angular
         if (window.StatusBar) {
           StatusBar.styleDefault();
         }
-        //REGISTER FOR PUSH NOTIFICATIONS
         var isandr = fpmUtilitiesFactory.device.isAndroid();
+        if (!isInDevMode && window.cordova && window.SQLitePlugin) {
+          try {
+            db = fpmUtilitiesFactory.device.isIOS() ? $cordovaSQLite.openDB({
+              name: sqlStorageFactory.FP_DB_NAME + ".db",
+              iosDatabaseLocation: 'Library'
+            }) : $cordovaSQLite.openDB({
+              name: sqlStorageFactory.FP_DB_NAME + ".db",
+              location: 'default'
+            });
+
+          } catch (error) {
+            window.alert("ERROR WHILE CREATING DATABASE" + error)
+          }
+        } else {
+          /**
+           * ? window.openDatabase(database_name, database_version, database_displayname, database_size);
+           * This method will create a new SQL Lite Database and return a Database object. 
+           * Use the Database Object to manipulate the data.
+           */
+          db = window.openDatabase(sqlStorageFactory.FP_DB_NAME + ".db", '1.0', 'DEV', 5 * 1024 * 1024);
+        }
+
+        if (db) {
+          sqlStorageFactory.setDb(db, isInDevMode);
+          sqlStorageFactory.createUserLoginTable();
+          sqlStorageFactory.createWorkOrdersTable();
+        }
+
+        //REGISTER FOR PUSH NOTIFICATIONS
+
 
         document.addEventListener(
           "backbutton",
@@ -443,34 +495,24 @@ var fpm = angular
           fpmUtilitiesFactory.push.register();
         }
 
-        // document.addEventListener("pause", function () {
-        //   if (!isInDevMode && locationServiceRunning) {
-        //     if (bgGeo) {
-        //       bgGeo.stop(function () {
-        //         locationServiceRunning = false;
-        //       });
-        //     }
-        //   }
-        // }, false);
-
-        // document.addEventListener("resume", function () {
-        //   if (!isInDevMode && bgGeo && !locationServiceRunning) {
-        //     bgGeo.getState(function (state) {
-        //       if (!state.enabled) {
-        //         bgGeo.start(function () {
-        //           locationServiceRunning = true;
-        //         });
-        //       }
-        //     });
-        //   }
-        // }, false);
-      });
-      //CHECK CONNECTION
-      $rootScope.$on("$cordovaNetwork:online", function (event, networkState) {
-        fpmUtilitiesFactory.hideNetworkDialog();
-      });
-      $rootScope.$on("$cordovaNetwork:offline", function (event, networkState) {
-        fpmUtilitiesFactory.showNetworkDialog();
+        function onKeyboardshow() {
+          //    * This code is a hack to fix the cursor issue.
+          //    * When we click on the input field and keyboard appears, the cursor most of the time is not on the right position.
+          //    * It simply needs to refresh UI once. There was no solution to this problem, so I tried a hack, and it worked. ;)
+          //    * i.e. disable it for 10 micro secs and then re-enable it.
+          //    */
+          document.body.classList.add('keyboard-opened');
+          if (document.activeElement.nodeName === 'INPUT') {
+            setTimeout(function () {
+              console.log("INPUT BOX TIMEOUT");
+              document.activeElement.disabled = true;
+              setTimeout(function () {
+                document.activeElement.disabled = false;
+              }, 10);
+            }, 350);
+          }
+        }
+        document.addEventListener('native.keyboardshow', onKeyboardshow, false);
       });
     }
   ]);

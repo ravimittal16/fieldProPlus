@@ -1,5 +1,6 @@
-(function() {
+(function () {
   "use strict";
+
   function initFactory(
     $rootScope,
     $q,
@@ -13,20 +14,7 @@
     var locationapi = "api/Location/";
 
     function updateLocationServiceStatus(userEmail) {
-      // if (!$rootScope.isOnDevMode && cordova) {
-      //   cordova.plugins.diagnostic.isLocationEnabled(
-      //     function(enabled) {
-      //       apiBaseFactory.get(
-      //         locationapi +
-      //           "UpdateLocationServiceStatus?userEmail=" +
-      //           userEmail +
-      //           "&locationServiceOn=" +
-      //           enabled
-      //       );
-      //     },
-      //     function() {}
-      //   );
-      // }
+
     }
 
     function updateSettings(settings) {
@@ -45,7 +33,7 @@
       } else {
         return apiBaseFactory
           .get(apibaseurl + "GetIniitialData")
-          .then(function(data) {
+          .then(function (data) {
             localStorageService.set(keyName, data);
             return data;
           });
@@ -55,12 +43,13 @@
     function saveLocationCordinates(p) {
       return apiBaseFactory.get(
         apibaseurl +
-          "SaveLocationCoordinates?lat=" +
-          p.latitude +
-          "&lng=" +
-          p.longitude
+        "SaveLocationCoordinates?lat=" +
+        p.latitude +
+        "&lng=" +
+        p.longitude
       );
     }
+
     function registerUserTemplateForPushNotifications() {
       var handle = localStorageService.get("PUSH:registrationId");
       var isOnDevMode = fpmUtilitiesFactory.isOnDevMode;
@@ -90,18 +79,26 @@
       if (window.google) {
         var geocoder = new google.maps.Geocoder();
         var addressf = address + " " + city + " " + state + " " + zip;
-        geocoder.geocode({ address: addressf }, function(results, status) {
+        geocoder.geocode({
+          address: addressf
+        }, function (results, status) {
           if (status === google.maps.GeocoderStatus.OK) {
             defer.resolve({
               log: results[0].geometry.location.lng(),
               lat: results[0].geometry.location.lat()
             });
           } else {
-            defer.resolve({ log: 0, lat: 0 });
+            defer.resolve({
+              log: 0,
+              lat: 0
+            });
           }
         });
       } else {
-        defer.resolve({ log: 0, lat: 0 });
+        defer.resolve({
+          log: 0,
+          lat: 0
+        });
       }
       return defer.promise;
     }
@@ -119,9 +116,7 @@
       var totalLoopLength = Math.floor(byteCharacters.length / sliceSize) + 1;
       var loopCount = 0;
       for (
-        var offset = 0;
-        offset < byteCharacters.length;
-        offset += sliceSize
+        var offset = 0; offset < byteCharacters.length; offset += sliceSize
       ) {
         loopCount += 1;
         var slice = byteCharacters.slice(offset, offset + sliceSize);

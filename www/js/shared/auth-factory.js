@@ -1,4 +1,4 @@
-(function() {
+(function () {
   "use strict";
 
   function initFactory(
@@ -39,10 +39,9 @@
             showPrice: response.showPrice === "True",
             havingGroupsAssigned: response.havingGroups === "True",
             inventoryOn: response.inventoryOn === "True",
-            allowUserToEditWoDescription:
-              response.allowUserToEditWoDescription === "True",
+            allowUserToEditWoDescription: response.allowUserToEditWoDescription === "True",
             currencySymbol: response.currencySymbol,
-            dateFormat:response.dateFormat
+            dateFormat: response.dateFormat
           };
           $rootScope.currencySymbol = response.currencySymbol;
           $rootScope.dateFormat = response.dateFormat;
@@ -112,7 +111,7 @@
     }
 
     function logout(clearCredentials) {
-      $rootScope.$evalAsync(function() {
+      $rootScope.$evalAsync(function () {
         timecardFactory.clearTimecardFactoryData();
         $ionicHistory.clearHistory();
         $ionicHistory.clearCache();
@@ -137,9 +136,11 @@
     function changePassword(m) {
       return apiContext.post("api/user/changepassword", m);
     }
+
     function getStoredCredentials() {
       return localStorageService.get(localStorageKeys.userCredentials);
     }
+
     function getToken() {
       var user = localStorageService.get(localStorageKeys.storageKeyName);
       return user.token;

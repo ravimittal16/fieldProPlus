@@ -48,7 +48,8 @@
       hideEmailButton: false,
       customField2Label: "Custom 2",
       customField3Label: "Custom 3",
-      expenseTrackingEnabled: true
+      expenseTrackingEnabled: true,
+      paymentOn: false
     };
 
     vm.errors = [];
@@ -439,6 +440,7 @@
               response.customerNumberEntity.equipmentTrackingOn || false;
             vm.uiSettings.enableMarkup =
               response.customerNumberEntity.enableMarkupForWorkOrders || false;
+            vm.uiSettings.paymentOn = response.customerNumberEntity.paymentOn || false;
             vm.enableMarkup = vm.uiSettings.enableMarkup;
             if (response.customerNumberEntity.billingOption) {
               vm.uiSettings.billingOption =
@@ -825,6 +827,12 @@
               vm.popModal.content
             );
           }
+          if (vm.popModal.type === "TRIP_NOTES") {
+            vm.schedule.tripNote = angular.copy(
+              vm.popModal.content
+            );
+            updateSchedule(false, false);
+          }
           updateOrder(vm.popModal.type === "DESCRIPTION" ? "desc" : null);
           vm.popModal.modal.hide();
         },
@@ -833,22 +841,28 @@
         },
         popoutTextBox: function (type) {
           vm.popupDescriptionBoxType = type;
-          if (type === "DESCRIPTION") {
-            vm.popModal.content = angular.copy(
-              vm.barCodeData.barcodeDetails.comment_1
-            );
+          switch (type) {
+            case 'DESCRIPTION':
+              vm.popModal.content = angular.copy(
+                vm.barCodeData.barcodeDetails.comment_1
+              );
+              break;
+            case 'RESOLUTION':
+              vm.popModal.content = angular.copy(
+                vm.barCodeData.barcodeDetails.comment_2
+              );
+              break;
+            case 'COMMENTS':
+              vm.popModal.content = angular.copy(
+                vm.barCodeData.barcodeDetails.comment_4
+              );
+              break;
+            case 'TRIP_NOTES':
+              vm.popModal.content = angular.copy(
+                vm.schedule.tripNote
+              );
+              break;
           }
-          if (type === "RESOLUTION") {
-            vm.popModal.content = angular.copy(
-              vm.barCodeData.barcodeDetails.comment_2
-            );
-          }
-          if (type === "COMMENTS") {
-            vm.popModal.content = angular.copy(
-              vm.barCodeData.barcodeDetails.comment_4
-            );
-          }
-
           vm.popModal.type = type;
           if (vm.popModal.modal) {
             vm.popModal.modal.show();

@@ -1,6 +1,7 @@
 // added from culture
-(function() {
+(function () {
   "use strict";
+
   function initController(
     $scope,
     $state,
@@ -13,7 +14,8 @@
     authenticationFactory,
     timecardFactory,
     fpmUtilitiesFactory,
-    localStorageService
+    localStorageService,
+    sqlStorageFactory
   ) {
     var vm = this;
     vm.userInfo = authenticationFactory.getLoggedInUserInfo();
@@ -29,11 +31,11 @@
     function extractJsonOrdersToLocalArray() {
       orders = [];
       if (!vm.isServiceProvider || vm.havingGroupsAssigned) {
-        angular.forEach(vm.result, function(r, i) {
+        angular.forEach(vm.result, function (r, i) {
           if (r.dataForAdministrator && r.dataForAdministrator.length > 0) {
-            _.forEach(r.dataForAdministrator, function(p) {
+            _.forEach(r.dataForAdministrator, function (p) {
               if (p.ordersJson) {
-                _.forEach(JSON.parse(p.ordersJson), function(o) {
+                _.forEach(JSON.parse(p.ordersJson), function (o) {
                   orders.push(o);
                 });
               }
@@ -41,9 +43,9 @@
           }
         });
       } else {
-        angular.forEach(vm.result, function(r, i) {
+        angular.forEach(vm.result, function (r, i) {
           if (r.dataForServiceProvider && r.dataForServiceProvider.length > 0) {
-            _.forEach(r.dataForServiceProvider, function(p) {
+            _.forEach(r.dataForServiceProvider, function (p) {
               orders.push(p);
             });
           }
@@ -51,11 +53,12 @@
       }
     }
     vm.showingLoading = true;
+
     function loadDashboard(forceGet, callback) {
       vm.showingLoading = true;
       workOrderFactory
         .getMobileDashboard(forceGet)
-        .then(function(response) {
+        .then(function (response) {
           vm.result = response.result;
           vm.havingGroupsAssinged = response.havingGroupsAssinged;
           if (vm.isServiceProvider && !vm.havingGroupsAssigned) {
@@ -64,20 +67,26 @@
           }
           extractJsonOrdersToLocalArray();
         })
-        .finally(function() {
+        .finally(function () {
           vm.showingLoading = false;
           if (angular.isFunction(callback)) {
             callback();
           }
         });
     }
-    var scheduleButtons = { AcceptJob: 0, InRoute: 1, CheckIn: 3, CheckOut: 4 };
+    var scheduleButtons = {
+      AcceptJob: 0,
+      InRoute: 1,
+      CheckIn: 3,
+      CheckOut: 4
+    };
+
     function _processInRouteClick(job) {
       alerts.confirmWithOkayCancel(
         "Confirmation!",
         "Your status has been updated to In Route",
-        function() {
-          fpmUtilitiesFactory.showLoading().then(function() {
+        function () {
+          fpmUtilitiesFactory.showLoading().then(function () {
             workOrderFactory
               .updateJobStatus({
                 scheduleButton: scheduleButtons.InRoute,
@@ -85,10 +94,10 @@
                 barcode: job.Barcode,
                 ClientTime: kendo.toString(new Date(), "g")
               })
-              .then(function() {
+              .then(function () {
                 job.InRoute = true;
               })
-              .finally(function() {
+              .finally(function () {
                 fpmUtilitiesFactory.hideLoading();
                 if (timeCardInfo.enabled === true) {
                   _getTodaysTimeCardEntries();
@@ -98,6 +107,7 @@
         }
       );
     }
+
     function beforeFinalInRoute(job) {
       var notCheckInDetails = _.where(timeCardInfo.currentDetails, {
         finishTime: null
@@ -106,7 +116,7 @@
         alerts.confirmWithOkayCancel(
           "Confirmation",
           "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?",
-          function() {
+          function () {
             _processInRouteClick(job);
           }
         );
@@ -120,24 +130,28 @@
     vm.sortingType = "WorkPerformedDate";
     vm.sortingOrderDesc = false;
     vm.events = {
-      onDotsClicked: function(item, isForAdmin) {
-        var titleText = isForAdmin
-          ? "Sort " + item.technicianName + "'s work orders"
-          : "Sort " + item.heading;
+      onDotsClicked: function (item, isForAdmin) {
+        var titleText = isForAdmin ?
+          "Sort " + item.technicianName + "'s work orders" :
+          "Sort " + item.heading;
         $ionicActionSheet.show({
-          buttons: [{ text: "Sort Ascending" }, { text: "Sort Descending" }],
+          buttons: [{
+            text: "Sort Ascending"
+          }, {
+            text: "Sort Descending"
+          }],
           titleText: titleText,
           cancelText: "Cancel",
-          cancel: function() {
+          cancel: function () {
             // add cancel code..
           },
-          buttonClicked: function(index) {
+          buttonClicked: function (index) {
             vm.sortingOrderDesc = index === 1;
             return true;
           }
         });
       },
-      inRouteClicked: function(odr) {
+      inRouteClicked: function (odr) {
         if (timeCardInfo.enabled === false) {
           _processInRouteClick(odr);
         } else {
@@ -148,8 +162,10 @@
             alerts.confirm(
               "Warning!",
               "You have not Clocked-In yet. Would you like to Clock-In now?",
-              function() {
-                $state.go("app.timecard", { proute: $state.current.name });
+              function () {
+                $state.go("app.timecard", {
+                  proute: $state.current.name
+                });
               }
             );
           } else {
@@ -157,14 +173,14 @@
           }
         }
       },
-      onSearchItemClick: function(order) {
+      onSearchItemClick: function (order) {
         if (order) {
           vm.matchedOrders = [];
           vm.isSearchModalOpened = false;
           vm.searchModal.hide();
           vm.searchValue = "";
           if (vm.isServiceProvider && !vm.havingGroupsAssigned) {
-            timerForonSearchItemClick = $timeout(function() {
+            timerForonSearchItemClick = $timeout(function () {
               $state.go("app.editOrder", {
                 barCode: order.barcode,
                 technicianNum: order.technicianScheduleNum,
@@ -172,7 +188,7 @@
               });
             }, 300);
           } else {
-            timerForonSearchItemClick = $timeout(function() {
+            timerForonSearchItemClick = $timeout(function () {
               $state.go("app.editOrder", {
                 barCode: order.Barcode,
                 technicianNum: order.TechnicianScheduleNum,
@@ -182,38 +198,38 @@
           }
         }
       },
-      applySearch: function() {
+      applySearch: function () {
         if (orders && orders.length > 0) {
           var tolower = vm.searchValue.toLowerCase();
-          var matchedOrders = _.filter(orders, function(o) {
+          var matchedOrders = _.filter(orders, function (o) {
             return (
               o[barcodePropName].indexOf(tolower) > -1 ||
               o[displayNamePropName].toLowerCase().indexOf(tolower) > -1
             );
           });
-          vm.matchedOrders = _.uniq(matchedOrders, function(item, key, a) {
+          vm.matchedOrders = _.uniq(matchedOrders, function (item, key, a) {
             return item[barcodePropName];
           });
         }
       },
-      closeSearchModal: function() {
+      closeSearchModal: function () {
         vm.matchedOrders = [];
         vm.isSearchModalOpened = false;
         vm.searchModal.hide();
         vm.searchValue = "";
       },
-      openSearchModal: function() {
+      openSearchModal: function () {
         vm.searchValue = "";
         vm.matchedOrders = [];
         vm.isSearchModalOpened = true;
         vm.searchModal.show();
       },
-      refreshOnPullDown: function() {
-        loadDashboard(true, function() {
+      refreshOnPullDown: function () {
+        loadDashboard(true, function () {
           $scope.$broadcast("scroll.refreshComplete");
         });
       },
-      onChildGroupClicked: function(item, type, prop) {
+      onChildGroupClicked: function (item, type, prop) {
         item.isOpen = !item.isOpen;
         var orderState = localStorageService.get("orderState");
         if (orderState === null) orderState = {};
@@ -244,13 +260,16 @@
     };
 
     function _getTodaysTimeCardEntries() {
-      var jobCodes = { CLOCK_IN: 5001, CLOCK_OUT: 5002 };
+      var jobCodes = {
+        CLOCK_IN: 5001,
+        CLOCK_OUT: 5002
+      };
       var cdt = new Date();
       var dt = kendo.toString(
         new Date(cdt.getFullYear(), cdt.getMonth(), cdt.getDate(), 0, 0, 0, 0),
         "g"
       );
-      timecardFactory.getTimeCardByDate(dt).then(function(response) {
+      timecardFactory.getTimeCardByDate(dt).then(function (response) {
         if (response) {
           timeCardInfo.todaysClockIns = _.where(response.timeCardDetails, {
             jobCode: jobCodes.CLOCK_IN
@@ -264,6 +283,7 @@
     vm.havingGroupsAssigned = false;
     var barcodePropName = "BarcodeName";
     var displayNamePropName = "DisplayName";
+
     function activateController() {
       timeCardInfo.enabled = vm.userInfo.timeCard || false;
       vm.havingGroupsAssigned = vm.userInfo.havingGroupsAssigned;
@@ -275,23 +295,27 @@
 
       sharedDataFactory
         .getIniitialData()
-        .then(function(response) {
+        .then(function (response) {
           vm.trackJobStatus =
             response.customerNumberEntity.trackJobStatus || false;
         })
-        .finally(function() {
-          var refresh = angular.isDefined($stateParams.refresh)
-            ? $stateParams.refresh
-            : false;
+        .finally(function () {
+          var refresh = angular.isDefined($stateParams.refresh) ?
+            $stateParams.refresh :
+            false;
           loadDashboard(refresh, null);
         });
     }
 
-    $scope.$on("$ionicView.beforeEnter", function(e, data) {
+    $scope.$on("network:connection:changed", function (e, data) {
+      console.log(data);
+    });
+
+    $scope.$on("$ionicView.beforeEnter", function (e, data) {
       activateController();
     });
 
-    $scope.$on("$destroy", function() {
+    $scope.$on("$destroy", function () {
       vm.searchModal.remove();
       if (timerForonSearchItemClick) {
         $timeout.cancel(timerForonSearchItemClick);
@@ -306,7 +330,7 @@
         animation: "slide-in-up",
         focusFirstInput: true
       })
-      .then(function(modal) {
+      .then(function (modal) {
         vm.searchModal = modal;
       });
   }
@@ -322,7 +346,8 @@
     "authenticationFactory",
     "timecard-factory",
     "fpm-utilities-factory",
-    "localStorageService"
+    "localStorageService",
+    "sqlStorageFactory"
   ];
   angular.module("fpm").controller("dashboard-controller", initController);
 })();

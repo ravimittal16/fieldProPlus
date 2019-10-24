@@ -14,7 +14,6 @@
   <link rel="stylesheet" href="lib/others/kendo.default.min.css">
   <link rel="stylesheet" href="lib/others/kendo.default.mobile.min.css">
   <link href="css/style.css" rel="stylesheet">
-
   <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
@@ -24,13 +23,14 @@
 
 </head>
 
-<body data-ng-controller="main-controller as vm">
+<body data-ng-controller="main-controller as vm" network-check="">
   <ion-nav-view animation="slide-left-right"></ion-nav-view>
 
   <script src="lib/jquery/dist/jquery.min.js"></script>
   <script src="lib/signalr/jquery.signalR.min.js"></script>
   <!-- ionic/angular	js js -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYDqnWsKtcKM08cfTZMoiyqjiqt4qGj7A" async></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1ipAUjNU2971yZd9ggxFnSqxCrDPgtJU" async defer>
+  </script>
 
   <script src="lib/ionic/js/ionic.bundle.js"></script>
   <script src="lib/ionic-calendar/dist/js/calendar-tpls.min.js"></script>

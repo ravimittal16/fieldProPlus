@@ -1,0 +1,48 @@
+<ion-header-bar>
+    <h1 class="title">
+        <span ng-if="vm.modalType==1">Add</span>
+        <span ng-if="vm.modalType==0">Edit</span> Payment
+    </h1>
+    <button class="button" data-ng-click="vm.events.closePaymentModal()">
+		Cancel
+    </button>
+</ion-header-bar>
+<ion-content>
+    <form action="" name="addForm">
+        <div class="list">
+            <div class="list padding-top" data-ng-if="vm.showError">
+                <div class="error">
+                    <ui class="list-unstyled">
+                        <li data-ng-repeat="error in vm.errors">{{::error}}</li>
+                    </ui>
+                </div>
+            </div>
+            <label class="item item-input">
+                <span class="input-label">Payment Date</span>
+                <input type="text" class="transparent-background text-right" placeholder="Date" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}" data-ng-model="vm.payment.receivedDate"/>
+            </label>
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Payment Method
+                </div>
+                <select required="" name="selectPaymentMethod" data-ng-options="pro.name as pro.name for pro in vm.paymentModes" data-ng-model="vm.payment.paymentMode"><select>
+            </label>
+            
+            <label class="item item-input">
+			    <span class="input-label">Amount Received</span>
+                <input type="number" class="transparent-background" mobiscroll-numpad="{display:'bottom',min:0,scale:2,max:99999.99,preset:'decimal'}"
+                placeholder="0.00" ng-model="vm.payment.amountReceived" />
+            </label>
+            <label class="item item-input">
+                    <span class="input-label">Memo</span>
+                    <input type="text"  class="transparent-background" ng-model="vm.payment.paymentMemo"
+                    />
+                </label>
+            <div class="padding">
+                <button class="button button-block button-positive" data-ng-click="vm.events.submit()" type="button">
+                Submit
+            </button>
+            </div>
+        </div>
+    </form>
+</ion-content>

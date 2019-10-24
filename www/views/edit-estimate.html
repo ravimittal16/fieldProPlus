@@ -1,8 +1,9 @@
-<ion-view title="Edit Estimate" cache-view="false" hide-back-button="true" align-title="center" view-title="Edit Estimate">
+<ion-view title="Edit Estimate" cache-view="false" hide-back-button="true" align-title="center"
+  view-title="Edit Estimate">
   <ion-nav-buttons side="left">
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
-  <ion-content has-header="true">
+  <ion-content scroll="false" has-header="true">
     <errors-view errors="vm.errors"></errors-view>
     <ion-tabs class="tabs-dark tabs-icon-top">
       <ion-tab title="DESCRIPTION" icon-on="ion-ios-paper" icon-off="ion-ios-paper-outline">
@@ -12,14 +13,16 @@
           <div class="padding-top">
             <div class="row">
               <div class="col">
-                <div class="alert" ng-class="{'alert-danger':!vm.est.estimate.isApproved,'alert-success':vm.est.estimate.isApproved}"
+                <div class="alert"
+                  ng-class="{'alert-danger':!vm.est.estimate.isApproved,'alert-success':vm.est.estimate.isApproved}"
                   style="padding: 7px;">
                   <span ng-if="!vm.est.estimate.isApproved">Estimate is not approved yet</span>
                   <span ng-if="vm.est.estimate.isApproved">
                     <i class="fa fa-check"></i>&nbsp;Estimate approved by
                     <strong ng-bind="vm.est.estimate.approverName"></strong> on
                     <!-- <strong>{{vm.est.estimate.approvedDateTime | date}}</strong> class="m-top-45"-->
-                    <fp-date-time-renderer model-val="vm.est.estimate.approvedDateTime" type="date" format="vm.dateTimeFormat"></fp-date-time-renderer>
+                    <fp-date-time-renderer model-val="vm.est.estimate.approvedDateTime" type="date"
+                      format="vm.dateTimeFormat"></fp-date-time-renderer>
                   </span>
                 </div>
               </div>
@@ -39,13 +42,15 @@
                           <strong>{{::vm.est.estimate.woCompanyName}}</strong>
                         </p>
                         <p>{{::vm.est.estimate.wosStreet}}</p>
-                        <p>{{::vm.est.estimate.wosCity}},{{::vm.est.estimate.wosState}}&nbsp;{{::vm.est.estimate.wosZip}}
+                        <p>
+                          {{::vm.est.estimate.wosCity}},{{::vm.est.estimate.wosState}}&nbsp;{{::vm.est.estimate.wosZip}}
                         </p>
                         <p ng-if="vm.barCodeData.barcodeDetails.phone">
                           <span>
                             <i class="icon ion-android-call"></i>&nbsp;{{::vm.est.estimate.woPhone}}</span>
                         </p>
-                        <button class="button button-block button-small button-positive" ng-click="vm.events.onAddressTapped()">
+                        <button class="button button-block button-small button-positive"
+                          ng-click="vm.events.onAddressTapped()">
                           <i class="ion ion-ios-location"></i>&nbsp;Show on Google Map
                         </button>
                       </address>
@@ -59,8 +64,8 @@
                     <h5 class="text-muted">
                       Estimate Create Date
                       <!-- <span class="pull-right">{{::vm.est.estimate.createdOn | date:'MM/dd/yyyy'}}</span>  -->
-                      <fp-date-time-renderer model-val="vm.est.estimate.createdOn" type="date" format="vm.dateTimeFormat"
-                        class="pull-right"></fp-date-time-renderer>
+                      <fp-date-time-renderer model-val="vm.est.estimate.createdOn" type="date"
+                        format="vm.dateTimeFormat" class="pull-right"></fp-date-time-renderer>
                     </h5>
                   </p>
                   <p ng-if="vm.est.estimate.woJobTypeId">
@@ -80,22 +85,26 @@
               <div class="card">
                 <div class="item item-divider header-dark">
                   WORK DESCRIPTION
+                  <a class="pull-right pointer" on-tap="vm.events.popoutTextBox('DESCRIPTION')">Edit</a>
                 </div>
                 <div class="list">
                   <div class="item item-input">
-                    <textarea cols="30" rows="10" ng-model="vm.est.estimate.woDescription" auto-grow="" ng-change="vm.events.onDescriptionOrNotesChanged()"
-                      ng-model-options="{debounce:500}" placeholder="enter work description here..."></textarea>
+                    <textarea cols="30" rows="10" ng-model="vm.est.estimate.woDescription" auto-grow=""
+                      ng-change="vm.events.onDescriptionOrNotesChanged()" ng-model-options="{debounce:500}"
+                      placeholder="enter work description here..."></textarea>
                   </div>
                 </div>
               </div>
               <div class="card">
                 <div class="item item-divider header-dark">
                   NOTES
+                  <a class="pull-right pointer" on-tap="vm.events.popoutTextBox('NOTES')">Edit</a>
                 </div>
                 <div class="list">
                   <div class="item item-input">
-                    <textarea cols="30" rows="10" ng-model="vm.est.estimate.woNotes" auto-grow="" ng-change="vm.events.onDescriptionOrNotesChanged()"
-                      ng-model-options="{debounce:500}" placeholder="enter notes here..."></textarea>
+                    <textarea cols="30" rows="10" ng-model="vm.est.estimate.woNotes" auto-grow=""
+                      ng-change="vm.events.onDescriptionOrNotesChanged()" ng-model-options="{debounce:500}"
+                      placeholder="enter notes here..."></textarea>
                   </div>
                 </div>
               </div>
@@ -110,7 +119,8 @@
             <div class="card">
               <div class="item item-divider">
                 PRODUCTS
-                <button type="button" class="button pull-right button-small button-small button-positive" ng-click="vm.events.onProdcutActionButtonClicked()">Add
+                <button type="button" class="button pull-right button-small button-small button-positive"
+                  ng-click="vm.events.onProdcutActionButtonClicked()">Add
                   Product
                   </a>
               </div>
@@ -144,9 +154,12 @@
                       <small>
                   </div>
                   <div class="col">
-                    <button type="button" class="button icon ion-edit button-small text-energized" style="margin-top: -5px;float: left;"
-                      ng-if="!vm.isServiceProvider || sch.technicianNum == vm.user.userEmail" ng-click="vm.events.onEditProductClicked(p)"></button>
-                    <button type="button" class="button icon ion-trash-b button-small text-assertive" style="margin-top: -5px;float: left;margin-left: 5px;"
+                    <button type="button" class="button icon ion-edit button-small text-energized"
+                      style="margin-top: -5px;float: left;"
+                      ng-if="!vm.isServiceProvider || sch.technicianNum == vm.user.userEmail"
+                      ng-click="vm.events.onEditProductClicked(p)"></button>
+                    <button type="button" class="button icon ion-trash-b button-small text-assertive"
+                      style="margin-top: -5px;float: left;margin-left: 5px;"
                       ng-click="vm.events.onDeleteProductClicked(p)"></button>
                   </div>
                 </div>
@@ -181,7 +194,8 @@
                           <h3>{{::inv.productName}}</h3>
                         </div>
                         <div class="col col-10">
-                          <input type="checkbox" ng-model="inv.isTaxable" ng-change="vm.events.onTaxCheckboaxChanged(inv)" />
+                          <input type="checkbox" ng-model="inv.isTaxable"
+                            ng-change="vm.events.onTaxCheckboaxChanged(inv)" />
                         </div>
                         <div class="col col-20 text-center">
                           <h3>{{inv.qty || 0}}</h3>
@@ -227,9 +241,11 @@
               </div>
             </div>
             <order-signature-component barcode="vm.barcode" is-estimate="true"></order-signature-component>
-            <order-email-card-component default-emails="vm.est.estimate.woEmail" on-send-email-clicked="vm.events.sendEstimateMail(mails)"
-              is-busy="vm.sendingEmail" is-estimate="true"></order-email-card-component>
-            <order-images-list-component barcode="vm.barcode" is-estimate="true" allow-selection="true"></order-images-list-component>
+            <order-email-card-component default-emails="vm.est.estimate.woEmail"
+              on-send-email-clicked="vm.events.sendEstimateMail(mails)" is-busy="vm.sendingEmail" is-estimate="true">
+            </order-email-card-component>
+            <order-images-list-component barcode="vm.barcode" is-estimate="true" allow-selection="true">
+            </order-images-list-component>
           </div>
         </ion-content>
       </ion-tab>

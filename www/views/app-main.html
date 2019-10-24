@@ -1,32 +1,32 @@
 <ion-side-menus enable-menu-with-back-views="false">
-	<ion-side-menu-content>
-		<ion-nav-bar class="bar-stable">
-			<ion-nav-buttons side="left">
-				<button class="button button-icon button-clear ion-navicon" menu-toggle="left">
-				</button>
-			</ion-nav-buttons>
-		</ion-nav-bar>
-		<ion-nav-view>
+  <ion-side-menu-content>
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view>
 
-		</ion-nav-view>
-	</ion-side-menu-content>
+    </ion-nav-view>
+  </ion-side-menu-content>
 
-	<ion-side-menu side="left" enable-menu-with-back-views="false">
-		<ion-header-bar class="bar-stable">
-			<h1 class="title">Menu</h1>
-		</ion-header-bar>
-		<ion-content class="has-header">
-			<ion-list>
-				<ion-item ui-sref-active="active" menu-close ng-repeat="menu in ::vm.sideMenuItems" ng-if="vm.events.checkMenuItemVisibility(menu)"
-				 ng-click="vm.events.onMenuItemClicked(menu)">
-					<i ng-if="menu.icon" class="icon ion-{{menu.icon}} app-title-promax"></i> {{::menu.title}}
-				</ion-item>
-			</ion-list>
-		</ion-content>
-	</ion-side-menu>
+  <ion-side-menu side="left" enable-menu-with-back-views="false">
+    <ion-header-bar class="bar-stable">
+      <h1 class="title">Menu</h1>
+    </ion-header-bar>
+    <ion-content class="has-header">
+      <ion-list>
+        <ion-item ui-sref-active="active" menu-close ng-repeat="menu in ::vm.sideMenuItems"
+          ng-if="vm.events.checkMenuItemVisibility(menu)" ng-click="vm.events.onMenuItemClicked(menu)">
+          <i ng-if="menu.icon" class="icon ion-{{menu.icon}} app-title-promax"></i> {{::menu.title}}
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
 </ion-side-menus>
 <script id="dashboardSearchModal.html" type="text/ng-template">
-	<ion-modal-view>
+  <ion-modal-view>
 		<ion-header-bar>
 			<h1 class="title">Search Work Order</h1>
 		</ion-header-bar>
@@ -72,18 +72,18 @@
 </script>
 
 <script id="productSearchModal.html" type="text/ng-template">
-	<ion-modal-view>
+  <ion-modal-view>
 		<product-search-component></product-search-component>
 	</ion-modal-view>
 </script>
 <script id="addScheduleModal.html" type="text/ng-template">
-	<ion-modal-view>
+  <ion-modal-view>
 		<add-schedule-modal-component barcode="vm.barcode" on-cancel-clicked="vm.tabs.sch.events.onModalCancelClicked()"
 		service-providers="vm.serviceProviders" on-add-completed="vm.tabs.sch.events.onAddScheduleCompleted(o)"></add-schedule-modal-component>
 	</ion-modal-view>
 </script>
 <script id="imageViewerModal.html" type="text/ng-template">
-	<ion-modal-view>
+  <ion-modal-view>
 		<ion-header-bar>
 				<button class="button button-assertive" ng-if="vm.showDeleteImageOnModal" on-tap="vm.events.deleteImageClicked()">
 						Delete
@@ -103,3 +103,28 @@
 		</ion-content>
 	</ion-modal-view>
 </script>
+<script id="fulltextModal.html" type="text/ng-template">
+  <ion-modal-view>
+	  <ion-header-bar>
+		<button type="button" ng-disabled="vm.popupDescriptionBoxType === 'DESCRIPTION' && !vm.user.allowUserToEditWoDescription" class="button button-small button-positive" ng-click="vm.tabs.events.updateClicked()">
+				Update
+			  </button>
+		 <h1 class="title">
+				  {{vm.popModal.type}} 
+			  </h1>
+			  <button type="button" class="button button-small button-light" ng-click="vm.tabs.events.closePopoutModal()">
+				  Close
+			  </button>
+	  </ion-header-bar>
+	   <ion-content has-bouncing="true">
+		  <div class="row">
+			<div class="col">
+			  <textarea rows="30" cols="5" style="width:100%;" 
+			  ng-model="vm.popModal.content"
+			  placeholder="{{vm.popModal.placeholder}}"></textarea>
+			</div>
+		  </div>
+		 
+	   </ion-content>
+	</ion-modal-view>
+  </script>

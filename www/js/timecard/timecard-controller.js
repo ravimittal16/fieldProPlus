@@ -124,14 +124,20 @@
       var payables = _.filter(vm.ui.data.timeCards, function (tc) {
         return tc.jobCode === jobCodes.CLOCK_IN && tc.finishTime !== null;
       });
+      console.log(payables);
+
       var nonPayables = _.filter(vm.ui.data.timeCards, function (tc) {
         return tc.jobCode !== jobCodes.CLOCK_IN && tc.isPayable === false && tc.finishTime !== null;
       });
-      var totalMins = 0;
+
+      var totalPayableMins = 0;
       if (payables.length > 0) {
         angular.forEach(payables, function (e, i) {
-          totalMins += moment(kendo.parseDate(e.finishTime)).diff(kendo.parseDate(e.startTime), "minutes");
+          totalPayableMins += moment(kendo.parseDate(e.finishTime)).diff(kendo.parseDate(e.startTime), "minutes");
         });
+      } else {
+        vm.ui.data.totalTime = "0 hrs 0 min";
+        return;
       }
 
       if (nonPayables.length > 0) {
@@ -139,15 +145,19 @@
         angular.forEach(nonPayables, function (e, i) {
           totalNonPMins += moment(kendo.parseDate(e.finishTime)).diff(kendo.parseDate(e.startTime), "minutes");
           if (i === nonPayables.length - 1) {
-            totalMins = totalMins - totalNonPMins;
-            var hours = Math.floor(totalMins / 60);
-            var mintues = totalMins % 60;
-            vm.ui.data.totalTime = hours + " hrs " + mintues + " min";
+            totalPayableMins = totalPayableMins - totalNonPMins;
+            if (totalPayableMins > 0) {
+              var hours = Math.floor(totalPayableMins / 60);
+              var mintues = totalPayableMins % 60;
+              vm.ui.data.totalTime = hours + " hrs " + mintues + " min";
+            } else {
+              vm.ui.data.totalTime = "0 hrs 0 min";
+            }
           }
         });
       } else {
-        var hours = Math.floor(totalMins / 60);
-        var mintues = totalMins % 60;
+        var hours = Math.floor(totalPayableMins / 60);
+        var mintues = totalPayableMins % 60;
         vm.ui.data.totalTime = hours + " hrs " + mintues + " min";
       }
     }

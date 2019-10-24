@@ -119,8 +119,7 @@
               <div class="card">
                 <div class="item item-divider header-dark">
                   WORK DESCRIPTION
-                  <a class="icon ion-ios-browsers-outline pull-right font25 pointer"
-                    on-tap="vm.tabs.events.popoutTextBox('DESCRIPTION')"></a>
+                  <a class="pull-right pointer" on-tap="vm.tabs.events.popoutTextBox('DESCRIPTION')">Edit</a>
                 </div>
                 <div class="list">
                   <div class="item item-input">
@@ -134,11 +133,12 @@
               <div class="card">
                 <div class="item item-divider header-dark">
                   RESOLUTION
-                  <div class="pull-right">
+                  <div class="pull-right" style="display: flex;
+                  justify-content: center;
+                  align-items: center;">
                     <a class="icon ion-refresh font25 pointer" style="margin-right: 10px;"
                       on-tap="vm.tabs.desc.events.reloadWorkResolution()"></a>
-                    <a class="icon ion-ios-browsers-outline font25 pointer"
-                      on-tap="vm.tabs.events.popoutTextBox('RESOLUTION')"></a>
+                    <a class=" pointer" on-tap="vm.tabs.events.popoutTextBox('RESOLUTION')">Edit</a>
                   </div>
                 </div>
                 <div class="list">
@@ -153,8 +153,7 @@
                 <div class="item item-divider header-dark">
                   COMMENTS
                   <div class="pull-right">
-                    <a class="icon ion-ios-browsers-outline font25 pointer"
-                      on-tap="vm.tabs.events.popoutTextBox('COMMENTS')"></a>
+                    <a class="pointer" on-tap="vm.tabs.events.popoutTextBox('COMMENTS')">Edit</a>
                   </div>
                 </div>
                 <div class="list">
@@ -275,6 +274,10 @@
                   <input type="text" ng-if="vm.schedule.approve" class="transparent-background text-right" disabled
                     placeholder="Total Time" ng-model="vm.scheduleTimeSpan.timeSpan" />
                 </label>
+                <div class="item item-divider header-dark">
+                  Trip Notes
+                  <a class="pull-right pointer" on-tap="vm.tabs.events.popoutTextBox('TRIP_NOTES')">Edit</a>
+                </div>
                 <label class="item item-input">
                   <textarea name="" id="" rows="6" placeholder="enter trip note here..." ng-model="vm.schedule.tripNote"
                     ng-change="vm.tabs.sch.events.onTripnoteChanged()" ng-model-options="{debounce:500}"></textarea>
@@ -613,31 +616,7 @@
     enable-markup-orders="vm.enableMarkup"></edit-product-component>
 	</ion-modal-view>
 </script>
-<script id="fulltextModal.html" type="text/ng-template">
-  <ion-modal-view>
-    <ion-header-bar>
-      <button type="button" ng-disabled="vm.popupDescriptionBoxType === 'DESCRIPTION' && !vm.user.allowUserToEditWoDescription" class="button button-small button-positive" ng-click="vm.tabs.events.updateClicked()">
-              Update
-            </button>
-       <h1 class="title">
-                {{vm.popModal.type}} 
-            </h1>
-            <button type="button" class="button button-small button-light" ng-click="vm.tabs.events.closePopoutModal()">
-                Close
-            </button>
-    </ion-header-bar>
-     <ion-content has-bouncing="true">
-        <div class="row">
-          <div class="col">
-            <textarea rows="30" cols="5" style="width:100%;" 
-            ng-model="vm.popModal.content"
-            placeholder="{{vm.popModal.placeholder}}"></textarea>
-          </div>
-        </div>
-       
-     </ion-content>
-  </ion-modal-view>
-</script>
+
 <script id="addProductModal.html" type="text/ng-template">
   <ion-modal-view>
 		<edit-product-component is-estimate="false" modal-type="1" 
