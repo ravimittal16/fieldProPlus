@@ -2,28 +2,18 @@
   "use strict"
   var fpm = angular.module("fpm");
 
-  function _directiveController($scope, $timeout, $ionicPlatform) {
+  function _directiveController($scope, $timeout, $ionicPlatform, sqlStorageFactory) {
     var vm = this;
     vm.isConnectedToNetwork = true;
 
     vm._onNetworkConnectionChange = function (isConnected) {
+      sqlStorageFactory.setNetworkConnectivity(isConnected);
       if (isConnected !== vm.isConnectedToNetwork) {
         vm.isConnectedToNetwork = isConnected;
         $timeout(function () {
-          // var $header = $("div [nav-bar=active]");
-          // if ($header.length > 0) {
-          //   var text = $header.find("div.title").text();
-          //   if (isConnected) {
-          //     $("#div-offline").remove()
-          //   } else {
-          //     $header.find("div.title").html(text + "&nbsp;<div id='div-offline' class='offline-status-panel'>Offline</div>");
-          //   }
-          // }
-
           $scope.$broadcast("network:connection:changed", {
             isConnected: isConnected
           });
-
         }, 300);
 
       }
@@ -51,7 +41,7 @@
     }
     vm.$onChanges = function () {}
   }
-  _directiveController.$inject = ["$scope", "$timeout", "$ionicPlatform"]
+  _directiveController.$inject = ["$scope", "$timeout", "$ionicPlatform", "sqlStorageFactory"]
   fpm.directive("networkCheck", [function () {
     return {
       restrict: "A",

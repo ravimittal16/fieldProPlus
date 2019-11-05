@@ -4,6 +4,7 @@
   function initFactory($timeout, $cordovaSQLite, $q, authenticationFactory) {
     var db = null;
     var FP_DB_NAME = "fieldPromaxDb";
+    var IS_CONNECTED = true;
     var _isOnDevMode = false;
 
     function setDb(_db, isOnDevMode) {
@@ -313,9 +314,17 @@
     function updateProduct(propertyName, propertyValue, num) {}
 
 
+    function tryLoginOffline(userName, password) {}
+
+    function setNetworkConnectivity(_isConnected) {
+      IS_CONNECTED = _isConnected;
+    }
 
     return {
       FP_DB_NAME: FP_DB_NAME,
+      isConnected: IS_CONNECTED,
+      setNetworkConnectivity: setNetworkConnectivity,
+      tryLoginOffline: tryLoginOffline,
       setDb: setDb,
       deleteOrder: deleteOrder,
       getOrderInfo: getOrderInfo,

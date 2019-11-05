@@ -226,15 +226,21 @@
         apibaseurl + "GetWorkOrderPayments?barcode=" + barcode
       );
     }
-    function addUpdatePayment(o)
-    {
+
+    function addUpdatePayment(o) {
       return apiBaseFactory.post(apibaseurl + "AddUpdatePayment", o);
     }
+
     function deletePayment(num) {
       return apiBaseFactory.get(
         apibaseurl + "DeletePayment?num=" + num
       );
     }
+
+    function updateTaxRate(barcode, taxRate) {
+      return apiBaseFactory.get(apibaseurl + "UpdateTaxRate?barcode=" + barcode + "&taxRate=" + taxRate);
+    }
+
 
     return {
       checkIfBarcodeClosed: checkIfBarcodeClosed,
@@ -267,9 +273,10 @@
       updateOrderProduct: updateOrderProduct,
       getDatewiseEvents: getDatewiseEvents,
       clearAllCache: clearAllCache,
-      getBarcodePayments:getBarcodePayments,
-      addUpdatePayment:addUpdatePayment,
-      deletePayment:deletePayment
+      getBarcodePayments: getBarcodePayments,
+      addUpdatePayment: addUpdatePayment,
+      deletePayment: deletePayment,
+      updateTaxRate: updateTaxRate
     };
   }
   initFactory.$inject = [

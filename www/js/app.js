@@ -6,8 +6,8 @@
 // "http://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 // "https://microsoft-apiapp01371f9b84264eab9d5e506c9c4f6d24.azurewebsites.net/"
 //"http://localhost/FieldPromaxApi/"
-var isInDevMode = true;
-var prodReady = false;
+var isInDevMode = false;
+var prodReady = true;
 
 var runningOnEmulator = false;
 if (runningOnEmulator) {
@@ -18,7 +18,7 @@ if (runningOnEmulator) {
 var constants = {
   devEnv: isInDevMode,
   fieldPromaxApi: isInDevMode ?
-    "http://localhost:51518/" : "https://fieldpromax.azurewebsites.net/",
+    "http://localhost:51518/" : "https://fieldpromax-stagging1.azurewebsites.net/",
   localStorageKeys: {
     authorizationDataKey: "authorizationData",
     initialData: "initialData",
@@ -348,13 +348,16 @@ var fpm = angular
           StatusBar.styleDefault();
         }
         var isandr = fpmUtilitiesFactory.device.isAndroid();
+        //=======================================================================
+        //OFFLINE CONFIGURATION
+        var _dbName = sqlStorageFactory.FP_DB_NAME + ".db";
         if (!isInDevMode && window.cordova && window.SQLitePlugin) {
           try {
             db = fpmUtilitiesFactory.device.isIOS() ? $cordovaSQLite.openDB({
-              name: sqlStorageFactory.FP_DB_NAME + ".db",
+              name: _dbName,
               iosDatabaseLocation: 'Library'
             }) : $cordovaSQLite.openDB({
-              name: sqlStorageFactory.FP_DB_NAME + ".db",
+              name: _dbName,
               location: 'default'
             });
 
@@ -367,7 +370,7 @@ var fpm = angular
            * This method will create a new SQL Lite Database and return a Database object. 
            * Use the Database Object to manipulate the data.
            */
-          db = window.openDatabase(sqlStorageFactory.FP_DB_NAME + ".db", '1.0', 'DEV', 5 * 1024 * 1024);
+          db = window.openDatabase(_dbName, '1.0', 'DEV', 5 * 1024 * 1024);
         }
 
         if (db) {
@@ -375,6 +378,8 @@ var fpm = angular
           sqlStorageFactory.createUserLoginTable();
           sqlStorageFactory.createWorkOrdersTable();
         }
+
+        //========================================================================
 
         //REGISTER FOR PUSH NOTIFICATIONS
 
@@ -456,8 +461,8 @@ var fpm = angular
           locationUpdateInterval: 60000,
           activityRecognitionInterval: 60000,
           stopTimeout: 5, // Stop-detection timeout minutes (wait x minutes to turn off tracking)
-          debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
-          logLevel: 0, // Verbose logging.  0: NONE
+          debug: runningOnEmulator, // <-- enable this hear sounds for background-geolocation life-cycle.
+          logLevel: runningOnEmulator ? bgGeo.LOG_LEVEL_VERBOSE : 0, // Verbose logging.  0: NONE
           startOnBoot: true,
           autoSync: false,
           stopOnTerminate: false
@@ -504,7 +509,6 @@ var fpm = angular
           document.body.classList.add('keyboard-opened');
           if (document.activeElement.nodeName === 'INPUT') {
             setTimeout(function () {
-              console.log("INPUT BOX TIMEOUT");
               document.activeElement.disabled = true;
               setTimeout(function () {
                 document.activeElement.disabled = false;

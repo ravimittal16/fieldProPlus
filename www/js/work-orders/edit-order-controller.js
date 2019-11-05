@@ -52,6 +52,30 @@
       paymentOn: false
     };
 
+
+    // TAX RATE CODE CHANGES
+    //==================================================
+
+    vm.numpad = null;
+    vm.numpadSettings = {
+      display: 'bottom',
+      min: 0,
+      scale: 2,
+      max: 99999.99,
+      preset: 'decimal',
+      prefix: '$',
+      onClose: function (event, inst) {
+        if (vm.barCodeData) {
+          if (vm.barCodeData.taxRate && vm.barCodeData.taxRate.toString() !== event.toString()) {
+            vm.barCodeData.taxRate = event;
+            workOrderFactory.updateTaxRate(vm.barcode, event);
+          }
+          calculateTotals();
+        }
+      }
+    }
+
+    //==================================================
     vm.errors = [];
     vm.gettingBarcodeDetails = true;
 
@@ -1211,6 +1235,11 @@
       },
       smry: {
         events: {
+          onEditTaxRateClicked: function () {
+            $timeout(function () {
+              vm.numpad.show();
+            }, 50);
+          },
           onTaxCheckboaxChanged: function (i) {
             if (checkAuthorizationIfServiceProvider(i, restoreInvoice)) {
               $timeout(function () {
