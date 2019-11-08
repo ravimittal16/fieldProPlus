@@ -4,15 +4,13 @@
   "description": "FieldProIonic: An Ionic project",
   "dependencies": {
     "cordova-android": "^8.1.0",
-    "cordova-background-geolocation": "^2.12.0",
+    "cordova-background-geolocation": "git+https://github.com/transistorsoft/cordova-background-geolocation.git#3.3.1",
     "cordova-multidex": "git+https://github.com/jwall149/cordova-multidex.git",
-    "cordova-plugin-background-fetch": "^5.4.1",
-    "cordova-plugin-barcodescanner": "^0.7.4",
-    "cordova-plugin-camera": "^2.4.1",
+    "cordova-plugin-background-fetch": "^5.6.1",
+    "cordova-plugin-camera": "^4.1.0",
     "cordova-plugin-cocoalumberjack": "0.0.4",
-    "cordova-plugin-compat": "^1.2.0",
     "cordova-plugin-console": "^1.1.0",
-    "cordova-plugin-device": "^1.1.7",
+    "cordova-plugin-device": "^2.0.3",
     "cordova-plugin-geolocation": "^4.0.1",
     "cordova-plugin-ignore-lint-translation": "0.0.1",
     "cordova-plugin-inappbrowser": "^1.7.2",
@@ -29,6 +27,7 @@
     "ionic-plugin-keyboard": "^2.2.1",
     "jquery.ns-autogrow": "^1.1.6",
     "natives": "^1.1.6",
+    "phonegap-plugin-barcodescanner": "8.1.0",
     "phonegap-plugin-push": "^1.11.1"
   },
   "devDependencies": {
@@ -43,31 +42,25 @@
   },
   "cordovaPlugins": [
     "ionic-plugin-keyboard",
-    "cordova-plugin-camera@~2.4.0",
-    "cordova-plugin-console@~1.0.3",
     "cordova-plugin-inappbrowser@1.7.0",
     "cordova-plugin-network-information",
-    "cordova-plugin-device@~1.1.5",
     "cordova-plugin-cocoalumberjack",
     "cordova-plugin-splashscreen",
-    "cordova-plugin-camera",
     "cordova-plugin-statusbar",
     "cordova-plugin-whitelist",
-    "cordova-plugin-device",
     "cordova-plugin-inappbrowser",
-    "cordova-plugin-device@~1.1.6",
-    "cordova-plugin-whitelist@~1.3.2",
     "cordova-plugin-splashscreen@~4.0.3",
     "cordova-plugin-statusbar@~2.2.3",
     "ionic-plugin-keyboard@~2.2.1",
-    "cordova-plugin-camera@~2.4.1",
     "cordova-plugin-cocoalumberjack@~0.0.4",
     "cordova-plugin-network-information@~1.3.2",
-    "cordova-plugin-console@~1.0.6",
     "cordova-plugin-inappbrowser@~1.7.0",
     "phonegap-plugin-push@1.10.5",
     "cordova-plugin-geolocation",
-    "cordova-sqlite-storage"
+    "cordova-sqlite-storage",
+    "cordova-plugin-console",
+    "cordova-plugin-device",
+    "phonegap-plugin-barcodescanner"
   ],
   "cordovaPlatforms": [
     "ios",
@@ -79,12 +72,9 @@
   ],
   "cordova": {
     "plugins": {
-      "cordova-plugin-device": {},
-      "cordova-plugin-whitelist": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-statusbar": {},
       "ionic-plugin-keyboard": {},
-      "cordova-plugin-camera": {},
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-cocoalumberjack": {},
       "cordova-plugin-network-information": {},
@@ -95,14 +85,21 @@
       "cordova-plugin-compat": {},
       "cordova.plugins.diagnostic": {},
       "cordova-sqlite-storage": {},
-      "cordova-plugin-barcodescanner": {},
-      "cordova-plugin-console": {},
       "cordova-plugin-ignore-lint-translation": {},
-      "cordova-plugin-background-fetch": {},
       "cordova-background-geolocation": {
-        "LICENSE": "7060fa055b5afaad68b0fee1bc33eb0d4d89f8b17e26aa0663ef710864486976",
-        "GOOGLE_API_VERSION": "11.8.0",
-        "APPCOMPAT_VERSION": "28.0.0"
+        "GOOGLE_API_VERSION": "16.+",
+        "APPCOMPAT_VERSION": "28.+",
+        "OKHTTP_VERSION": "3.12.+",
+        "EVENTBUS_VERSION": "3.0.0"
+      },
+      "cordova-plugin-camera": {
+        "ANDROID_SUPPORT_V4_VERSION": "27.+"
+      },
+      "cordova-plugin-console": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-whitelist": {},
+      "phonegap-plugin-barcodescanner": {
+        "ANDROID_SUPPORT_V4_VERSION": "27.+"
       }
     },
     "platforms": [
