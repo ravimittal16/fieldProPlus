@@ -17,8 +17,9 @@ if (runningOnEmulator) {
 
 var constants = {
   devEnv: isInDevMode,
-  fieldPromaxApi: isInDevMode ?
-    "http://localhost:51518/" : "https://fieldpromax-stagging1.azurewebsites.net/",
+  fieldPromaxApi: isInDevMode
+    ? "http://localhost:51518/"
+    : "https://fieldpromax-stagging1.azurewebsites.net/",
   localStorageKeys: {
     authorizationDataKey: "authorizationData",
     initialData: "initialData",
@@ -58,7 +59,7 @@ var fpm = angular
     "ionicDatePickerProvider",
     "$provide",
     "fpm-utilities-factoryProvider",
-    function (
+    function(
       $stateProvider,
       $urlRouterProvider,
       $compileProvider,
@@ -69,7 +70,8 @@ var fpm = angular
       fpmUtilitiesFactoryProvider
     ) {
       fpmUtilitiesFactoryProvider.setApplicationModel(isInDevMode);
-      var routes = [{
+      var routes = [
+        {
           state: "login",
           config: {
             url: "/",
@@ -242,7 +244,7 @@ var fpm = angular
         }
       ];
 
-      angular.forEach(routes, function (route) {
+      angular.forEach(routes, function(route) {
         $stateProvider.state(route.state, route.config);
       });
       $urlRouterProvider.otherwise("/");
@@ -286,8 +288,8 @@ var fpm = angular
       $provide.decorator("$exceptionHandler", [
         "$delegate",
         "$injector",
-        function ($delegate, $injector) {
-          return function (exception, cause) {
+        function($delegate, $injector) {
+          return function(exception, cause) {
             var data = {
               type: "angular",
               url: window.location.hash,
@@ -322,7 +324,7 @@ var fpm = angular
     "authenticationFactory",
     "shared-data-factory",
     "sqlStorageFactory",
-    function (
+    function(
       $ionicPlatform,
       $rootScope,
       $state,
@@ -333,7 +335,8 @@ var fpm = angular
       sqlStorageFactory
     ) {
       $rootScope.isInDevMode = isInDevMode;
-      $ionicPlatform.ready(function () {
+      $rootScope.locationTrackingOn = true;
+      $ionicPlatform.ready(function() {
         if (window.cordova && window.cordova.plugins.Keyboard) {
           // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
           // for form inputs)
@@ -353,24 +356,25 @@ var fpm = angular
         var _dbName = sqlStorageFactory.FP_DB_NAME + ".db";
         if (!isInDevMode && window.cordova && window.SQLitePlugin) {
           try {
-            db = fpmUtilitiesFactory.device.isIOS() ? $cordovaSQLite.openDB({
-              name: _dbName,
-              iosDatabaseLocation: 'Library'
-            }) : $cordovaSQLite.openDB({
-              name: _dbName,
-              location: 'default'
-            });
-
+            db = fpmUtilitiesFactory.device.isIOS()
+              ? $cordovaSQLite.openDB({
+                  name: _dbName,
+                  iosDatabaseLocation: "Library"
+                })
+              : $cordovaSQLite.openDB({
+                  name: _dbName,
+                  location: "default"
+                });
           } catch (error) {
-            window.alert("ERROR WHILE CREATING DATABASE" + error)
+            window.alert("ERROR WHILE CREATING DATABASE" + error);
           }
         } else {
           /**
            * ? window.openDatabase(database_name, database_version, database_displayname, database_size);
-           * This method will create a new SQL Lite Database and return a Database object. 
+           * This method will create a new SQL Lite Database and return a Database object.
            * Use the Database Object to manipulate the data.
            */
-          db = window.openDatabase(_dbName, '1.0', 'DEV', 5 * 1024 * 1024);
+          db = window.openDatabase(_dbName, "1.0", "DEV", 5 * 1024 * 1024);
         }
 
         if (db) {
@@ -383,10 +387,9 @@ var fpm = angular
 
         //REGISTER FOR PUSH NOTIFICATIONS
 
-
         document.addEventListener(
           "backbutton",
-          function (event) {
+          function(event) {
             if ($state.current.name === "app.dashboard") {
               //authenticationFactory.logout(false);
               if (navigator) navigator.app.exitApp();
@@ -405,7 +408,7 @@ var fpm = angular
             location.isMoving = location.is_moving;
             location.coords.altitudeAccuracy =
               location.coords.altitude_accuracy;
-            sharedDataFactory.postLocation(location).finally(function () {
+            sharedDataFactory.postLocation(location).finally(function() {
               isRunning = false;
             });
           }
@@ -414,12 +417,19 @@ var fpm = angular
         if (!isInDevMode) {
           var bgGeo = window.BackgroundGeolocation;
 
-          bgGeo.on("location", function (location, taskId) {
-            succesFn(location);
-            bgGeo.finish(taskId);
-          });
+          bgGeo.on(
+            "location",
+            function(location, taskId) {
+              succesFn(location);
+              bgGeo.finish(taskId);
+            },
+            function(error) {
+              console.log("LOCATION TACKING ", error);
+              $rootScope.locationTrackingOn = error !== 1 && error !== "1";
+            }
+          );
 
-          bgGeo.on("motionchange", function (isMoving, location, taskId) {
+          bgGeo.on("motionchange", function(isMoving, location, taskId) {
             location.is_moving = isMoving;
             succesFn(location);
             bgGeo.finish(taskId);
@@ -487,9 +497,9 @@ var fpm = angular
         }
         //TRY TO READ location
         function readLocation() {
-          bgGeo.configure(locationConfig, function (state) {
+          bgGeo.configure(locationConfig, function(state) {
             if (!state.enabled) {
-              bgGeo.start(function () {
+              bgGeo.start(function() {
                 locationServiceRunning = true;
               });
             }
@@ -506,17 +516,17 @@ var fpm = angular
           //    * It simply needs to refresh UI once. There was no solution to this problem, so I tried a hack, and it worked. ;)
           //    * i.e. disable it for 10 micro secs and then re-enable it.
           //    */
-          document.body.classList.add('keyboard-opened');
-          if (document.activeElement.nodeName === 'INPUT') {
-            setTimeout(function () {
+          document.body.classList.add("keyboard-opened");
+          if (document.activeElement.nodeName === "INPUT") {
+            setTimeout(function() {
               document.activeElement.disabled = true;
-              setTimeout(function () {
+              setTimeout(function() {
                 document.activeElement.disabled = false;
               }, 10);
             }, 350);
           }
         }
-        document.addEventListener('native.keyboardshow', onKeyboardshow, false);
+        document.addEventListener("native.keyboardshow", onKeyboardshow, false);
       });
     }
   ]);

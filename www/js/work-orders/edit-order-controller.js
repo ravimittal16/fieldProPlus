@@ -1,4 +1,4 @@
-(function () {
+(function() {
   "use strict";
   // HELLO WORLD
   function initController(
@@ -52,28 +52,33 @@
       paymentOn: false
     };
 
-
     // TAX RATE CODE CHANGES
     //==================================================
 
     vm.numpad = null;
     vm.numpadSettings = {
-      display: 'bottom',
+      display: "bottom",
       min: 0,
       scale: 2,
       max: 99999.99,
-      preset: 'decimal',
-      prefix: '$',
-      onClose: function (event, inst) {
+      preset: "decimal",
+      onClose: function(event, inst) {
         if (vm.barCodeData) {
-          if (vm.barCodeData.taxRate && vm.barCodeData.taxRate.toString() !== event.toString()) {
+          if (
+            vm.barCodeData.taxRate &&
+            vm.barCodeData.taxRate.toString() !== event.toString()
+          ) {
             vm.barCodeData.taxRate = event;
-            workOrderFactory.updateTaxRate(vm.barcode, event);
+            workOrderFactory
+              .updateTaxRate(vm.barcode, event)
+              .then(function(response) {
+                vm.barCodeData.taxRate = vm.barCodeData.taxRate.toFixed(2);
+              });
           }
           calculateTotals();
         }
       }
-    }
+    };
 
     //==================================================
     vm.errors = [];
@@ -85,13 +90,14 @@
         .show({
           template: "loading work order..."
         })
-        .then(function () {
+        .then(function() {
           workOrderFactory
             .getBarcodeDetails(vm.barcode)
             .then(
-              function (response) {
+              function(response) {
                 vm.gettingBarcodeDetails = false;
                 vm.barCodeData = angular.copy(response);
+                vm.barCodeData.taxRate = vm.barCodeData.taxRate.toFixed(2);
                 vm.uiSettings.woData = angular.copy(response);
                 vm.taxCheckboxVisibility = (vm.barCodeData.taxRate || 0) > 0;
                 if (
@@ -154,7 +160,7 @@
                   calculateTotals();
                 }
               },
-              function () {
+              function() {
                 alerts.alert(
                   "Oops",
                   "ERROR WHILE GETTING WORK ORDER INFORMATION..",
@@ -162,7 +168,7 @@
                 );
               }
             )
-            .finally(function () {
+            .finally(function() {
               $ionicLoading.hide();
               $scope.$broadcast("scroll.refreshComplete");
             });
@@ -199,7 +205,7 @@
         var totalMintues = moment(ft).diff(moment(st), "minutes");
         var mins = totalMintues % 60;
         var hours = Math.floor(totalMintues / 60);
-        findTimeDiffTimer = $timeout(function () {
+        findTimeDiffTimer = $timeout(function() {
           if (forInRoute) {
             if (hours === 0) {
               vm.scheduleTimeSpan.inRouteTimeSpan = mins + " Minutes";
@@ -233,7 +239,7 @@
       var timeSpanSelected = e.getVal();
       var seconds = Math.floor(timeSpanSelected / 1000);
       var minutesToAdd = Math.floor(seconds / 60);
-      onInRouteTimespanChangedTimer = $timeout(function () {
+      onInRouteTimespanChangedTimer = $timeout(function() {
         var start = angular.copy(vm.schedule.inRouteStartTime);
         var startDate;
         if (start == null) {
@@ -271,15 +277,15 @@
           ) {
             alerts.alert(
               "Warning",
-              isStartTime ?
-              "Start time cannot be greater than finish time." :
-              "Finish time cannot be less than start time"
+              isStartTime
+                ? "Start time cannot be greater than finish time."
+                : "Finish time cannot be less than start time"
             );
           } else {
             findTimeDiff(
               vm.schedule.actualStartDateTime,
               vm.schedule.actualFinishDateTime
-            ).then(function (totalMins) {
+            ).then(function(totalMins) {
               if (!vm.schedule.approve) {
                 updateSchduleTotalTime();
               }
@@ -298,11 +304,11 @@
       inRouteTimeSpan: "",
       onInRouteTimespanChanged: onInRouteTimespanChanged,
       onInRouteTImeChanged: onInRouteTImeChanged,
-      onTimespanSeletionChanged: function (s, e) {
+      onTimespanSeletionChanged: function(s, e) {
         var timeSpanSelected = e.getVal();
         var seconds = Math.floor(timeSpanSelected / 1000); //ignore any left over units smaller than a second
         var minutesToAdd = Math.floor(seconds / 60);
-        onTimespanSeletionChangedTimer = $timeout(function () {
+        onTimespanSeletionChangedTimer = $timeout(function() {
           var start = angular.copy(vm.schedule.actualStartDateTime);
           var startDate;
           if (start == null) {
@@ -318,13 +324,13 @@
           }
         }, 50);
       },
-      onStartDateTimeChaged: function () {
+      onStartDateTimeChaged: function() {
         onActualTimesChanged(true);
       },
-      onEndDateTimeChanged: function () {
+      onEndDateTimeChanged: function() {
         onActualTimesChanged(false);
       },
-      clearAllDateTimeSelection: function () {}
+      clearAllDateTimeSelection: function() {}
     };
 
     function checkAuthorizationIfServiceProvider(co, cb, fromAddSchedule) {
@@ -351,7 +357,7 @@
           alerts.alert(
             "Oops!",
             "you are not authorized to perform this action",
-            function () {
+            function() {
               if (angular.isFunction(cb) && co) {
                 cb(co);
               }
@@ -387,7 +393,7 @@
         vm.schedule.actualFinishDateTime,
         "g"
       );
-      workOrderFactory.updateSchduleTotalTime(sch).then(function (response) {
+      workOrderFactory.updateSchduleTotalTime(sch).then(function(response) {
         if (response) {
           vm.barCodeData.schedules = response.schedule;
           vm.barCodeData.invoice = response.invoice;
@@ -412,7 +418,7 @@
         scheduleId: vm.schedule.num
       };
       if (vm.schedule.actualStartDateTime) {
-        timecardFactory.pushCheckInOutTimes(model).then(function (response) {
+        timecardFactory.pushCheckInOutTimes(model).then(function(response) {
           if (angular.isArray(response) && response.length > 0) {
             alerts.alert("Warning", response[0]);
           } else {
@@ -429,13 +435,19 @@
       if ($rootScope.currentLocation) {
         currentLoc = $rootScope.currentLocation;
       } else {
-        window.BackgroundGeolocation.getCurrentPosition(function (
-          location,
-          taskId
+        if (
+          fpmUtilities.device.isIOS() &&
+          $rootScope.locationTrackingOn &&
+          window.BackgroundGeolocation
         ) {
-          window.BackgroundGeolocation.finish(taskId);
-          currentLoc = location;
-        });
+          window.BackgroundGeolocation.getCurrentPosition(function(
+            location,
+            taskId
+          ) {
+            window.BackgroundGeolocation.finish(taskId);
+            currentLoc = location;
+          });
+        }
       }
     }
     //================================================================================================
@@ -454,7 +466,7 @@
       vm.showPrice = vm.user.showPrice;
       sharedDataFactory
         .getIniitialData(true)
-        .then(function (response) {
+        .then(function(response) {
           if (response) {
             vm.uiSettings.milageTrackingEnabled =
               response.customerNumberEntity.milageTrackingEnabled || false;
@@ -464,7 +476,8 @@
               response.customerNumberEntity.equipmentTrackingOn || false;
             vm.uiSettings.enableMarkup =
               response.customerNumberEntity.enableMarkupForWorkOrders || false;
-            vm.uiSettings.paymentOn = response.customerNumberEntity.paymentOn || false;
+            vm.uiSettings.paymentOn =
+              response.customerNumberEntity.paymentOn || false;
             vm.enableMarkup = vm.uiSettings.enableMarkup;
             if (response.customerNumberEntity.billingOption) {
               vm.uiSettings.billingOption =
@@ -526,7 +539,7 @@
       if (vm.barCodeData.invoice && vm.barCodeData.invoice.length > 0) {
         var taxRate = vm.barCodeData.taxRate || 0;
         var totalTax = 0;
-        angular.forEach(vm.barCodeData.invoice, function (pro, i) {
+        angular.forEach(vm.barCodeData.invoice, function(pro, i) {
           if (pro.price && pro.qty) {
             var totalPrice = 0;
             if (!angular.isDefined(pro.newPriceCalculated)) {
@@ -537,10 +550,10 @@
               angular.isNumber(parseInt(pro.qty, 10))
             ) {
               if (pro.markup > 0) {
-                var newPrice = pro.newPriceCalculated ?
-                  pro.price :
-                  parseFloat(pro.price) +
-                  parseFloat(((pro.markup || 0) / 100) * pro.price);
+                var newPrice = pro.newPriceCalculated
+                  ? pro.price
+                  : parseFloat(pro.price) +
+                    parseFloat(((pro.markup || 0) / 100) * pro.price);
                 pro.price = newPrice;
                 pro.newPriceCalculated = true;
                 totalPrice = newPrice * pro.qty;
@@ -549,9 +562,9 @@
               }
               pro.totalPrice = totalPrice;
               var taxAmt = parseFloat(
-                parseFloat(taxRate) > 0 ?
-                parseFloat((taxRate / 100) * totalPrice) :
-                0
+                parseFloat(taxRate) > 0
+                  ? parseFloat((taxRate / 100) * totalPrice)
+                  : 0
               );
               totals.subtotal += parseFloat(totalPrice);
               totals.totalqty += parseInt(pro.qty, 10);
@@ -577,7 +590,7 @@
             barcodeAssay: vm.barCodeData.barcodeDetails,
             fromMobile: true
           })
-          .then(function (response) {
+          .then(function(response) {
             if (response && angular.isArray(response) && response.length > 0) {
               vm.errors = response;
             }
@@ -617,12 +630,12 @@
         sch.inRouteEndTime = kendo.toString(vm.schedule.inRouteEndTime, "g");
       }
       if (showLoading === true) {
-        fpmUtilities.showLoading().then(function () {
+        fpmUtilities.showLoading().then(function() {
           workOrderFactory
             .updateSchedule(sch)
-            .then(function (response) {
+            .then(function(response) {
               if (response && response !== "") {
-                alerts.alert("Warning", response, function () {
+                alerts.alert("Warning", response, function() {
                   vm.schedule.workComplete = false;
                 });
               } else {
@@ -630,7 +643,7 @@
                   alerts.alert(
                     "Success",
                     "Schedule information updated successfully",
-                    function () {
+                    function() {
                       if (angular.isFunction(callback)) {
                         callback();
                       }
@@ -646,12 +659,12 @@
             .then(fpmUtilities.hideLoading);
         });
       } else {
-        workOrderFactory.updateSchedule(sch).then(function () {
+        workOrderFactory.updateSchedule(sch).then(function() {
           if (showSuccessAlert) {
             alerts.alert(
               "Success",
               "Schedule information updated successfully",
-              function () {
+              function() {
                 if (angular.isFunction(callback)) {
                   callback();
                 }
@@ -666,7 +679,8 @@
       }
     }
 
-    var actions = [{
+    var actions = [
+      {
         text: '<span class="text-assertive">Clear All</span>'
       },
       {
@@ -708,7 +722,7 @@
     }
 
     function processCheckIn(refreshDetails) {
-      fpmUtilities.showLoading().then(function () {
+      fpmUtilities.showLoading().then(function() {
         vm.schedule.actualStartDateTime = new Date();
         vm.schedule.actualFinishDateTime = null;
         vm.scheduleTimeSpan.onStartDateTimeChaged();
@@ -723,10 +737,10 @@
             timerStartAt: fpmUtilities.toStringDate(new Date()),
             clientTime: kendo.toString(new Date(), "g")
           })
-          .then(function () {
+          .then(function() {
             vm.schedule.checkInStatus = true;
           })
-          .finally(function () {
+          .finally(function() {
             fpmUtilities.hideLoading();
             if (vm.user.timeCard && refreshDetails) {
               _getTodaysTimeCardEntries(false);
@@ -741,12 +755,12 @@
       } else {
         fpmUtilities
           .getModal("productSearchModal.html", $scope)
-          .then(function (modal) {
+          .then(function(modal) {
             vm.productSearchModal = modal;
             vm.productSearchModal.show();
           });
       }
-      $timeout(function () {
+      $timeout(function() {
         $scope.$broadcast("$fpm:changeAddModalOpenPriority", true);
       }, 1000);
     }
@@ -757,7 +771,7 @@
       } else {
         fpmUtilities
           .getModal("editProductModal.html", $scope)
-          .then(function (modal) {
+          .then(function(modal) {
             vm.productModal = modal;
             vm.productModal.show();
           });
@@ -785,9 +799,10 @@
           currentLoc.coords.longitude +
           "&daddr=";
         goourl += daddr;
-        $window
-          .open(goourl, "_system", "location=yes")
-          .then(function () {}, function (event) {});
+        $window.open(goourl, "_system", "location=yes").then(
+          function() {},
+          function(event) {}
+        );
       } else {
         goourl = "https://maps.google.com?daddr=" + daddr;
         $window.open(goourl, "_system", "location=yes");
@@ -814,13 +829,13 @@
           Barcode: vm.barcode,
           clientTime: kendo.toString(new Date(), "g")
         })
-        .then(function () {
+        .then(function() {
           vm.schedule.checkOutStatus = true;
         });
     }
     vm.tabs = {
       events: {
-        updateClicked: function () {
+        updateClicked: function() {
           if (vm.popModal.type === "DESCRIPTION") {
             var oldDesc = vm.uiSettings.woData.barcodeDetails.comment_1;
             var newDesc = vm.popModal.content;
@@ -828,8 +843,8 @@
               alerts.alert(
                 "Unauthorized",
                 "You are not authorized to change the description.",
-                function () {
-                  $timeout(function () {
+                function() {
+                  $timeout(function() {
                     vm.barCodeData.barcodeDetails.comment_1 = oldDesc;
                   }, 400);
                 }
@@ -852,39 +867,35 @@
             );
           }
           if (vm.popModal.type === "TRIP_NOTES") {
-            vm.schedule.tripNote = angular.copy(
-              vm.popModal.content
-            );
+            vm.schedule.tripNote = angular.copy(vm.popModal.content);
             updateSchedule(false, false);
           }
           updateOrder(vm.popModal.type === "DESCRIPTION" ? "desc" : null);
           vm.popModal.modal.hide();
         },
-        closePopoutModal: function () {
+        closePopoutModal: function() {
           vm.popModal.modal.hide();
         },
-        popoutTextBox: function (type) {
+        popoutTextBox: function(type) {
           vm.popupDescriptionBoxType = type;
           switch (type) {
-            case 'DESCRIPTION':
+            case "DESCRIPTION":
               vm.popModal.content = angular.copy(
                 vm.barCodeData.barcodeDetails.comment_1
               );
               break;
-            case 'RESOLUTION':
+            case "RESOLUTION":
               vm.popModal.content = angular.copy(
                 vm.barCodeData.barcodeDetails.comment_2
               );
               break;
-            case 'COMMENTS':
+            case "COMMENTS":
               vm.popModal.content = angular.copy(
                 vm.barCodeData.barcodeDetails.comment_4
               );
               break;
-            case 'TRIP_NOTES':
-              vm.popModal.content = angular.copy(
-                vm.schedule.tripNote
-              );
+            case "TRIP_NOTES":
+              vm.popModal.content = angular.copy(vm.schedule.tripNote);
               break;
           }
           vm.popModal.type = type;
@@ -893,7 +904,7 @@
           } else {
             fpmUtilities
               .getModal("fulltextModal.html", $scope)
-              .then(function (modal) {
+              .then(function(modal) {
                 vm.popModal.modal = modal;
                 vm.popModal.modal.show();
               });
@@ -902,13 +913,13 @@
       },
       desc: {
         events: {
-          reloadWorkResolution: function () {
+          reloadWorkResolution: function() {
             if (checkAuthorizationIfServiceProvider()) {
-              fpmUtilities.showLoading().then(function () {
+              fpmUtilities.showLoading().then(function() {
                 var id = vm.barCodeData.barcodeDetails.id;
                 workOrderFactory
                   .getWorkOrderResolution(id)
-                  .then(function (response) {
+                  .then(function(response) {
                     if (response) {
                       vm.barCodeData.barcodeDetails.comment_2 =
                         response.comment_2;
@@ -920,17 +931,17 @@
               });
             }
           },
-          refreshOnPullDown: function () {
+          refreshOnPullDown: function() {
             getBarcodeDetails();
             _getTodaysTimeCardEntries(false);
           },
-          closeWorkOrderMapModal: function () {
+          closeWorkOrderMapModal: function() {
             isMapLoaded = false;
             if (workOrderMapModal) {
               workOrderMapModal.hide();
             }
           },
-          onAddressTapped: function () {
+          onAddressTapped: function() {
             // fpmUtilities.getModal("workOrderMap.html", $scope).then(function (modal) {
             //     workOrderMapModal = modal;
             //     workOrderMapModal.show().then(function () {
@@ -939,7 +950,7 @@
             // });
             loadWorkOrderMap();
           },
-          onDescriptionOrResolutionChanged: function (type) {
+          onDescriptionOrResolutionChanged: function(type) {
             if (type && type === "desc") {
               var oldDesc = vm.uiSettings.woData.barcodeDetails.comment_1;
               var newDesc = vm.barCodeData.barcodeDetails.comment_1;
@@ -965,7 +976,7 @@
       },
       sch: {
         events: {
-          workCompleteChanged: function () {
+          workCompleteChanged: function() {
             if (
               checkAuthorizationIfServiceProvider(
                 vm.schedule,
@@ -973,8 +984,8 @@
                 false
               )
             ) {
-              updateSchedule(true, true, function () {
-                $timeout(function () {
+              updateSchedule(true, true, function() {
+                $timeout(function() {
                   $state.go("app.dashboard", {
                     refresh: true
                   });
@@ -982,55 +993,53 @@
               });
             }
           },
-          onCustomScheduleChanged: function (e) {
+          onCustomScheduleChanged: function(e) {
             if (!vm.schedule.approve) {
               workOrderFactory.updateCustomScheduleData(e);
             }
           },
-          pushToTimecard: function () {
+          pushToTimecard: function() {
             pushToTimecard();
           },
-          onAddScheduleCompleted: function (o) {
+          onAddScheduleCompleted: function(o) {
             if (o) {
-              vm.scheduleAddModal.hide();
-              alerts.alert(
-                "Success",
-                "Schedule added successfully",
-                function () {
-                  $timeout(function () {
-                    //vm.user = authenticationFactory.getLoggedInUserInfo();
+              vm.scheduleAddModal.hide().then(function() {
+                alerts.alert(
+                  "Success",
+                  "Schedule added successfully",
+                  function() {
                     vm.barCodeData.schedules = o.schedules;
                     vm.barCodeData.invoice = o.invoice;
                     calculateTotals();
-                  }, 50);
-                }
-              );
+                  }
+                );
+              });
             }
           },
-          onModalCancelClicked: function () {
+          onModalCancelClicked: function() {
             vm.scheduleAddModal.hide();
           },
-          updateMilage: function () {
+          updateMilage: function() {
             if (vm.schedule.startMiles && vm.schedule.endMiles) {
               vm.schedule.totalMiles = parseFloat(
                 parseFloat(vm.schedule.endMiles) -
-                parseFloat(vm.schedule.startMiles)
+                  parseFloat(vm.schedule.startMiles)
               ).toFixed(2);
             }
             updateSchedule(false, false);
           },
-          onTripnoteChanged: function () {
+          onTripnoteChanged: function() {
             updateSchedule(false, false);
           },
-          updateSchedule: function () {
+          updateSchedule: function() {
             updateSchedule(true, true);
           },
-          onListScheduleItemTap: function (sch) {
+          onListScheduleItemTap: function(sch) {
             if (sch.num !== vm.schedule.num) {
               alerts.confirm(
                 "Confirmation",
                 "Are you sure to load this schedule?",
-                function () {
+                function() {
                   $state.go("app.editOrder", {
                     barCode: vm.barcode,
                     technicianNum: sch.num,
@@ -1040,11 +1049,11 @@
               );
             }
           },
-          onSchedulesListButtonClicked: function () {
+          onSchedulesListButtonClicked: function() {
             if (vm.scheduleAddModal === null) {
               fpmUtilities
                 .getModal("addScheduleModal.html", $scope)
-                .then(function (modal) {
+                .then(function(modal) {
                   vm.scheduleAddModal = modal;
                   vm.scheduleAddModal.show();
                 });
@@ -1052,7 +1061,7 @@
               vm.scheduleAddModal.show();
             }
           },
-          checkIn: function () {
+          checkIn: function() {
             if (
               vm.schedule.approve === true ||
               vm.schedule.checkInStatus === true
@@ -1072,10 +1081,10 @@
                     alerts.confirm(
                       "Confirmation!",
                       "You have not clocked in yet. You will be clocked in automattically \n\n Are you sure?",
-                      function () {
+                      function() {
                         processCheckIn(true);
                       },
-                      function () {
+                      function() {
                         //UNBLOCKUI
                       }
                     );
@@ -1086,11 +1095,12 @@
                         jobCodeName: "On Job"
                       });
                       if (runningCheckIn.length > 0) {
-                        var _defaultActions = [{
-                            text: 'Check-out the pending task'
+                        var _defaultActions = [
+                          {
+                            text: "Check-out the pending task"
                           },
                           {
-                            text: 'Open pending schedule'
+                            text: "Open pending schedule"
                           },
                           {
                             text: "Goto Timecard"
@@ -1100,68 +1110,100 @@
                           buttons: _defaultActions,
                           titleText: "Pending Check-out Actions",
                           cancelText: "Cancel",
-                          cancel: function () {
+                          cancel: function() {
                             // add cancel code..
                           },
-                          buttonClicked: function (index) {
+                          buttonClicked: function(index) {
                             var _e = angular.copy(runningCheckIn[0]);
                             if (index === 0) {
-                              alerts.confirm("Confirmation!", "Are you sure to check-out?", function () {
-                                fpmUtilities.showLoading().then(function () {
-                                  timecardFactory.checkoutPending(_e).then(function (response) {
-                                    if (response && response.success) {
-                                      if (_e.scheduleId) {
-                                        workOrderFactory
-                                          .updateJobStatus({
-                                            scheduleButton: jobStatus.CheckOut,
-                                            scheduleNum: _e.scheduleId,
-                                            actualEndTime: fpmUtilities.toStringDate(new Date()),
-                                            Barcode: vm.barcode,
-                                            clientTime: kendo.toString(new Date(), "g")
-                                          }).then(function () {
-                                            alerts.alert("Success!", "Pending task checked out successfully.", function () {
-                                              $timeout(function () {
-                                                processCheckIn(true);
-                                              }, 10);
-                                            });
-                                          }).finally(function () {
-                                            fpmUtilities.hideLoading();
-                                          });
-                                      } else {
-                                        alerts.alert("Success!", "Pending task checked out successfully.", function () {
-                                          $timeout(function () {
-                                            processCheckIn(true);
-                                            fpmUtilities.hideLoading();
-                                          }, 10);
-                                        });
-                                      }
-                                    } else {
-                                      alerts.alert("Invalid Time", "Go to Timecard and checkout manually.");
-                                    }
-                                  }, function () {
-                                    fpmUtilities.hideLoading();
-                                  }).finally(function () {
-
+                              alerts.confirm(
+                                "Confirmation!",
+                                "Are you sure to check-out?",
+                                function() {
+                                  fpmUtilities.showLoading().then(function() {
+                                    timecardFactory
+                                      .checkoutPending(_e)
+                                      .then(
+                                        function(response) {
+                                          if (response && response.success) {
+                                            if (_e.scheduleId) {
+                                              workOrderFactory
+                                                .updateJobStatus({
+                                                  scheduleButton:
+                                                    jobStatus.CheckOut,
+                                                  scheduleNum: _e.scheduleId,
+                                                  actualEndTime: fpmUtilities.toStringDate(
+                                                    new Date()
+                                                  ),
+                                                  Barcode: vm.barcode,
+                                                  clientTime: kendo.toString(
+                                                    new Date(),
+                                                    "g"
+                                                  )
+                                                })
+                                                .then(function() {
+                                                  alerts.alert(
+                                                    "Success!",
+                                                    "Pending task checked out successfully.",
+                                                    function() {
+                                                      processCheckIn(true);
+                                                    }
+                                                  );
+                                                })
+                                                .finally(function() {
+                                                  fpmUtilities.hideLoading();
+                                                });
+                                            } else {
+                                              alerts.alert(
+                                                "Success!",
+                                                "Pending task checked out successfully.",
+                                                function() {
+                                                  processCheckIn(true);
+                                                  fpmUtilities.hideLoading();
+                                                }
+                                              );
+                                            }
+                                          } else {
+                                            alerts.alert(
+                                              "Invalid Time",
+                                              "Go to Timecard and checkout manually."
+                                            );
+                                          }
+                                        },
+                                        function() {
+                                          fpmUtilities.hideLoading();
+                                        }
+                                      )
+                                      .finally(function() {});
                                   });
-                                });
-                              });
+                                }
+                              );
                             }
                             if (index === 1) {
                               if (_e.scheduleId) {
-                                workOrderFactory.checkIfBarcodeClosed(_e.barcode).then(function (isClosed) {
-                                  if (isClosed !== null && !isClosed) {
-                                    $state.go($state.current, {
-                                      barcode: _e.barcode,
-                                      technicianNum: _e.scheduleId,
-                                      src: "main",
-                                      _i: 1
-                                    }, {
-                                      reload: true
-                                    });
-                                  } else {
-                                    alerts.alert("Alert", "Work order has been closed. Please go to timecard and check-out manually.");
-                                  }
-                                });
+                                workOrderFactory
+                                  .checkIfBarcodeClosed(_e.barcode)
+                                  .then(function(isClosed) {
+                                    if (isClosed !== null && !isClosed) {
+                                      $state.go(
+                                        $state.current,
+                                        {
+                                          barcode: _e.barcode,
+                                          technicianNum: _e.scheduleId,
+                                          src: "main",
+                                          _i: 1
+                                        },
+                                        {
+                                          reload: true
+                                        }
+                                      );
+                                    } else {
+                                      alerts.alert(
+                                        "Alert",
+                                        "Work order has been closed. Please go to timecard and check-out manually."
+                                      );
+                                    }
+                                  });
                               }
                             }
                             if (index === 2) {
@@ -1186,7 +1228,7 @@
               return false;
             }
           },
-          checkOut: function () {
+          checkOut: function() {
             if (
               vm.schedule.approve === true ||
               vm.schedule.checkOutStatus === true
@@ -1202,19 +1244,19 @@
               }
             }
           },
-          clearAllDateTimeSelection: function (clearAll) {
+          clearAllDateTimeSelection: function(clearAll) {
             clearAllDateTimeSelection(clearAll);
           },
-          onScheduleActionButtonClicked: function () {
+          onScheduleActionButtonClicked: function() {
             var defaultActions = angular.copy(actions);
             $ionicActionSheet.show({
               buttons: defaultActions,
               titleText: "Current Schedule",
               cancelText: "Cancel",
-              cancel: function () {
+              cancel: function() {
                 // add cancel code..
               },
-              buttonClicked: function (index) {
+              buttonClicked: function(index) {
                 if (index === 0) {
                   clearAllDateTimeSelection(true);
                 }
@@ -1235,14 +1277,14 @@
       },
       smry: {
         events: {
-          onEditTaxRateClicked: function () {
-            $timeout(function () {
+          onEditTaxRateClicked: function() {
+            $timeout(function() {
               vm.numpad.show();
             }, 50);
           },
-          onTaxCheckboaxChanged: function (i) {
+          onTaxCheckboaxChanged: function(i) {
             if (checkAuthorizationIfServiceProvider(i, restoreInvoice)) {
-              $timeout(function () {
+              $timeout(function() {
                 calculateTotals();
                 workOrderFactory.updateOrderProduct(i);
               }, 200);
@@ -1252,22 +1294,22 @@
       },
       prod: {
         events: {
-          onProdcutActionButtonClicked: function () {
+          onProdcutActionButtonClicked: function() {
             openProductSearchModal();
           },
-          closeProductEditModal: function () {
+          closeProductEditModal: function() {
             vm.productModal.hide();
           },
-          openProductSearchModal: function () {},
-          onEditProductClicked: function (product) {
+          openProductSearchModal: function() {},
+          onEditProductClicked: function(product) {
             vm.currentProduct = angular.copy(product);
             openEditProductModal();
           },
-          onDeleteProductClicked: function (product) {
-            alerts.confirmDelete(function () {
+          onDeleteProductClicked: function(product) {
+            alerts.confirmDelete(function() {
               workOrderFactory
                 .deleteProduct(vm.barcode, product.num, product.qty)
-                .then(function (response) {
+                .then(function(response) {
                   if (response) {
                     vm.barCodeData.products = response.products;
                     vm.barCodeData.invoice = response.invoice;
@@ -1284,10 +1326,10 @@
       currentDetails: []
     };
 
-    vm.onBarcodeScanned = function (skuCode) {
+    vm.onBarcodeScanned = function(skuCode) {
       workOrderFactory
         .addProductFromBarcodeScanner(skuCode, vm.barcode)
-        .then(function (response) {
+        .then(function(response) {
           if (response) {
             getBarcodeProducts(true);
           } else {
@@ -1306,19 +1348,22 @@
         var dt = fpmUtilities.toStringDate(
           new Date(cdt.getFullYear(), cdt.getMonth(), cdt.getDate(), 0, 0, 0, 0)
         );
-        timecardFactory.getTimeCardByDate(dt).then(function (response) {
-          if (response) {
-            timeCardInfo.currentDetails = response.timeCardDetails;
-          }
-        }).finally(function () {
-          if (runCheckin) {
-            processCheckIn(true);
-          }
-        });
+        timecardFactory
+          .getTimeCardByDate(dt)
+          .then(function(response) {
+            if (response) {
+              timeCardInfo.currentDetails = response.timeCardDetails;
+            }
+          })
+          .finally(function() {
+            if (runCheckin) {
+              processCheckIn(true);
+            }
+          });
       }
     }
 
-    $scope.$on("$fpm:closeEditProductModal", function () {
+    $scope.$on("$fpm:closeEditProductModal", function() {
       if (vm.productModal) {
         vm.productModal.hide();
       }
@@ -1327,12 +1372,12 @@
     function getBarcodeProducts(closeModal) {
       workOrderFactory
         .getBarcodeInvoiceAndProductDetails(vm.barcode)
-        .then(function (response) {
+        .then(function(response) {
           vm.barCodeData.products = response.products;
           vm.barCodeData.invoice = response.invoice;
           calculateTotals();
         })
-        .finally(function () {
+        .finally(function() {
           if (closeModal) {
             fpmUtilities.hideLoading();
             vm.productModal.hide();
@@ -1340,7 +1385,7 @@
         });
     }
 
-    $scope.$on("$fpm:closeProductSearchModal", function ($event, args) {
+    $scope.$on("$fpm:closeProductSearchModal", function($event, args) {
       if (vm.productSearchModal) {
         if (args && args.fromProductAdd === true) {
           getBarcodeProducts(false);
@@ -1351,15 +1396,15 @@
 
     var uProductTimer = null;
 
-    $scope.$on("$fpm:operation:updateProduct", function ($event, agrs) {
-      uProductTimer = $timeout(function () {
-        fpmUtilities.showLoading().then(function () {
+    $scope.$on("$fpm:operation:updateProduct", function($event, agrs) {
+      uProductTimer = $timeout(function() {
+        fpmUtilities.showLoading().then(function() {
           getBarcodeProducts(true);
         });
       }, 300);
     });
 
-    $scope.$on("$destroy", function () {
+    $scope.$on("$destroy", function() {
       if (uProductTimer) $timeout.cancel(uProductTimer);
       if (findTimeDiffTimer) $timeout.cancel(findTimeDiffTimer);
       if (onTimespanSeletionChangedTimer)
@@ -1373,9 +1418,9 @@
 
     getBarcodeDetails();
     activateController();
-    var $indexTimeout = $timeout(function () {
+    var $indexTimeout = $timeout(function() {
       if (_index > 0) {
-        var _handle = $ionicTabsDelegate.$getByHandle('tabs');
+        var _handle = $ionicTabsDelegate.$getByHandle("tabs");
         _handle.select(Number(_index));
       }
       $timeout.cancel($indexTimeout);

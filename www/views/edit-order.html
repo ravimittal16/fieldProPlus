@@ -157,7 +157,7 @@
                   </div>
                 </div>
                 <div class="list">
-                  <div class="item item-input">
+                  <div class="item item-input textarea-parent">
                     <textarea cols="30" rows="10" ng-model="vm.barCodeData.barcodeDetails.comment_4"
                       ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()"
                       ng-model-options="{debounce:500}" placeholder="enter comments here..."></textarea>
@@ -417,7 +417,8 @@
                 </h3>
               </ion-item>
               <ion-item class="item-text-wrap" ng-if="vm.barCodeData.schedules.length > 1"
-                ng-repeat="sch in vm.barCodeData.schedules" ng-click="vm.tabs.sch.events.onListScheduleItemTap(sch)"
+                ng-repeat="sch in vm.barCodeData.schedules track by sch.num"
+                ng-click="vm.tabs.sch.events.onListScheduleItemTap(sch)"
                 ng-class="{'active':vm.schedule.num === sch.num}">
                 <h4>
                   <span class="text-muted">Sch Date :</span>
@@ -526,7 +527,8 @@
                       </div>
                     </div>
                   </div>
-                  <div ng-repeat="inv in vm.barCodeData.invoice" class="item item-text-wrap" style="padding:5px;">
+                  <div ng-repeat="inv in vm.barCodeData.invoice track by inv.num" class="item item-text-wrap"
+                    style="padding:5px;">
                     <div class="row">
                       <div class="col col-50">
                         <h3>{{::inv.productName}}</h3>
@@ -562,19 +564,15 @@
               </p>
               <p>
                 <h5>Tax Percent
-                  <span class="pull-right">
-                    <fpcurrency-renderer model-val="vm.barCodeData.taxRate">
-                    </fpcurrency-renderer>
+                  <span class="pull-right" ng-bind="vm.barCodeData.taxRate">
                     <input type="number" id="taxNumpad" class="transparent-background"
                       mobiscroll-numpad="vm.numpadSettings" mobiscroll-instance="vm.numpad" placeholder="0.00"
-                      ng-model="vm.barCodeData.taxRate" style="display: none;" />
-                  </span>
+                      ng-model="vm.barCodeData.taxRate" style="display: none;" /></span>
                   <button type="button" style="float:right;margin-top:-5px;"
                     class="button icon ion-edit button-small text-energized"
                     ng-click="vm.tabs.smry.events.onEditTaxRateClicked()"
                     on-tap="vm.tabs.smry.events.onEditTaxRateClicked()"></button>
                 </h5>
-
               </p>
               <p>
                 <h5>Total Tax
@@ -644,15 +642,15 @@
 <script id="workOrderMap.html" type="text/ng-template">
   <ion-modal-view>
       <ion-header-bar>
-            <h1 class="title">
-                {{::vm.barCodeData.barcodeDetails.barcodeName}} 
-            </h1>
-            <button type="button" class="button button-small button-light" ng-click="vm.tabs.desc.events.closeWorkOrderMapModal()">
-                Close
-            </button>
-              </ion-header-bar>
-              <ion-content>
-                <div id="map" style="height:100%;width:100%;" tap-disabled="true"></div>
-              </ion-content>
-              </ion-modal-view>
-              </script>
+          <h1 class="title">
+            {{::vm.barCodeData.barcodeDetails.barcodeName}} 
+          </h1>
+          <button type="button" class="button button-small button-light" ng-click="vm.tabs.desc.events.closeWorkOrderMapModal()">
+            Close
+          </button>
+      </ion-header-bar>
+      <ion-content>
+          <div id="map" style="height:100%;width:100%;" tap-disabled="true"></div>
+      </ion-content>
+  </ion-modal-view>
+</script>
