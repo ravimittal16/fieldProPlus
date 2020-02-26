@@ -241,8 +241,17 @@
       return apiBaseFactory.get(apibaseurl + "UpdateTaxRate?barcode=" + barcode + "&taxRate=" + taxRate);
     }
 
+    function submitPayment(model) {
+      return apiBaseFactory.post(
+        "api/Checkout/SubmitPayment",
+        model
+      );
+    }
+
+
 
     return {
+      submitPayment: submitPayment,
       checkIfBarcodeClosed: checkIfBarcodeClosed,
       uploadFiles: uploadFiles,
       addProductFromBarcodeScanner: addProductFromBarcodeScanner,

@@ -1,0 +1,27 @@
+<ion-view title="Receive Payment(Stripe)" cache-view="false" name="payment-view">
+  <ion-content scroll="false">
+    <div class="list padding-top" data-ng-if="vm.showError">
+      <div class="error">
+        <ui class="list-unstyled">
+          <li data-ng-repeat="error in vm.errors">{{::error}}</li>
+        </ui>
+      </div>
+    </div>
+    <form action="/charge" method="post" id="payment-form">
+      <div class="form-row">
+        <label for="card-element" class="cardLabel">
+          Credit or Debit Card
+        </label>
+        <div id="card-element" style="margin-top:15px;">
+          <!-- A Stripe Element will be inserted here. -->
+        </div>
+
+        <!-- Used to display Element errors. -->
+        <div id="card-errors" role="alert"></div>
+      </div>
+
+      <button class="submitButton">Submit Payment</button>
+    </form>
+    <button class="backButton" ng-click="vm.events.backButtonClicked()">Back</button>
+  </ion-content>
+</ion-view>

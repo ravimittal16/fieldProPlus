@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  function initFactory(apicontext, $q, $cacheFactory) {
+  function initFactory(apicontext, $rootScope, $q, $cacheFactory) {
     var baseUrl = "api/timecard/";
     var cache = $cacheFactory("timeCardCache");
 
@@ -9,12 +9,23 @@
       return apicontext.get(baseUrl + "GetTimeCardByDate?date=" + date);
     }
 
+    function _attachLocationCoordinates(postObj) {
+      var _loction = $rootScope.currentLocation;
+      var _coords = _loction !== undefined ? _loction.coords : {};
+      if (_coords && _coords["latitude"] !== undefined) {
+        postObj["coordinateX"] = _coords["longitude"];
+        postObj["coordinateY"] = _coords["latitude"];
+      }
+      return postObj;
+    }
+
     function getClockInByDate(date) {
       return apicontext.get(baseUrl + "GetClockInByDate?date=" + date);
     }
 
     function clockInOutUser(details) {
-      return apicontext.post(baseUrl + "ClockInOutUser", details);
+      var _p = _attachLocationCoordinates(details);
+      return apicontext.post(baseUrl + "ClockInOutUser", _p);
     }
 
     function getJobCodes(forceGet) {
@@ -50,7 +61,8 @@
     }
 
     function addNewDetails(entity) {
-      return apicontext.post(baseUrl + "AddNewDetails", entity);
+      var _entity = _attachLocationCoordinates(entity);
+      return apicontext.post(baseUrl + "AddNewDetails", _entity);
     }
 
     function clearCheckedOutTime(detailId, summaryId) {
@@ -74,7 +86,8 @@
     }
 
     function pushCheckInOutTimes(entity) {
-      return apicontext.post(baseUrl + "PushCheckInOutTimes", entity);
+      var _entity = _attachLocationCoordinates(entity);
+      return apicontext.post(baseUrl + "PushCheckInOutTimes", _entity);
     }
 
     function certifyUser() {
@@ -86,7 +99,8 @@
     }
 
     function addPtoDetails(details) {
-      return apicontext.post(baseUrl + "AddPtoDetails", details);
+      var _entity = _attachLocationCoordinates(details);
+      return apicontext.post(baseUrl + "AddPtoDetails", _entity);
     }
 
     function getSummaryPayableHours(filters) {
@@ -161,6 +175,6 @@
     return factory;
   }
 
-  initFactory.$inject = ["api-base-factory", "$q", "$cacheFactory"];
+  initFactory.$inject = ["api-base-factory", "$rootScope", "$q", "$cacheFactory"];
   angular.module("fpm").factory("timecard-factory", initFactory);
 })();

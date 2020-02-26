@@ -1,90 +1,89 @@
 <ion-list>
-    <div class="card">
-      <div class="item item-divider header-dark">
-        <strong>RECEIVE PAYMENT</strong>
-        <button
-      class="button button-small button-positive pull-right"
-      type="button"
-      data-ng-click="vm.events.addEditPayment()">
-      Add Payment
+  <div class="card">
+    <div class="item item-divider header-dark aligncontent">
+      <strong style="margin-right: 20px;">PAYMENT</strong>
+
+    </div>
+    <div class="item item-text-wrap text-center" id="noImageMessageContainer" ng-if=!vm.showList>
+      <h3 class="text-muted">
+        <strong>No Payments Received</strong>
+      </h3>
+    </div>
+    <div class="paymentButton">
+      <button type="button" class="button button-small button-positive collectButton"
+        ng-click="vm.events.collectPaymentClicked()">
+        Receive Payment using Stripe
       </button>
-      </div>
-      <div class="item item-text-wrap text-center" id="noImageMessageContainer" ng-if=!vm.showList>
-          <h3 class="text-muted">
-            <strong>No Payments Received</strong>
-          </h3>
-        </div>
-      <div ng-if="vm.showList">
-        <div class="list">
-          <div class="item item-stable">
-            <div class="row">
-                <div class="col col-30 pull-left">Date</div>
-                <div class="col col-20 text-center">Mode</div>
-                <div class="col col-20">
-                  <span class="pull-right">Amount</span>
-                </div>
-                <div class="col">
-                    <span></span>
-                  </div>
-              </div>
+      <button class="button button-small button-positive collectButton" type="button"
+        data-ng-click="vm.events.addEditPayment()">
+        Receive Payment Manually
+      </button>
+    </div>
+    <div ng-if="vm.showList">
+      <div class="list">
+        <div class="item item-stable">
+          <div class="row">
+            <div class="col col-30 pull-left">Date</div>
+            <div class="col col-20 text-center">Mode</div>
+            <div class="col col-20">
+              <span class="pull-right">Amount</span>
+            </div>
+            <div class="col">
+              <span></span>
+            </div>
           </div>
-          <div ng-repeat="pmt in vm.payments" class="item item-text-wrap">
-            <div class="row">
-              <div class="col col-30">
-                <h3>{{pmt.receivedDate | date:'MM/dd/yyyy'}}</h3>
-              </div>
-              <div class="col col-20 text-center">
-                <h3>{{pmt.paymentMode}}</h3>
-              </div>
-              <div class="col col-20">
-                <h3 class="pull-right">
-                    <fpcurrency-renderer model-val="pmt.amountReceived">
-                      </fpcurrency-renderer>
-                </h3>
-              </div>
-              <div class="col">
-                  <button
-                  type="button"
-                  class="button icon ion-edit button-small text-energized"
-                  style="margin-top: -5px;float:left;"
-                  ng-click="vm.events.onEditPaymentClicked(pmt)"
-                  ></button>
-                  <button
-                  type="button"
-                  class="button icon ion-trash-b button-small text-assertive"
-                  style="margin-top: -5px;float:left;margin-left:2px;"
-                  ng-click="vm.events.onDeletePaymentClicked(pmt)"
-                  ></button>
-              </div>
+        </div>
+        <div ng-repeat="pmt in vm.payments" class="item item-text-wrap">
+          <div class="row">
+            <div class="col col-30">
+              <h3>{{pmt.receivedDate | date:'MM/dd/yyyy'}}</h3>
+            </div>
+            <div class="col col-20 text-center">
+              <h3>{{pmt.paymentMode}}</h3>
+            </div>
+            <div class="col col-20">
+              <h3 class="pull-right">
+                <fpcurrency-renderer model-val="pmt.amountReceived">
+                </fpcurrency-renderer>
+              </h3>
+            </div>
+            <div class="col">
+              <button type="button" class="button icon ion-edit button-small text-energized"
+                style="margin-top: -5px;float:left;" ng-click="vm.events.onEditPaymentClicked(pmt)"></button>
+              <button type="button" class="button icon ion-trash-b button-small text-assertive"
+                style="margin-top: -5px;float:left;margin-left:2px;"
+                ng-click="vm.events.onDeletePaymentClicked(pmt)"></button>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </ion-list>
-  <div class="row" ng-if="vm.showList">
-      <div class="col">
-          <p>
-            <h5>Amount Received
-              <span class="pull-right" style="margin-right:115px;">
-                <fpcurrency-renderer model-val="vm.amountReceived">
-                </fpcurrency-renderer>
-              </span>
-            </h5>
-          </p>
-          <p>
-            <h5>Balance Due
-              <span class="pull-right" style="margin-right:115px;">
-                <fpcurrency-renderer model-val="vm.balanceDue">
-                </fpcurrency-renderer>
-              </span>
-            </h5>
-          </p>
-        </div>
   </div>
-  <script id="addEditPaymentModal.html" type="text/ng-template">
-    <ion-modal-view>
-      <add-edit-payment-component barcode="vm.barcode" payment="vm.currentPayment" modal-type="vm.modalType" amount-received="vm.amountReceived" balance-due="vm.balanceDue"
-      ></add-edit-payment-component>
-    </ion-modal-view>
-    </script>
+</ion-list>
+<div class="row" ng-if="vm.showList">
+  <div class="col">
+    <p>
+      <h5>Amount Received
+        <span class="pull-right" style="margin-right:115px;">
+          <fpcurrency-renderer model-val="vm.amountReceived">
+          </fpcurrency-renderer>
+        </span>
+      </h5>
+    </p>
+    <p>
+      <h5>Balance Due
+        <span class="pull-right" style="margin-right:115px;">
+          <fpcurrency-renderer model-val="vm.balanceDue">
+          </fpcurrency-renderer>
+        </span>
+      </h5>
+    </p>
+  </div>
+</div>
+<script id="addEditPaymentModal.html" type="text/ng-template">
+  <ion-modal-view>
+  <add-edit-payment-component barcode="vm.barcode" payment="vm.currentPayment" modal-type="vm.modalType" 
+  amount-received="vm.amountReceived" balance-due="vm.balanceDue"
+  ></add-edit-payment-component>
+  </ion-modal-view>
+  </script>

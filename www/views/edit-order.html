@@ -594,6 +594,8 @@
               </p>
             </div>
           </div>
+          <order-payment-component barcode="vm.barcode" total-amount-due="vm.totals.subtotal + vm.totals.totaltax"
+            ng-if="vm.uiSettings.paymentOn && vm.user.showPrice"></order-payment-component>
           <order-signature-component barcode="vm.barcode" is-estimate="false"></order-signature-component>
           <order-email-card-component barcode="vm.barcode" taxrate="vm.barCodeData.taxRate"
             default-emails="vm.barCodeData.barcodeDetails.address2_Group" show-price="vm.showPrice"
