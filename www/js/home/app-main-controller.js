@@ -1,5 +1,6 @@
-(function() {
+(function () {
   "use strict";
+
   function initController(
     $scope,
     $ionicSideMenuDelegate,
@@ -16,10 +17,21 @@
     var secLevels = fieldPromaxConfig.secLevels;
     var userData = authenticationFactory.getLoggedInUserInfo();
     var configurations = localStorageService.get("configurations");
-    vm.sideMenuItems = [
-      { title: "Home", state: "app.dashboard", icon: "home" },
-      { title: "Calendar", state: "app.calendar", icon: "calendar" },
-      { title: "Map", state: "app.map", icon: "location" },
+    vm.sideMenuItems = [{
+        title: "Home",
+        state: "app.dashboard",
+        icon: "home"
+      },
+      {
+        title: "Calendar",
+        state: "app.calendar",
+        icon: "calendar"
+      },
+      {
+        title: "Map",
+        state: "app.map",
+        icon: "location"
+      },
       {
         title: "Create Work Order",
         state: "app.createWorkOrder",
@@ -73,9 +85,13 @@
         state: "app.changePassword",
         icon: "person"
       },
-      { title: "Logout", state: "app.logout", icon: "power" }
+      {
+        title: "Logout",
+        state: "app.logout",
+        icon: "power"
+      }
     ];
-    $scope.$on("$ionicView.beforeEnter", function(e, data) {
+    $scope.$on("$ionicView.beforeEnter", function (e, data) {
       $ionicNavBarDelegate.showBackButton(false);
     });
 
@@ -86,7 +102,7 @@
       "app.editEstimate"
     ];
 
-    $rootScope.$on("$stateChangeSuccess", function(
+    $rootScope.$on("$stateChangeSuccess", function (
       event,
       toState,
       toParams,
@@ -112,7 +128,7 @@
     });
 
     vm.events = {
-      checkMenuItemVisibility: function(menu) {
+      checkMenuItemVisibility: function (menu) {
         if (angular.isDefined(menu.basedOn)) {
           var basedOn = userData[menu.basedOn];
           return basedOn;
@@ -129,10 +145,10 @@
         }
         return true;
       },
-      onMenuItemClicked: function(item) {
+      onMenuItemClicked: function (item) {
         $state.go(item.state);
       },
-      toggleLeft: function() {}
+      toggleLeft: function () {}
     };
   }
   initController.$inject = [

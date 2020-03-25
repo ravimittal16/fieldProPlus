@@ -78,7 +78,7 @@
 </script>
 <script id="addScheduleModal.html" type="text/ng-template">
   <ion-modal-view>
-		<add-schedule-modal-component barcode="vm.barcode" on-cancel-clicked="vm.tabs.sch.events.onModalCancelClicked()"
+		<add-schedule-modal-component barcode="vm.barcode" on-cancel-clicked="vm.tabs.sch.events.onModalCancelClicked()" is-for-edit="false"
 		service-providers="vm.serviceProviders" on-add-completed="vm.tabs.sch.events.onAddScheduleCompleted(o)"></add-schedule-modal-component>
 	</ion-modal-view>
 </script>
@@ -127,4 +127,10 @@
 		 
 	   </ion-content>
 	</ion-modal-view>
+  </script>
+<script id="editScheduleModal.html" type="text/ng-template">
+  <ion-modal-view>
+		  <add-schedule-modal-component barcode="vm.barcode" on-cancel-clicked="vm.events.onModalCancelClicked()" is-for-edit="true"
+		  service-providers="vm.serviceProviders" on-edit-op-completed="vm.events.onEditCompleted(isDone)" edited-schedule="vm.schedule"></add-schedule-modal-component>
+	  </ion-modal-view>
   </script>

@@ -139,7 +139,12 @@
       return defer.promise;
     }
 
+    function submitQuestion(entity) {
+      return apiBaseFactory.post(apibaseurl + "SubmitQuestion", entity);
+    }
+
     return {
+      submitQuestion: submitQuestion,
       convertToBlob: convertToBlob,
       updateLocationServiceStatus: updateLocationServiceStatus,
       getAddressCoorinates: getAddressCoorinates,

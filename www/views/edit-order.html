@@ -189,11 +189,19 @@
               <!-- <p>{{vm.schedule.scheduledFinishDateTime | date:'MM/dd/yyyy hh:mm a'}}</p> -->
               <fp-date-time-renderer model-val='vm.schedule.scheduledFinishDateTime' type="datetime"
                 format='vm.dateTimeFormat'></fp-date-time-renderer>
+
+              <!-- <div style="display: flex;justify-content: center;align-items: center;margin-top: 15px;"
+                ng-if="vm.uiSettings.isTimeCardModuleEnabled">
+                <button class="button button-block button-small button-dark"
+                  ng-click="vm.tabs.sch.events.pushToTimecard()">
+                  <i class="icon ion-ios-trash-outline"></i>&nbsp;Delete Schedule
+                </button>
+              </div> -->
             </div>
           </div>
           <div class="card">
             <div class="item item-divider header-dark">
-              ACTUAL SCHEDULE START AND END
+              ACTUAL START AND END
               <!--<a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion white"
                 ng-if="vm.uiSettings.billingOption == 0" ng-click="vm.tabs.sch.events.onScheduleActionButtonClicked()"></a>-->
             </div>
@@ -238,7 +246,7 @@
                   </div>
                 </div>
                 <div class="item item-input item-stacked-label" style="border-bottom: 0px !important;">
-                  <span class="input-label">Actual Finish Time</span>
+                  <span class="input-label">Actual End Time</span>
                 </div>
                 <div class="item" style="border-top:0px !important;padding-top: 0px !important;">
                   <div style="width: 65%;float: left;">
@@ -609,7 +617,7 @@
             <div class="list">
               <div class="item item-input item-select">
                 <div class="input-label">
-                  Secondary Order Status
+                  Secondary Status
                 </div>
                 <select ng-model="vm.barCodeData.barcodeDetails.secondaryOrderStatus"
                   ng-options="p.statusId as p.statusName for p in vm.scheduleStatus"

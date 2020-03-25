@@ -1,30 +1,36 @@
-<ion-view title="Field Promax" id="dashboardView">
+<ion-view title="Field Promax" id="dashboardView" cache-view="false">
   <ion-nav-buttons side="left">
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
   <ion-header-bar class="bar-subheader item-input-inset">
     <label class="item-input-wrapper">
       <i class="icon ion-search placeholder-icon"></i>
-      <input type="search" placeholder="Search Work Order..." data-on-tap="vm.events.openSearchModal()" readonly />
+      <input type="search" placeholder="Search Work Order..." on-tap="vm.events.openSearchModal()" readonly />
     </label>
+    <help-button-component></help-button-component>
   </ion-header-bar>
+  <!-- <ion-nav-buttons side="right">
+    <div id="dashboardQuestionButton">
+      <help-button-component></help-button-component>
+    </div>
+  </ion-nav-buttons> -->
   <ion-content class="has-header" direction="y">
     <ion-refresher pulling-text="Pull to refresh..." on-refresh="vm.events.refreshOnPullDown()" spinner="none">
     </ion-refresher>
-    <div class="text-center padding-top" data-ng-if="vm.showingLoading">
+    <div class="text-center padding-top" ng-if="vm.showingLoading">
       <ion-spinner icon="ripple"></ion-spinner>
     </div>
     <ion-list>
-      <div data-ng-if="!vm.isServiceProvider || vm.havingGroupsAssinged">
+      <div ng-if="!vm.isServiceProvider || vm.havingGroupsAssinged">
         <div ng-repeat="group in vm.result">
           <ion-item class="item-stable item-bg-gray" ng-click="vm.events.onChildGroupClicked(group,'DD','mainparent')"
             ng-class="{active: group.isOpen}">
             <i class="icon" ng-class="group.isOpen ? 'ion-minus' : 'ion-plus'"></i> &nbsp;
             <strong>{{::group.heading}}</strong>
             <span class="badge"
-              data-ng-class="{'badge-balanced':group.count > 0,'badge-dark':group.count == 0}">{{group.count}}</span>
+              ng-class="{'badge-balanced':group.count > 0,'badge-dark':group.count == 0}">{{group.count}}</span>
           </ion-item>
-          <div data-ng-if="group.dataForAdministrator.length > 0 && group.isOpen">
+          <div ng-if="group.dataForAdministrator.length > 0 && group.isOpen">
             <div ng-repeat="item in group.dataForAdministrator">
               <ion-item class="item-stable item-button-right" ng-class="{active: item.isOpen}">
                 <i class="icon" ng-click="vm.events.onChildGroupClicked(item,'AD','parent')"
@@ -37,35 +43,35 @@
                   ng-click="vm.events.onDotsClicked(item,true)" style="color:#8d8d8d;justify-content: flex-end;">
                 </button>
               </ion-item>
-              <workorder-view-component data-ng-if="item.isOpen"
-                data-ng-repeat="odr in item.ordersN | orderBy:vm.sortingType:vm.sortingOrderDesc" data-odr="odr"
-                track-job-status="vm.trackJobStatus" user-info="vm.userInfo"
+              <workorder-view-component ng-if="item.isOpen"
+                ng-repeat="odr in item.ordersN | orderBy:vm.sortingType:vm.sortingOrderDesc" index="$index"
+                data-odr="odr" track-job-status="vm.trackJobStatus" user-info="vm.userInfo"
                 in-route-clicked="vm.events.inRouteClicked(odr)"></workorder-view-component>
             </div>
           </div>
         </div>
       </div>
-      <div data-ng-if="vm.isServiceProvider && !vm.havingGroupsAssinged">
+      <div ng-if="vm.isServiceProvider && !vm.havingGroupsAssinged">
         <div ng-repeat="group in vm.result">
           <ion-item class="item-stable item-bg-gray item-button-right" ng-class="{active: group.isOpen}">
             <i class="icon" ng-click="vm.events.onChildGroupClicked(group,'SP','mainparent')"
               ng-class="group.isOpen ? 'ion-minus' : 'ion-plus'"></i> &nbsp;
             <strong ng-click="vm.events.onChildGroupClicked(group,'SP','mainparent')">{{::group.heading}}</strong>
             <span class="badge child-badge-right"
-              data-ng-class="{'badge-balanced':group.count > 0,'badge-dark':group.count == 0}">{{group.count}}</span>
+              ng-class="{'badge-balanced':group.count > 0,'badge-dark':group.count == 0}">{{group.count}}</span>
             <button class="button button-clear button-stable icon ion-android-more-vertical"
               ng-click="vm.events.onDotsClicked(group,false)" style="color:#8d8d8d;justify-content: flex-end;">
             </button>
           </ion-item>
-          <div data-ng-if="group.dataForServiceProvider.length > 0 && group.isOpen">
+          <div ng-if="group.dataForServiceProvider.length > 0 && group.isOpen">
             <workorder-view-component
               ng-repeat="odr in group.dataForServiceProvider | orderBy:vm.sortingType:vm.sortingOrderDesc"
-              data-odr="odr" track-job-status="vm.trackJobStatus" user-info="vm.userInfo"
+              index="$index" data-odr="odr" track-job-status="vm.trackJobStatus" user-info="vm.userInfo"
               in-route-clicked="vm.events.inRouteClicked(odr)"></workorder-view-component>
           </div>
         </div>
       </div>
-      <offline-item></offline-item>
+      <!-- <offline-item></offline-item> -->
     </ion-list>
   </ion-content>
 </ion-view>

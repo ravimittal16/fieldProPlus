@@ -5,10 +5,11 @@
       odr: "<",
       trackJobStatus: "<",
       userInfo: "<",
-      inRouteClicked: "&"
+      inRouteClicked: "&",
+      index: "<"
     },
-    controller: ["$state", "$rootScope", "fpm-utilities-factory", "sqlStorageFactory", "work-orders-factory",
-      function ($state, $rootScope, fpmUtilitiesFactory, sqlStorageFactory, workOrdersFactory) {
+    controller: ["$scope", "$state", "$rootScope", "fpm-utilities-factory", "authenticationFactory", "sqlStorageFactory", "work-orders-factory", "dashboard-factory",
+      function ($scope, $state, $rootScope, fpmUtilitiesFactory, authenticationFactory, sqlStorageFactory, workOrdersFactory, dashboardFactory) {
         var scheduleButtons = {
           AcceptJob: 0,
           InRoute: 1,
@@ -16,7 +17,68 @@
           CheckOut: 4
         };
         var vm = this;
+        vm.userInfo = authenticationFactory.getLoggedInUserInfo();
+        vm.scheduleEditModal = null;
         vm.events = {
+          onModalCancelClicked: function () {
+            vm.scheduleEditModal.hide();
+          },
+          onEditCompleted: function (isDone) {
+            fpmUtilitiesFactory.alerts.alert("Success!", "Schedule has been updated successfully.", function () {
+              vm.scheduleEditModal.hide();
+              $scope.$emit("$fpm:scheduleChanged", {
+                scheduleId: vm.odr.TechnicianScheduleNum
+              });
+            })
+          },
+          onEditButtonClicked: function () {
+            fpmUtilitiesFactory.showLoading().then(function () {
+              workOrdersFactory.getScheduleById(vm.odr.TechnicianScheduleNum).then(function (response) {
+                if (response && response.schedule) {
+                  if (response.schedule.workComplete) {
+                    fpmUtilitiesFactory.alerts.alert("Warning!", "Schedule has been marked as completed.", function () {
+                      vm.odr.workComplete = response.schedule.workComplete;
+                    });
+                  } else {
+                    vm.schedule = response.schedule;
+                    if (vm.scheduleEditModal === null) {
+                      fpmUtilitiesFactory
+                        .getModal("editScheduleModal.html", $scope)
+                        .then(function (modal) {
+                          vm.scheduleEditModal = modal;
+                          vm.scheduleEditModal.show();
+                        });
+                    } else {
+                      vm.scheduleEditModal.show();
+                    }
+                  }
+                }
+              }).finally(function () {
+                fpmUtilitiesFactory.hideLoading();
+              });
+            });
+          },
+          onDeleteButtonClicked: function () {
+            fpmUtilitiesFactory.alerts.confirm(
+              "Confirmation",
+              "Are you sure you want to delete the schedule?",
+              function () {
+                //TechnicianScheduleNum
+                fpmUtilitiesFactory.showLoading().then(function () {
+                  workOrdersFactory.deleteSchedule(vm.odr.TechnicianScheduleNum).then(function (response) {
+                    if (response && response.success) {
+                      fpmUtilitiesFactory.alerts.alert("Success!", "Schedule has been deleted.", function () {
+                        $scope.$emit("$fpm:scheduleChanged", {
+                          scheduleId: vm.odr.TechnicianScheduleNum
+                        });
+                      });
+                    }
+                  }).finally(function () {
+                    fpmUtilitiesFactory.hideLoading();
+                  });
+                });
+              });
+          },
           saveOrderRefOffline: function () {
             fpmUtilitiesFactory.alerts.confirm("Confirmation!", "Are you sure?", function () {
               var _barcode = vm.odr.Barcode;
@@ -45,8 +107,6 @@
                         });
                     });
                   });
-                  //TODO : Download the work order details
-
                 }
                 if (id === -1) {
                   fpmUtilitiesFactory.alerts.alert("Warning", "This work order already saved.", function () {
@@ -86,9 +146,12 @@
             }
           }
         };
-        vm.$onInit = function () {}
+        vm.$onInit = function () {
+          vm.serviceProviders = dashboardFactory.serviceProviders;
+        }
       }
     ],
+
     controllerAs: "vm",
     templateUrl: "js/dashboard/workorder-view-component-template.html"
   });

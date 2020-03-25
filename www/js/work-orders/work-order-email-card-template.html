@@ -1,13 +1,13 @@
 <div class="card">
   <div class="item item-divider header-dark">
-    EMAIL
+    EMAIL CUSTOMER
   </div>
   <div class="item item-body">
     <errors-view errors="vm.emailErrors"></errors-view>
     <form action="" name="emailForm">
       <div class="list">
         <label for="" class="item item-input item-stacked-label">
-          <span class="input-label">Email(s)</span>
+          <span class="input-label">Separate multiple Emails by comma (,)</span>
           <input type="text" placeholder="email address" data-ng-model="vm.mailConfig.mailAddresses" data-ng-list=","
             maxlength="100" required name="emailBox" />
         </label>
@@ -17,7 +17,8 @@
             ng-disabled="vm.sendingEmails || emailForm.$invalid" data-ng-click="vm.events.sendEmail(true)">
             Send As Invoice
           </button>
-          <button type="button" class="button button-small button-positive" ng-disabled="(!vm.isEstimate && (vm.sendingEmails || emailForm.$invalid)) || (vm.isEstimate && (emailForm.$invalid || vm.isBusy))"
+          <button type="button" class="button button-small button-positive"
+            ng-disabled="(!vm.isEstimate && (vm.sendingEmails || emailForm.$invalid)) || (vm.isEstimate && (emailForm.$invalid || vm.isBusy))"
             data-ng-click="vm.events.sendEmail(false)">
             <span ng-if="!vm.isEstimate">Send As Work Order</span>
             <span ng-if="vm.isEstimate">Send Estimate</span>

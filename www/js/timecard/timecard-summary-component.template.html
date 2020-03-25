@@ -1,287 +1,297 @@
 <ion-header-bar>
-    <h1 class="title">
-        <span data-ng-if="!vm.isFromPto">Details</span>
-    </h1>
-    <button class="button" data-ng-click="vm.events.closeProductEditModal()">
-		Cancel
-    </button>
+  <h1 class="title">
+    <span ng-if="!vm.isFromPto">Details</span>
+  </h1>
+  <button class="button" ng-click="vm.events.closeProductEditModal()">
+    Cancel
+  </button>
 </ion-header-bar>
 <ion-content>
-    <div class="list">
-        <div class="item item-divider bg-white">
-            <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
-                data-ng-click="vm.events.onCardActionClicked()"></a>
-        </div>
-        <div data-ng-if="vm.showCurrentSummary">
-            <div class="row">
-                <div class="col">
-                    <h6>Clock In/Out</h6>
-                    <table class="timecard-table">
-                        <thead>
-                            <tr>
-                                <th class="text-center">
-                                    <h6>Clock In</h6>
-                                </th>
-                                <th class="text-center">
-                                    <h6>Clock Out</h6>
-                                </th>
-                                <th class="text-center">
-                                    <h6>Total</h6>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr data-ng-repeat="(key,t) in vm.lists.clockInOuts">
-
-                                <td class="text-center">
-                                    <h6>
-                                        <i class="icon ion-clock text-muted"></i>&nbsp;<span data-ng-bind="t.startTime | date :'shortTime'"></span>
-                                    </h6>
-                                </td>
-                                <td class="text-center">
-                                    <h6>
-                                        <i class="icon ion-clock text-muted"></i>&nbsp;<span data-ng-bind="t.finishTime | date :'shortTime'"></span>
-                                    </h6>
-                                </td>
-                                <td class="text-center">
-                                    <h6>
-                                        <i class="icon ion-clock"></i>&nbsp;<span data-ng-bind="t.startTime | timeSpan:t.finishTime:'sm'"></span>
-                                    </h6>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="2">
-                                    <h6>
-                                        <strong>Total Time</strong>
-                                    </h6>
-                                </td>
-                                <td class="text-center">
-                                    <h6><span>{{vm.lists.clockInOuts | totalTimeDiff}}</span>
-                                    </h6>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <h6 class="label label-success">Payable Codes</h6>
-                    <table class="timecard-table table-condensed table-hover table-summary m-t-10">
-                        <thead>
-                            <tr>
-                                <th class="text-center">
-                                    <h6>Job Code</h6>
-                                </th>
-                                <th class="text-center">
-                                    <h6>Check In</h6>
-                                </th>
-                                <th class="text-center">
-                                    <h6>Check Out</h6>
-                                </th>
-                                <th class="text-center">
-                                    <h6>Total</h6>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr data-ng-repeat="(key,t) in vm.lists.payables" class="success">
-                                <td class="text-center">
-                                    <h6 data-ng-bind="t.jobCodeName"></h6>
-                                </td>
-                                <td class="text-center">
-                                    <h6>
-                                        <i class="icon ion-clock text-muted"></i>&nbsp;<span data-ng-bind="t.startTime | date :'shortTime'"></span>
-                                    </h6>
-                                </td>
-                                <td class="text-center">
-                                    <h6>
-                                        <i class="icon ion-clock text-muted"></i>&nbsp;<span data-ng-bind="t.finishTime | date :'shortTime'"></span>
-                                    </h6>
-                                </td>
-                                <td class="text-center">
-                                    <h6>
-                                        <i class="icon ion-clock"></i>&nbsp;<span data-ng-bind="t.startTime | timeSpan:t.finishTime:'sm'"></span>
-                                    </h6>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="3">
-                                    <h6>
-                                        <strong>Total Time</strong>
-                                    </h6>
-                                </td>
-                                <td>
-                                    <h6><span>{{vm.lists.payables | totalTimeDiff}}</span>
-                                    </h6>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-            <div class="row" data-ng-if="vm.lists.nonPayables.length > 0">
-                <div class="col">
-                    <h6 class="label label-danger ">Non Payable Codes</h6>
-                    <table class="timecard-table table-condensed table-hover table-summary m-t-10">
-                        <thead>
-                            <tr>
-                                <th class="text-center">
-                                    <h6>Job Code</h6>
-                                </th>
-                                <th class="text-center">
-                                    <h6>Check In</h6>
-                                </th>
-                                <th class="text-center">
-                                    <h6>Check Out</h6>
-                                </th>
-                                <th class="text-center">
-                                    <h6>Total</h6>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr data-ng-repeat="(key,t) in vm.lists.nonPayables" class="danger">
-                                <td class="text-center">
-                                    <h6 data-ng-bind="t.jobCodeName"></h6>
-                                </td>
-                                <td class="text-center">
-                                    <h6>
-                                        <i class="icon ion-clock text-muted"></i>&nbsp;<span data-ng-bind="t.startTime | date :'shortTime'"></span>
-                                    </h6>
-                                </td>
-                                <td class="text-center">
-                                    <h6>
-                                        <i class="icon ion-clock text-muted"></i>&nbsp;<span data-ng-bind="t.finishTime | date :'shortTime'"></span>
-                                    </h6>
-                                </td>
-                                <td class="text-center">
-                                    <h6>
-                                        <i class="icon ion-clock"></i>&nbsp;<span data-ng-bind="t.startTime | timeSpan:t.finishTime:'sm'"></span>
-                                    </h6>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="3">
-                                    <h6>
-                                        <strong>Total Time</strong>
-                                    </h6>
-                                </td>
-                                <td>
-                                    <h6>
-                                        <span>{{vm.lists.nonPayables | totalTimeDiff}}</span>
-                                    </h6>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-        </div>
+  <div class="list">
+    <div class="item item-divider bg-white">
+      <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+        ng-click="vm.events.onCardActionClicked()"></a>
     </div>
+    <div ng-if="vm.showCurrentSummary">
+      <div class="row">
+        <div class="col">
+          <h6>Clock In/Out</h6>
+          <table class="timecard-table">
+            <thead>
+              <tr>
+                <th class="text-center">
+                  <h6>Clock In</h6>
+                </th>
+                <th class="text-center">
+                  <h6>Clock Out</h6>
+                </th>
+                <th class="text-center">
+                  <h6>Total</h6>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="(key,t) in vm.lists.clockInOuts">
 
-    <div data-ng-if="!vm.showCurrentSummary">
-        <div class="row">
-            <div class="col">
-                <div class="list">
-                    <label for="" class="item item-input">
-                    <span class="input-label">Start Date</span>
-                    <!-- <input type="text" placeholder="Start Date" class="transparent-background text-right" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A'}" 
-                    readonly="" data-ng-model="vm.modal.startDate"   />-->
-                    <fp-date-component  model-val="vm.modal.startDate" readonly="" type="date" format="vm.dateFormat" default-text="Start Date" align-calendar></fp-date-component>
-                   
-                </label>
-                    <label for="" class="item item-input">
-                    <span class="input-label">End Date</span>
-                    <!-- <input type="text" placeholder="End Date" class="transparent-background text-right" data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A'}" 
-                    readonly="" data-ng-model="vm.modal.endDate"
+                <td class="text-center">
+                  <h6>
+                    <i class="icon ion-clock text-muted"></i>&nbsp;<span
+                      ng-bind="t.startTime | date :'shortTime'"></span>
+                  </h6>
+                </td>
+                <td class="text-center">
+                  <h6>
+                    <i class="icon ion-clock text-muted"></i>&nbsp;<span
+                      ng-bind="t.finishTime | date :'shortTime'"></span>
+                  </h6>
+                </td>
+                <td class="text-center">
+                  <h6>
+                    <i class="icon ion-clock"></i>&nbsp;<span ng-bind="t.startTime | timeSpan:t.finishTime:'sm'"></span>
+                  </h6>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2">
+                  <h6>
+                    <strong>Total Time</strong>
+                  </h6>
+                </td>
+                <td class="text-center">
+                  <h6><span>{{vm.lists.clockInOuts | totalTimeDiff}}</span>
+                  </h6>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <h6 class="label label-success">Payable Codes</h6>
+          <table class="timecard-table table-condensed table-hover table-summary m-t-10">
+            <thead>
+              <tr>
+                <th class="text-center">
+                  <h6>Job Code</h6>
+                </th>
+                <th class="text-center">
+                  <h6>Check In</h6>
+                </th>
+                <th class="text-center">
+                  <h6>Check Out</h6>
+                </th>
+                <th class="text-center">
+                  <h6>Total</h6>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="(key,t) in vm.lists.payables" class="success">
+                <td class="text-center">
+                  <h6 ng-bind="t.jobCodeName"></h6>
+                </td>
+                <td class="text-center">
+                  <h6>
+                    <i class="icon ion-clock text-muted"></i>&nbsp;<span
+                      ng-bind="t.startTime | date :'shortTime'"></span>
+                  </h6>
+                </td>
+                <td class="text-center">
+                  <h6>
+                    <i class="icon ion-clock text-muted"></i>&nbsp;<span
+                      ng-bind="t.finishTime | date :'shortTime'"></span>
+                  </h6>
+                </td>
+                <td class="text-center">
+                  <h6>
+                    <i class="icon ion-clock"></i>&nbsp;<span ng-bind="t.startTime | timeSpan:t.finishTime:'sm'"></span>
+                  </h6>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3">
+                  <h6>
+                    <strong>Total Time</strong>
+                  </h6>
+                </td>
+                <td>
+                  <h6><span>{{vm.lists.payables | totalTimeDiff}}</span>
+                  </h6>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+      <div class="row" ng-if="vm.lists.nonPayables.length > 0">
+        <div class="col">
+          <h6 class="label label-danger ">Non Payable Codes</h6>
+          <table class="timecard-table table-condensed table-hover table-summary m-t-10">
+            <thead>
+              <tr>
+                <th class="text-center">
+                  <h6>Job Code</h6>
+                </th>
+                <th class="text-center">
+                  <h6>Check In</h6>
+                </th>
+                <th class="text-center">
+                  <h6>Check Out</h6>
+                </th>
+                <th class="text-center">
+                  <h6>Total</h6>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="(key,t) in vm.lists.nonPayables" class="danger">
+                <td class="text-center">
+                  <h6 ng-bind="t.jobCodeName"></h6>
+                </td>
+                <td class="text-center">
+                  <h6>
+                    <i class="icon ion-clock text-muted"></i>&nbsp;<span
+                      ng-bind="t.startTime | date :'shortTime'"></span>
+                  </h6>
+                </td>
+                <td class="text-center">
+                  <h6>
+                    <i class="icon ion-clock text-muted"></i>&nbsp;<span
+                      ng-bind="t.finishTime | date :'shortTime'"></span>
+                  </h6>
+                </td>
+                <td class="text-center">
+                  <h6>
+                    <i class="icon ion-clock"></i>&nbsp;<span ng-bind="t.startTime | timeSpan:t.finishTime:'sm'"></span>
+                  </h6>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3">
+                  <h6>
+                    <strong>Total Time</strong>
+                  </h6>
+                </td>
+                <td>
+                  <h6>
+                    <span>{{vm.lists.nonPayables | totalTimeDiff}}</span>
+                  </h6>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div ng-if="!vm.showCurrentSummary">
+    <div class="row">
+      <div class="col">
+        <div class="list">
+          <label for="" class="item item-input">
+            <span class="input-label">Start Date</span>
+            <!-- <input type="text" placeholder="Start Date" class="transparent-background text-right" mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A'}" 
+                    readonly="" ng-model="vm.modal.startDate"   />-->
+            <fp-date-component model-val="vm.modal.startDate" readonly="" type="date" format="vm.dateFormat"
+              default-text="Start Date" align-calendar></fp-date-component>
+
+          </label>
+          <label for="" class="item item-input">
+            <span class="input-label">End Date</span>
+            <!-- <input type="text" placeholder="End Date" class="transparent-background text-right" mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A'}" 
+                    readonly="" ng-model="vm.modal.endDate"
                      /> -->
-                     <fp-date-component  model-val="vm.modal.endDate" readonly="" type="date" format="vm.dateFormat" default-text="End Date" align-calendar></fp-date-component>
-                </label>
-                    <button type="button" class="button button-block button-positive button-small" data-ng-click="vm.events.showReport()">
-                    Generate Report
-                </button>
-                </div>
-            </div>
+            <fp-date-component model-val="vm.modal.endDate" readonly="" type="date" format="vm.dateFormat"
+              default-text="End Date" align-calendar></fp-date-component>
+          </label>
+          <button type="button" class="button button-block button-positive button-small"
+            ng-click="vm.events.showReport()">
+            Generate Report
+          </button>
         </div>
-        <div class="row">
-            <div class="col">
-                <table class="timecard-table">
-                    <thead>
-                        <tr>
-                            <th class="text-center">
-                                <span class="h6 m-t-b-2">Date</span>
-                            </th>
-                            <th class="text-center">
-                                <span class="h6 m-t-b-2">Payable</span>
-                            </th>
-                            <th class="text-center">
-                                <span class="h6 m-t-b-2">Non Payable</span>
-                            </th>
-                            <th class="text-center">
-                                <span class="h6 m-t-b-2">Total</span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-ng-repeat="(key,r) in vm.payableReport">
-                            <td class="text-center">
-                                <h6 class="h6">
-                                    <i class="icon ion-clock"></i>&nbsp;
-                                    <!-- <span data-ng-bind="r.timeCardDate | date :'shortDate'"></span> -->
-                                    <fp-date-time-renderer model-val="r.timeCardDate" type="date" format="vm.dateFormat"></fp-date-time-renderer>
-                                </h6>
-                            </td>
-                            <td class="text-center">
-                                <h6 class="h6">
-                                    <span class="text-success" data-ng-bind="r.payableHours"></span>
-                                </h6>
-                            </td>
-                            <td class="text-center">
-                                <h6 class="h6">
-                                    <span class="text-danger" data-ng-bind="r.nonPayable"></span>
-                                </h6>
-                            </td>
-                            <td class="text-center">
-                                <h6 class="h6">
-                                    <strong data-ng-bind="r.total"></strong>
-                                </h6>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr class="warning">
-                            <td>
-                                <h6>
-                                    <strong>Total Time</strong>
-                                </h6>
-                            </td>
-                            <td class="text-center">
-                                <h6><strong>{{vm.totalPayables.p | number:2}}</strong>
-                                </h6>
-                            </td>
-                            <td class="text-center">
-                                <h6><strong>{{vm.totalPayables.np | number:2}}</strong>
-                                </h6>
-                            </td>
-                            <td class="text-center">
-                                <h6><strong>{{vm.totalPayables.t | number:2}}</strong>
-                                </h6>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-
-
-
-
+      </div>
     </div>
+    <div class="row">
+      <div class="col">
+        <table class="timecard-table">
+          <thead>
+            <tr>
+              <th class="text-center">
+                <span class="h6 m-t-b-2">Date</span>
+              </th>
+              <th class="text-center">
+                <span class="h6 m-t-b-2">Payable</span>
+              </th>
+              <th class="text-center">
+                <span class="h6 m-t-b-2">Non Payable</span>
+              </th>
+              <th class="text-center">
+                <span class="h6 m-t-b-2">Total</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="(key,r) in vm.payableReport">
+              <td class="text-center">
+                <h6 class="h6">
+                  <i class="icon ion-clock"></i>&nbsp;
+                  <!-- <span ng-bind="r.timeCardDate | date :'shortDate'"></span> -->
+                  <fp-date-time-renderer model-val="r.timeCardDate" type="date" format="vm.dateFormat">
+                  </fp-date-time-renderer>
+                </h6>
+              </td>
+              <td class="text-center">
+                <h6 class="h6">
+                  <span class="text-success" ng-bind="::r.payableHours | toTimeFormat"></span>
+                </h6>
+              </td>
+              <td class="text-center">
+                <h6 class="h6">
+                  <span class="text-danger" ng-bind="::r.nonPayable | toTimeFormat"></span>
+                </h6>
+              </td>
+              <td class="text-center">
+                <h6 class="h6">
+                  <strong ng-bind="::r.total | toTimeFormat"></strong>
+                </h6>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="warning">
+              <td>
+                <h6>
+                  <strong>Total Time</strong>
+                </h6>
+              </td>
+              <td class="text-center">
+                <h6><strong>{{vm.totalPayables.p | toTimeFormat}}</strong>
+                </h6>
+              </td>
+              <td class="text-center">
+                <h6><strong>{{vm.totalPayables.np | toTimeFormat}}</strong>
+                </h6>
+              </td>
+              <td class="text-center">
+                <h6><strong>{{vm.totalPayables.t | toTimeFormat}}</strong>
+                </h6>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+
+
+
+  </div>
 </ion-content>

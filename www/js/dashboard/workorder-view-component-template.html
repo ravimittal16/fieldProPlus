@@ -1,9 +1,23 @@
 <div class="card">
-  <div class="item item-divider">
-    <small style="float:left;"><i class="icon ion-calendar"></i>&nbsp;{{::vm.odr.WorkPerformedDate | date:'EEEE dd
-            MMM'}}</small>
-    <small style="float:right;"><i
-        class="icon ion-clock"></i>&nbsp;{{::vm.odr.WorkPerformedDate | date:'hh:mm a'}}</small>
+  <div class="item item-divider" style="display: flex;
+  align-items: center;
+  justify-content: space-between;">
+    <small style="float:left;">
+      <i class="icon ion-clock"></i>&nbsp;
+      {{::vm.odr.WorkPerformedDate | date:'hh:mm a'}}, {{::vm.odr.WorkPerformedDate | date:'EEE'}}
+
+      <b>{{::vm.odr.WorkPerformedDate | date:'dd MMMM'}}</b></small>
+    <small style="float:right;">
+      <div style="display: flex;align-items: center;justify-self: end;min-height: 25px;
+      height: 25px;">
+        <button class="button button-icon icon ion-edit button-font-small"
+          ng-if="vm.userInfo.isAdminstrator && !vm.odr.WorkComplete" style="color: #27768d;margin-right:10px"
+          ng-click="vm.events.onEditButtonClicked()"></button>
+        <button class="button button-icon icon ion-trash-b button-font-small" ng-if="vm.userInfo.isAdminstrator"
+          style="color: #DA251C;" ng-click="vm.events.onDeleteButtonClicked()"></button>
+
+      </div>
+    </small>
   </div>
   <div class="item item-text-wrap">
     <span class="label label-success">{{::vm.odr.BarcodeName}}</span>
@@ -34,10 +48,10 @@
       data-ng-click="vm.events.inRouteClicked()">
       In Route
     </button>
-    <button data-ng-if="vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
+    <!-- <button data-ng-if="vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
       class="button button-small button-dark" data-ng-click="vm.events.saveOrderRefOffline()">
       <i class="icon ion-android-download"></i>
-    </button>
+    </button> -->
     <button class="button  button-small button-calm pull-right" data-ng-click="vm.events.onOrderClicked()">
       <i class="icon ion-chevron-right"></i>
     </button>

@@ -1,42 +1,48 @@
 <ion-header-bar>
-    <h1 class="title">
-        Add Schedule
-    </h1>
-    <button class="button" data-ng-click="vm.events.closeProductEditModal()">
-		Cancel
-    </button>
+  <h1 class="title">
+    <span ng-if="vm.isForEdit">Edit</span><span ng-if="!vm.isForEdit">Add</span> Schedule
+  </h1>
+  <button class="button" data-ng-click="vm.events.closeProductEditModal()">
+    Cancel
+  </button>
 </ion-header-bar>
 <ion-content>
-    <form action="" name="addScheduleForm">
-        <div class="list">
-            <div class="list padding-top" data-ng-if="vm.showError">
-                <div class="error">
-                    <ui class="list-unstyled">
-                        <li data-ng-repeat="error in vm.errors">{{::error}}</li>
-                    </ui>
-                </div>
-            </div>
-            <label class="item item-input item-select">
-                <div class="input-label">
-                    Service Provider
-                </div>
-                <select required="" name="selectServiceProvider" data-ng-options="pro.userId as pro.last_Name for pro in vm.serviceProviders track by pro.userId" data-ng-change="vm.events.onServiceProviderSelectionChanged()" data-ng-model="vm.newSchedule.serviceProvider"><select>
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Schedule Start</span>
-                <!-- <input type="text" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A'}" data-ng-model="vm.newSchedule.startDate"/> -->
-                <fp-date-time-component model-val="vm.newSchedule.startDate" type="datetime" format="vm.dateTimeFormat" align-calendar></fp-date-time-component>
-            </label>
-            <label class="item item-input">
-			    <span class="input-label">Schedule Finish</span>
-                <!-- <input type="text" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A'}" data-ng-model="vm.newSchedule.endTime"/> -->
-                <fp-date-time-component model-val="vm.newSchedule.endTime" type="datetime" format="vm.dateTimeFormat" align-calendar></fp-date-time-component>
-            </label>
-            <div class="padding">
-                <button class="button button-block button-positive" data-ng-click="vm.events.addScheduleClicked()" type="button">
-                Add Schedule
-            </button>
-            </div>
+  <form action="" name="addScheduleForm">
+    <div class="list">
+      <div class="list padding-top" data-ng-if="vm.showError">
+        <div class="error">
+          <ui class="list-unstyled">
+            <li data-ng-repeat="error in vm.errors">{{::error}}</li>
+          </ui>
         </div>
-    </form>
+      </div>
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Service Provider
+        </div>
+        <select required="" name="selectServiceProvider"
+          data-ng-options="pro.userId as pro.last_Name for pro in vm.serviceProviders"
+          data-ng-change="vm.events.onServiceProviderSelectionChanged()"
+          data-ng-model="vm.newSchedule.serviceProvider"><select>
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Schedule Start</span>
+        <!-- <input type="text" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A'}" data-ng-model="vm.newSchedule.startDate"/> -->
+        <fp-date-time-component model-val="vm.newSchedule.startDate" type="datetime" format="vm.dateTimeFormat"
+          align-calendar></fp-date-time-component>
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Schedule Finish</span>
+        <!-- <input type="text" class="transparent-background text-right" data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A'}" data-ng-model="vm.newSchedule.endTime"/> -->
+        <fp-date-time-component model-val="vm.newSchedule.endTime" type="datetime" format="vm.dateTimeFormat"
+          align-calendar></fp-date-time-component>
+      </label>
+      <div class="padding">
+        <button class="button button-block button-positive" data-ng-click="vm.events.addScheduleClicked()"
+          type="button">
+          <span ng-if="vm.isForEdit">Update</span><span ng-if="!vm.isForEdit">Add</span> Schedule
+        </button>
+      </div>
+    </div>
+  </form>
 </ion-content>

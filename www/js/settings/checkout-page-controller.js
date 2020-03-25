@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  function initController($state, $stateParams, authenticationFactory, fpmUtilitiesFactory, workOrderFactory) {
+  function initController($state, $stateParams, $timeout, authenticationFactory, fpmUtilitiesFactory, workOrderFactory) {
     var vm = this;
     vm.errors = [];
     var alerts = fpmUtilitiesFactory.alerts;
@@ -73,13 +73,22 @@
 
     function submitPayment() {
       vm.errors = [];
+      if (vm.amount > $stateParams.amount) {
+        alerts.alert("Warning!", "Payment amount can not be higher than the amount due.", function () {
+          vm.amount = $stateParams.amount;
+        });
+        return false;
+      } else {
+        vm.model.amount = vm.amount * 100;
+      }
       fpmUtilitiesFactory.showLoading().then(function () {
         workOrderFactory
           .submitPayment(vm.model)
           .then(function (response) {
-            if (response.Success != undefined && response.Success == true) {
-              alerts.alert("Success!", "Thank you!!!\nYour card has been successfully charged.", function () {});
-              goToEditWorkOrderPage();
+            if (response.Success != undefined && response.Success) {
+              alerts.alert("Success!", "Thank you!!!\nYour card has been successfully charged.", function () {
+                goToEditWorkOrderPage();
+              });
             } else {
               alerts.alert("Failure!", "Sorry!!! We are unable to charge your card, Please try again.", function () {});
             }
@@ -111,6 +120,7 @@
   initController.$inject = [
     "$state",
     "$stateParams",
+    "$timeout",
     "authenticationFactory",
     "fpm-utilities-factory",
     "work-orders-factory"

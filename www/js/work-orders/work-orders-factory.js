@@ -150,6 +150,15 @@
       );
     }
 
+    //this method will be called from dashboard schedule update modal
+    //we can update on Service Provider | schedule start and finish times
+    function updateSchedule2(model) {
+      return apiBaseFactory.post(
+        apibaseurl + "UpdateSchedule?fromMobile=true",
+        model
+      );
+    }
+
     function addWorkOrderSchedule(schedule) {
       return apiBaseFactory.post(apibaseurl + "AddWorkOrderSchedule", schedule);
     }
@@ -248,9 +257,16 @@
       );
     }
 
+    function deleteSchedule(num) {
+      return apiBaseFactory.deleteReq(apibaseurl + "DeleteSchedule?num=" + num + "&fromMobile=true");
+    }
 
+    function getScheduleById(num) {
+      return apiBaseFactory.get(apibaseurl + "GetScheduleById?scheduleId=" + num + "&fromMobile=true");
+    }
 
     return {
+      getScheduleById: getScheduleById,
       submitPayment: submitPayment,
       checkIfBarcodeClosed: checkIfBarcodeClosed,
       uploadFiles: uploadFiles,
@@ -278,6 +294,7 @@
       updateWorkOrderMobile: updateWorkOrderMobile,
       updateJobStatus: updateJobStatus,
       updateSchedule: updateSchedule,
+      updateSchedule2: updateSchedule2,
       addWorkOrderSchedule: addWorkOrderSchedule,
       updateOrderProduct: updateOrderProduct,
       getDatewiseEvents: getDatewiseEvents,
@@ -285,7 +302,8 @@
       getBarcodePayments: getBarcodePayments,
       addUpdatePayment: addUpdatePayment,
       deletePayment: deletePayment,
-      updateTaxRate: updateTaxRate
+      updateTaxRate: updateTaxRate,
+      deleteSchedule: deleteSchedule
     };
   }
   initFactory.$inject = [

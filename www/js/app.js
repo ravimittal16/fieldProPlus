@@ -152,6 +152,7 @@ var fpm = angular
         },
         {
           state: "app.editOrder",
+          cache: false,
           config: {
             url: "/editOrder?barCode&technicianNum&src&_i",
             controller: "edit-order-controller",
@@ -296,7 +297,7 @@ var fpm = angular
 
       //$ionicConfigProvider.tabs.position(isInDevMode ? 'top' : 'bottom');
       $ionicConfigProvider.tabs.position("bottom");
-
+      $ionicConfigProvider.views.forwardCache(false);
       //EXCPTION HANDLING
       $provide.decorator("$exceptionHandler", [
         "$delegate",

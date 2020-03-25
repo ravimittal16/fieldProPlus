@@ -1,0 +1,38 @@
+<ion-header-bar>
+  <h1 class="title">
+    Submit a Question
+  </h1>
+  <button type="button" class="button button-small button-light" ng-click="vm.events.closePopoutModal()">
+    Close
+  </button>
+</ion-header-bar>
+<ion-content has-bouncing="true">
+  <form name="questionForm" role="form" novalidate="novalidate">
+    <div class="list" id="formContainer">
+      <!-- <label class="item item-input">
+          <span class="input-label"
+            style="max-width: 25% !important;width:25% !important;padding: 7px 10px 0px 0px;">Select Question</span>
+        </label>
+        <label class="item item-input item-select" style="height: 50px;border-top-color: transparent;">
+          <span class="input-label"></span>
+          <select required ng-options="question.title as question.title for question in vm.data.questions"
+            ng-model="vm.data.entity.question"
+            style="max-width: 100% !important;width:100% !important;direction: ltr;    white-space: normal;"></select>
+        </label> -->
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Question</span>
+        <input type="text" placeholder="question..." ng-model="vm.data.entity.question" required maxlength="100" />
+      </label>
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Description</span>
+        <textarea cols="30" rows="8" maxlength="500" placeholder="description..."
+          ng-model="vm.data.entity.description"></textarea>
+      </label>
+      <div class="padding">
+        <button ng-disabled="questionForm.$invalid || vm.data.posting" class="button button-block button-positive"
+          type="button" style="background-color: #30aa53;"
+          ng-click="vm.events.onSubmitClicked(questionForm.$valid)">Submit</button>
+      </div>
+    </div>
+  </form>
+</ion-content>

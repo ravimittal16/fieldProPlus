@@ -15,7 +15,8 @@
     timecardFactory,
     fpmUtilitiesFactory,
     localStorageService,
-    sqlStorageFactory
+    sqlStorageFactory,
+    dashboardFactory
   ) {
     var vm = this;
     vm.userInfo = authenticationFactory.getLoggedInUserInfo();
@@ -298,6 +299,7 @@
         .then(function (response) {
           vm.trackJobStatus =
             response.customerNumberEntity.trackJobStatus || false;
+          dashboardFactory.serviceProviders = response.serviceProviders;
         })
         .finally(function () {
           var refresh = angular.isDefined($stateParams.refresh) ?
@@ -308,11 +310,15 @@
     }
 
     $scope.$on("network:connection:changed", function (e, data) {
-      console.log(data);
+
     });
 
     $scope.$on("$ionicView.beforeEnter", function (e, data) {
       activateController();
+    });
+
+    $scope.$on("$fpm:scheduleChanged", function (e, data) {
+      loadDashboard(true, null);
     });
 
     $scope.$on("$destroy", function () {
@@ -347,7 +353,8 @@
     "timecard-factory",
     "fpm-utilities-factory",
     "localStorageService",
-    "sqlStorageFactory"
+    "sqlStorageFactory",
+    "dashboard-factory"
   ];
   angular.module("fpm").controller("dashboard-controller", initController);
 })();

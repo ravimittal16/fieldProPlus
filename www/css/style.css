@@ -562,7 +562,7 @@ select[readonly] {
   margin-right: 15px;
 }
 
-button:hover {
+submitButton:hover {
   transform: translateY(-1px);
   box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
   background-color: #43458b;
@@ -708,4 +708,13 @@ button:hover {
   border: solid 1px #ccc;
   padding: 10px 25px;
   border-radius: 5px;
+}
+
+.button-font-small {
+  background-color: transparent;
+}
+
+.button-font-small .icon:before,
+.button-font-small.icon:before {
+  font-size: 25px !important;
 }
