@@ -19,6 +19,7 @@
         var vm = this;
         vm.userInfo = authenticationFactory.getLoggedInUserInfo();
         vm.scheduleEditModal = null;
+        vm.allowedForSp = false;
         vm.events = {
           onModalCancelClicked: function () {
             vm.scheduleEditModal.hide();
@@ -148,6 +149,7 @@
         };
         vm.$onInit = function () {
           vm.serviceProviders = dashboardFactory.serviceProviders;
+          vm.allowedForSp = dashboardFactory.isServiceProvider && dashboardFactory.showEditDeleteForServiceProvider;
         }
       }
     ],

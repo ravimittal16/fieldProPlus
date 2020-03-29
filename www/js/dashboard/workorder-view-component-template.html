@@ -11,10 +11,11 @@
       <div style="display: flex;align-items: center;justify-self: end;min-height: 25px;
       height: 25px;">
         <button class="button button-icon icon ion-edit button-font-small"
-          ng-if="vm.userInfo.isAdminstrator && !vm.odr.WorkComplete" style="color: #27768d;margin-right:10px"
-          ng-click="vm.events.onEditButtonClicked()"></button>
-        <button class="button button-icon icon ion-trash-b button-font-small" ng-if="vm.userInfo.isAdminstrator"
-          style="color: #DA251C;" ng-click="vm.events.onDeleteButtonClicked()"></button>
+          ng-if="(vm.userInfo.isAdminstrator && !vm.odr.WorkComplete) || (!vm.odr.WorkComplete && vm.allowedForSp)"
+          style="color: #27768d;margin-right:10px" ng-click="vm.events.onEditButtonClicked()"></button>
+        <button class="button button-icon icon ion-trash-b button-font-small"
+          ng-if="vm.userInfo.isAdminstrator || vm.allowedForSp" style="color: #DA251C;"
+          ng-click="vm.events.onDeleteButtonClicked()"></button>
 
       </div>
     </small>

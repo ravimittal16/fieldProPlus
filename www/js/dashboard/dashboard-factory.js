@@ -5,7 +5,9 @@
     var api = "api/workorders/";
 
     var factory = {
-      serviceProviders: []
+      serviceProviders: [],
+      showEditDeleteForServiceProvider: false,
+      isServiceProvider: false
     };
 
     return factory;
