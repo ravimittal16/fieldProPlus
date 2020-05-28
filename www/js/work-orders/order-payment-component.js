@@ -3,7 +3,7 @@
   var componentConfig = {
     bindings: {
       barcode: "<",
-      totalAmountDue: "<",
+      totalAmountDue: "=",
     },
     templateUrl: "js/work-orders/order-payment-component.template.html",
     controller: ["$scope", "$state", "$stateParams", "authenticationFactory", "work-orders-factory", "fieldPromaxConfig", "fpm-utilities-factory", "$timeout",
@@ -149,9 +149,7 @@
             });
           }
 
-
         }
-
 
         vm.$onInit = function () {
           getBarcodePayments();

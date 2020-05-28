@@ -562,7 +562,7 @@ select[readonly] {
   margin-right: 15px;
 }
 
-submitButton:hover {
+button:hover {
   transform: translateY(-1px);
   box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
   background-color: #43458b;
@@ -574,8 +574,8 @@ submitButton:hover {
 } */
 
 #card-errors {
-  height: 20px;
-  padding: 4px 0;
+  height: auto;
+  padding: 8px 7px;
   color: #fa755a;
 }
 
@@ -660,9 +660,6 @@ submitButton:hover {
 }
 
 .collectButton {
-  background: transparent !important;
-  text-decoration: underline;
-  color: blue !important;
   font-weight: 600;
 }
 
@@ -682,16 +679,6 @@ submitButton:hover {
   box-shadow: none;
 }
 
-#card-errors {
-  height: auto;
-  padding: 8px 7px;
-  color: #fa755a;
-}
-
-.collectButton {
-  font-weight: 600;
-}
-
 .paymentButton {
   width: 100%;
   display: flex;
@@ -708,6 +695,19 @@ submitButton:hover {
   border: solid 1px #ccc;
   padding: 10px 25px;
   border-radius: 5px;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.amountR {
+  background: #f1f1f1;
+  padding: 10px 20px;
 }
 
 .button-font-small {

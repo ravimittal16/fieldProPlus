@@ -34,7 +34,7 @@
           </div>
         </div>
         <div ng-repeat="pmt in vm.payments" class="item item-text-wrap">
-          <div class="row">
+          <div class="row d-flex align-items-center">
             <div class="col col-30">
               <h3>{{pmt.receivedDate | date:'MM/dd/yyyy'}}</h3>
             </div>
@@ -47,13 +47,13 @@
                 </fpcurrency-renderer>
               </h3>
             </div>
-            <div class="col">
+            <div class="col text-right">
               <button type="button" class="button icon ion-edit button-small text-energized"
-                style="margin-top: -5px;float:left;" ng-click="vm.events.onEditPaymentClicked(pmt)"></button>
+                ng-click="vm.events.onEditPaymentClicked(pmt)"></button>
               <button type="button" class="button icon ion-trash-b button-small text-assertive"
-                style="margin-top: -5px;float:left;margin-left:2px;"
                 ng-click="vm.events.onDeletePaymentClicked(pmt)"></button>
             </div>
+
           </div>
         </div>
       </div>
@@ -61,10 +61,10 @@
   </div>
 </ion-list>
 <div class="row" ng-if="vm.showList">
-  <div class="col">
+  <div class="col amountR">
     <p>
       <h5>Amount Received
-        <span class="pull-right" style="margin-right:115px;">
+        <span class="pull-right">
           <fpcurrency-renderer model-val="vm.amountReceived">
           </fpcurrency-renderer>
         </span>
@@ -72,7 +72,7 @@
     </p>
     <p>
       <h5>Balance Due
-        <span class="pull-right" style="margin-right:115px;">
+        <span class="pull-right">
           <fpcurrency-renderer model-val="vm.balanceDue">
           </fpcurrency-renderer>
         </span>
@@ -82,8 +82,8 @@
 </div>
 <script id="addEditPaymentModal.html" type="text/ng-template">
   <ion-modal-view>
-  <add-edit-payment-component barcode="vm.barcode" payment="vm.currentPayment" modal-type="vm.modalType" 
-  amount-received="vm.amountReceived" balance-due="vm.balanceDue"
-  ></add-edit-payment-component>
+    <add-edit-payment-component barcode="vm.barcode" payment="vm.currentPayment" modal-type="vm.modalType"
+          amount-received="vm.amountReceived" balance-due="vm.balanceDue">
+      </add-edit-payment-component>
   </ion-modal-view>
-  </script>
+</script>
