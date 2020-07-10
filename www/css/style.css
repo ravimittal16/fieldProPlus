@@ -398,7 +398,7 @@ customer-search-header-component {
 }
 
 .clockin-item {
-  background: #DADADA !important;
+  background: #90af98 !important;
   color: white;
   padding: 0px !important;
   text-align: center !important;
@@ -717,4 +717,15 @@ button:hover {
 .button-font-small .icon:before,
 .button-font-small.icon:before {
   font-size: 25px !important;
+}
+
+.center-element {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.font-large {
+  font-size: 18px;
+
 }

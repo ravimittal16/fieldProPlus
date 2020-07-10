@@ -83,10 +83,12 @@
             s.section = 0;
           }
           if (i === (details.length - 1)) {
-            vm.ui.data.timeCards = _.reject(details, {
-              jobCode: jobCodes.CLOCK_IN,
-              finishTime: null
-            });
+            // vm.ui.data.timeCards = _.reject(details, {
+            //   jobCode: jobCodes.CLOCK_IN,
+            //   finishTime: null
+            // });
+            //NOTE : WE NEED TO SHOW EVERYTHING : JOY : JULY 10,2020
+            vm.ui.data.timeCards = details;
           }
         });
       }
@@ -124,8 +126,6 @@
       var payables = _.filter(vm.ui.data.timeCards, function (tc) {
         return tc.jobCode === jobCodes.CLOCK_IN && tc.finishTime !== null;
       });
-      console.log(payables);
-
       var nonPayables = _.filter(vm.ui.data.timeCards, function (tc) {
         return tc.jobCode !== jobCodes.CLOCK_IN && tc.isPayable === false && tc.finishTime !== null;
       });

@@ -1,96 +1,107 @@
 <ion-header-bar>
-    <h1 class="title">
-        <span data-ng-if="vm.editMode">Edit</span>
-        <span data-ng-if="!vm.editMode">Add</span>
-        <span data-ng-if="vm.isFromPto">PTO</span>
-        <span data-ng-if="!vm.isFromPto">Details</span>
-    </h1>
-    <button class="button" data-ng-click="vm.events.closeProductEditModal()">
-		Cancel
-    </button>
+  <h1 class="title">
+    <span data-ng-if="vm.editMode">Edit</span>
+    <span data-ng-if="!vm.editMode">Add</span>
+    <span data-ng-if="vm.isFromPto">PTO</span>
+    <span data-ng-if="!vm.isFromPto">Details</span>
+  </h1>
+  <button class="button" data-ng-click="vm.events.closeProductEditModal()">
+    Cancel
+  </button>
 </ion-header-bar>
 <ion-content>
-    <form action="" name="addScheduleForm">
-        <div class="list padding-top" data-ng-if="vm.ui.errors.length > 0">
-            <div class="error">
-                <ui class="list-unstyled">
-                    <li data-ng-repeat="error in vm.ui.errors">{{::error}}</li>
-                </ui>
-            </div>
+  <form action="" name="addScheduleForm">
+    <div class="list padding-top" data-ng-if="vm.ui.errors.length > 0">
+      <div class="error">
+        <ui class="list-unstyled">
+          <li data-ng-repeat="error in vm.ui.errors">{{::error}}</li>
+        </ui>
+      </div>
+    </div>
+    <div class="list">
+      <div class="padding">
+        <div class="button-bar button-bar-with-margin"
+          data-ng-if="vm.entity.isUserDefined && !vm.timecardPermissions.timePickerVisibility">
+          <button class="button button-small button-dark" data-ng-disabled="vm.dateTimeMode.isCheckedIn" type="button"
+            data-ng-click="vm.events.checkInClick()">Check In</button>
+          <button class="button button-small button-dark" data-ng-disabled="vm.dateTimeMode.isCheckedOut" type="button"
+            data-ng-click="vm.events.checkOutClick()">Check Out</button>
         </div>
-        <div class="list">
-            <div class="padding">
-                <div class="button-bar button-bar-with-margin" data-ng-if="vm.entity.isUserDefined && !vm.timecardPermissions.timePickerVisibility">
-                    <button class="button button-small button-dark" data-ng-disabled="vm.dateTimeMode.isCheckedIn" type="button" data-ng-click="vm.events.checkInClick()">Check In</button>
-                    <button class="button button-small button-dark" data-ng-disabled="vm.dateTimeMode.isCheckedOut" type="button" data-ng-click="vm.events.checkOutClick()">Check Out</button>
-                </div>
-            </div>
-            <!--<div class="item item-divider bg-white">
+      </div>
+      <!--<div class="item item-divider bg-white">
                 <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
                     data-ng-click="vm.events.onCardActionClicked(t)" data-ng-if="vm.entity.isUserDefined && !vm.timecardPermissions.timePickerVisibility"></a>
             </div>-->
-            <!--<label class="item item-input" data-ng-if="!vm.entity.isUserDefined">
+      <!--<label class="item item-input" data-ng-if="!vm.entity.isUserDefined">
                 <span class="input-label">Start Time</span>
                     <input type="text" placeholder="Start Time" class="transparent-background text-right" data-ng-model="vm.entity.startTime" readonly=""/>
                 </label>-->
-            <label class="item" data-ng-if="vm.entity.isUserDefined && !vm.timecardPermissions.timePickerVisibility">
-                Start Time
-                    <span class="item-note">
-                        {{vm.dateTimeMode.startTime | date:'h:mm a'}}
-                    </span>
-                </label>
-            <label class="item" data-ng-if="!vm.timecardPermissions.timePickerVisibility">
-                Finish Time
-                    <span class="item-note">
-                        {{vm.dateTimeMode.finishTime | date:'h:mm a'}}
-                    </span>
-                </label>
-            <label for="" class="item item-input" data-ng-if="vm.timecardPermissions.timePickerVisibility">
-                    <span class="input-label">Start Time</span>
-                    <input type="text" placeholder="Start Time" class="transparent-background text-right" data-mobiscroll-time="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect: vm.events.onDateTimeChaged}" 
-                    readonly="" data-ng-model="vm.dateTimeMode.startTime"/>
-                </label>
-            <label for="" class="item item-input" data-ng-if="vm.timecardPermissions.timePickerVisibility">
-                    <span class="input-label">Finish Time</span>
-                    <input type="text" placeholder="Finish Time" class="transparent-background text-right" data-mobiscroll-time="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect: vm.events.onFinishDateTimeChaged}" 
-                    readonly="" data-ng-model="vm.dateTimeMode.finishTime"
-                     />
-                </label>
-            <label for="" class="item item-input">
-                <span class="input-label">Total Time</span>
-                <input type="text" class="transparent-background text-right" readonly="" data-ng-model="vm.dateTimeMode.timeSpan" />
-                </label>
-            <div class="item item-input item-select" data-ng-if="!vm.timecardPermissions.isFromAddingPto">
-                <div class="input-label">
-                    Job Code
-                </div>
-                <select data-ng-disabled="!vm.entity.isUserDefined" data-ng-options="pro.num as pro.jobCode1 for pro in vm.ui.jobCodes" data-ng-change="vm.ui.isInvalidSave = false"
-                    data-ng-model="vm.entity.jobCode"></select>
-            </div>
-            <div class="item item-input item-select" data-ng-if="!vm.timecardPermissions.isFromAddingPto">
-                <div class="input-label">
-                    Work Order
-                </div>
-                <select data-ng-disabled="!vm.entity.isUserDefined" data-ng-options="pro.barcode as pro.barcodeName for pro in vm.ui.workOrders"
-                    data-ng-model="vm.entity.barcode"></select>
-            </div>
-            <div class="item item-input item-select" data-ng-if="vm.timecardPermissions.isFromAddingPto">
-                <div class="input-label">
-                    Job Code
-                </div>
-                <select data-ng-disabled="!vm.entity.isUserDefined" data-ng-options="pro.num as pro.jobCode1 for pro in vm.ui.ptoJobCodes"
-                    data-ng-change="vm.ui.isInvalidSave = false" data-ng-model="vm.entity.jobCode"></select>
-            </div>
-            <label class="item item-input item-stacked-label">
-                    <span class="input-label">Notes</span>
-                    <textarea cols="30" rows="3" data-ng-model="vm.entity.notes"></textarea>
-                </label>
-            <div class="row">
-                <button class="button button-block button-positive" type="button" data-ng-click="vm.events.updateButtonClicked()">
-                    <span data-ng-if="vm.editMode">Update</span>
-                    <span data-ng-if="!vm.editMode">Save</span>
-                </button>
-            </div>
+      <label class="item" data-ng-if="vm.entity.isUserDefined && !vm.timecardPermissions.timePickerVisibility">
+        Start Time
+        <span class="item-note">
+          {{vm.dateTimeMode.startTime | date:'h:mm a'}}
+        </span>
+      </label>
+      <label class="item" data-ng-if="!vm.timecardPermissions.timePickerVisibility">
+        Finish Time
+        <span class="item-note">
+          {{vm.dateTimeMode.finishTime | date:'h:mm a'}}
+        </span>
+      </label>
+      <label for="" class="item item-input" data-ng-if="vm.timecardPermissions.timePickerVisibility">
+        <span class="input-label">Start Time</span>
+        <input type="text" placeholder="Start Time" class="transparent-background text-right"
+          data-mobiscroll-time="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect: vm.events.onDateTimeChaged}"
+          readonly="" data-ng-model="vm.dateTimeMode.startTime" />
+      </label>
+      <label for="" class="item item-input" data-ng-if="vm.timecardPermissions.timePickerVisibility">
+        <span class="input-label">Finish Time</span>
+        <input type="text" placeholder="Finish Time" class="transparent-background text-right"
+          data-mobiscroll-time="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect: vm.events.onFinishDateTimeChaged}"
+          readonly="" data-ng-model="vm.dateTimeMode.finishTime" />
+      </label>
+      <label for="" class="item item-input">
+        <span class="input-label">Total Time</span>
+        <input type="text" class="transparent-background text-right" readonly=""
+          data-ng-model="vm.dateTimeMode.timeSpan" />
+      </label>
+      <div class="item item-input item-select" data-ng-if="!vm.timecardPermissions.isFromAddingPto">
+        <div class="input-label">
+          Job Code
         </div>
-    </form>
+        <select data-ng-disabled="!vm.entity.isUserDefined"
+          data-ng-options="pro.num as pro.jobCode1 for pro in vm.ui.jobCodes"
+          data-ng-change="vm.ui.isInvalidSave = false" data-ng-model="vm.entity.jobCode"></select>
+      </div>
+      <div class="item item-input item-select" data-ng-if="!vm.timecardPermissions.isFromAddingPto">
+        <div class="input-label">
+          Work Order
+        </div>
+        <select data-ng-disabled="!vm.entity.isUserDefined"
+          ng-options="pro.barcode as pro.barcodeName group by pro.displayName for pro in vm.ui.workOrders track by pro.barcode"
+          data-ng-model="vm.entity.barcode">
+          <option value="">#NA</option>
+        </select>
+      </div>
+      <div class="item item-input item-select" data-ng-if="vm.timecardPermissions.isFromAddingPto">
+        <div class="input-label">
+          Job Code
+        </div>
+        <select data-ng-disabled="!vm.entity.isUserDefined"
+          data-ng-options="pro.num as pro.jobCode1 for pro in vm.ui.ptoJobCodes"
+          data-ng-change="vm.ui.isInvalidSave = false" data-ng-model="vm.entity.jobCode"></select>
+      </div>
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Notes</span>
+        <textarea cols="30" rows="3" data-ng-model="vm.entity.notes"></textarea>
+      </label>
+      <div class="row">
+        <button class="button button-block button-positive" type="button"
+          data-ng-click="vm.events.updateButtonClicked()">
+          <span data-ng-if="vm.editMode">Update</span>
+          <span data-ng-if="!vm.editMode">Save</span>
+        </button>
+      </div>
+    </div>
+  </form>
 </ion-content>

@@ -24,13 +24,17 @@
         </div>
       </div>
       <div class="row">
-        <div class="col center">
+        <div class="col center center-element">
           <button class="button icon-center ion-clock button-block button-positive button-small"
             ng-click="vm.ui.events.clockInClick()" ng-if="!vm.ui.data.isClockedIn"
             ng-disabled="vm.ui.data.disableClockInButton || (vm.ui.data.approvalStatus != 0 && vm.ui.data.approvalStatus != 2)">&nbsp;Clock
             In</button>
 
-          <h5 class="m-t-b-2" ng-if="vm.ui.data.isClockedIn" ng-bind="vm.ui.data.clockInDateTime | date:'hh:mm a'"></h5>
+          <div ng-if="vm.ui.data.isClockedIn">
+            <h5 class="m-t-b-2 n-m-b font-large"><span class="icon-center ion-clock"></span>&nbsp;<span
+                ng-bind="vm.ui.data.clockInDateTime | date:'hh:mm a'"></span></h5>
+            <span class="label label-primary" style="background-color: #387ef5;">Clock In</span>
+          </div>
         </div>
         <div class="col center">
           <button class="button icon-center ion-clock button-block button-positive button-small"
@@ -81,9 +85,13 @@
           </span>
         </span>
       </div>
-      <div class="card" ng-repeat="(key,t) in vm.ui.data.timeCards">
+      <div class="card" ng-repeat="(key,t) in vm.ui.data.timeCards | orderBy:'num'">
         <div class="item item-divider" ng-if="t.jobCode != 5001">
-          <span ng-if="!t.isPtoType">Section - {{t.section}}</span>
+          <span ng-if="!t.isPtoType && t.jobCode != 5001 && t.barcode != 0" style="font-size: 14px;
+          font-weight: 500;">{{t.barcodeName}} - {{t.jobCodeName}}</span>
+
+          <span ng-if="t.jobCode != 5001 && t.barcode == 0" style="font-size: 14px;
+          font-weight: 500;">{{t.jobCodeName}}</span>
           <span ng-if="t.isPtoType" class="text-danger">PTO - {{t.pto}}</span>
           <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
             ng-click="vm.ui.events.onCardActionClicked(t)"
@@ -92,16 +100,6 @@
 
         <div class="item item-text-wrap"
           ng-class="{'clockin-item':t.jobCode == 5001,'timecard-checkin-item':t.jobCode != 5001}">
-          <div class="row" ng-if="t.jobCode != 5001 && t.barcode != 0">
-            <div class="col col-50">
-              <h4 class="text-muted pull-left">
-                #<strong ng-bind="t.barcodeName"></strong></h4>
-            </div>
-            <div class="col col-50">
-              <h4 class="text-muted text-right">
-                <strong ng-bind="t.jobCodeName"></strong></h4>
-            </div>
-          </div>
           <div class="row">
             <div class="col col-33 col-center">
               <h5><i class="icon ion-clock"></i>
@@ -127,7 +125,7 @@
             <div class="col col-33">
               <button ng-if="!t.finishTime && t.jobCodeName === 'On Job'" class="button button-small button-calm"
                 ng-click="vm.ui.events.checkOutPending(t)">
-                Clock out
+                Check out
               </button>
               <h3 ng-if="t.finishTime" ng-bind="t.finishTime | date :'shortTime'"></h3>
             </div>
@@ -152,7 +150,8 @@
                         <a ng-if="vm.ui.data.addTimeVisibility && (vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2)" ng-click="vm.ui.events.addTimeClick(false)"
                             class="item">Add Time</a>
                         <a class="item" ng-click="vm.ui.events.checkSummaryClick()">Check Summary</a>
-                        <a class="item" ng-click="vm.ui.events.showTimeCardTutorialWindow()">Tutorial</a>
+                        <!-- TODO : NEED TO CHANGE IT TO A LINK -->
+                        <!-- <a class="item" ng-click="vm.ui.events.showTimeCardTutorialWindow()">Tutorial</a> -->
                     </div>
                 </ion-content>
             </ion-popover-view>

@@ -35,6 +35,11 @@
         function showReport() {
           vm.payableReport = [];
           var report = [];
+          vm.totalPayables = {
+            p: 0,
+            np: 0,
+            t: 0
+          };
           fpmUtilitiesFactory.showLoading().then(function () {
             timecardFactory.getSummaryPayableHours({
               startDate: vm.modal.startDate,

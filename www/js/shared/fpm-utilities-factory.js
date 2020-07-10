@@ -246,12 +246,13 @@
           },
           getPicture: function () {
             var options = {
-              quality: 50,
+              quality: 75,
               destinationType: Camera.DestinationType.DATA_URL,
               sourceType: Camera.PictureSourceType.CAMERA,
               allowEdit: false,
               encodingType: Camera.EncodingType.JPEG,
-              saveToPhotoAlbum: false
+              saveToPhotoAlbum: false,
+              correctOrientation: true
             };
             var defer = $q.defer();
             $cordovaCamera.getPicture(options).then(

@@ -30,7 +30,7 @@
         </p>
         <p>{{::vm.odr.Street}}</p>
         <p>{{::vm.odr.CityStateZip}}</p>
-        <p data-ng-if="vm.odr.WorkOrderDescription">
+        <p ng-if="vm.odr.WorkOrderDescription">
           <small class="text-italic text-muted">
             <i><strong>Description : </strong>{{::vm.odr.WorkOrderDescription}}</i>
           </small>
@@ -39,21 +39,26 @@
     </div>
   </div>
   <div class="item item-divider">
-    <button class="button button-small button-calm" type="button" data-ng-disabled="vm.odr.JobAcceptanceStatus"
-      data-ng-if="vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
-      data-ng-click="vm.events.acceptJob()">
+    <button class="button button-small button-calm" type="button"
+      ng-if="!vm.odr.JobAcceptanceStatus && vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
+      ng-click="vm.events.acceptJob()">
       Accept
     </button>
-    <button class="button button-small button-calm" type="button" data-ng-disabled="vm.odr.InRoute"
-      data-ng-if="vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
-      data-ng-click="vm.events.inRouteClicked()">
+    <button class="button button-small button-assertive" type="button"
+      ng-if="vm.odr.JobAcceptanceStatus && vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
+      ng-click="vm.events.unAcceptJob()">
+      un-Accept
+    </button>
+    <button class="button button-small button-calm" type="button" ng-disabled="vm.odr.InRoute"
+      ng-if="vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
+      ng-click="vm.events.inRouteClicked()">
       In Route
     </button>
-    <!-- <button data-ng-if="vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
-      class="button button-small button-dark" data-ng-click="vm.events.saveOrderRefOffline()">
+    <!-- <button ng-if="vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
+      class="button button-small button-dark" ng-click="vm.events.saveOrderRefOffline()">
       <i class="icon ion-android-download"></i>
     </button> -->
-    <button class="button  button-small button-calm pull-right" data-ng-click="vm.events.onOrderClicked()">
+    <button class="button  button-small button-calm pull-right" ng-click="vm.events.onOrderClicked()">
       <i class="icon ion-chevron-right"></i>
     </button>
   </div>

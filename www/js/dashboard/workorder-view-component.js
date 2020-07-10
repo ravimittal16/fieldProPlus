@@ -13,8 +13,7 @@
         var scheduleButtons = {
           AcceptJob: 0,
           InRoute: 1,
-          CheckIn: 3,
-          CheckOut: 4
+          unAcceptJob: 4
         };
         var vm = this;
         vm.userInfo = authenticationFactory.getLoggedInUserInfo();
@@ -118,6 +117,18 @@
               });
             });
           },
+          unAcceptJob: function () {
+            fpmUtilitiesFactory.alerts.confirm("Confirmation!", "Are you sure you want to un-accept this job?", function () {
+              fpmUtilitiesFactory.showLoading().then(function () {
+                workOrdersFactory.updateJobStatus({
+                  scheduleButton: scheduleButtons.unAcceptJob,
+                  scheduleNum: vm.odr.TechnicianScheduleNum
+                }).then(function () {
+                  vm.odr.JobAcceptanceStatus = false;
+                }).finally(fpmUtilitiesFactory.hideLoading);
+              });
+            });
+          },
           acceptJob: function () {
             fpmUtilitiesFactory.alerts.confirm("Confirmation!", "Are you sure you want to accept this job?", function () {
               fpmUtilitiesFactory.showLoading().then(function () {
@@ -132,8 +143,10 @@
           },
           inRouteClicked: function () {
             if (angular.isFunction(vm.inRouteClicked)) {
-              vm.inRouteClicked({
-                odr: vm.odr
+              fpmUtilitiesFactory.alerts.confirm("Confirmation!", "Are you sure?", function () {
+                vm.inRouteClicked({
+                  odr: vm.odr
+                });
               });
             }
           },
