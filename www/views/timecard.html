@@ -123,7 +123,7 @@
               <h3 ng-bind="t.startTime | date :'shortTime'"></h3>
             </div>
             <div class="col col-33">
-              <button ng-if="!t.finishTime && t.jobCodeName === 'On Job'" class="button button-small button-calm"
+              <button ng-if="!t.finishTime && t.jobCode != 5001" class="button button-small button-calm"
                 ng-click="vm.ui.events.checkOutPending(t)">
                 Check out
               </button>

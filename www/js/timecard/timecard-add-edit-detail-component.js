@@ -9,6 +9,10 @@
       function ($scope, $timeout, $q, timecardFactory, fpmUtilitiesFactory, authenticationFactory) {
         var vm = this;
         var alerts = fpmUtilitiesFactory.alerts;
+        var jobCodes = {
+          CLOCK_IN: 5001,
+          CLOCK_OUT: 5002
+        };
         var isConfirmedBefore = false;
         vm.ui = {
           summary: angular.copy(timecardFactory.summary),
@@ -127,8 +131,8 @@
             vm.entity.finishTime = kendo.toString(vm.entity.finishTime, "g");
             if (!vm.editMode) {
               var allDetails = angular.copy(timecardFactory.details);
-              var notCheckInDetails = _.where(allDetails, {
-                finishTime: null
+              var notCheckInDetails = _.filter(allDetails, function (tc) {
+                return tc.finishTime === null && tc.jobCode !== jobCodes.CLOCK_IN;
               });
               if (notCheckInDetails.length > 0 && !isConfirmedBefore) {
                 alerts.confirm("Confirmation!", "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?", function (isConfirm) {

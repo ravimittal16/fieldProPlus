@@ -499,9 +499,10 @@
           });
         },
         clockOutClick: function () {
-          var notCheckInDetails = _.where(vm.ui.data.timeCards, {
-            finishTime: null
+          var notCheckInDetails = _.filter(vm.ui.data.timeCards, function (tc) {
+            return tc.finishTime === null && tc.jobCode !== jobCodes.CLOCK_IN;
           });
+          console.log(notCheckInDetails)
           if (notCheckInDetails.length > 0) {
             alerts.confirm("Confirmation!", "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?", function () {
               _processClockOutUser();
