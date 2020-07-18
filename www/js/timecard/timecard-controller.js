@@ -42,43 +42,80 @@
       timecardObject: null,
       onTimeNewPicked: function () {
         var _timeObj = vm.timePicker.timecardObject;
-        _timeObj[vm.timePicker.prop] = vm.timePicker.currentTime;
+        var __isClockout = _timeObj.jobCode === 5001 && vm.timePicker.prop === 'finishTime'
         var _e = angular.copy(_timeObj);
-        _e.startTime = kendo.toString(kendo.parseDate(_timeObj.startTime), "g");
-        _e.finishTime = kendo.toString(kendo.parseDate(_timeObj.finishTime), "g");
-        fpmUtilitiesFactory.showLoading().then(function () {
-          timecardFactory.addNewDetails(_e).then(function (response) {
-            if (response.errors === null) {
-              alerts.alert("Time Added", "Time has been updated.");
-            }
-          }).finally(fpmUtilitiesFactory.hideLoading);
-        });
+        if (__isClockout) {
+          // ==========================================================
+          // CLOCK OUT BUTTON CLICKED
+          // ==========================================================
+          _processClockOutUser(vm.timePicker.currentTime);
+        } else {
+          _timeObj[vm.timePicker.prop] = vm.timePicker.currentTime;
+          _e.startTime = kendo.toString(kendo.parseDate(_timeObj.startTime), "g");
+          _e.finishTime = kendo.toString(kendo.parseDate(_timeObj.finishTime), "g");
+          fpmUtilitiesFactory.showLoading().then(function () {
+            timecardFactory.addNewDetails(_e).then(function (response) {
+              if (response.errors === null) {
+                alerts.alert("Time Added", "Time has been updated.");
+                if (vm.ui.data.timeCards.length !== response.timeCardDetails.length) {
+                  vm.ui.data.approvalStatus = response.timeCardSummary.approveStatus || 0;
+                }
+                _updateTimeCardsArray(response.timeCardDetails);
+              }
+            }).finally(fpmUtilitiesFactory.hideLoading);
+          });
+        }
       },
-      onTimeClicked: function (t, checkInTime) {
+      onTimeClicked: function (t, isForStartTime) {
         var __status = vm.ui.data.approvalStatus;
         if (__status === statusTypes.SEND_FOR_APPROVAL || __status === statusTypes.APPROVED || __status === statusTypes.RESENT_FOR_APPROVAL) {
           return false;
         }
-        var __headerText = 'SELECT TIME';
-        if (t.jobCode === 5001) {
-          __headerText = checkInTime ? 'CLOCK IN' : 'CLOCK OUT';
+        var __isClockout = t.jobCode === 5001 && !isForStartTime;
+        if (__isClockout) {
+          var notCheckInDetails = _.filter(vm.ui.data.timeCards, function (tc) {
+            return tc.finishTime === null && tc.jobCode !== jobCodes.CLOCK_IN;
+          });
+          if (notCheckInDetails.length > 0) {
+            alerts.confirm("Confirmation!", "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?", function () {
+              $timeout(function () {
+                __showDateTimePicker(t, isForStartTime);
+              }, 20);
+            });
+          } else {
+            alerts.confirm("Confirmation!", "Are you sure?", function () {
+              $timeout(function () {
+                __showDateTimePicker(t, isForStartTime);
+              }, 20);
+            });
+          }
         } else {
-          __headerText = checkInTime ? 'CHECK IN' : 'CHECK OUT';
-        }
-        vm.timePicker.prop = checkInTime ? 'startTime' : 'finishTime';
-        var __dateText = kendo.toString(kendo.parseDate(t[vm.timePicker.prop]), "g");
-        __headerText = __headerText + " - " + __dateText;
-        var __currentVal = kendo.parseDate(t[vm.timePicker.prop]);
-        if (vm.timePicker.instance) {
-          vm.timePicker.timecardObject = t;
-          vm.timePicker.originalTime = __currentVal;
-          vm.timePicker.instance.settings.headerText = __headerText;
-          vm.timePicker.instance.setVal(__currentVal);
-          vm.timePicker.instance.show();
+          __showDateTimePicker(t, isForStartTime);
         }
       }
     };
 
+    function __showDateTimePicker(t, isForStartTime) {
+      var __headerText = 'SELECT TIME';
+      if (t.jobCode === 5001) {
+        __headerText = isForStartTime ? 'CLOCK IN' : 'CLOCK OUT';
+      } else {
+        __headerText = isForStartTime ? 'CHECK IN' : 'CHECK OUT';
+      }
+      vm.timePicker.prop = isForStartTime ? 'startTime' : 'finishTime';
+      if (t[vm.timePicker.prop]) {
+        var __dateText = kendo.toString(kendo.parseDate(t[vm.timePicker.prop]), "g");
+        __headerText = __headerText + " - " + __dateText;
+      }
+      var __currentVal = kendo.parseDate(t[vm.timePicker.prop]);
+      if (vm.timePicker.instance) {
+        vm.timePicker.timecardObject = t;
+        vm.timePicker.originalTime = __currentVal;
+        vm.timePicker.instance.settings.headerText = __headerText;
+        vm.timePicker.instance.setVal(__currentVal);
+        vm.timePicker.instance.show();
+      }
+    }
     // ==========================================================
     // TIME CARD TIME PICKER CHANGES - END
     // ==========================================================
@@ -271,8 +308,8 @@
       showPopoverClicked: showPopoverClicked
     }
 
-    function _processClockOutUser() {
-      var smDt = new Date();
+    function _processClockOutUser(clockInDateTime) {
+      var smDt = clockInDateTime ? clockInDateTime : new Date();
       var clockOutTime = new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), smDt.getHours(), smDt.getMinutes(), 0, 0);
       var details = {
         startTime: kendo.toString(clockOutTime, "g"),
@@ -421,6 +458,36 @@
         timecardTutorialModal: null
       },
       events: {
+        onClockInOutActionClicked: function (detail) {
+          var hideSheet = $ionicActionSheet.show({
+            destructiveText: 'Clear Clock-Out Time',
+            titleText: 'Time Card Options',
+            cancel: function () {},
+            destructiveButtonClicked: function () {
+              alerts.confirm("Confirmation!", "Are you sure?", function () {
+                hideSheet();
+                fpmUtilitiesFactory.showLoading().then(function () {
+                  timecardFactory.clearClockOutTime(detail.num).then(function (response) {
+                    if (response) {
+                      $timeout(function () {
+                        _getTimeCardByDate();
+                      });
+                    }
+                  }).finally(function () {
+                    fpmUtilitiesFactory.hideLoading();
+                  });
+                });
+              }, function () {
+                hideSheet();
+              });
+
+            }
+          });
+
+          // $timeout(function () {
+          //   hideSheet();
+          // }, 5000);
+        },
         checkOutPending: function (details) {
           alerts.confirm("Confirmation!", "Are you sure?", function () {
             var tcd = kendo.parseDate(details.timeCardDate);
@@ -555,17 +622,17 @@
             });
           });
         },
-        clockOutClick: function () {
+        clockOutClick: function (clockInDate) {
           var notCheckInDetails = _.filter(vm.ui.data.timeCards, function (tc) {
             return tc.finishTime === null && tc.jobCode !== jobCodes.CLOCK_IN;
           });
           if (notCheckInDetails.length > 0) {
             alerts.confirm("Confirmation!", "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?", function () {
-              _processClockOutUser();
+              _processClockOutUser(clockInDate);
             });
           } else {
             alerts.confirm("Confirmation!", "Are you sure?", function () {
-              _processClockOutUser();
+              _processClockOutUser(clockInDate);
             });
           }
         },

@@ -728,3 +728,17 @@ button:hover {
 .font-large {
   font-size: 18px;
 }
+
+.button.button-clock-out {
+  border-color: transparent;
+  background-color: #4e6353;
+  color: #fff;
+}
+
+.justify-space-between {
+  justify-content: space-between;
+}
+
+.justify-space-center {
+  justify-content: center;
+}

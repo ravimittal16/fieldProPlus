@@ -107,6 +107,10 @@
       return apicontext.post(baseUrl + "GetPayableHoursSummaryView", filters);
     }
 
+    function clearClockOutTime(detailId) {
+      return apicontext.get(baseUrl + "ClearClockOutTime?detailNum=" + detailId);
+    }
+
     function clearTimecardFactoryData() {
       factory.data = {
         details: [],
@@ -153,6 +157,7 @@
     }
 
     var factory = {};
+    factory.clearClockOutTime = clearClockOutTime;
     factory.checkoutPending = checkoutPending;
     factory.clearTimecardFactoryData = clearTimecardFactoryData;
     factory.addPtoDetails = addPtoDetails;
