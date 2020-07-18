@@ -1042,7 +1042,8 @@
                   $state.go("app.editOrder", {
                     barCode: vm.barcode,
                     technicianNum: sch.num,
-                    src: "main"
+                    src: "main",
+                    _i: 1
                   });
                 }
               );

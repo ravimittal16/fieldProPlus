@@ -197,6 +197,7 @@
           vm.details = eventParams.details;
           vm.editMode = eventParams.editMode;
           vm.isInEditMode = vm.editMode;
+
           var fromPto = eventParams.isFromPto;
           vm.isFromPto = fromPto;
           if (vm.editMode && vm.details) {
@@ -297,7 +298,7 @@
             }).finally(fpmUtilitiesFactory.hideLoading);
           });
         }
-
+        var eventCalled = false;
         vm.$onInit = function () {
           vm.userInfo = authenticationFactory.getLoggedInUserInfo();
           if (vm.userInfo) {
@@ -307,6 +308,7 @@
           _getOrders();
         }
         $scope.$on("timecard:addEditDetailsModal:open", function ($event, params) {
+          eventCalled = true;
           initController(params);
         })
       }

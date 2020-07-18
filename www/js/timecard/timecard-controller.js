@@ -14,7 +14,9 @@
       NONE: 0,
       SEND_FOR_APPROVAL: 1,
       CANCELLED: 2,
-      APPROVED: 3
+      APPROVED: 3,
+      UNAPPROVED: 4,
+      RESENT_FOR_APPROVAL: 5
     };
     var pendingClockIns = [];
     var havingPreRoute = false
@@ -22,7 +24,64 @@
     vm.factory = timecardFactory;
     var alerts = fpmUtilitiesFactory.alerts;
     vm.currentDate = new Date();
+    // ==========================================================
+    // TIME CARD TIME PICKER CHANGES - START
+    // ==========================================================
+    vm.timePicker = {
+      settings: {
+        timeFormat: 'hh:ii A',
+        headerText: '{label} Time',
+        theme: "mobiscroll",
+        display: "bottom",
+        swipeDirection: "vertical"
+      },
+      prop: null,
+      instance: null,
+      originalTime: null,
+      currentTime: null,
+      timecardObject: null,
+      onTimeNewPicked: function () {
+        var _timeObj = vm.timePicker.timecardObject;
+        _timeObj[vm.timePicker.prop] = vm.timePicker.currentTime;
+        var _e = angular.copy(_timeObj);
+        _e.startTime = kendo.toString(kendo.parseDate(_timeObj.startTime), "g");
+        _e.finishTime = kendo.toString(kendo.parseDate(_timeObj.finishTime), "g");
+        fpmUtilitiesFactory.showLoading().then(function () {
+          timecardFactory.addNewDetails(_e).then(function (response) {
+            if (response.errors === null) {
+              alerts.alert("Time Added", "Time has been updated.");
+            }
+          }).finally(fpmUtilitiesFactory.hideLoading);
+        });
+      },
+      onTimeClicked: function (t, checkInTime) {
+        var __status = vm.ui.data.approvalStatus;
+        if (__status === statusTypes.SEND_FOR_APPROVAL || __status === statusTypes.APPROVED || __status === statusTypes.RESENT_FOR_APPROVAL) {
+          return false;
+        }
+        var __headerText = 'SELECT TIME';
+        if (t.jobCode === 5001) {
+          __headerText = checkInTime ? 'CLOCK IN' : 'CLOCK OUT';
+        } else {
+          __headerText = checkInTime ? 'CHECK IN' : 'CHECK OUT';
+        }
+        vm.timePicker.prop = checkInTime ? 'startTime' : 'finishTime';
+        var __dateText = kendo.toString(kendo.parseDate(t[vm.timePicker.prop]), "g");
+        __headerText = __headerText + " - " + __dateText;
+        var __currentVal = kendo.parseDate(t[vm.timePicker.prop]);
+        if (vm.timePicker.instance) {
+          vm.timePicker.timecardObject = t;
+          vm.timePicker.originalTime = __currentVal;
+          vm.timePicker.instance.settings.headerText = __headerText;
+          vm.timePicker.instance.setVal(__currentVal);
+          vm.timePicker.instance.show();
+        }
+      }
+    };
 
+    // ==========================================================
+    // TIME CARD TIME PICKER CHANGES - END
+    // ==========================================================
 
     function _updateBindingsForSummaryStatus(details) {
       var anythingPending = _.where(details.timeCardDetails, {
@@ -253,8 +312,6 @@
     }
 
     function showModal() {
-
-
       if (vm.ui.data.isFromPto === true && vm.ui.data.summary === null) {
         vm.ui.data.summary = {
           num: 0,
@@ -502,7 +559,6 @@
           var notCheckInDetails = _.filter(vm.ui.data.timeCards, function (tc) {
             return tc.finishTime === null && tc.jobCode !== jobCodes.CLOCK_IN;
           });
-          console.log(notCheckInDetails)
           if (notCheckInDetails.length > 0) {
             alerts.confirm("Confirmation!", "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?", function () {
               _processClockOutUser();
@@ -562,6 +618,15 @@
       });
       vm.ui.data.enableForCustomer = angular.isDefined(havingCustomrNumber);
       vm.dateFormat = userInfo.dateFormat;
+      if (userInfo) {
+        vm.userName = userInfo.userName;
+      }
+      $ionicModal.fromTemplateUrl("timecardDetailsModal.html", {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function (modal) {
+        vm.ui.data.addEditDetailsModal = modal;
+      });
     }
 
     $scope.$watch("vm.ui.data.timeCards", function (nw) {

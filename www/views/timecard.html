@@ -10,14 +10,23 @@
         </ui>
       </div>
     </div>
+
+
+    <!-- TIME PICKER -->
+    <!-- ============================================================================== -->
+    <input ng-model="vm.timePicker.currentTime" mobiscroll-datetime="vm.timePicker.settings"
+      ng-change="vm.timePicker.onTimeNewPicked()" mobiscroll-instance="vm.timePicker.instance" class="hidden" />
+    <!-- ============================================================================== -->
+
     <div style="border-bottom:2px solid #DDD;background-color:#f9f9f9;-webkit-box-shadow: -5px 10px 13px -12px rgba(0,0,0,0.75);
     -moz-box-shadow: -5px 10px 13px -12px rgba(0,0,0,0.75);
     box-shadow: -5px 10px 13px -12px rgba(0,0,0,0.75);">
-      <div class="row">
+      <div class="row" style="display: flex;align-items: center;">
         <div class="col">
-          <Strong>SERVICE PROVIDER NAME</Strong>
+          <Strong ng-bind="vm.userName" style="font-size: 1.2rem;
+          margin-left: 5px;"></Strong>
         </div>
-        <div class="col-33" style="display: flex;justify-content: flex-end;margin-right: 5px;">
+        <div class="col" style="font-size: 1.2rem;display: flex;justify-content: flex-end;margin-right: 5px;">
           <input ng-model="vm.currentDate" mobiscroll-date="vm.ui.calendar.settings"
             ng-change="vm.ui.events.onCurrentDateChanged()" mobiscroll-instance="vm.ui.calendar.control"
             class="hidden" />
@@ -93,7 +102,9 @@
           </span>
         </div>
         <div class="card" ng-repeat="(key,t) in vm.ui.data.timeCards | orderBy:'num'">
-          <div class="item item-divider" ng-if="t.jobCode != 5001">
+          <div class="item item-divider" ng-if="t.jobCode != 5001" style="display: flex;
+          align-items: center;
+          justify-content: space-between;">
             <span ng-if="!t.isPtoType && t.jobCode != 5001 && t.barcode != 0" style="font-size: 14px;
           font-weight: 500;">{{t.barcodeName}} - {{t.jobCodeName}}</span>
 
@@ -127,14 +138,20 @@
             </div>
             <div class="row">
               <div class="col col-33 col-center">
-                <h3 ng-bind="t.startTime | date :'shortTime'"></h3>
+                <a ng-click="vm.timePicker.onTimeClicked(t,true)">
+                  <h3 ng-bind="t.startTime | date :'shortTime'"></h3>
+                </a>
               </div>
               <div class="col col-33">
                 <button ng-if="!t.finishTime && t.jobCode != 5001" class="button button-small button-calm"
-                  ng-click="vm.ui.events.checkOutPending(t)">
+                  ng-click="vm.timePicker.onTimeClicked(t,false)">
                   Check out
                 </button>
-                <h3 ng-if="t.finishTime" ng-bind="t.finishTime | date :'shortTime'"></h3>
+                <div>
+                  <a ng-click="vm.timePicker.onTimeClicked(t,false)">
+                    <h3 ng-if="t.finishTime" ng-bind="t.finishTime | date :'shortTime'"></h3>
+                  </a>
+                </div>
               </div>
               <div class="col col-33">
                 <h3 ng-bind="t.startTime | timeSpan:t.finishTime:'sm'"></h3>

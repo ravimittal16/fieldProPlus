@@ -176,28 +176,36 @@
             <div class="item item-divider header-dark">
               SCHEDULE START AND END
             </div>
-            <div class="item item-text-wrap">
-              <p class="n-m-b">
-                <strong>Schedule Start</strong>
-              </p>
-              <!-- <p>{{vm.schedule.scheduledStartDateTime | date:'MM/dd/yyyy hh:mm a'}}</p> -->
-              <fp-date-time-renderer model-val='vm.schedule.scheduledStartDateTime' type="datetime"
-                format='vm.dateTimeFormat'></fp-date-time-renderer>
-              <p class="n-m-b">
-                <strong>Schedule End</strong>
-              </p>
-              <!-- <p>{{vm.schedule.scheduledFinishDateTime | date:'MM/dd/yyyy hh:mm a'}}</p> -->
-              <fp-date-time-renderer model-val='vm.schedule.scheduledFinishDateTime' type="datetime"
-                format='vm.dateTimeFormat'></fp-date-time-renderer>
-
-              <!-- <div style="display: flex;justify-content: center;align-items: center;margin-top: 15px;"
-                ng-if="vm.uiSettings.isTimeCardModuleEnabled">
-                <button class="button button-block button-small button-dark"
-                  ng-click="vm.tabs.sch.events.pushToTimecard()">
-                  <i class="icon ion-ios-trash-outline"></i>&nbsp;Delete Schedule
-                </button>
-              </div> -->
+            <div class="row">
+              <div class="col">
+                <strong><span ng-bind="vm.schedule.technicianName"></span></strong>
+              </div>
             </div>
+            <div class="row">
+              <div class="col" style="display: flex; justify-content: center;">
+                <span class="label label-default">Schedule Start</span>
+              </div>
+              <div class="col" style="display: flex;justify-content: center;"><span class="label label-default">Schedule
+                  Finish</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col" style="display: flex; justify-content: center;">
+
+                <span class="icon-center ion-clock"></span>&nbsp;
+                <fp-date-time-renderer model-val='vm.schedule.scheduledStartDateTime' type="datetime"
+                  format='vm.dateTimeFormat'></fp-date-time-renderer>
+
+              </div>
+              <div class="col" style="display: flex; justify-content: center;">
+
+                <span class="icon-center ion-clock"></span>&nbsp;
+                <fp-date-time-renderer model-val='vm.schedule.scheduledFinishDateTime' type="datetime"
+                  format='vm.dateTimeFormat'></fp-date-time-renderer>
+
+              </div>
+            </div>
+
           </div>
           <div class="card">
             <div class="item item-divider header-dark">
@@ -219,7 +227,8 @@
             <div class="list" ng-if="vm.uiSettings.billingOption == 0">
               <div>
                 <div class="item item-input item-stacked-label" style="border-bottom: 0px !important;">
-                  <span class="input-label">Actual Start Time</span>
+                  <span class="input-label">
+                    <span class="label label-primary">Actual Start Time</span></span>
                 </div>
                 <div class="item" style="border-top:0px !important;padding-top: 0px !important;">
                   <div style="width: 65%;float: left;">
@@ -238,7 +247,7 @@
                       ng-click="vm.tabs.sch.events.clearAllDateTimeSelection(true)">
                       <i class="icon ion-ios-trash-outline"></i>
                     </button>
-                    <button type="button" class="button button-small button-positive"
+                    <button type="button" class="button button-small button-positive" style="width: 79px;"
                       ng-disabled="vm.schedule.approve || vm.schedule.checkInStatus"
                       ng-click="vm.tabs.sch.events.checkIn()">
                       <i class="ion ion-clock"></i>&nbsp;Check In
@@ -246,7 +255,7 @@
                   </div>
                 </div>
                 <div class="item item-input item-stacked-label" style="border-bottom: 0px !important;">
-                  <span class="input-label">Actual End Time</span>
+                  <span class="input-label"><span class="label label-primary">Actual Finish Time</span></span>
                 </div>
                 <div class="item" style="border-top:0px !important;padding-top: 0px !important;">
                   <div style="width: 65%;float: left;">
@@ -429,20 +438,25 @@
                 ng-click="vm.tabs.sch.events.onListScheduleItemTap(sch)"
                 ng-class="{'active':vm.schedule.num === sch.num}">
                 <h4>
-                  <span class="text-muted">Sch Date :</span>
-                  <!-- <strong>{{::sch.scheduledStartDateTime | date:'MM/dd/yyyy'}}</strong> -->
-                  <fp-date-time-renderer model-val="sch.scheduledStartDateTime" type="datetime"
-                    format="vm.dateTimeFormat"></fp-date-time-renderer>&nbsp;
-                  <span class="text-muted" ng-if="sch.actualStartDateTime">Actual Date : </span>
+                  <p><span>Schedule Date :</span>
+                    <fp-date-time-renderer model-val="sch.scheduledStartDateTime" type="datetime"
+                      format="vm.dateTimeFormat"></fp-date-time-renderer>
+                    <span ng-if="sch.workComplete" class="icon-center ion-checkmark-circled"
+                      style="color:#25ad45;font-size: 16px;"></span>
+                  </p>
+                  <p>Service Provider : <strong>{{::sch.technicianName}}</strong></p>
+                  <!-- <p>Status : <strong>{{::sch.scheduleStatus}}</strong></p> -->
+                  <!-- <span class="text-muted" ng-if="sch.actualStartDateTime">Actual Date : </span>
                   <strong ng-if="sch.actualStartDateTime">
-                    <!-- {{::sch.actualStartDateTime | date:'MM/dd/yyyy'}} -->
+
                     <fp-date-time-renderer model-val="sch.actualStartDateTime" type="datetime"
                       format="vm.dateTimeFormat"></fp-date-time-renderer>&nbsp;
-                  </strong>
-                  <strong class="text-info">{{::sch.technicianName}}</strong>
-                  <span ng-if="sch.tripNote">: Trip Note - {{::sch.tripNote}}</span>
+                  </strong> -->
+                  <!-- <strong class="text-info">{{::sch.technicianName}}</strong> -->
+                  <!-- <span ng-if="sch.tripNote">: Trip Note - {{::sch.tripNote}}</span> -->
                 </h4>
               </ion-item>
+              <ion-item>&nbsp;</ion-item>
             </ion-list>
           </div>
         </ion-content>
