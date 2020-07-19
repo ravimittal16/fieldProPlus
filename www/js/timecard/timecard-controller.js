@@ -72,7 +72,7 @@
         if (__status === statusTypes.SEND_FOR_APPROVAL || __status === statusTypes.APPROVED || __status === statusTypes.RESENT_FOR_APPROVAL) {
           return false;
         }
-        var __isClockout = t.jobCode === 5001 && !isForStartTime;
+        var __isClockout = t.jobCode === 5001 && !isForStartTime && t.finishTime === null;
         if (__isClockout) {
           var notCheckInDetails = _.filter(vm.ui.data.timeCards, function (tc) {
             return tc.finishTime === null && tc.jobCode !== jobCodes.CLOCK_IN;
@@ -139,27 +139,29 @@
     }
 
     function _checkIfPastDateSelected() {
-      var selected = new Date(vm.ui.data.currentDate.getFullYear(), vm.ui.data.currentDate.getMonth(), vm.ui.data.currentDate.getDate(), 0, 0, 0, 0);
-      var current = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0, 0);
-      var isPastDate = moment(selected).isBefore(current);
-      var isFutureDate = moment(selected).isAfter(current);
-      if (moment(selected).isSame(current)) {
-        vm.ui.data.addTimeVisibility = vm.ui.data.isClockedIn;
-        vm.ui.data.ptoButtonVisibility = !vm.ui.data.isClockedIn;
-      }
-      vm.ui.data.disableClockInButton = isPastDate;
-      if (vm.ui.data.isClockedOut === true) {
-        vm.ui.data.disableClockOutButton = isPastDate;
-      }
-      if (isFutureDate === true) {
-        vm.ui.data.disableClockInButton = true;
-        vm.ui.data.addTimeVisibility = false;
-        vm.ui.data.ptoButtonVisibility = true;
-      }
-      if (isPastDate === true) {
-        vm.ui.data.addTimeVisibility = false;
-        vm.ui.data.ptoButtonVisibility = true;
-      }
+      $timeout(function () {
+        var selected = new Date(vm.currentDate.getFullYear(), vm.currentDate.getMonth(), vm.currentDate.getDate(), 0, 0, 0, 0);
+        var current = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0, 0);
+        var isPastDate = moment(selected).isBefore(current);
+        var isFutureDate = moment(selected).isAfter(current);
+        if (moment(selected).isSame(current)) {
+          vm.ui.data.addTimeVisibility = vm.ui.data.isClockedIn;
+          vm.ui.data.ptoButtonVisibility = !vm.ui.data.isClockedIn;
+        }
+        //    vm.ui.data.disableClockInButton = isPastDate;
+        // if (vm.ui.data.isClockedOut === true) {
+        //   vm.ui.data.disableClockOutButton = isPastDate;
+        // }
+        if (isFutureDate === true) {
+          //   vm.ui.data.disableClockInButton = true;
+          // vm.ui.data.addTimeVisibility = false;
+          // vm.ui.data.ptoButtonVisibility = true;
+        }
+        if (isPastDate === true) {
+          // vm.ui.data.addTimeVisibility = false;
+          // vm.ui.data.ptoButtonVisibility = true;
+        }
+      }, 100);
     }
 
     function _updateTimeCardsArray(details) {
@@ -319,6 +321,12 @@
     }
 
     function _processClockOutUser(clockInDateTime, __details) {
+      var tcd = null;
+      if (vm.ui.data.summary && vm.ui.data.summary.timeCardDate) {
+        tcd = moment(vm.ui.data.summary.timeCardDate).toDate();
+      } else {
+        tcd = vm.currentDate;
+      }
       var smDt = clockInDateTime ? clockInDateTime : new Date();
       var clockOutTime = new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), smDt.getHours(), smDt.getMinutes(), 0, 0);
       var __num = __details ? __details.num : 0;
@@ -327,11 +335,14 @@
         startTime: kendo.toString(clockOutTime, "g"),
         jobCode: jobCodes.CLOCK_OUT,
         numFromSummary: vm.ui.data.summary.num,
-        timeCardDate: kendo.toString(kendo.parseDate(vm.ui.data.summary.timeCardDate), "g"),
+        timeCardDate: kendo.toString(kendo.parseDate(tcd), "g"),
         uniqueIdentifier: vm.ui.data.currentClockedIn.uniqueIdentifier
       };
       fpmUtilitiesFactory.showLoading().then(function () {
         timecardFactory.clockInOutUser(details).then(function (response) {
+          // ==========================================================
+          // TODO: NEED TO CHANGE IT
+          // ==========================================================
           if (response && response.errors === null) {
             vm.ui.data.clockOutDateTime = clockOutTime;
             vm.ui.data.isClockedOut = true;
@@ -343,7 +354,7 @@
             vm.factory.summary = response.timeCardSummary;
             var dt = vm.currentDate ? vm.currentDate : new Date();
             var cDate = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 0, 0, 0, 0);
-            var tcd = moment(vm.ui.data.summary.timeCardDate).toDate();
+
             var tcDate = new Date(tcd.getFullYear(), tcd.getMonth(), tcd.getDate(), 0, 0, 0, 0);
             if (moment(tcDate).isSameOrAfter(cDate)) {
               vm.ui.data.disableClockInButton = false;
@@ -365,7 +376,7 @@
       if (vm.ui.data.isFromPto === true && vm.ui.data.summary === null) {
         vm.ui.data.summary = {
           num: 0,
-          timeCardDate: vm.ui.data.currentDate
+          timeCardDate: vm.currentDate
         };
         vm.factory.summary = vm.ui.data.summary;
       }
@@ -380,7 +391,7 @@
               isFromPto: vm.ui.data.isFromPto,
               details: vm.ui.data.currentDetails,
               editMode: vm.ui.data.isInEditMode,
-              currentDate: vm.ui.data.currentDate
+              currentDate: vm.currentDate
             });
             modal.show();
           }, 300);
@@ -389,7 +400,8 @@
         $scope.$broadcast("timecard:addEditDetailsModal:open", {
           isFromPto: vm.ui.data.isFromPto,
           details: vm.ui.data.currentDetails,
-          editMode: vm.ui.data.isInEditMode
+          editMode: vm.ui.data.isInEditMode,
+          currentDate: vm.currentDate
         });
         vm.ui.data.addEditDetailsModal.show();
       }
@@ -480,6 +492,18 @@
             titleText: 'Time Card Options',
             cancel: function () {},
             destructiveButtonClicked: function () {
+              // ==========================================================
+              // Checking the pending clock-out counts
+              // ==========================================================
+              var _pendingClockout = vm.ui.data.timeCards.filter(function (t) {
+                return t.jobCode === jobCodes.CLOCK_IN && t.finishTime === null;
+              })
+              if (_pendingClockout.length > 0) {
+                // TODO : NEED TO CHANGE THE MESSAGE
+                hideSheet();
+                alerts.alert("Warning", "You cannot have multiple Clock Out.");
+                return false;
+              }
               alerts.confirm("Confirmation!", "Are you sure?", function () {
                 hideSheet();
                 fpmUtilitiesFactory.showLoading().then(function () {
@@ -653,13 +677,15 @@
           }
         },
         clockInClick: function () {
-          var smDt = vm.currentDate;
+          var tcDate = vm.currentDate;
+          var smDt = new Date();
           var clockInTime = new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0);
+          var timeCardDate = new Date(tcDate.getFullYear(), tcDate.getMonth(), tcDate.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0);
           var details = {
             startTime: fpmUtilitiesFactory.toStringDate(clockInTime),
             jobCode: jobCodes.CLOCK_IN,
             numFromSummary: vm.ui.data.summary === null ? 0 : vm.ui.data.summary.Num,
-            timeCardDate: clockInTime
+            timeCardDate: timeCardDate
           };
           vm.errors = [];
           fpmUtilitiesFactory.showLoading().then(function () {

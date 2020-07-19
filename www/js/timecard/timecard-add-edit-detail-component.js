@@ -59,17 +59,18 @@
               vm.ui.errors.push("Invalid Time");
               return false;
             }
-            if (!vm.isFromPto) {
-              if (!vm.editMode && ft.isAfter(tcd)) {
-                vm.ui.errors.push("Cannot be a future time");
-                return false;
-              }
-            }
+            // if (!vm.isFromPto) {
+            //   if (!vm.editMode && ft.isAfter(tcd)) {
+            //     vm.ui.errors.push("Cannot be a future time");
+            //     return false;
+            //   }
+            // }
           }
 
           var _e = angular.copy(vm.entity)
           _e.startTime = kendo.toString(kendo.parseDate(vm.entity.startTime), "g");
           _e.finishTime = kendo.toString(kendo.parseDate(vm.entity.finishTime), "g");
+          _e.timeCardDate = kendo.toString(dt, "g");
           if (_e.jobCode === null || _e.jobCode === 0) {
             vm.ui.errors.push("Please select Job code before save");
             return false;
@@ -159,23 +160,25 @@
 
         function onDateTimeChaged() {
           $timeout(function () {
-            var summary = timecardFactory.summary;
-            var st = vm.dateTimeMode.startTime;
-            var smDt = kendo.parseDate(summary.timeCardDate);
-            vm.entity.startTime = new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), st.getHours(), st.getMinutes(), 0, 0);
+            // var summary = timecardFactory.summary;
+            // var st = vm.dateTimeMode.startTime;
+            // var smDt = kendo.parseDate(summary.timeCardDate);
+            //OLD
+            // vm.entity.startTime = new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), st.getHours(), st.getMinutes(), 0, 0);
+            vm.entity.startTime = vm.dateTimeMode.startTime;
             _findTimeDiff();
           }, 100);
         }
 
         function onFinishDateTimeChaged() {
           $timeout(function () {
-            var summary = timecardFactory.summary;
+            //  var summary = timecardFactory.summary;
             if (vm.entity && vm.entity.startTime === null) {
               onDateTimeChaged();
             }
-            var ft = kendo.parseDate(vm.dateTimeMode.finishTime);
-            var smDt = kendo.parseDate(summary.timeCardDate);
-            vm.entity.finishTime = new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), ft.getHours(), ft.getMinutes(), 0, 0);
+            // var ft = kendo.parseDate(vm.dateTimeMode.finishTime);
+            // var smDt = kendo.parseDate(summary.timeCardDate);
+            vm.entity.finishTime = vm.dateTimeMode.finishTime; //new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), ft.getHours(), ft.getMinutes(), 0, 0);
             _findTimeDiff();
           }, 100);
         }
@@ -193,7 +196,7 @@
 
         function initController(eventParams) {
           vm.ui.errors = [];
-          selectedDate = new Date();
+          selectedDate = eventParams.currentDate || new Date();
           vm.details = eventParams.details;
           vm.editMode = eventParams.editMode;
           vm.isInEditMode = vm.editMode;

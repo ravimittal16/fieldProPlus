@@ -51,13 +51,13 @@
       <label for="" class="item item-input" data-ng-if="vm.timecardPermissions.timePickerVisibility">
         <span class="input-label">Start Time</span>
         <input type="text" placeholder="Start Time" class="transparent-background text-right"
-          data-mobiscroll-time="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect: vm.events.onDateTimeChaged}"
+          data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect: vm.events.onDateTimeChaged}"
           readonly="" data-ng-model="vm.dateTimeMode.startTime" />
       </label>
       <label for="" class="item item-input" data-ng-if="vm.timecardPermissions.timePickerVisibility">
         <span class="input-label">Finish Time</span>
         <input type="text" placeholder="Finish Time" class="transparent-background text-right"
-          data-mobiscroll-time="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect: vm.events.onFinishDateTimeChaged}"
+          data-mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect: vm.events.onFinishDateTimeChaged}"
           readonly="" data-ng-model="vm.dateTimeMode.finishTime" />
       </label>
       <label for="" class="item item-input">
