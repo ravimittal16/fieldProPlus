@@ -55,7 +55,7 @@
           <button class="button icon-center ion-clock button-block button-positive button-small"
             ng-if="!vm.ui.data.isClockedOut"
             ng-disabled="!vm.ui.data.isClockedIn || vm.ui.data.disableClockOutButton || (vm.ui.data.approvalStatus != 0 && vm.ui.data.approvalStatus != 2)"
-            ng-click="vm.ui.events.clockOutClick(null)">&nbsp;Clock Out</button>
+            ng-click="vm.ui.events.clockOutClick(null,null)">&nbsp;Clock Out</button>
         </div>
         <div class="col center">
           <button class="button pull-right button-small button-icon icon ion-android-more-vertical"
@@ -101,7 +101,7 @@
             </span>
           </span>
         </div>
-        <div class="card" ng-repeat="(key,t) in vm.ui.data.timeCards | orderBy:'num'">
+        <div class="card" ng-repeat="(key,t) in vm.ui.data.timeCards | orderBy:'startTime'">
           <div class="item item-divider" ng-if="t.jobCode != 5001" style="display: flex;
           align-items: center;
           justify-content: space-between;">
@@ -110,7 +110,7 @@
 
             <span ng-if="t.jobCode != 5001 && t.barcode == 0" style="font-size: 14px;
           font-weight: 500;">{{t.jobCodeName}}</span>
-            <span ng-if="t.isPtoType" class="text-danger">PTO - {{t.pto}}</span>
+            <!-- <span ng-if="t.isPtoType" class="text-danger">PTO - {{t.pto}}</span> -->
             <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
               ng-click="vm.ui.events.onCardActionClicked(t)"
               ng-if="vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2"></a>

@@ -24,6 +24,7 @@
     vm.factory = timecardFactory;
     var alerts = fpmUtilitiesFactory.alerts;
     vm.currentDate = new Date();
+    vm.showingLoading = false;
     // ==========================================================
     // TIME CARD TIME PICKER CHANGES - START
     // ==========================================================
@@ -48,7 +49,7 @@
           // ==========================================================
           // CLOCK OUT BUTTON CLICKED
           // ==========================================================
-          _processClockOutUser(vm.timePicker.currentTime);
+          _processClockOutUser(vm.timePicker.currentTime, _timeObj);
         } else {
           _timeObj[vm.timePicker.prop] = vm.timePicker.currentTime;
           _e.startTime = kendo.toString(kendo.parseDate(_timeObj.startTime), "g");
@@ -162,32 +163,37 @@
     }
 
     function _updateTimeCardsArray(details) {
-      var sectionCounter = 1;
-      var ptoCounter = 1;
-      vm.ui.data.timeCards = [];
-      if (details.length > 0) {
-        angular.forEach(details, function (s, i) {
-          if (s.jobCode !== jobCodes.CLOCK_IN) {
-            if (!s.isPtoType) {
-              s.section = sectionCounter;
-              sectionCounter++;
-            } else {
-              s.pto = ptoCounter;
-              ptoCounter++;
-            }
-          } else {
-            s.section = 0;
-          }
-          if (i === (details.length - 1)) {
-            // vm.ui.data.timeCards = _.reject(details, {
-            //   jobCode: jobCodes.CLOCK_IN,
-            //   finishTime: null
-            // });
-            //NOTE : WE NEED TO SHOW EVERYTHING : JOY : JULY 10,2020
-            vm.ui.data.timeCards = details;
-          }
-        });
-      }
+
+      // ==========================================================
+      // We don't need the sections now
+      // ==========================================================
+      vm.ui.data.timeCards = details;
+      // var sectionCounter = 1;
+      // var ptoCounter = 1;
+      // vm.ui.data.timeCards = [];
+      // if (details.length > 0) {
+      //   angular.forEach(details, function (s, i) {
+      //     if (s.jobCode !== jobCodes.CLOCK_IN) {
+      //       if (!s.isPtoType) {
+      //         s.section = sectionCounter;
+      //         sectionCounter++;
+      //       } else {
+      //         s.pto = ptoCounter;
+      //         ptoCounter++;
+      //       }
+      //     } else {
+      //       s.section = 0;
+      //     }
+      //     if (i === (details.length - 1)) {
+      //       // vm.ui.data.timeCards = _.reject(details, {
+      //       //   jobCode: jobCodes.CLOCK_IN,
+      //       //   finishTime: null
+      //       // });
+      //       //NOTE : WE NEED TO SHOW EVERYTHING : JOY : JULY 10,2020
+      //       vm.ui.data.timeCards = details;
+      //     }
+      //   });
+      // }
     }
 
     function _updateTimeCardBindings(details) {
@@ -276,6 +282,7 @@
 
     function _getTimeCardByDate() {
       _clearClockInData();
+      vm.showingLoading = true;
       fpmUtilitiesFactory.showLoading().then(function () {
         timecardFactory.getTimeCardByDate(toDateString(vm.currentDate)).then(function (response) {
           if (response) {
@@ -283,7 +290,10 @@
           } else {
             _checkIfPastDateSelected();
           }
-        }).finally(fpmUtilitiesFactory.hideLoading);
+        }).finally(function () {
+          vm.showingLoading = false;
+          fpmUtilitiesFactory.hideLoading();
+        });
       });
     }
 
@@ -308,10 +318,12 @@
       showPopoverClicked: showPopoverClicked
     }
 
-    function _processClockOutUser(clockInDateTime) {
+    function _processClockOutUser(clockInDateTime, __details) {
       var smDt = clockInDateTime ? clockInDateTime : new Date();
       var clockOutTime = new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), smDt.getHours(), smDt.getMinutes(), 0, 0);
+      var __num = __details ? __details.num : 0;
       var details = {
+        num: __num,
         startTime: kendo.toString(clockOutTime, "g"),
         jobCode: jobCodes.CLOCK_OUT,
         numFromSummary: vm.ui.data.summary.num,
@@ -339,6 +351,7 @@
             vm.ui.data.approvalStatus = response.timeCardSummary.approveStatus || 0;
             _updateTimeCardsArray(response.timeCardDetails);
             _updateBindingsForSummaryStatus(response);
+
           } else {
             alerts.alert("Error", "Not able to perform clock out");
           }
@@ -458,6 +471,9 @@
         timecardTutorialModal: null
       },
       events: {
+        refreshOnPullDown: function () {
+          _getTimeCardByDate();
+        },
         onClockInOutActionClicked: function (detail) {
           var hideSheet = $ionicActionSheet.show({
             destructiveText: 'Clear Clock-Out Time',
@@ -622,17 +638,17 @@
             });
           });
         },
-        clockOutClick: function (clockInDate) {
+        clockOutClick: function (clockInDate, detail) {
           var notCheckInDetails = _.filter(vm.ui.data.timeCards, function (tc) {
             return tc.finishTime === null && tc.jobCode !== jobCodes.CLOCK_IN;
           });
           if (notCheckInDetails.length > 0) {
             alerts.confirm("Confirmation!", "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?", function () {
-              _processClockOutUser(clockInDate);
+              _processClockOutUser(clockInDate, detail);
             });
           } else {
             alerts.confirm("Confirmation!", "Are you sure?", function () {
-              _processClockOutUser(clockInDate);
+              _processClockOutUser(clockInDate, detail);
             });
           }
         },
