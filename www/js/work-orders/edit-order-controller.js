@@ -1226,13 +1226,13 @@
           },
           checkOut: function () {
             if (
-              vm.schedule.approve === true ||
-              vm.schedule.checkOutStatus === true
+              vm.schedule.approve ||
+              vm.schedule.checkOutStatus
             ) {
               alerts.alert("Alert", "Not allowed to checkout");
             } else {
               if (checkAuthorizationIfServiceProvider(null, null, false)) {
-                if (vm.schedule.actualStartDateTime === null) {
+                if (vm.schedule.actualStartDateTime === null || !vm.schedule.checkInStatus) {
                   alerts.alert("Warning", "Please check in first");
                   return false;
                 }
