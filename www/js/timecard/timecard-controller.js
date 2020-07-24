@@ -144,10 +144,11 @@
         var current = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0, 0);
         var isPastDate = moment(selected).isBefore(current);
         var isFutureDate = moment(selected).isAfter(current);
-        if (moment(selected).isSame(current)) {
-          vm.ui.data.addTimeVisibility = vm.ui.data.isClockedIn;
-          vm.ui.data.ptoButtonVisibility = !vm.ui.data.isClockedIn;
-        }
+        // if (moment(selected).isSame(current)) {
+
+        // }
+        vm.ui.data.addTimeVisibility = vm.ui.data.isClockedIn;
+        vm.ui.data.ptoButtonVisibility = !vm.ui.data.isClockedIn;
         //    vm.ui.data.disableClockInButton = isPastDate;
         // if (vm.ui.data.isClockedOut === true) {
         //   vm.ui.data.disableClockOutButton = isPastDate;
@@ -750,7 +751,10 @@
       }
     });
     $scope.$on("$ionicView.beforeEnter", function (e, data) {
-      activateController();
+      $timeout(function () {
+        activateController();
+        _checkIfPastDateSelected();
+      }, 100)
     });
   }
   initController.$inject = ["$scope", "$timeout", "$rootScope", "$state", "$ionicPopover", "$ionicModal",
