@@ -141,9 +141,14 @@
     function _checkIfPastDateSelected() {
       $timeout(function () {
         var selected = new Date(vm.currentDate.getFullYear(), vm.currentDate.getMonth(), vm.currentDate.getDate(), 0, 0, 0, 0);
-        var current = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0, 0);
+        var _dt = new Date();
+        var current = new Date(_dt.getFullYear(), _dt.getMonth(), _dt.getDate(), 0, 0, 0, 0);
+        // ==========================================================
+        // NOTE : Future date should not longer that Current Date + 1
+        var currentPlusOneDay = moment().add(1, 'days').toDate();
+        // ==========================================================
         var isPastDate = moment(selected).isBefore(current);
-        var isFutureDate = moment(selected).isAfter(current);
+        var isFutureDate = moment(selected).isAfter(currentPlusOneDay);
         // if (moment(selected).isSame(current)) {
 
         // }
@@ -153,10 +158,10 @@
         // if (vm.ui.data.isClockedOut === true) {
         //   vm.ui.data.disableClockOutButton = isPastDate;
         // }
-        if (isFutureDate === true) {
-          //   vm.ui.data.disableClockInButton = true;
-          // vm.ui.data.addTimeVisibility = false;
-          // vm.ui.data.ptoButtonVisibility = true;
+        if (isFutureDate) {
+          vm.ui.data.disableClockInButton = true;
+          vm.ui.data.addTimeVisibility = false;
+          vm.ui.data.ptoButtonVisibility = true;
         }
         if (isPastDate === true) {
           // vm.ui.data.addTimeVisibility = false;

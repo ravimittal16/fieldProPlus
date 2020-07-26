@@ -49,12 +49,30 @@
 
         function _addOrUpdateToDatabase() {
           vm.ui.errors = [];
+
+          if (vm.isFromPto) {
+            if (vm.entity.finishTime === null) {
+              vm.ui.errors.push("Please select finish time.");
+              return false;
+            }
+            var _st = kendo.parseDate(vm.entity.startTime);
+            var _tcd = kendo.parseDate(vm.entity.timeCardDate);
+            var s = moment(new Date(_st.getFullYear(), _st.getMonth(), _st.getDate(), 0, 0, 0, 0));
+            var tcd = moment(new Date(_tcd.getFullYear(), _tcd.getMonth(), _tcd.getDate(), 0, 0, 0, 0));
+            var tcd = moment(kendo.parseDate(vm.entity.timeCardDate));
+            var dayDiff = moment(s).diff(tcd, "day");
+            if (dayDiff < 0 || dayDiff > 1) {
+              vm.ui.errors.push("Invalid Date");
+              return false;
+            }
+          }
           if (vm.entity.finishTime !== null) {
             var f = kendo.parseDate(vm.entity.finishTime);
             var dt = kendo.parseDate(vm.entity.timeCardDate);
             var tcd = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0);
             var ft = moment(new Date(f.getFullYear(), f.getMonth(), f.getDate(), f.getHours(), f.getMinutes(), 0, 0));
             var totalMinutes = moment(ft).diff(kendo.parseDate(vm.entity.startTime), "minutes");
+            // console.log(totalMinutes, vm.entity.startTime, vm.entity.finishTime)
             if (totalMinutes < 0) {
               vm.ui.errors.push("Invalid Time");
               return false;
@@ -66,7 +84,6 @@
             //   }
             // }
           }
-
           var _e = angular.copy(vm.entity)
           _e.startTime = kendo.toString(kendo.parseDate(vm.entity.startTime), "g");
           _e.finishTime = kendo.toString(kendo.parseDate(vm.entity.finishTime), "g");
@@ -178,6 +195,7 @@
             }
             // var ft = kendo.parseDate(vm.dateTimeMode.finishTime);
             // var smDt = kendo.parseDate(summary.timeCardDate);
+            // console.log("FINISHTIME", vm.dateTimeMode.finishTime);
             vm.entity.finishTime = vm.dateTimeMode.finishTime; //new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), ft.getHours(), ft.getMinutes(), 0, 0);
             _findTimeDiff();
           }, 100);
@@ -267,9 +285,13 @@
                   vm.dateTimeMode.timeSpan = mintues + " Minutes";
                 }
                 defer.resolve(true);
+              } else if (totalMintues < 0) {
+                vm.dateTimeMode.timeSpan = "";
+                vm.ui.isInvalidSave = true;
+                defer.resolve(false);
               } else {
                 if (!vm.isInEditMode) {
-                  vm.entity.finishTime = new Date();
+                  // vm.entity.finishTime = new Date();
                   vm.ui.isInvalidSave = true;
                   //vm.ui.errors.push("Invalid Time");
                   defer.resolve(false);

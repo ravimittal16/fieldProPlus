@@ -28,12 +28,17 @@
           <input ng-model="vm.currentDate" mobiscroll-date="vm.ui.calendar.settings"
             ng-change="vm.ui.events.onCurrentDateChanged()" mobiscroll-instance="vm.ui.calendar.control"
             class="hidden" />
-          <strong><a ng-click="vm.ui.events.onShowCalenderClick($event)">
+          <strong>
+            <div style="font-size: 11px;">
+              <span>Timecard Date</span>
+            </div>
+            <a ng-click="vm.ui.events.onShowCalenderClick($event)">
               <span class="icon-center ion-clock"></span>
               <fp-date-time-renderer model-val="vm.currentDate" type="date" format="vm.dateFormat">
               </fp-date-time-renderer>
               <i class="icon ion-arrow-down-b"></i>
-            </a></strong>
+            </a>
+          </strong>
         </div>
       </div>
       <div class="row">
@@ -155,14 +160,17 @@
                 </a>
               </div>
             </div>
-            <div class="col col-33 col-center">
+            <div class="col col-33">
               <div style="display: flex;
-                align-items: center;"
-                ng-class="{'justify-space-between':t.finishTime && t.jobCode === 5001,'justify-space-center':t.jobCode !== 5001}">
-                <h3 ng-bind="t.startTime | timeSpan:t.finishTime:'sm'"></h3>
-                <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
-                  ng-click="vm.ui.events.onClockInOutActionClicked(t)"
-                  ng-if="t.finishTime && t.jobCode === 5001 && (vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2)"></a>
+              align-items: center;justify-content: center;">
+                <div>
+                  <h3 ng-bind="t.startTime | timeSpan:t.finishTime:'sm'"></h3>
+                </div>
+                <div
+                  ng-if="t.finishTime && t.jobCode === 5001 && (vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2)">
+                  <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                    ng-click="vm.ui.events.onClockInOutActionClicked(t)"></a>
+                </div>
               </div>
             </div>
           </div>
