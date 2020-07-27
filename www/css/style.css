@@ -742,3 +742,7 @@ button:hover {
 .justify-space-center {
   justify-content: center;
 }
+
+.p-0 {
+  padding: 0px;
+}

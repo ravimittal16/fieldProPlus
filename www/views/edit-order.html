@@ -174,7 +174,16 @@
         <ion-content>
           <div class="card">
             <div class="item item-divider header-dark">
-              SCHEDULE START AND END
+              <div class="row p-0">
+                <div class="col p-0 col-75">
+                  SCHEDULE START AND END
+                </div>
+                <div class="col p-0 col-25" style="display: flex;align-items: center;justify-content: flex-end;">
+                  <div>
+                    <span ng-if="vm.schedule.displayNum">#{{::vm.schedule.displayNum}}</span>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="row">
               <div class="col">

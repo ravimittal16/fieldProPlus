@@ -61,7 +61,9 @@
                 if (vm.ui.data.timeCards.length !== response.timeCardDetails.length) {
                   vm.ui.data.approvalStatus = response.timeCardSummary.approveStatus || 0;
                 }
-                _updateTimeCardsArray(response.timeCardDetails);
+                $timeout(function () {
+                  _updateTimeCardsArray(response.timeCardDetails);
+                }, 100)
               }
             }).finally(fpmUtilitiesFactory.hideLoading);
           });
@@ -175,6 +177,7 @@
       // ==========================================================
       // We don't need the sections now
       // ==========================================================
+
       vm.ui.data.timeCards = details;
       // var sectionCounter = 1;
       // var ptoCounter = 1;
@@ -289,20 +292,23 @@
     }
 
     function _getTimeCardByDate() {
-      _clearClockInData();
-      vm.showingLoading = true;
-      fpmUtilitiesFactory.showLoading().then(function () {
-        timecardFactory.getTimeCardByDate(toDateString(vm.currentDate)).then(function (response) {
-          if (response) {
-            _updateTimeCardBindings(response);
-          } else {
-            _checkIfPastDateSelected();
-          }
-        }).finally(function () {
-          vm.showingLoading = false;
-          fpmUtilitiesFactory.hideLoading();
+      $timeout(function () {
+        _clearClockInData();
+        vm.showingLoading = true;
+        fpmUtilitiesFactory.showLoading().then(function () {
+          timecardFactory.getTimeCardByDate(toDateString(vm.currentDate)).then(function (response) {
+            if (response) {
+
+              _updateTimeCardBindings(response);
+            } else {
+              _checkIfPastDateSelected();
+            }
+          }).finally(function () {
+            vm.showingLoading = false;
+            fpmUtilitiesFactory.hideLoading();
+          });
         });
-      });
+      }, 50);
     }
 
     $ionicPopover.fromTemplateUrl('my-popover.html', {
@@ -324,6 +330,16 @@
     }
     vm.events = {
       showPopoverClicked: showPopoverClicked
+    }
+
+    vm.isPtoClockIn = function (tc) {
+      if (tc.jobCode !== 5001) return true;
+
+      var _hasLinkedWithPto = _.filter(vm.ui.data.timeCards, function (t) {
+        return t.ptoClockInLinkedWith && t.ptoClockInLinkedWith === tc.num;
+      });
+
+      return _hasLinkedWithPto.length === 0;
     }
 
     function _processClockOutUser(clockInDateTime, __details) {
@@ -726,6 +742,7 @@
     }];
 
     function activateController() {
+
       _getTimeCardByDate();
       var userInfo = authenticationFactory.getLoggedInUserInfo();
       var havingCustomrNumber = _.findWhere(customerNumberList, {
@@ -751,16 +768,13 @@
       }
     }, true);
     $scope.$on("$destroy", function () {
+
       if (timeoutvar) {
         $timeout.cancel(timeoutvar)
       }
     });
-    $scope.$on("$ionicView.beforeEnter", function (e, data) {
-      $timeout(function () {
-        activateController();
-        _checkIfPastDateSelected();
-      }, 100)
-    });
+    activateController();
+    _checkIfPastDateSelected();
   }
   initController.$inject = ["$scope", "$timeout", "$rootScope", "$state", "$ionicPopover", "$ionicModal",
     "$ionicActionSheet", "timecard-factory", "fpm-utilities-factory", "authenticationFactory"

@@ -66,11 +66,11 @@
           </button>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="col">
-          <h5>Total payable time : <strong ng-bind="vm.ui.data.totalTime"></strong></h5>
+          <h5>Total time : <strong ng-bind="vm.ui.data.totalTime"></strong></h5>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="row"
       ng-if="vm.ui.data.allowSendForApproval && vm.ui.data.approvalStatus == 0 && vm.ui.data.timeCards.length > 0">
@@ -104,19 +104,25 @@
           </span>
         </span>
       </div>
-      <div class="card" ng-repeat="(key,t) in vm.ui.data.timeCards | orderBy:'startTime'">
+      <div class="card" ng-repeat="(key,t) in vm.ui.data.timeCards">
         <div class="item item-divider" ng-if="t.jobCode != 5001" style="display: flex;
           align-items: center;
           justify-content: space-between;">
-          <span ng-if="!t.isPtoType && t.jobCode != 5001 && t.barcode != 0" style="font-size: 14px;
-          font-weight: 500;">{{t.barcodeName}} - {{t.jobCodeName}}</span>
-
-          <span ng-if="t.jobCode != 5001 && t.barcode == 0" style="font-size: 14px;
-          font-weight: 500;">{{t.jobCodeName}}</span>
-          <!-- <span ng-if="t.isPtoType" class="text-danger">PTO - {{t.pto}}</span> -->
-          <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
-            ng-click="vm.ui.events.onCardActionClicked(t)"
-            ng-if="vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2"></a>
+          <div class="row p-0">
+            <div class="col p-0 col-25">
+              <span ng-if="t.jobCode != 5001" style="font-size: 14px;
+              font-weight: 500;">{{t.jobCodeName}}</span>
+            </div>
+            <div class="col p-0"><span ng-if="!t.isPtoType && t.jobCode != 5001 && t.barcode != 0" style="font-size: 14px;
+              font-weight: 500;">{{t.barcodeName}}</span>
+            </div>
+            <div class="col p-0 col-25">
+              <span ng-if="t.scheduleDisplayNum && t.scheduleDisplayNum !== 0">#{{::t.scheduleDisplayNum}}</span>
+              <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                ng-click="vm.ui.events.onCardActionClicked(t)"
+                ng-if="vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2"></a>
+            </div>
+          </div>
         </div>
 
         <div class="item item-text-wrap"
