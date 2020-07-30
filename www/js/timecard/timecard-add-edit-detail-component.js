@@ -72,7 +72,6 @@
             var tcd = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0);
             var ft = moment(new Date(f.getFullYear(), f.getMonth(), f.getDate(), f.getHours(), f.getMinutes(), 0, 0));
             var totalMinutes = moment(ft).diff(kendo.parseDate(vm.entity.startTime), "minutes");
-            // console.log(totalMinutes, vm.entity.startTime, vm.entity.finishTime)
             if (totalMinutes < 0) {
               vm.ui.errors.push("Invalid Time");
               return false;
@@ -87,7 +86,9 @@
           var _e = angular.copy(vm.entity)
           _e.startTime = kendo.toString(kendo.parseDate(vm.entity.startTime), "g");
           _e.finishTime = kendo.toString(kendo.parseDate(vm.entity.finishTime), "g");
-          _e.timeCardDate = kendo.toString(dt, "g");
+          if (vm.entity.timeCardDate) {
+            _e.timeCardDate = kendo.toString(vm.entity.timeCardDate, "g");
+          }
           if (_e.jobCode === null || _e.jobCode === 0) {
             vm.ui.errors.push("Please select Job code before save");
             return false;
@@ -195,7 +196,6 @@
             }
             // var ft = kendo.parseDate(vm.dateTimeMode.finishTime);
             // var smDt = kendo.parseDate(summary.timeCardDate);
-            // console.log("FINISHTIME", vm.dateTimeMode.finishTime);
             vm.entity.finishTime = vm.dateTimeMode.finishTime; //new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), ft.getHours(), ft.getMinutes(), 0, 0);
             _findTimeDiff();
           }, 100);
@@ -225,6 +225,7 @@
             vm.entity = angular.copy(vm.details);
             vm.entity.startTime = kendo.parseDate(vm.details.startTime);
             vm.entity.finishTime = kendo.parseDate(vm.details.finishTime);
+            vm.entity.timeCardDate = kendo.parseDate(vm.details.timeCardDate);
             vm.isFromPto = vm.details.isPtoType;
             vm.dateTimeMode.startTime = null;
             if (vm.entity.startTime) {
@@ -248,14 +249,15 @@
             vm.dateTimeMode.isCheckedIn = false;
             vm.dateTimeMode.isCheckedOut = false;
             vm.dateTimeMode.timeSpan = "";
-            if (eventParams && eventParams.currentDate !== undefined) {
+            if (eventParams && eventParams.currentDate) {
+              vm.entity.timeCardDate = eventParams.currentDate;
               selectedDate = eventParams.currentDate;
             }
             if (fromPto === true) {
               setInitialStartDateForPto();
             }
           }
-          if (timecardFactory.summary) {
+          if (timecardFactory.summary && timecardFactory.summary.timeCardDate) {
             vm.entity.numFromSummary = timecardFactory.summary.num;
             vm.entity.timeCardDate = kendo.parseDate(timecardFactory.summary.timeCardDate);
           }
@@ -330,11 +332,13 @@
             vm.timecardPermissions.allowPushTime = vm.userInfo.allowPushTime;
             vm.timecardPermissions.timePickerVisibility = vm.userInfo.allowPushTime;
           }
-          _getOrders();
         }
         $scope.$on("timecard:addEditDetailsModal:open", function ($event, params) {
           eventCalled = true;
           initController(params);
+          $timeout(function () {
+            _getOrders();
+          }, 100);
         })
       }
     ],

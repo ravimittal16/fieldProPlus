@@ -107,8 +107,8 @@
       return apicontext.post(baseUrl + "GetPayableHoursSummaryView", filters);
     }
 
-    function clearClockOutTime(detailId) {
-      return apicontext.get(baseUrl + "ClearClockOutTime?detailNum=" + detailId);
+    function clearClockOutTime(detailId, fromDeleteClockIn) {
+      return apicontext.get(baseUrl + "ClearClockOutTime?detailNum=" + detailId + "&fromDeleteClockIn=" + fromDeleteClockIn);
     }
 
     function clearTimecardFactoryData() {

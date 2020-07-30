@@ -468,6 +468,30 @@
         vm.ui.calendar.control.show();
       }
     }
+
+    function _processClearOrDeleteClockOut(numFromDetail, fromDeleteClockIn, callback) {
+      alerts.confirm("Confirmation!", "Are you sure?", function () {
+        if (angular.isFunction(callback)) {
+          callback();
+        }
+        fpmUtilitiesFactory.showLoading().then(function () {
+          timecardFactory.clearClockOutTime(numFromDetail, fromDeleteClockIn).then(function (response) {
+            if (response) {
+              $timeout(function () {
+                _getTimeCardByDate();
+              });
+            }
+          }).finally(function () {
+            fpmUtilitiesFactory.hideLoading();
+          });
+        });
+      }, function () {
+        if (angular.isFunction(callback)) {
+          callback();
+        }
+      });
+    }
+
     var timeoutvar = null;
     vm.ui = {
       errors: [],
@@ -510,9 +534,18 @@
         },
         onClockInOutActionClicked: function (detail) {
           var hideSheet = $ionicActionSheet.show({
+            buttons: [{
+              text: 'Delete Clock In/Out',
+              className: "destructive "
+            }],
             destructiveText: 'Clear Clock-Out Time',
             titleText: 'Time Card Options',
             cancel: function () {},
+            buttonClicked: function (index) {
+              if (index === 0) {
+                _processClearOrDeleteClockOut(detail.num, true, hideSheet);
+              }
+            },
             destructiveButtonClicked: function () {
               // ==========================================================
               // Checking the pending clock-out counts
@@ -526,29 +559,9 @@
                 alerts.alert("Warning", "You cannot have multiple Clock Out.");
                 return false;
               }
-              alerts.confirm("Confirmation!", "Are you sure?", function () {
-                hideSheet();
-                fpmUtilitiesFactory.showLoading().then(function () {
-                  timecardFactory.clearClockOutTime(detail.num).then(function (response) {
-                    if (response) {
-                      $timeout(function () {
-                        _getTimeCardByDate();
-                      });
-                    }
-                  }).finally(function () {
-                    fpmUtilitiesFactory.hideLoading();
-                  });
-                });
-              }, function () {
-                hideSheet();
-              });
-
+              _processClearOrDeleteClockOut(detail.num, false, hideSheet);
             }
           });
-
-          // $timeout(function () {
-          //   hideSheet();
-          // }, 5000);
         },
         checkOutPending: function (details) {
           alerts.confirm("Confirmation!", "Are you sure?", function () {
@@ -707,7 +720,7 @@
             startTime: fpmUtilitiesFactory.toStringDate(clockInTime),
             jobCode: jobCodes.CLOCK_IN,
             numFromSummary: vm.ui.data.summary === null ? 0 : vm.ui.data.summary.Num,
-            timeCardDate: timeCardDate
+            timeCardDate: fpmUtilitiesFactory.toStringDate(timeCardDate)
           };
           vm.errors = [];
           fpmUtilitiesFactory.showLoading().then(function () {
@@ -742,7 +755,12 @@
     }];
 
     function activateController() {
-
+      $ionicModal.fromTemplateUrl("timecardDetailsModal.html", {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function (modal) {
+        vm.ui.data.addEditDetailsModal = modal;
+      });
       _getTimeCardByDate();
       var userInfo = authenticationFactory.getLoggedInUserInfo();
       var havingCustomrNumber = _.findWhere(customerNumberList, {
@@ -753,12 +771,6 @@
       if (userInfo) {
         vm.userName = userInfo.userName;
       }
-      $ionicModal.fromTemplateUrl("timecardDetailsModal.html", {
-        scope: $scope,
-        animation: 'slide-in-up'
-      }).then(function (modal) {
-        vm.ui.data.addEditDetailsModal = modal;
-      });
     }
 
     $scope.$watch("vm.ui.data.timeCards", function (nw) {
@@ -767,8 +779,13 @@
         _calculateTotalPayableTime();
       }
     }, true);
-    $scope.$on("$destroy", function () {
 
+    $scope.$on('modal.removed', function () {});
+
+    $scope.$on("$destroy", function () {
+      if (vm.ui.data.addEditDetailsModal) {
+        vm.ui.data.addEditDetailsModal.remove();
+      }
       if (timeoutvar) {
         $timeout.cancel(timeoutvar)
       }
