@@ -1069,7 +1069,9 @@
               alerts.alert("Alert", "Not allowed to checkin");
             } else {
               if (checkAuthorizationIfServiceProvider(null, null, true)) {
-                if (vm.user.timeCard === true) {
+                var isBeongToCurrentUser =
+                  vm.schedule.technicianNum === vm.user.userEmail;
+                if (vm.user.timeCard === true && isBeongToCurrentUser) {
                   var runningClockIn = _.where(timeCardInfo.currentDetails, {
                     jobCode: jobCodes.CLOCK_IN,
                     finishTime: null
