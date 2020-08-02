@@ -22,6 +22,7 @@
     var _index = $stateParams._i === undefined ? 0 : $stateParams._i;
     vm.barcode = $stateParams.barCode;
     vm.taxCheckboxVisibility = true;
+    vm.pendingPreviousDayClockout = false;
     var alerts = fpmUtilities.alerts;
     var jobStatus = {
       AcceptJob: 0,
@@ -159,6 +160,23 @@
                 } else {
                   calculateTotals();
                 }
+                // ==========================================================
+                // checking previous timecard
+                // ==========================================================
+                $timeout(function () {
+                  var cdt = new Date();
+                  var dt = fpmUtilities.toStringDate(
+                    new Date(cdt.getFullYear(), cdt.getMonth(), cdt.getDate(), 0, 0, 0, 0)
+                  );
+                  if (vm.schedule) {
+                    timecardFactory.checkPreviousDateClockIn({
+                      timecardDate: dt,
+                      userEmail: vm.schedule.technicianNum
+                    }).then(function (response) {
+                      vm.timecardClockinStat = response;
+                    });
+                  }
+                }, 100);
               },
               function () {
                 alerts.alert(
@@ -454,6 +472,9 @@
     vm.user = authenticationFactory.getLoggedInUserInfo();
     vm.dateTimeFormat = vm.user.dateFormat;
     vm.placeholder = "tap here to select...";
+
+
+
 
     function activateController() {
       if (!$rootScope.isInDevMode) {

@@ -156,7 +156,12 @@
       return defer.promise;
     }
 
+    function checkPreviousDateClockIn(model) {
+      return apicontext.post(baseUrl + "CheckPreviousDateClockIn", model);
+    }
+
     var factory = {};
+    factory.checkPreviousDateClockIn = checkPreviousDateClockIn;
     factory.clearClockOutTime = clearClockOutTime;
     factory.checkoutPending = checkoutPending;
     factory.clearTimecardFactoryData = clearTimecardFactoryData;

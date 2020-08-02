@@ -310,6 +310,25 @@
                   <textarea name="" id="" rows="6" placeholder="enter trip note here..." ng-model="vm.schedule.tripNote"
                     ng-change="vm.tabs.sch.events.onTripnoteChanged()" ng-model-options="{debounce:500}"></textarea>
                 </label>
+                <label style="display: flex;justify-content: center;"
+                  ng-if="vm.schedule.technicianNum === vm.user.userEmail && vm.timecardClockinStat">
+                  <div style="font-weight: normal;padding: 5px;margin-top: 5px;font-size: 12px;">
+                    <!-- last clock in at 7/30 2:00 P.  No Clock out. -->
+                    <span class="label label-warning" ng-if="vm.timecardClockinStat.lastClockOut === null"
+                      style="font-weight: normal;font-size: 13px;"><span class="ion-alert"></span>&nbsp;Last
+                      Clock In
+                      {{vm.timecardClockinStat.lastClockIn | date:'MM/dd h:mm a'}} and no Clock out.</span>
+                    <!-- last clock in at 7/30 2:00 PM.  last clock out at 7/30 5:00PM -->
+                    <span class="label label-warning" ng-if="vm.timecardClockinStat.lastClockOut !== null"
+                      style="font-weight: normal;font-size: 13px;"><span class="ion-alert"></span>&nbsp;Last
+                      Clock
+                      In
+                      {{vm.timecardClockinStat.lastClockIn | date:'MM/dd h:mm a'}} and Clock Out was at
+                      {{vm.timecardClockinStat.lastClockOut | date:'MM/dd h:mm a'}}.</span>
+                  </div>
+                </label>
+
+
                 <div class="padding" ng-if="vm.uiSettings.isTimeCardModuleEnabled">
                   <button class="button button-block button-small button-dark"
                     ng-click="vm.tabs.sch.events.pushToTimecard()">
