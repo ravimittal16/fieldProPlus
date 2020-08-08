@@ -746,3 +746,9 @@ select[readonly] {
 .p-0 {
   padding: 0px;
 }
+.div-disabled
+{
+  pointer-events: none;
+  opacity: 0.5;
+  /* background: #CCC; */
+}

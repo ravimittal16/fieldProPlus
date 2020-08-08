@@ -209,6 +209,7 @@
 
     function _updateTimeCardBindings(details) {
       vm.ui.data.timeCards = [];
+      vm.timecardAccessLevel = details.timecardAccessLevel;
       vm.ui.data.summary = details.timeCardSummary;
       vm.factory.summary = details.timeCardSummary;
       vm.ui.data.approvalStatus = details.timeCardSummary.approveStatus || 0;
@@ -235,14 +236,36 @@
 
     function _calculateTotalPayableTime() {
       vm.ui.data.totalTime = "0";
-      //JobCode: jobCodes.CLOCK_IN 
+      vm.ui.data.totalCheckinTime = [];
+      //JobCode: jobCodes.CLOCK_IN
       var payables = _.filter(vm.ui.data.timeCards, function (tc) {
         return tc.jobCode === jobCodes.CLOCK_IN && tc.finishTime !== null;
       });
       var nonPayables = _.filter(vm.ui.data.timeCards, function (tc) {
         return tc.jobCode !== jobCodes.CLOCK_IN && tc.isPayable === false && tc.finishTime !== null;
       });
+      var checkins = _.filter(vm.ui.data.timeCards, function (tc) {
+        return tc.jobCode !== jobCodes.CLOCK_IN && tc.finishTime !== null;
+      });
+      if (checkins.length > 0) {
+        var clockinNums = _.pluck(checkins, 'clockInNum');
+        var distinctClockInNums = _.uniq(clockinNums);
+        angular.forEach(distinctClockInNums, function (cn, i) {
+          var totalCheckinsMins = 0;
+          angular.forEach(checkins, function (e, i) {
+            if (e.clockInNum == cn)
+              totalCheckinsMins += moment(kendo.parseDate(e.finishTime)).diff(kendo.parseDate(e.startTime), "minutes");
+          });
+          var hours = Math.floor(totalCheckinsMins / 60);
+          var mintues = totalCheckinsMins % 60;
+          vm.ui.data.totalCheckinTime[cn] = hours + " hrs " + mintues + " min";
+        });
 
+      }
+      else {
+        vm.ui.data.totalcheckinTime = "0 hrs 0 min";
+        return;
+      }
       var totalPayableMins = 0;
       if (payables.length > 0) {
         angular.forEach(payables, function (e, i) {
@@ -298,7 +321,6 @@
         fpmUtilitiesFactory.showLoading().then(function () {
           timecardFactory.getTimeCardByDate(toDateString(vm.currentDate)).then(function (response) {
             if (response) {
-
               _updateTimeCardBindings(response);
             } else {
               _checkIfPastDateSelected();
@@ -647,7 +669,7 @@
             cancelText: 'Cancel',
             cancel: function () {},
             destructiveButtonClicked: function () {
-              if (!t.isUserDefined) {
+              if (!t.isUserDefined || vm.timecardAccessLevel == 1) {
                 alerts.alert("Invalid Action", "You are not allowed to perform delete");
               } else {
                 alerts.confirmDelete(function () {

@@ -853,6 +853,67 @@
           vm.schedule.checkOutStatus = true;
         });
     }
+
+    function __checkoutPendingTask(_e) {
+      fpmUtilities.showLoading().then(function () {
+        timecardFactory
+          .checkoutPending(_e)
+          .then(
+            function (response) {
+              if (response && response.success) {
+                if (_e.scheduleId) {
+                  workOrderFactory
+                    .updateJobStatus({
+                      scheduleButton: jobStatus.CheckOut,
+                      scheduleNum: _e.scheduleId,
+                      actualEndTime: fpmUtilities.toStringDate(
+                        new Date()
+                      ),
+                      barcode: vm.barcode,
+                      clientTime: kendo.toString(
+                        new Date(),
+                        "g"
+                      )
+                    })
+                    .then(function () {
+                      alerts.alert(
+                        "Success!",
+                        "Pending task checked out successfully.",
+                        function () {
+                          processCheckIn(true);
+                        }
+                      );
+                    })
+                    .finally(function () {
+                      fpmUtilities.hideLoading();
+                    });
+                } else {
+                  alerts.alert(
+                    "Success!",
+                    "Pending task checked out successfully.",
+                    function () {
+                      processCheckIn(true);
+                      fpmUtilities.hideLoading();
+                    }
+                  );
+                }
+              } else {
+                alerts.alert(
+                  "Invalid Time",
+                  "Go to Timecard and checkout manually."
+                );
+              }
+            },
+            function () {
+              fpmUtilities.hideLoading();
+            }
+          )
+          .finally(function () {});
+      });
+    }
+
+
+
     vm.tabs = {
       events: {
         updateClicked: function () {
@@ -1100,17 +1161,46 @@
                   var checkins = _.reject(timeCardInfo.currentDetails, {
                     jobCode: jobCodes.CLOCK_IN
                   });
+                  var cdt = new Date();
+                  var dt = fpmUtilities.toStringDate(
+                    new Date(cdt.getFullYear(), cdt.getMonth(), cdt.getDate(), 0, 0, 0, 0)
+                  );
+
                   if (runningClockIn.length === 0) {
-                    alerts.confirm(
-                      "Confirmation!",
-                      "You have not clocked in yet. You will be clocked in automattically \n\n Are you sure?",
-                      function () {
-                        processCheckIn(true);
-                      },
-                      function () {
-                        //UNBLOCKUI
+                    // ==========================================================
+                    // CHECKING PREVIOUS DAY CLOCK OUT
+                    // ==========================================================
+                    timecardFactory.checkPreviousDateClockIn({
+                      timecardDate: dt,
+                      userEmail: vm.schedule.technicianNum,
+                      previousDayCheck: true
+                    }).then(function (response) {
+                      if (response && response.previousDayCheck && response.lastClockOut === null && response.hasPendingClockIn) {
+                        // ==========================================================
+                        // USER HAS NOT CLOCKED OUT FOR YESTERDAY 
+                        // ==========================================================
+                        alerts.confirm(
+                          "Confirmation!",
+                          "You have not clocked out for yesterday. \n\n Are you sure?",
+                          function () {
+                            processCheckIn(true);
+                          },
+                          function () {}
+                        );
+                      } else {
+                        // ==========================================================
+                        // USER HAS NOT CLOCKED IN FOR TODAY
+                        // ==========================================================
+                        alerts.confirm(
+                          "Confirmation!",
+                          "You have not clocked in yet. You will be clocked in automattically \n\n Are you sure?",
+                          function () {
+                            processCheckIn(true);
+                          },
+                          function () {}
+                        );
                       }
-                    );
+                    });
                   } else {
                     if (checkins.length > 0) {
                       var runningCheckIn = _.where(checkins, {
@@ -1142,61 +1232,7 @@
                                 "Confirmation!",
                                 "Are you sure to check-out?",
                                 function () {
-                                  fpmUtilities.showLoading().then(function () {
-                                    timecardFactory
-                                      .checkoutPending(_e)
-                                      .then(
-                                        function (response) {
-                                          if (response && response.success) {
-                                            if (_e.scheduleId) {
-                                              workOrderFactory
-                                                .updateJobStatus({
-                                                  scheduleButton: jobStatus.CheckOut,
-                                                  scheduleNum: _e.scheduleId,
-                                                  actualEndTime: fpmUtilities.toStringDate(
-                                                    new Date()
-                                                  ),
-                                                  Barcode: vm.barcode,
-                                                  clientTime: kendo.toString(
-                                                    new Date(),
-                                                    "g"
-                                                  )
-                                                })
-                                                .then(function () {
-                                                  alerts.alert(
-                                                    "Success!",
-                                                    "Pending task checked out successfully.",
-                                                    function () {
-                                                      processCheckIn(true);
-                                                    }
-                                                  );
-                                                })
-                                                .finally(function () {
-                                                  fpmUtilities.hideLoading();
-                                                });
-                                            } else {
-                                              alerts.alert(
-                                                "Success!",
-                                                "Pending task checked out successfully.",
-                                                function () {
-                                                  processCheckIn(true);
-                                                  fpmUtilities.hideLoading();
-                                                }
-                                              );
-                                            }
-                                          } else {
-                                            alerts.alert(
-                                              "Invalid Time",
-                                              "Go to Timecard and checkout manually."
-                                            );
-                                          }
-                                        },
-                                        function () {
-                                          fpmUtilities.hideLoading();
-                                        }
-                                      )
-                                      .finally(function () {});
-                                  });
+                                  __checkoutPendingTask(_e);
                                 }
                               );
                             }
