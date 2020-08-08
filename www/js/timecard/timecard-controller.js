@@ -43,7 +43,7 @@
       timecardObject: null,
       onTimeNewPicked: function () {
         var _timeObj = vm.timePicker.timecardObject;
-        var __isClockout = _timeObj.jobCode === 5001 && vm.timePicker.prop === 'finishTime'
+        var __isClockout = _timeObj.jobCode === jobCodes.CLOCK_IN && vm.timePicker.prop === 'finishTime'
         var _e = angular.copy(_timeObj);
         if (__isClockout) {
           // ==========================================================
@@ -74,7 +74,7 @@
         if (__status === statusTypes.SEND_FOR_APPROVAL || __status === statusTypes.APPROVED || __status === statusTypes.RESENT_FOR_APPROVAL) {
           return false;
         }
-        var __isClockout = t.jobCode === 5001 && !isForStartTime && t.finishTime === null;
+        var __isClockout = t.jobCode === jobCodes.CLOCK_IN && !isForStartTime && t.finishTime === null;
         if (__isClockout) {
           var notCheckInDetails = _.filter(vm.ui.data.timeCards, function (tc) {
             return tc.finishTime === null && tc.jobCode !== jobCodes.CLOCK_IN;
@@ -261,8 +261,7 @@
           vm.ui.data.totalCheckinTime[cn] = hours + " hrs " + mintues + " min";
         });
 
-      }
-      else {
+      } else {
         vm.ui.data.totalcheckinTime = "0 hrs 0 min";
         return;
       }
@@ -380,13 +379,16 @@
         jobCode: jobCodes.CLOCK_OUT,
         numFromSummary: vm.ui.data.summary.num,
         timeCardDate: kendo.toString(kendo.parseDate(tcd), "g"),
-        uniqueIdentifier: vm.ui.data.currentClockedIn.uniqueIdentifier
       };
+      if (vm.ui.data.currentClockedIn) {
+        details["uniqueIdentifier"] = vm.ui.data.currentClockedIn.uniqueIdentifier;
+      } else {
+        details["uniqueIdentifier"] = __details.uniqueIdentifier;
+      }
+
+
       fpmUtilitiesFactory.showLoading().then(function () {
         timecardFactory.clockInOutUser(details).then(function (response) {
-          // ==========================================================
-          // TODO: NEED TO CHANGE IT
-          // ==========================================================
           if (response && response.errors === null) {
             vm.ui.data.clockOutDateTime = clockOutTime;
             vm.ui.data.isClockedOut = true;
@@ -725,11 +727,15 @@
           });
           if (notCheckInDetails.length > 0) {
             alerts.confirm("Confirmation!", "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?", function () {
-              _processClockOutUser(clockInDate, detail);
+              $timeout(function () {
+                _processClockOutUser(clockInDate, detail);
+              }, 10);
             });
           } else {
             alerts.confirm("Confirmation!", "Are you sure?", function () {
-              _processClockOutUser(clockInDate, detail);
+              $timeout(function () {
+                _processClockOutUser(clockInDate, detail);
+              }, 10);
             });
           }
         },
