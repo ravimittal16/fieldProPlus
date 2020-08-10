@@ -1237,14 +1237,14 @@
                               );
                             }
                             if (index === 1) {
-                              if (_e.scheduleId) {
+                              if (_e.scheduleId && _e.scheduleId > 0) {
                                 workOrderFactory
                                   .checkIfBarcodeClosed(_e.barcode)
                                   .then(function (isClosed) {
                                     if (isClosed !== null && !isClosed) {
                                       $state.go(
-                                        $state.current, {
-                                          barcode: _e.barcode,
+                                        "app.editOrder", {
+                                          barCode: _e.barcode,
                                           technicianNum: _e.scheduleId,
                                           src: "main",
                                           _i: 1
@@ -1259,6 +1259,10 @@
                                       );
                                     }
                                   });
+                              } else {
+                                $state.go("app.timecard", {
+                                  refresh: true
+                                });
                               }
                             }
                             if (index === 2) {
