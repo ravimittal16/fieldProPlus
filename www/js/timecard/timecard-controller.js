@@ -209,6 +209,10 @@
 
     function _updateTimeCardBindings(details) {
       vm.ui.data.timeCards = [];
+      vm.ui.data.checkInOuts = _.filter(details.timeCardDetails, function (e) {
+        return (e.jobCode != 5001 && e.jobCode != 5002)
+      });
+      console.log(vm.ui.data.checkInOuts.length);
       vm.timecardAccessLevel = details.timecardAccessLevel;
       vm.ui.data.summary = details.timeCardSummary;
       vm.factory.summary = details.timeCardSummary;
@@ -564,7 +568,7 @@
             }],
             destructiveText: 'Clear Clock-Out Time',
             titleText: 'Time Card Options',
-            cancel: function () {},
+            cancel: function () { },
             buttonClicked: function (index) {
               if (index === 0) {
                 _processClearOrDeleteClockOut(detail.num, true, hideSheet);
@@ -669,7 +673,7 @@
             destructiveText: 'Delete',
             titleText: 'Time Card Options',
             cancelText: 'Cancel',
-            cancel: function () {},
+            cancel: function () { },
             destructiveButtonClicked: function () {
               if (!t.isUserDefined || vm.timecardAccessLevel == 1) {
                 alerts.alert("Invalid Action", "You are not allowed to perform delete");
@@ -808,7 +812,7 @@
       }
     }, true);
 
-    $scope.$on('modal.removed', function () {});
+    $scope.$on('modal.removed', function () { });
 
     $scope.$on("$destroy", function () {
       if (vm.ui.data.addEditDetailsModal) {

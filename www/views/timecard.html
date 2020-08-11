@@ -203,14 +203,16 @@
               <strong>NOTE</strong> <span ng-bind="t.notes"></span>
             </h5>
           </div>
-          <div class="item item-text-wrap" ng-if="t.jobCode == 5001">
+          <div class="item item-text-wrap p-0" ng-if="t.jobCode == 5001 &&  vm.ui.data.checkInOuts.length>1">
             <div class="row">
-              <div class="col col-33 col-center"></div>
-              <div class="col col-33 col-center"></div>
-              <div class="col col-33 col-center">
+             <div class="col col-67 col-center" style="text-align: right;">
                 <h5><i class="icon ion-clock"></i>
-                  <span></strong>Total Check In/Out: {{::vm.ui.data.totalCheckinTime[t.clockInNum]}}</strong></span>
-                </h5>
+                <span style="font-size:13px;">Total Check In/Out:</span> </h5>
+              </div>
+              <div class="col col-33 col-center">
+                  <h5>
+                  <span style="font-size:13px;">{{::vm.ui.data.totalCheckinTime[t.clockInNum]}}</span></h5>
+
               </div>
             </div>
           </div>
