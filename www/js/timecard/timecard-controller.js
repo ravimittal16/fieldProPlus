@@ -173,38 +173,10 @@
     }
 
     function _updateTimeCardsArray(details) {
-
       // ==========================================================
       // We don't need the sections now
       // ==========================================================
-
       vm.ui.data.timeCards = details;
-      // var sectionCounter = 1;
-      // var ptoCounter = 1;
-      // vm.ui.data.timeCards = [];
-      // if (details.length > 0) {
-      //   angular.forEach(details, function (s, i) {
-      //     if (s.jobCode !== jobCodes.CLOCK_IN) {
-      //       if (!s.isPtoType) {
-      //         s.section = sectionCounter;
-      //         sectionCounter++;
-      //       } else {
-      //         s.pto = ptoCounter;
-      //         ptoCounter++;
-      //       }
-      //     } else {
-      //       s.section = 0;
-      //     }
-      //     if (i === (details.length - 1)) {
-      //       // vm.ui.data.timeCards = _.reject(details, {
-      //       //   jobCode: jobCodes.CLOCK_IN,
-      //       //   finishTime: null
-      //       // });
-      //       //NOTE : WE NEED TO SHOW EVERYTHING : JOY : JULY 10,2020
-      //       vm.ui.data.timeCards = details;
-      //     }
-      //   });
-      // }
     }
 
     function _updateTimeCardBindings(details) {

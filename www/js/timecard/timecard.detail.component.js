@@ -53,15 +53,49 @@
       loading: false,
       timecard: null,
       currentClockedIn: null,
-      approvalStatus: 0
+      approvalStatus: 0,
+      allowSendForApproval: false,
+      summary: null,
+      clockInDateTime: new Date()
     };
 
     // ==========================================================
     // Getting Timecard Information for Schedule User
     // ==========================================================
+    function __updateBindingsForSummaryStatus(details) {
+      var anythingPending = _.where(details.timeCardDetails, {
+        finishTime: null
+      });
+      if (anythingPending.length > 0 || vm.data.approvalStatus !== __statusTypes.NONE) {
+        vm.data.allowSendForApproval = false;
+        return false;
+      }
+      vm.data.allowSendForApproval = true;
+      return true;
+    }
+
+    function __clearClockInData() {
+      vm.data.allowSendForApproval = false;
+      vm.data.summary = null;
+      vm.data.approvalStatus = 0;
+      vm.data.isClockedOut = false;
+      vm.data.summary = null;
+      vm.data.clockInDateTime = new Date();
+      vm.data.isClockedIn = false;
+      vm.data.addTimeVisibility = false;
+      vm.data.clockedInDate = null;
+      vm.data.timeCards = [];
+      vm.data.disableClockInButton = false;
+      vm.data.disableClockOutButton = false;
+    }
 
     function __updateTimeCardBindings(details) {
       vm.data.timecard = details;
+      vm.data.checkInOuts = _.filter(details.timeCardDetails, function (e) {
+        return (e.jobCode !== __jobCodes.CLOCK_IN && e.jobCode !== __jobCodes.CLOCK_OUT)
+      });
+      vm.timecardAccessLevel = details.timecardAccessLevel;
+      vm.data.summary = details.timeCardSummary;
       vm.data.currentClockedIn = _.findWhere(details.timeCardDetails, {
         jobCode: __jobCodes.CLOCK_IN,
         finishTime: null
@@ -69,16 +103,31 @@
       if (details.timeCardSummary) {
         vm.data.approvalStatus = details.timeCardSummary.approveStatus || 0;
       }
+      __updateBindingsForSummaryStatus(details);
+      if (angular.isDefined(vm.data.currentClockedIn)) {
+        var __clockIn = vm.ui.data.currentClockedIn;
+        vm.data.clockInDateTime = __toDate(__clockIn.startTime);
+        vm.data.isClockedIn = true;
+        vm.data.isClockedOut = clockIn.finishTime !== null;
+        vm.data.addTimeVisibility = !vm.data.isClockedOut;
+        vm.data.clockOutDateTime = __toDate(clockIn.finishTime);
+        vm.data.clockedInDate = angular.copy(clockIn);
+      }
     }
 
     function __getUserTimeCardByDate() {
 
       var __dt = __toDateString(vm.currentDate);
+      __clearClockInData();
+      vm.showingLoading = true;
       timecardFactory.getTimeCardByDate(__dt, __userEmail).then(function (__res) {
         console.log(__res)
         if (__res) {
           __updateTimeCardBindings(__res);
         }
+      }).finally(function () {
+        vm.showingLoading = false;
+        fpmUtilitiesFactory.hideLoading();
       });
     }
 
@@ -93,7 +142,9 @@
         vm.userName = __isForWorkOrder ? vm.schedule.technicianName : vm.user.userName;
         if (!vm.assgiendToSameUser) {
           __userEmail = vm.schedule.technicianNum;
-          __getUserTimeCardByDate();
+          $timeout(function () {
+            __getUserTimeCardByDate()
+          }, 50);
         }
       }
     }

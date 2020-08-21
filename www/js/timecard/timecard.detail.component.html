@@ -40,6 +40,14 @@
         </strong>
       </div>
     </div>
+    <div class="row"
+      ng-if="vm.data.allowSendForApproval && vm.data.approvalStatus == 0 && vm.data.timeCards.length > 0">
+      <div class="col">
+        <button class="button button-positive button-small button-block" ng-click="vm.ui.events.sendForApproval(1)">
+          Send for Approval
+        </button>
+      </div>
+    </div>
     <div class="list" style="overflow: auto;max-height: 350px;">
       <div class="alert" ng-if="vm.data.approvalStatus !== 0"
         ng-class="{'alert-info': vm.data.approvalStatus === 1 || vm.data.approvalStatus === 5,'alert-success': vm.data.approvalStatus === 3,'alert-danger': vm.data.approvalStatus === 4 || vm.data.approvalStatus === 2}">
@@ -144,7 +152,7 @@
                   <h3 ng-bind="t.startTime | timeSpan:t.finishTime:'sm'"></h3>
                 </div>
                 <div ng-class="{'div-disabled': vm.timecardAccessLevel==1}"
-                  ng-if="t.finishTime && t.jobCode === 5001 && (vm.ui.data.approvalStatus == 0 || vm.ui.data.approvalStatus == 2)">
+                  ng-if="t.finishTime && t.jobCode === 5001 && (vm.data.approvalStatus == 0 || vm.data.approvalStatus == 2)">
                   <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
                     ng-click="vm.data.events.onClockInOutActionClicked(t)"></a>
                 </div>
@@ -156,7 +164,7 @@
               <strong>NOTE</strong> <span ng-bind="t.notes"></span>
             </h5>
           </div>
-          <div class="item item-text-wrap p-0" ng-if="t.jobCode == 5001 &&  vm.ui.data.checkInOuts.length>1">
+          <div class="item item-text-wrap p-0" ng-if="t.jobCode == 5001 &&  vm.data.checkInOuts.length>1">
             <div class="row">
               <div class="col col-67 col-center" style="text-align: right;">
                 <h5><i class="icon ion-clock"></i>
@@ -164,7 +172,7 @@
               </div>
               <div class="col col-33 col-center">
                 <h5>
-                  <span style="font-size:13px;">{{::vm.ui.data.totalCheckinTime[t.clockInNum]}}</span></h5>
+                  <span style="font-size:13px;">{{::vm.data.totalCheckinTime[t.clockInNum]}}</span></h5>
 
               </div>
             </div>
