@@ -372,7 +372,6 @@
                     placeholder="Total Time" ng-model="vm.scheduleTimeSpan.inRouteTimeSpan" />
                 </label>
               </div>
-
             </div>
             <div class="list" ng-if="vm.uiSettings.billingOption == 1">
               <label class="item item-input">
@@ -445,6 +444,7 @@
               </button>
             </div>
           </div>
+          <timecard-details based-on="workorder" schedule="vm.schedule"></timecard-details>
           <div class="card">
             <div class="item item-divider header-dark">
               OTHER SCHEDULES IN THIS WORK ORDER

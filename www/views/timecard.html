@@ -28,7 +28,7 @@
             justify-content: flex-end;
             margin-right: 5px;
           ">
-          <input ng-model="vm.currentDate" mobiscroll-date="vm.ui.calendar.settings"
+          <input ng-model="vm.currentDate" ng-model-options="{debounce:300}" mobiscroll-date="vm.ui.calendar.settings"
             ng-change="vm.ui.events.onCurrentDateChanged()" mobiscroll-instance="vm.ui.calendar.control"
             class="hidden" />
           <strong>
@@ -205,12 +205,12 @@
           </div>
           <div class="item item-text-wrap p-0" ng-if="t.jobCode == 5001 &&  vm.ui.data.checkInOuts.length>1">
             <div class="row">
-             <div class="col col-67 col-center" style="text-align: right;">
+              <div class="col col-67 col-center" style="text-align: right;">
                 <h5><i class="icon ion-clock"></i>
-                <span style="font-size:13px;">Total Check In/Out:</span> </h5>
+                  <span style="font-size:13px;">Total Check In/Out:</span> </h5>
               </div>
               <div class="col col-33 col-center">
-                  <h5>
+                <h5>
                   <span style="font-size:13px;">{{::vm.ui.data.totalCheckinTime[t.clockInNum]}}</span></h5>
 
               </div>

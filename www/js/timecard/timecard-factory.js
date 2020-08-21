@@ -5,8 +5,14 @@
     var baseUrl = "api/timecard/";
     var cache = $cacheFactory("timeCardCache");
 
-    function getTimeCardByDate(date) {
-      return apicontext.get(baseUrl + "GetTimeCardByDate?date=" + date);
+    var jobCodes = {
+      CLOCK_IN: 5001,
+      CLOCK_OUT: 5002
+    };
+
+    function getTimeCardByDate(date, userEmail) {
+      var __userEmail = userEmail ? userEmail : "";
+      return apicontext.get(baseUrl + "GetTimeCardByDate?date=" + encodeURIComponent(date) + "&userEmail=" + encodeURIComponent(__userEmail));
     }
 
     function _attachLocationCoordinates(postObj) {
@@ -160,7 +166,20 @@
       return apicontext.post(baseUrl + "CheckPreviousDateClockIn", model);
     }
 
+    var statusTypes = {
+      NONE: 0,
+      SEND_FOR_APPROVAL: 1,
+      CANCELLED: 2,
+      APPROVED: 3,
+      UNAPPROVED: 4,
+      RESENT_FOR_APPROVAL: 5
+    };
+
     var factory = {};
+    factory.statics = {
+      jobCodes: jobCodes,
+      statusTypes: statusTypes
+    };
     factory.checkPreviousDateClockIn = checkPreviousDateClockIn;
     factory.clearClockOutTime = clearClockOutTime;
     factory.checkoutPending = checkoutPending;
@@ -173,6 +192,7 @@
     factory.data = data;
     factory.getPendingClockIns = getPendingClockIns;
     factory.getJobCodes = getJobCodes;
+
     factory.clockInOutUser = clockInOutUser;
     factory.getClockInByDate = getClockInByDate;
     factory.getTimeCardByDate = getTimeCardByDate;
