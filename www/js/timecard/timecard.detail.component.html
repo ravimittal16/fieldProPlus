@@ -1,12 +1,24 @@
 <div class="card" ng-if="!vm.assgiendToSameUser">
   <!-- TIME PICKER -->
   <!-- ============================================================================== -->
-  <input ng-model="vm.timePicker.currentTime" mobiscroll-datetime="vm.timePicker.settings"
-    ng-change="vm.timePicker.onTimeNewPicked()" mobiscroll-instance="vm.timePicker.instance" class="hidden" />
+  <input
+    ng-model="vm.timePicker.currentTime"
+    mobiscroll-datetime="vm.timePicker.settings"
+    ng-change="vm.timePicker.onTimeNewPicked()"
+    mobiscroll-instance="vm.timePicker.instance"
+    class="hidden"
+  />
   <!-- ============================================================================== -->
 
   <div style="border-bottom: 2px solid #ddd; background-color: #f9f9f9;">
-    <div class="row" style="background-color: #444444;color: white;border-radius: 5px 5px 0 0;">
+    <div
+      class="row"
+      style="
+        background-color: #444444;
+        color: white;
+        border-radius: 5px 5px 0 0;
+      "
+    >
       <div class="col">
         Timecard
       </div>
@@ -16,91 +28,194 @@
     </div>
     <div class="row" style="display: flex; align-items: center;">
       <div class="col">
-        <strong ng-bind="vm.userName" style="font-size: 1rem; margin-left: 5px;"></strong>
+        <strong
+          ng-bind="vm.userName"
+          style="font-size: 1rem; margin-left: 5px;"
+        ></strong>
       </div>
-      <div class="col" style="
-            font-size: 1.2rem;
-            display: flex;
-            justify-content: flex-end;
-            margin-right: 5px;
-          ">
-        <input ng-model="vm.currentDate" ng-model-options="{debounce:300}" mobiscroll-date="vm.data.calendar.settings"
-          ng-change="vm.data.events.onCurrentDateChanged()" mobiscroll-instance="vm.data.calendar.control"
-          class="hidden" />
+      <div
+        class="col"
+        style="
+          font-size: 1.2rem;
+          display: flex;
+          justify-content: flex-end;
+          margin-right: 5px;
+        "
+      >
+        <input
+          ng-model="vm.currentDate"
+          ng-model-options="{debounce:300}"
+          mobiscroll-date="vm.data.calendar.settings"
+          ng-change="vm.data.events.onCurrentDateChanged()"
+          mobiscroll-instance="vm.data.calendar.control"
+          class="hidden"
+        />
         <strong>
           <div style="font-size: 11px;">
             <span>Timecard Date</span>
           </div>
           <a ng-click="vm.data.events.onShowCalenderClick($event)">
             <span class="icon-center ion-clock"></span>
-            <fp-date-time-renderer model-val="vm.currentDate" type="date" format="vm.dateFormat">
+            <fp-date-time-renderer
+              model-val="vm.currentDate"
+              type="date"
+              format="vm.dateFormat"
+            >
             </fp-date-time-renderer>
             <i class="icon ion-arrow-down-b"></i>
           </a>
         </strong>
       </div>
     </div>
-    <div class="row"
-      ng-if="vm.data.allowSendForApproval && vm.data.approvalStatus == 0 && vm.data.timeCards.length > 0">
+    <div class="row">
+      <div class="col center center-element">
+        <button
+          class="button icon-center ion-clock button-block button-positive button-small"
+          on-tap="vm.data.events.clockInClick()"
+          ng-if="!vm.data.isClockedIn"
+          ng-disabled="vm.data.disableClockInButton || (vm.data.approvalStatus != 0 && vm.data.approvalStatus != 2)"
+        >
+          &nbsp;Clock In
+        </button>
+
+        <div ng-if="vm.data.isClockedIn">
+          <h5 class="m-t-b-2 n-m-b font-large">
+            <span class="icon-center ion-clock"></span>&nbsp;<span
+              ng-bind="vm.data.clockInDateTime | date:'hh:mm a'"
+            ></span>
+          </h5>
+          <span class="label label-primary" style="background-color: #387ef5;"
+            >Clock In</span
+          >
+        </div>
+      </div>
+      <div class="col center">
+        <button
+          class="button icon-center ion-clock button-block button-positive button-small"
+          ng-if="!vm.data.isClockedOut"
+          ng-disabled="!vm.data.isClockedIn || vm.data.disableClockOutButton || (vm.data.approvalStatus != 0 && vm.data.approvalStatus != 2)"
+          on-tap="vm.data.events.clockOutClick(null, null)"
+        >
+          &nbsp;Clock Out
+        </button>
+      </div>
+      <!-- <div class="col center">
+        <button
+          class="button pull-right button-small button-icon icon ion-android-more-vertical"
+          style="margin-top: 15px;"
+          on-tap="vm.events.showPopoverClicked($event)"
+        ></button>
+      </div> -->
+    </div>
+    <div
+      class="row"
+      ng-if="
+        vm.data.allowSendForApproval &&
+        vm.data.approvalStatus == 0 &&
+        vm.data.timeCards.length > 0
+      "
+    >
       <div class="col">
-        <button class="button button-positive button-small button-block" ng-click="vm.ui.events.sendForApproval(1)">
+        <button
+          class="button button-positive button-small button-block"
+          ng-click="vm.events.sendForApproval(1)"
+        >
           Send for Approval
         </button>
       </div>
     </div>
-    <div class="list" style="overflow: auto;max-height: 350px;">
-      <div class="alert" ng-if="vm.data.approvalStatus !== 0"
-        ng-class="{'alert-info': vm.data.approvalStatus === 1 || vm.data.approvalStatus === 5,'alert-success': vm.data.approvalStatus === 3,'alert-danger': vm.data.approvalStatus === 4 || vm.data.approvalStatus === 2}">
+    <div class="list" style="overflow: auto; max-height: 350px;">
+      <div
+        class="alert"
+        ng-if="vm.data.approvalStatus !== 0"
+        ng-class="{
+          'alert-info':
+            vm.data.approvalStatus === 1 || vm.data.approvalStatus === 5,
+          'alert-success': vm.data.approvalStatus === 3,
+          'alert-danger':
+            vm.data.approvalStatus === 4 || vm.data.approvalStatus === 2
+        }"
+      >
         <span ng-switch="vm.data.approvalStatus">
           <span ng-switch-when="1" class="">
             <strong>Waiting for approval</strong>
           </span>
-          <span ng-switch-when="2">Time card has been rejected due to following reason :
-            {{vm.data.timecard.timeCardSummary.messageText}}
-            <button class="button button-block button-small button-positive"
-              ng-click="vm.data.events.sendForApproval(5)">
+          <span ng-switch-when="2"
+            >Time card has been rejected due to following reason :
+            {{ vm.data.timecard.timeCardSummary.messageText }}
+            <button
+              class="button button-block button-small button-positive"
+              ng-click="vm.data.events.sendForApproval(5)"
+            >
               Re-submit for Approval
             </button>
           </span>
           <span ng-switch-when="3">
             <i class="fa fa-check"></i>&nbsp;Time card has been approved
           </span>
-          <span ng-switch-when="4">Time card has been unapproved due to following reason :
-            {{vm.data.timecard.timeCardSummary.messageText}}
-            <button class="button button-block button-small button-positive"
-              ng-click="vm.data.events.sendForApproval(5)">
+          <span ng-switch-when="4"
+            >Time card has been unapproved due to following reason :
+            {{ vm.data.timecard.timeCardSummary.messageText }}
+            <button
+              class="button button-block button-small button-positive"
+              ng-click="vm.data.events.sendForApproval(5)"
+            >
               Re-submit for Approval
             </button>
           </span>
-          <span ng-switch-when="5">Time card has been resent for approval
+          <span ng-switch-when="5"
+            >Time card has been resent for approval
           </span>
         </span>
       </div>
       <div class="card" ng-repeat="(key,t) in vm.data.timecard.timeCardDetails">
-        <div class="item item-divider" ng-if="t.jobCode !== 5001" style="
+        <div
+          class="item item-divider"
+          ng-if="t.jobCode !== 5001"
+          style="
             display: flex;
             align-items: center;
             justify-content: space-between;
-          ">
+          "
+        >
           <div class="row p-0">
             <div class="col p-0 col-25">
-              <span ng-if="t.jobCode != 5001" style="font-size: 14px; font-weight: 500;">{{t.jobCodeName}}</span>
+              <span
+                ng-if="t.jobCode != 5001"
+                style="font-size: 14px; font-weight: 500;"
+                >{{ t.jobCodeName }}</span
+              >
             </div>
             <div class="col p-0">
-              <span ng-if="!t.isPtoType && t.jobCode != 5001 && t.barcode != 0"
-                style="font-size: 14px; font-weight: 500;">{{t.barcodeName}}</span>
+              <span
+                ng-if="!t.isPtoType && t.jobCode != 5001 && t.barcode != 0"
+                style="font-size: 14px; font-weight: 500;"
+                >{{ t.barcodeName }}</span
+              >
             </div>
             <div class="col p-0 col-25">
-              <span style="font-size: 14px;"
-                ng-if="t.scheduleDisplayNum && t.scheduleDisplayNum !== 0">#{{::t.scheduleDisplayNum}}</span>
-              <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+              <span
+                style="font-size: 14px;"
+                ng-if="t.scheduleDisplayNum && t.scheduleDisplayNum !== 0"
+                >#{{::t.scheduleDisplayNum}}</span
+              >
+              <a
+                class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
                 ng-click="vm.data.events.onCardActionClicked(t)"
-                ng-if="vm.data.approvalStatus === 0 || vm.data.approvalStatus === 2"></a>
+                ng-if="
+                  vm.data.approvalStatus === 0 || vm.data.approvalStatus === 2
+                "
+              ></a>
             </div>
           </div>
         </div>
-        <div class="item item-text-wrap"
-          ng-class="{'clockin-item':t.jobCode == 5001,'timecard-checkin-item':t.jobCode != 5001}">
+        <div
+          class="item item-text-wrap"
+          ng-class="{
+            'clockin-item': t.jobCode == 5001,
+            'timecard-checkin-item': t.jobCode != 5001
+          }"
+        >
           <div class="row">
             <div class="col col-33 col-center">
               <h5>
@@ -121,40 +236,69 @@
             </div>
           </div>
           <div class="row">
-            <div class="col col-33 col-center"
-              ng-class="{'div-disabled': vm.timecardAccessLevel==1 && t.jobCode == 5001}">
+            <div
+              class="col col-33 col-center"
+              ng-class="{
+                'div-disabled': vm.timecardAccessLevel == 1 && t.jobCode == 5001
+              }"
+            >
               <a ng-click="vm.timePicker.onTimeClicked(t,true)">
                 <h3 ng-bind="t.startTime | date :'MM/dd h:mm a'"></h3>
               </a>
             </div>
             <div class="col col-33 col-center">
-              <button ng-if="!t.finishTime && t.jobCode != 5001" class="button button-small button-calm"
-                ng-click="vm.timePicker.onTimeClicked(t,false)">
+              <button
+                ng-if="!t.finishTime && t.jobCode != 5001"
+                class="button button-small button-calm"
+                ng-click="vm.timePicker.onTimeClicked(t,false)"
+              >
                 Check out
               </button>
-              <button ng-if="!t.finishTime && t.jobCode === 5001" class="button button-small button-clock-out"
-                ng-click="vm.timePicker.onTimeClicked(t,false)" ng-disabled="vm.timecardAccessLevel==1">
+              <button
+                ng-if="!t.finishTime && t.jobCode === 5001"
+                class="button button-small button-clock-out"
+                ng-click="vm.timePicker.onTimeClicked(t,false)"
+                ng-disabled="vm.timecardAccessLevel==1"
+              >
                 Clock out
               </button>
-              <div ng-class="{'div-disabled': vm.timecardAccessLevel==1 && t.jobCode == 5001}">
+              <div
+                ng-class="{
+                  'div-disabled':
+                    vm.timecardAccessLevel == 1 && t.jobCode == 5001
+                }"
+              >
                 <a ng-click="vm.timePicker.onTimeClicked(t,false)">
-                  <h3 ng-if="t.finishTime" ng-bind="t.finishTime | date :'MM/dd h:mm a'"></h3>
+                  <h3
+                    ng-if="t.finishTime"
+                    ng-bind="t.finishTime | date :'MM/dd h:mm a'"
+                  ></h3>
                 </a>
               </div>
             </div>
             <div class="col col-33">
-              <div style="
+              <div
+                style="
                   display: flex;
                   align-items: center;
                   justify-content: center;
-                ">
-                <div ng-class="{'div-disabled': vm.timecardAccessLevel==1}">
+                "
+              >
+                <div ng-class="{ 'div-disabled': vm.timecardAccessLevel == 1 }">
                   <h3 ng-bind="t.startTime | timeSpan:t.finishTime:'sm'"></h3>
                 </div>
-                <div ng-class="{'div-disabled': vm.timecardAccessLevel==1}"
-                  ng-if="t.finishTime && t.jobCode === 5001 && (vm.data.approvalStatus == 0 || vm.data.approvalStatus == 2)">
-                  <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
-                    ng-click="vm.data.events.onClockInOutActionClicked(t)"></a>
+                <div
+                  ng-class="{ 'div-disabled': vm.timecardAccessLevel == 1 }"
+                  ng-if="
+                    t.finishTime &&
+                    t.jobCode === 5001 &&
+                    (vm.data.approvalStatus == 0 || vm.data.approvalStatus == 2)
+                  "
+                >
+                  <a
+                    class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
+                    ng-click="vm.data.events.onClockInOutActionClicked(t)"
+                  ></a>
                 </div>
               </div>
             </div>
@@ -164,16 +308,24 @@
               <strong>NOTE</strong> <span ng-bind="t.notes"></span>
             </h5>
           </div>
-          <div class="item item-text-wrap p-0" ng-if="t.jobCode == 5001 &&  vm.data.checkInOuts.length>1">
+          <div
+            class="item item-text-wrap p-0"
+            ng-if="t.jobCode == 5001 && vm.data.checkInOuts.length > 1"
+          >
             <div class="row">
               <div class="col col-67 col-center" style="text-align: right;">
-                <h5><i class="icon ion-clock"></i>
-                  <span style="font-size:13px;">Total Check In/Out:</span> </h5>
+                <h5>
+                  <i class="icon ion-clock"></i>
+                  <span style="font-size: 13px;">Total Check In/Out:</span>
+                </h5>
               </div>
               <div class="col col-33 col-center">
                 <h5>
-                  <span style="font-size:13px;">{{::vm.data.totalCheckinTime[t.clockInNum]}}</span></h5>
-
+                  <span
+                    style="font-size: 13px;"
+                    >{{::vm.data.totalCheckinTime[t.clockInNum]}}</span
+                  >
+                </h5>
               </div>
             </div>
           </div>

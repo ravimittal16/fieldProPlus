@@ -4,20 +4,10 @@
   function initController($scope, $timeout, $rootScope, $state, $ionicPopover,
     $ionicModal, $ionicActionSheet, timecardFactory, fpmUtilitiesFactory, authenticationFactory) {
     var vm = this;
-    var jobCodes = {
-      CLOCK_IN: 5001,
-      CLOCK_OUT: 5002
-    };
+    var jobCodes = timecardFactory.statics.jobCodes;
     var toDateString = fpmUtilitiesFactory.toStringDate;
     vm.dateFormat = $rootScope.dateFormat;
-    var statusTypes = {
-      NONE: 0,
-      SEND_FOR_APPROVAL: 1,
-      CANCELLED: 2,
-      APPROVED: 3,
-      UNAPPROVED: 4,
-      RESENT_FOR_APPROVAL: 5
-    };
+    var statusTypes = timecardFactory.statics.statusTypes;
     var pendingClockIns = [];
     var havingPreRoute = false
     vm.errors = [];
