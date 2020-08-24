@@ -529,6 +529,12 @@
       }, 100);
     }
 
+    $scope.$on("$timecard.refreshTimecard.pushToTimecard", function (evnt, args) {
+      $timeout(function () {
+        __ensureScheduleNotAssgiendToCurrentUser(false);
+      }, 100);
+    })
+
     $ionicPopover.fromTemplateUrl('timecard-popover.html', {
       scope: $scope
     }).then(function (popover) {

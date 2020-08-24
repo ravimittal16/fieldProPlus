@@ -420,6 +420,10 @@
       });
     }
 
+    var __customPushToTimecardCustomers = ["97713"]
+
+    function __customPushToTimecard() {}
+
     function pushToTimecard() {
       var model = {
         num: 0,
@@ -441,6 +445,12 @@
             alerts.alert("Warning", response[0]);
           } else {
             alerts.alert("Success", "Details successfully pushed to timecard");
+            // ==========================================================
+            // Updating timecard component
+            // ==========================================================
+            $scope.$broadcast("$timecard.refreshTimecard.pushToTimecard", {
+              scheduleNum: vm.schedule.num
+            });
           }
         });
       } else {
