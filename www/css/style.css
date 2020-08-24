@@ -398,7 +398,7 @@ customer-search-header-component {
 }
 
 .clockin-item {
-  background: #90af98 !important;
+  background: #dfebf6 !important;
   color: white;
   padding: 0px !important;
   text-align: center !important;
@@ -731,7 +731,7 @@ select[readonly] {
 
 .button.button-clock-out {
   border-color: transparent;
-  background-color: #4e6353;
+  background-color: #387ef5;
   color: #fff;
 }
 
@@ -746,8 +746,8 @@ select[readonly] {
 .p-0 {
   padding: 0px;
 }
-.div-disabled
-{
+
+.div-disabled {
   pointer-events: none;
   opacity: 0.5;
   /* background: #CCC; */

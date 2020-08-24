@@ -2,7 +2,7 @@
   "use strict";
 
   function __detailController($rootScope, $scope, $state, $timeout, workOrdersFactory,
-    fpmUtilitiesFactory, sharedDataFactory, authenticationFactory, timecardFactory) {
+    fpmUtilitiesFactory, sharedDataFactory, authenticationFactory, timecardFactory, $ionicPopover, $ionicModal, $ionicActionSheet) {
     var vm = this;
     var __jobCodes = timecardFactory.statics.jobCodes;
     var __statusTypes = timecardFactory.statics.statusTypes;
@@ -45,6 +45,30 @@
         var _timeObj = vm.timePicker.timecardObject;
         var __isClockout = _timeObj.jobCode === __jobCodes.CLOCK_IN && vm.timePicker.prop === 'finishTime'
         var _e = angular.copy(_timeObj);
+        if (__isClockout) {
+          __processClockOutUser(vm.timePicker.currentTime, _timeObj);
+        } else {
+          _timeObj[vm.timePicker.prop] = vm.timePicker.currentTime;
+          _e.startTime = __toDateString(_timeObj.startTime);
+          _e.finishTime = __toDateString(_timeObj.finishTime);
+          if (!vm.assgiendToSameUser) {
+            _e.timecardUserEmailDefined = true;
+            _e.timecardUserEmail = __userEmail;
+          }
+          fpmUtilitiesFactory.showLoading().then(function () {
+            timecardFactory.addNewDetails(_e).then(function (response) {
+              if (response.errors === null) {
+                alerts.alert("Time Added", "Time has been updated.");
+                if (vm.data.timeCards.length !== response.timeCardDetails.length) {
+                  vm.data.approvalStatus = response.timeCardSummary.approveStatus || 0;
+                }
+                $timeout(function () {
+                  __updateTimeCardsArray(response.timeCardDetails);
+                }, 100)
+              }
+            }).finally(fpmUtilitiesFactory.hideLoading);
+          });
+        }
       },
       onTimeClicked: function (t, isForStartTime) {
         var __status = vm.data.approvalStatus;
@@ -102,8 +126,163 @@
       return new Date(dateFrom.getFullYear(), dateFrom.getMonth(), dateFrom.getDate(), __timeDate.getHours(), __timeDate.getMinutes(), 0, 0)
     }
 
-    function _processClockOutUser(clockInDateTime, __details) {
+    function __updateTimeCardsArray(details) {
+      // ==========================================================
+      // We don't need the sections now
+      // ==========================================================
+      vm.data.timeCards = details;
+    }
 
+
+    function __calculateTotalPayableTime() {
+      vm.data.totalTime = "0";
+      vm.data.totalCheckinTime = [];
+      //JobCode: jobCodes.CLOCK_IN
+      var payables = _.filter(vm.data.timeCards, function (tc) {
+        return tc.jobCode === __jobCodes.CLOCK_IN && tc.finishTime !== null;
+      });
+      var nonPayables = _.filter(vm.data.timeCards, function (tc) {
+        return tc.jobCode !== __jobCodes.CLOCK_IN && tc.isPayable === false && tc.finishTime !== null;
+      });
+      var checkins = _.filter(vm.data.timeCards, function (tc) {
+        return tc.jobCode !== __jobCodes.CLOCK_IN && tc.finishTime !== null;
+      });
+      if (checkins.length > 0) {
+        var clockinNums = _.pluck(checkins, 'clockInNum');
+        var distinctClockInNums = _.uniq(clockinNums);
+        angular.forEach(distinctClockInNums, function (cn, i) {
+          var totalCheckinsMins = 0;
+          angular.forEach(checkins, function (e, i) {
+            if (e.clockInNum == cn)
+              totalCheckinsMins += moment(kendo.parseDate(e.finishTime)).diff(kendo.parseDate(e.startTime), "minutes");
+          });
+          var hours = Math.floor(totalCheckinsMins / 60);
+          var mintues = totalCheckinsMins % 60;
+          vm.data.totalCheckinTime[cn] = hours + " hrs " + mintues + " min";
+        });
+
+      } else {
+        vm.data.totalcheckinTime = "0 hrs 0 min";
+        return;
+      }
+      var totalPayableMins = 0;
+      if (payables.length > 0) {
+        angular.forEach(payables, function (e, i) {
+          totalPayableMins += moment(kendo.parseDate(e.finishTime)).diff(kendo.parseDate(e.startTime), "minutes");
+        });
+      } else {
+        vm.data.totalTime = "0 hrs 0 min";
+        return;
+      }
+
+      if (nonPayables.length > 0) {
+        var totalNonPMins = 0;
+        angular.forEach(nonPayables, function (e, i) {
+          totalNonPMins += moment(kendo.parseDate(e.finishTime)).diff(kendo.parseDate(e.startTime), "minutes");
+          if (i === nonPayables.length - 1) {
+            totalPayableMins = totalPayableMins - totalNonPMins;
+            if (totalPayableMins > 0) {
+              var hours = Math.floor(totalPayableMins / 60);
+              var mintues = totalPayableMins % 60;
+              vm.data.totalTime = hours + " hrs " + mintues + " min";
+            } else {
+              vm.data.totalTime = "0 hrs 0 min";
+            }
+          }
+        });
+      } else {
+        var hours = Math.floor(totalPayableMins / 60);
+        var mintues = totalPayableMins % 60;
+        vm.data.totalTime = hours + " hrs " + mintues + " min";
+      }
+    }
+
+    function __processClockOutUser(clockInDateTime, __details) {
+      var tcd = null;
+      if (vm.data.summary && vm.data.summary.timeCardDate) {
+        tcd = moment(vm.data.summary.timeCardDate).toDate();
+      } else {
+        tcd = vm.currentDate;
+      }
+      var smDt = clockInDateTime ? clockInDateTime : new Date();
+      var clockOutTime = __toDateObj(smDt, smDt); //new Date(smDt.getFullYear(), smDt.getMonth(), smDt.getDate(), smDt.getHours(), smDt.getMinutes(), 0, 0);
+      var __num = __details ? __details.num : 0;
+      var details = {
+        num: __num,
+        startTime: __toDateString(clockOutTime),
+        jobCode: __jobCodes.CLOCK_OUT,
+        numFromSummary: vm.data.summary.num,
+        timeCardDate: __toDateString(tcd),
+      };
+      if (!vm.assgiendToSameUser) {
+        details.timecardUserEmailDefined = true;
+        details.timecardUserEmail = __userEmail;
+      }
+      if (vm.data.currentClockedIn) {
+        details["uniqueIdentifier"] = vm.data.currentClockedIn.uniqueIdentifier;
+      } else {
+        details["uniqueIdentifier"] = __details.uniqueIdentifier;
+      }
+      fpmUtilitiesFactory.showLoading().then(function () {
+        timecardFactory.clockInOutUser(details).then(function (response) {
+          if (response && response.errors === null) {
+            vm.data.clockOutDateTime = clockOutTime;
+            vm.data.isClockedOut = true;
+            vm.data.isClockedIn = false;
+            vm.data.disableClockOutButton = true;
+            vm.data.addTimeVisibility = false;
+            vm.data.ptoButtonVisibility = true;
+            vm.data.summary = response.timeCardSummary;
+            var dt = vm.currentDate ? vm.currentDate : new Date();
+            var cDate = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 0, 0, 0, 0);
+            var tcDate = new Date(tcd.getFullYear(), tcd.getMonth(), tcd.getDate(), 0, 0, 0, 0);
+            if (moment(tcDate).isSameOrAfter(cDate)) {
+              vm.data.disableClockInButton = false;
+            }
+            vm.data.approvalStatus = response.timeCardSummary.approveStatus || 0;
+            __updateTimeCardBindings(response);
+          } else {
+            alerts.alert("Error", "Not able to perform clock out");
+          }
+        }).finally(function () {
+          fpmUtilitiesFactory.hideLoading();
+        });
+      });
+    }
+
+    function __showModal() {
+      if (vm.data.isFromPto && vm.data.summary === null) {
+        vm.data.summary = {
+          num: 0,
+          timeCardDate: vm.currentDate
+        };
+        timecardFactory.summary = vm.data.summary;
+      }
+      if (vm.data.addEditDetailsModal === null) {
+        $ionicModal.fromTemplateUrl("timecardDetailsModal.html", {
+          scope: $scope,
+          animation: 'slide-in-up'
+        }).then(function (modal) {
+          vm.data.addEditDetailsModal = modal;
+          $timeout(function () {
+            $scope.$broadcast("timecard:addEditDetailsModal:open", {
+              isFromPto: vm.data.isFromPto,
+              details: vm.data.currentDetails,
+              editMode: vm.data.isInEditMode,
+              currentDate: vm.currentDate
+            });
+            modal.show();
+          }, 300);
+        });
+      } else {
+        $scope.$broadcast("timecard:addEditDetailsModal:open", {
+          isFromPto: vm.data.isFromPto,
+          details: vm.data.currentDetails,
+          editMode: vm.data.isInEditMode,
+          currentDate: vm.currentDate
+        });
+        vm.data.addEditDetailsModal.show();
+      }
     }
 
     vm.data = {
@@ -116,6 +295,32 @@
         }
       },
       events: {
+        onModalCancelClicked: function () {
+          vm.data.isInEditMode = false;
+          vm.data.isFromPto = false;
+          vm.data.currentDetails = null;
+          vm.data.addEditDetailsModal.hide();
+        },
+        onAddScheduleCompleted: function (__res) {
+          if (vm.data.timeCards.length !== __res.timeCardDetails.length) {
+            vm.data.approvalStatus = __res.timeCardSummary.approveStatus || 0;
+          }
+          __updateTimeCardBindings(__res);
+          vm.data.addEditDetailsModal.hide();
+        },
+        addTimeClick: function (isFromPto) {
+          $timeout(function () {
+            vm.data.isFromPto = isFromPto;
+            vm.data.isInEditMode = false;
+            vm.data.currentDate = vm.currentDate;
+            __showModal();
+          }, 100);
+          vm.popover.hide();
+          return true;
+        },
+        showPopoverClicked: function ($event) {
+          vm.popover.show($event);
+        },
         clockOutClick: function (clockInDate, detail) {
           var notCheckInDetails = _.filter(vm.data.timeCards, function (tc) {
             return tc.finishTime === null && tc.jobCode !== __jobCodes.CLOCK_IN;
@@ -246,7 +451,7 @@
 
     function __updateTimeCardBindings(details) {
       vm.data.timecard = details;
-      vm.data.timeCards = details;
+      vm.data.timeCards = details.timeCardDetails;
       vm.data.checkInOuts = _.filter(details.timeCardDetails, function (e) {
         return (e.jobCode !== __jobCodes.CLOCK_IN && e.jobCode !== __jobCodes.CLOCK_OUT)
       });
@@ -277,7 +482,6 @@
       vm.showingLoading = true;
       vm.data.loading = true;
       timecardFactory.getTimeCardByDate(__dt, __userEmail).then(function (__res) {
-        console.log(__res);
         if (__res) {
           __updateTimeCardBindings(__res);
         }
@@ -304,6 +508,11 @@
     }
 
 
+    $scope.$watch("vm.data.timeCards", function (nw) {
+      if (angular.isDefined(nw)) {
+        __calculateTotalPayableTime();
+      }
+    }, true);
 
     vm.$onChanges = function () {
       $timeout(function () {
@@ -314,10 +523,23 @@
     vm.$onInit = function () {
       vm.user = authenticationFactory.getLoggedInUserInfo();
       __isForWorkOrder = vm.basedOn === "workorder";
+      vm.canChangeTimecardDate = vm.basedOn === "timecard";
       $timeout(function () {
         __ensureScheduleNotAssgiendToCurrentUser(true);
       }, 100);
     }
+
+    $ionicPopover.fromTemplateUrl('timecard-popover.html', {
+      scope: $scope
+    }).then(function (popover) {
+      vm.popover = popover;
+    });
+    $ionicModal.fromTemplateUrl("timecardDetailsModal.html", {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function (modal) {
+      vm.data.addEditDetailsModal = modal;
+    });
   }
 
   // ==========================================================
@@ -336,7 +558,7 @@
   __detailController.$inject = ["$rootScope", "$scope", "$state", "$timeout", "work-orders-factory",
     "fpm-utilities-factory",
     "shared-data-factory",
-    "authenticationFactory", "timecard-factory"
+    "authenticationFactory", "timecard-factory", "$ionicPopover", "$ionicModal", "$ionicActionSheet"
   ];
 
   angular.module("fpm").component("timecardDetails", __componentConfig);

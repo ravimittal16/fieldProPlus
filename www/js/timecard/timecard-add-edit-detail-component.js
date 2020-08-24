@@ -4,15 +4,14 @@
     bindings: {
       onCancelClicked: "&",
       onAddCompleted: "&",
+      basedOn: "@",
+      schedule: "<"
     },
     controller: ["$scope", "$timeout", "$q", "timecard-factory", "fpm-utilities-factory", "authenticationFactory",
       function ($scope, $timeout, $q, timecardFactory, fpmUtilitiesFactory, authenticationFactory) {
         var vm = this;
         var alerts = fpmUtilitiesFactory.alerts;
-        var jobCodes = {
-          CLOCK_IN: 5001,
-          CLOCK_OUT: 5002
-        };
+        var jobCodes = timecardFactory.statics.jobCodes;
         var isConfirmedBefore = false;
         vm.ui = {
           summary: angular.copy(timecardFactory.summary),
@@ -93,6 +92,13 @@
             vm.ui.errors.push("Please select Job code before save");
             return false;
           }
+          if (vm.showServiceProviderLabel && vm.schedule && vm.basedOn === "workOrder") {
+            _e.timecardUserEmailDefined = true;
+            _e.timecardUserEmail = vm.schedule.technicianNum;
+          }
+
+
+
           fpmUtilitiesFactory.showLoading().then(function () {
             var action = vm.isFromPto ? timecardFactory.addPtoDetails : timecardFactory.addNewDetails;
             action(_e).then(function (response) {
@@ -213,6 +219,7 @@
         var selectedDate = new Date();
 
         function initController(eventParams) {
+          vm.showServiceProviderLabel = vm.basedOn === "workOrder" && vm.schedule !== null;
           vm.ui.errors = [];
           selectedDate = eventParams.currentDate || new Date();
           vm.details = eventParams.details;
@@ -309,7 +316,20 @@
           fpmUtilitiesFactory.showLoading().then(function () {
             timecardFactory.getWorkOrdersList().then(function (response) {
               vm.ui.workOrders = response;
-            }).finally(_getJobCodes);
+            }).finally(function () {
+              // ==========================================================
+              // if opened from Timecard Component in Edit Work Order Window
+              // ==========================================================
+              if (vm.showServiceProviderLabel && vm.schedule && vm.basedOn === "workOrder") {
+                var __woExists = _.contains(vm.ui.workOrders, {
+                  barcode: vm.schedule.barcode
+                });
+                if (__woExists) {
+                  vm.entity.barcode = vm.schedule.barcode;
+                }
+              }
+              _getJobCodes();
+            });
           });
         }
 

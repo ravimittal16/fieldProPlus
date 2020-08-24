@@ -36,6 +36,11 @@
                 <span class="input-label">Start Time</span>
                     <input type="text" placeholder="Start Time" class="transparent-background text-right" data-ng-model="vm.entity.startTime" readonly=""/>
                 </label>-->
+      <label for="" class="item item-input" style="background-color: #dfebf6;" ng-if="vm.showServiceProviderLabel">
+        <span class="input-label">Service Provider</span>
+        <input type="text" class="transparent-background text-right" readonly=""
+          data-ng-model="vm.schedule.technicianName" />
+      </label>
       <label class="item" data-ng-if="vm.entity.isUserDefined && !vm.timecardPermissions.timePickerVisibility">
         Start Time
         <span class="item-note">
