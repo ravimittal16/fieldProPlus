@@ -285,6 +285,30 @@
       }
     }
 
+
+    function _processClearOrDeleteClockOut(numFromDetail, fromDeleteClockIn, callback) {
+      alerts.confirm("Confirmation!", "Are you sure?", function () {
+        if (angular.isFunction(callback)) {
+          callback();
+        }
+        fpmUtilitiesFactory.showLoading().then(function () {
+          timecardFactory.clearClockOutTime(numFromDetail, fromDeleteClockIn).then(function (response) {
+            if (response) {
+              $timeout(function () {
+                __getUserTimeCardByDate();
+              }, 100);
+            }
+          }).finally(function () {
+            fpmUtilitiesFactory.hideLoading();
+          });
+        });
+      }, function () {
+        if (angular.isFunction(callback)) {
+          callback();
+        }
+      });
+    }
+
     vm.data = {
       errors: [],
       calendar: {
@@ -295,6 +319,77 @@
         }
       },
       events: {
+        onClockInOutActionClicked: function (detail) {
+          var hideSheet = $ionicActionSheet.show({
+            buttons: [{
+              text: 'Delete Clock In/Out',
+              className: "destructive "
+            }],
+            destructiveText: 'Clear Clock-Out Time',
+            titleText: 'Time Card Options',
+            cancel: function () {},
+            buttonClicked: function (index) {
+              if (index === 0) {
+                _processClearOrDeleteClockOut(detail.num, true, hideSheet);
+              }
+            },
+            destructiveButtonClicked: function () {
+              // ==========================================================
+              // Checking the pending clock-out counts
+              // ==========================================================
+              var _pendingClockout = vm.ui.data.timeCards.filter(function (t) {
+                return t.jobCode === __jobCodes.CLOCK_IN && t.finishTime === null;
+              })
+              if (_pendingClockout.length > 0) {
+                hideSheet();
+                alerts.alert("Warning", "You cannot have multiple Clock Out.");
+                return false;
+              }
+              _processClearOrDeleteClockOut(detail.num, false, hideSheet);
+            }
+          });
+        },
+        onCardActionClicked: function (t) {
+          $ionicActionSheet.show({
+            buttons: [{
+              text: 'Edit'
+            }],
+            destructiveText: 'Delete',
+            titleText: 'Time Card Options',
+            cancelText: 'Cancel',
+            cancel: function () {},
+            destructiveButtonClicked: function () {
+              if (!t.isUserDefined || vm.timecardAccessLevel === 1) {
+                alerts.alert("Invalid Action", "You are not allowed to perform delete");
+              } else {
+                alerts.confirmDelete(function () {
+                  fpmUtilitiesFactory.showLoading().then(function () {
+                    timecardFactory.deleteTimeCardDetails(t.num, t.numFromSummary)
+                      .then(function (response) {
+                        if (response) {
+                          alerts.alert("Success", "Time Details cleared successfully", function () {
+                            __updateTimeCardBindings(response);
+                          });
+                        }
+                      }).finally(fpmUtilitiesFactory.hideLoading);
+                  });
+                });
+              }
+              return true;
+            },
+            buttonClicked: function (index) {
+              if (index === 0) {
+                vm.data.currentDetails = t;
+                $timeout(function () {
+                  vm.data.isInEditMode = true;
+                  vm.data.isFromPto = t.isPtoType;
+                  __showModal();
+                }, 200);
+              }
+              return true;
+            }
+          });
+        },
         onModalCancelClicked: function () {
           vm.data.isInEditMode = false;
           vm.data.isFromPto = false;
