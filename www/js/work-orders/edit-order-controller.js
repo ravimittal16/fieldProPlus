@@ -98,6 +98,7 @@
               function (response) {
                 vm.gettingBarcodeDetails = false;
                 vm.barCodeData = angular.copy(response);
+
                 vm.barCodeData.taxRate = vm.barCodeData.taxRate.toFixed(2);
                 vm.uiSettings.woData = angular.copy(response);
                 vm.taxCheckboxVisibility = (vm.barCodeData.taxRate || 0) > 0;
@@ -448,9 +449,11 @@
             // ==========================================================
             // Updating timecard component
             // ==========================================================
-            $scope.$broadcast("$timecard.refreshTimecard.pushToTimecard", {
-              scheduleNum: vm.schedule.num
-            });
+            if (vm.user.timecardAccessLevel === 3) {
+              $scope.$broadcast("$timecard.refreshTimecard.pushToTimecard", {
+                scheduleNum: vm.schedule.num
+              });
+            }
           }
         });
       } else {
@@ -493,6 +496,7 @@
       isMapLoaded = false;
       vm.uiSettings.isTimeCardModuleEnabled =
         vm.user.timeCard && vm.user.allowPushTime;
+
       vm.isServiceProvider = !vm.user.isAdminstrator;
       vm.showPrice = vm.user.showPrice;
       sharedDataFactory
@@ -1412,7 +1416,7 @@
     };
 
     function _getTodaysTimeCardEntries(runCheckin) {
-      if (vm.user.timeCard === true) {
+      if (vm.user.timeCard) {
         var cdt = new Date();
         var dt = fpmUtilities.toStringDate(
           new Date(cdt.getFullYear(), cdt.getMonth(), cdt.getDate(), 0, 0, 0, 0)

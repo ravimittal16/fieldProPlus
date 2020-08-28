@@ -41,7 +41,8 @@
             inventoryOn: response.inventoryOn === "True",
             allowUserToEditWoDescription: response.allowUserToEditWoDescription === "True",
             currencySymbol: response.currencySymbol,
-            dateFormat: response.dateFormat
+            dateFormat: response.dateFormat,
+            timecardAccessLevel: +(response.timecardAccessLevel || 1)
           };
           $rootScope.currencySymbol = response.currencySymbol;
           $rootScope.dateFormat = response.dateFormat;

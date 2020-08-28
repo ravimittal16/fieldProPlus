@@ -444,7 +444,8 @@
               </button>
             </div>
           </div>
-          <timecard-details based-on="workorder" schedule="vm.schedule"></timecard-details>
+          <timecard-details ng-if="vm.uiSettings.isTimeCardModuleEnabled && vm.user.timecardAccessLevel === 3"
+            based-on="workorder" schedule="vm.schedule"></timecard-details>
           <div class="card">
             <div class="item item-divider header-dark">
               OTHER SCHEDULES IN THIS WORK ORDER

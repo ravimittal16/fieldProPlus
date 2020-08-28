@@ -593,12 +593,10 @@
         vm.assgiendToSameUser = vm.schedule && vm.schedule.technicianNum === vm.user.userEmail;
         vm.currentDate = __toDate(vm.schedule.scheduledStartDateTime);
         vm.userName = __isForWorkOrder ? vm.schedule.technicianName : vm.user.userName;
-        if (!vm.assgiendToSameUser) {
-          __userEmail = vm.schedule.technicianNum;
-          $timeout(function () {
-            __getUserTimeCardByDate()
-          }, 50);
-        }
+        __userEmail = vm.assgiendToSameUser ? vm.user.userEmail : vm.schedule.technicianNum;
+        $timeout(function () {
+          __getUserTimeCardByDate()
+        }, 50);
       }
     }
 
