@@ -188,15 +188,16 @@
             <div class="row">
               <div class="col">
                 <strong>
-                  <h4><span ng-bind="vm.schedule.technicianName"></span></h4>
+                  <h4><span style="font-weight: 600;" ng-bind="vm.schedule.technicianName"></span></h4>
                 </strong>
               </div>
             </div>
             <div class="row">
               <div class="col" style="display: flex; justify-content: center;">
-                <span class="label label-default">Schedule Start</span>
+                <span style="font-weight: 600;font-size: 13px;">Scheduled Start</span>
               </div>
-              <div class="col" style="display: flex;justify-content: center;"><span class="label label-default">Schedule
+              <div class="col" style="display: flex;justify-content: center;"><span
+                  style="font-weight: 600;font-size: 13px;">Scheduled
                   Finish</span>
               </div>
             </div>
@@ -239,7 +240,7 @@
               <div>
                 <div class="item item-input item-stacked-label" style="border-bottom: 0px !important;">
                   <span class="input-label">
-                    <span class="label label-primary">Actual Start</span></span>
+                    <span>Actual Start</span></span>
                 </div>
                 <div class="item" style="border-top:0px !important;padding-top: 0px !important;">
                   <div style="width: 65%;float: left;">
@@ -258,7 +259,7 @@
                       ng-click="vm.tabs.sch.events.clearAllDateTimeSelection(true)">
                       <i class="icon ion-ios-trash-outline"></i>
                     </button>
-                    <button type="button" class="button button-small button-positive" style="width: 79px;"
+                    <button type="button" class="button button-small button-calm" style="width: 79px;"
                       ng-disabled="vm.schedule.approve || vm.schedule.checkInStatus"
                       ng-click="vm.tabs.sch.events.checkIn()">
                       <i class="ion ion-clock"></i>&nbsp;Check In
@@ -266,7 +267,7 @@
                   </div>
                 </div>
                 <div class="item item-input item-stacked-label" style="border-bottom: 0px !important;">
-                  <span class="input-label"><span class="label label-primary">Actual Finish</span></span>
+                  <span class="input-label"><span>Actual Finish</span></span>
                 </div>
                 <div class="item" style="border-top:0px !important;padding-top: 0px !important;">
                   <div style="width: 65%;float: left;">
@@ -286,7 +287,7 @@
                       ng-click="vm.tabs.sch.events.clearAllDateTimeSelection(false)">
                       <i class="icon ion-ios-trash-outline"></i>
                     </button>
-                    <button type="button" class="button button-small button-positive"
+                    <button type="button" class="button button-small button-calm"
                       ng-disabled="vm.schedule.approve || vm.schedule.checkOutStatus"
                       ng-click="vm.tabs.sch.events.checkOut()">
                       <i class="ion ion-clock"></i>&nbsp;Check Out
@@ -327,8 +328,8 @@
                 </label> -->
 
 
-                <div class="padding" ng-if="vm.uiSettings.isTimeCardModuleEnabled">
-                  <button class="button button-block button-small button-dark"
+                <div class="padding text-center" ng-if="vm.uiSettings.isTimeCardModuleEnabled">
+                  <button class="button button-small button-block button-calm"
                     ng-click="vm.tabs.sch.events.pushToTimecard()">
                     <i class="ion ion-clock"></i>&nbsp;Push to Timecard
                   </button>

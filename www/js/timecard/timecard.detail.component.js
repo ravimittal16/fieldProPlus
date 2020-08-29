@@ -78,7 +78,7 @@
         var __isClockout = t.jobCode === __jobCodes.CLOCK_IN && !isForStartTime && t.finishTime === null;
         if (__isClockout) {
           var __notCheckInDetails = _.filter(vm.data.timeCards, function (tc) {
-            return tc.finishTime === null && tc.jobCode !== jobCodes.CLOCK_IN;
+            return tc.finishTime === null && tc.jobCode !== __jobCodes.CLOCK_IN;
           });
           if (__notCheckInDetails.length > 0) {
             alerts.confirm("Confirmation!", "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?", function () {

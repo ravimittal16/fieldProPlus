@@ -752,3 +752,12 @@ select[readonly] {
   opacity: 0.5;
   /* background: #CCC; */
 }
+
+.text13 {
+  font-size: 13px;
+
+}
+
+.font-bold {
+  font-weight: 600;
+}
