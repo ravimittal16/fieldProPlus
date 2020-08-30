@@ -319,6 +319,25 @@
         }
       },
       events: {
+        sendForApproval: function (status) {
+          if (angular.isArray(vm.data.timeCards) && vm.data.timeCards.length === 0) {
+            alerts.alert("No Timecard!", "No Timecard information found to process this request.");
+            return false;
+          }
+          alerts.confirm("Confirmation!", "Are you sure?", function () {
+            fpmUtilitiesFactory.showLoading().then(function () {
+              timecardFactory.sendForApproval(vm.data.summary.num, status).then(function (response) {
+                if (response) {
+                  vm.data.summary = response.timeCardSummary;
+                  alerts.alert("Success", "Time card sent for approval successfully");
+                  vm.data.addTimeVisibility = false;
+                  vm.data.ptoButtonVisibility = false;
+                  vm.data.approvalStatus = vm.data.summary.approveStatus;
+                }
+              }).finally(fpmUtilitiesFactory.hideLoading);
+            });
+          });
+        },
         onClockInOutActionClicked: function (detail) {
           var hideSheet = $ionicActionSheet.show({
             buttons: [{

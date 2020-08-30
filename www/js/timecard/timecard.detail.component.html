@@ -90,11 +90,11 @@
     </div>
     <div class="row" ng-if="
         vm.data.allowSendForApproval &&
-        vm.data.approvalStatus == 0 &&
+        vm.data.approvalStatus === 0 &&
         vm.data.timeCards.length > 0
       ">
       <div class="col">
-        <button class="button button-positive button-small button-block" ng-click="vm.events.sendForApproval(1)">
+        <button class="button button-positive button-small button-block" ng-click="vm.data.events.sendForApproval(1)">
           Send for Approval
         </button>
       </div>
