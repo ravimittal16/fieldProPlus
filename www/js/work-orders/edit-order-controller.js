@@ -24,16 +24,16 @@
     vm.taxCheckboxVisibility = true;
     vm.pendingPreviousDayClockout = false;
     var alerts = fpmUtilities.alerts;
+    var __customerNumber = "";
+    var __skipTimecardCheckFor = ["97713", "97719"];
+    var __skipTimecardClockInValidationOnCheckInOut = false;
     var jobStatus = {
       AcceptJob: 0,
       InRoute: 1,
       CheckIn: 2,
       CheckOut: 3
     };
-    var jobCodes = {
-      CLOCK_IN: 5001,
-      CLOCK_OUT: 5002
-    };
+    var jobCodes = timecardFactory.statics.jobCodes;
     vm.invoiceOpen = true;
 
     vm.uiSettings = {
@@ -490,6 +490,12 @@
 
 
     function activateController() {
+      // ==========================================================
+      // WE NEED TO SKIP THE CLOCK IN CHECK FOR SOME CUSTOMERS
+      // ==========================================================
+      __customerNumber = vm.user.customerNumber;
+      __skipTimecardClockInValidationOnCheckInOut = __skipTimecardCheckFor.indexOf(__customerNumber) > -1;
+      // ==========================================================
       if (!$rootScope.isInDevMode) {
         _getCurrentUserLocation();
       }
@@ -1159,15 +1165,15 @@
           },
           checkIn: function () {
             if (
-              vm.schedule.approve === true ||
-              vm.schedule.checkInStatus === true
+              vm.schedule.approve ||
+              vm.schedule.checkInStatus
             ) {
               alerts.alert("Alert", "Not allowed to checkin");
             } else {
               if (checkAuthorizationIfServiceProvider(null, null, true)) {
                 var isBeongToCurrentUser =
                   vm.schedule.technicianNum === vm.user.userEmail;
-                if (vm.user.timeCard === true && isBeongToCurrentUser) {
+                if (vm.user.timeCard && isBeongToCurrentUser && !__skipTimecardClockInValidationOnCheckInOut) {
                   var runningClockIn = _.where(timeCardInfo.currentDetails, {
                     jobCode: jobCodes.CLOCK_IN,
                     finishTime: null

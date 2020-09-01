@@ -303,6 +303,12 @@
                   <input type="text" ng-if="vm.schedule.approve" class="transparent-background text-right" disabled
                     placeholder="Total Time" ng-model="vm.scheduleTimeSpan.timeSpan" />
                 </label>
+                <ion-toggle ng-model="vm.schedule.workComplete" style="padding-top: 8px;padding-bottom: 8px;"
+                  toggle-class="toggle-balanced" ng-change="vm.tabs.sch.events.workCompleteChanged()"><span
+                    class="input-label">
+                    Work Complete
+                  </span>
+                </ion-toggle>
                 <div class="item item-divider header-dark">
                   Trip Notes
                   <a class="pull-right pointer" on-tap="vm.tabs.events.popoutTextBox('TRIP_NOTES')">Edit</a>
@@ -329,7 +335,7 @@
 
 
                 <div class="padding text-center" ng-if="vm.uiSettings.isTimeCardModuleEnabled">
-                  <button class="button button-small button-block button-calm"
+                  <button class="button button-small button-block button-calm" ng-disabled="vm.schedule.approve"
                     ng-click="vm.tabs.sch.events.pushToTimecard()">
                     <i class="ion ion-clock"></i>&nbsp;Push to Timecard
                   </button>
@@ -668,9 +674,11 @@
                   ng-change="vm.tabs.desc.events.onDescriptionOrResolutionChanged()">
                   <select>
               </div>
-              <ion-toggle ng-model="vm.schedule.workComplete" toggle-class="toggle-balanced"
-                ng-change="vm.tabs.sch.events.workCompleteChanged()">Work
-                Complete
+              <ion-toggle ng-model="vm.schedule.workComplete" style="padding-top:8px;padding-bottom: 8px;"
+                toggle-class="toggle-balanced" ng-change="vm.tabs.sch.events.workCompleteChanged()"><span
+                  class="input-label">
+                  Work Complete
+                </span>
               </ion-toggle>
             </div>
           </div>
