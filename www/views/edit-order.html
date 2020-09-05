@@ -3,7 +3,7 @@
   <ion-nav-buttons side="left">
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
-  <ion-content scroll="false">
+  <ion-content scroll="false" class="has-header">
     <div class="list padding-top" ng-if="vm.errors.length > 0">
       <div class="error">
         <ui class="list-unstyled">
@@ -17,7 +17,7 @@
           <ion-refresher pulling-text="Pull to refresh..." on-refresh="vm.tabs.desc.events.refreshOnPullDown()">
           </ion-refresher>
           <div>
-            <div class="padding-top">
+            <div>
               <div class="card">
                 <div class="list">
                   <div class="item item-divider header-dark">
@@ -172,6 +172,7 @@
       </ion-tab>
       <ion-tab title="SCHEDULE" icon-on="ion-ios-clock" icon-off="ion-ios-clock-outline">
         <ion-content>
+          <timecard-clock-in-header based-on="workorder" schedule="vm.schedule"></timecard-clock-in-header>
           <div class="card">
             <div class="item item-divider header-dark">
               <div class="row p-0">
@@ -246,9 +247,10 @@
                   <div style="width: 65%;float: left;">
                     <!-- <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onStartDateTimeChaged}"
                       ng-model="vm.schedule.actualStartDateTime" placeholder="tap here to select..." /> -->
-                    <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.actualStartDateTime"
-                      type="datetime" on-date-changed="vm.scheduleTimeSpan.onStartDateTimeChaged()"
-                      format="vm.dateTimeFormat" default-text="tap here to select..."></fp-date-time-component>
+                    <fp-date-time-component ng-if="!vm.schedule.approve" is-disabled="!vm.schedule.checkInStatus"
+                      model-val="vm.schedule.actualStartDateTime" type="datetime"
+                      on-date-changed="vm.scheduleTimeSpan.onStartDateTimeChaged()" format="vm.dateTimeFormat"
+                      default-text="tap here to select..."></fp-date-time-component>
                     <!-- <input type="text" ng-if="vm.schedule.approve" class="transparent-background" disabled ng-model="vm.schedule.actualStartDateTimeString"
                     /> -->
                     <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.actualStartDateTimeString"
@@ -273,9 +275,10 @@
                   <div style="width: 65%;float: left;">
                     <!-- <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onEndDateTimeChanged}"
                       ng-model="vm.schedule.actualFinishDateTime" placeholder="tap here to select..." /> -->
-                    <fp-date-time-component ng-if="!vm.schedule.approve" model-val="vm.schedule.actualFinishDateTime"
-                      type="datetime" on-date-changed="vm.scheduleTimeSpan.onEndDateTimeChanged()"
-                      format="vm.dateTimeFormat" default-text="tap here to select..."></fp-date-time-component>
+                    <fp-date-time-component ng-if="!vm.schedule.approve" is-disabled="!vm.schedule.checkInStatus"
+                      model-val="vm.schedule.actualFinishDateTime" type="datetime"
+                      on-date-changed="vm.scheduleTimeSpan.onEndDateTimeChanged()" format="vm.dateTimeFormat"
+                      default-text="tap here to select..."></fp-date-time-component>
                     <!-- <input type="text" ng-if="vm.schedule.approve" class="transparent-background" disabled ng-model="vm.schedule.actualFinishDateTimeString"
                     /> -->
                     <fp-date-time-renderer ng-if="vm.schedule.approve"
@@ -288,7 +291,7 @@
                       <i class="icon ion-ios-trash-outline"></i>
                     </button>
                     <button type="button" class="button button-small button-calm"
-                      ng-disabled="vm.schedule.approve || vm.schedule.checkOutStatus"
+                      ng-disabled="vm.schedule.approve || vm.schedule.checkOutStatus || !vm.schedule.checkInStatus"
                       ng-click="vm.tabs.sch.events.checkOut()">
                       <i class="ion ion-clock"></i>&nbsp;Check Out
                     </button>
@@ -303,12 +306,7 @@
                   <input type="text" ng-if="vm.schedule.approve" class="transparent-background text-right" disabled
                     placeholder="Total Time" ng-model="vm.scheduleTimeSpan.timeSpan" />
                 </label>
-                <ion-toggle ng-model="vm.schedule.workComplete" style="padding-top: 8px;padding-bottom: 8px;"
-                  toggle-class="toggle-balanced" ng-change="vm.tabs.sch.events.workCompleteChanged()"><span
-                    class="input-label">
-                    Work Complete
-                  </span>
-                </ion-toggle>
+
                 <div class="item item-divider header-dark">
                   Trip Notes
                   <a class="pull-right pointer" on-tap="vm.tabs.events.popoutTextBox('TRIP_NOTES')">Edit</a>

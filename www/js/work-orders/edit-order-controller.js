@@ -25,8 +25,10 @@
     vm.pendingPreviousDayClockout = false;
     var alerts = fpmUtilities.alerts;
     var __customerNumber = "";
-    var __skipTimecardCheckFor = ["97713", "97719"];
+    var __skipTimecardCheckFor = [];
     var __skipTimecardClockInValidationOnCheckInOut = false;
+    var __forIntegrityCustomer = false;
+    var __integrityCustomers = ["97713", "97719"];
     var jobStatus = {
       AcceptJob: 0,
       InRoute: 1,
@@ -190,6 +192,11 @@
             .finally(function () {
               $ionicLoading.hide();
               $scope.$broadcast("scroll.refreshComplete");
+              $timeout(function () {
+                if (__forIntegrityCustomer) {
+                  _getTodaysTimeCardEntries(false);
+                }
+              }, 100)
             });
         });
     }
@@ -307,6 +314,7 @@
             ).then(function (totalMins) {
               if (!vm.schedule.approve) {
                 updateSchduleTotalTime();
+
               }
             });
           }
@@ -372,7 +380,7 @@
             return true;
           }
         }
-        if (vm.isServiceProvider && !isBeongToCurrentUser) {
+        if (vm.isServiceProvider && !isBeongToCurrentUser && vm.user.timecardAccessLevel !== 3) {
           alerts.alert(
             "Oops!",
             "you are not authorized to perform this action",
@@ -418,6 +426,8 @@
           vm.barCodeData.invoice = response.invoice;
           calculateTotals();
         }
+      }).finally(function () {
+        $rootScope.$broadcast("$workOrder.refreshTimecardUI");
       });
     }
 
@@ -495,6 +505,7 @@
       // ==========================================================
       __customerNumber = vm.user.customerNumber;
       __skipTimecardClockInValidationOnCheckInOut = __skipTimecardCheckFor.indexOf(__customerNumber) > -1;
+      __forIntegrityCustomer = __integrityCustomers.indexOf(__customerNumber) > -1;
       // ==========================================================
       if (!$rootScope.isInDevMode) {
         _getCurrentUserLocation();
@@ -567,7 +578,11 @@
             vm.vehicles = response.vehicles;
           }
         })
-        .finally(_getTodaysTimeCardEntries);
+        .finally(function () {
+          if (!__forIntegrityCustomer) {
+            _getTodaysTimeCardEntries();
+          }
+        });
     }
 
     function calculateTotals() {
@@ -779,6 +794,8 @@
           })
           .then(function () {
             vm.schedule.checkInStatus = true;
+            //TODO: REFEESH BOTH COMPONENTS
+            $rootScope.$broadcast("$workOrder.refreshTimecardUI");
           })
           .finally(function () {
             fpmUtilities.hideLoading();
@@ -871,6 +888,13 @@
         })
         .then(function () {
           vm.schedule.checkOutStatus = true;
+          $rootScope.$broadcast("$workOrder.refreshTimecardUI");
+          // ==========================================================
+          // WORK COMPLETE WILL BE SET TO TRUE FOR INTEGRITY
+          // ==========================================================
+          if (__forIntegrityCustomer && (vm.schedule.workComplete === null || !vm.schedule.workComplete)) {
+            vm.schedule.workComplete = true;
+          }
         });
     }
 
@@ -1187,11 +1211,12 @@
                   );
 
                   if (runningClockIn.length === 0) {
+                    var __shcStartDate = kendo.parseDate(vm.schedule.scheduledStartDateTime)
                     // ==========================================================
                     // CHECKING PREVIOUS DAY CLOCK OUT
                     // ==========================================================
                     timecardFactory.checkPreviousDateClockIn({
-                      timecardDate: dt,
+                      timecardDate: __forIntegrityCustomer ? __shcStartDate : dt,
                       userEmail: vm.schedule.technicianNum,
                       previousDayCheck: true
                     }).then(function (response) {
@@ -1423,7 +1448,8 @@
 
     function _getTodaysTimeCardEntries(runCheckin) {
       if (vm.user.timeCard) {
-        var cdt = new Date();
+        var cdt = __forIntegrityCustomer ? kendo.parseDate(vm.schedule.scheduledStartDateTime) : new Date();
+
         var dt = fpmUtilities.toStringDate(
           new Date(cdt.getFullYear(), cdt.getMonth(), cdt.getDate(), 0, 0, 0, 0)
         );

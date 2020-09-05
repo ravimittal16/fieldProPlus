@@ -233,12 +233,13 @@
             vm.data.addTimeVisibility = false;
             vm.data.ptoButtonVisibility = true;
             vm.data.summary = response.timeCardSummary;
-            var dt = vm.currentDate ? vm.currentDate : new Date();
-            var cDate = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 0, 0, 0, 0);
-            var tcDate = new Date(tcd.getFullYear(), tcd.getMonth(), tcd.getDate(), 0, 0, 0, 0);
-            if (moment(tcDate).isSameOrAfter(cDate)) {
-              vm.data.disableClockInButton = false;
-            }
+            //var dt = vm.currentDate ? vm.currentDate : new Date();
+            // var cDate = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 0, 0, 0, 0);
+            // var tcDate = new Date(tcd.getFullYear(), tcd.getMonth(), tcd.getDate(), 0, 0, 0, 0);
+            // if (moment(tcDate).isSameOrAfter(cDate)) {
+            //   vm.data.disableClockInButton = false;
+            // }
+            $rootScope.$broadcast("$timecard.onclocked-out-fromComponent", response);
             vm.data.approvalStatus = response.timeCardSummary.approveStatus || 0;
             __updateTimeCardBindings(response);
           } else {
@@ -484,6 +485,7 @@
                 vm.data.disableClockOutButton = false;
                 vm.data.addTimeVisibility = true;
                 vm.data.ptoButtonVisibility = false;
+                $rootScope.$broadcast("$timecard.onClockedInCompleted", response);
                 alerts.alert("Clocked In", "Clocked in successfully", function () {
                   if (__havingPreRoute) {
                     $state.go($stateParams.proute);
@@ -641,11 +643,29 @@
       }, 100);
     }
 
+    $scope.$on("$timecard.onclocked-out-fromHeader", function (evnt, __resopnse) {
+      $timeout(function () {
+        vm.data.isClockedOut = true;
+        vm.data.isClockedIn = false;
+        vm.data.disableClockOutButton = true;
+        vm.data.addTimeVisibility = false;
+        vm.data.ptoButtonVisibility = true;
+        vm.data.summary = __resopnse.timeCardSummary;
+        __updateTimeCardBindings(__resopnse);
+      }, 100);
+    });
+
     $scope.$on("$timecard.refreshTimecard.pushToTimecard", function (evnt, args) {
       $timeout(function () {
         __ensureScheduleNotAssgiendToCurrentUser(false);
       }, 100);
-    })
+    });
+
+    $scope.$on("$workOrder.refreshTimecardUI", function (evnt, args) {
+      $timeout(function () {
+        __getUserTimeCardByDate();
+      }, 100);
+    });
 
     $ionicPopover.fromTemplateUrl('timecard-popover.html', {
       scope: $scope

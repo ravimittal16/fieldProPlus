@@ -19,11 +19,8 @@
         <strong ng-bind="vm.userName" style="margin-left: 5px;"></strong>
       </div> -->
     </div>
-    <div class="row" style="display: flex; align-items: center;">
+    <!-- <div class="row" style="display: flex; align-items: center;">
       <div class="col" style="height: 51px;display: flex;align-items: flex-end;">
-        <!-- <span style=" margin-left: 5px;font-weight: 600;">
-          <h4 ng-bind="vm.userName"></h4>
-        </span> -->
         <strong style="margin-left: 5px;">
           <h4><span style="font-weight: 600;" ng-bind="vm.userName"></span></h4>
         </strong>
@@ -57,7 +54,7 @@
           </strong>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="row">
       <div class="col center center-element" ng-if="!vm.data.isClockedIn">
         <button class="button icon-center ion-clock button-block button-positive button-small"
@@ -88,7 +85,7 @@
           style="margin-top: 15px;" on-tap="vm.data.events.showPopoverClicked($event)"></button>
       </div>
     </div>
-    <div class="row" ng-if="
+    <!-- <div class="row" ng-if="
         vm.data.allowSendForApproval &&
         vm.data.approvalStatus === 0 &&
         vm.data.timeCards.length > 0
@@ -98,9 +95,9 @@
           Send for Approval
         </button>
       </div>
-    </div>
+    </div> -->
     <div class="list">
-      <div class="alert" ng-if="vm.data.approvalStatus !== 0" ng-class="{
+      <!-- <div class="alert" ng-if="vm.data.approvalStatus !== 0" ng-class="{
           'alert-info':
             vm.data.approvalStatus === 1 || vm.data.approvalStatus === 5,
           'alert-success': vm.data.approvalStatus === 3,
@@ -131,7 +128,7 @@
           <span ng-switch-when="5">Time card has been resent for approval
           </span>
         </span>
-      </div>
+      </div> -->
       <div class="card" ng-repeat="(key,t) in vm.data.timecard.timeCardDetails">
         <div class="item item-divider" ng-if="t.jobCode !== 5001" style="
             display: flex;
@@ -211,17 +208,17 @@
                   align-items: center;
                   justify-content: center;
                 ">
-                <div ng-class="{ 'div-disabled': vm.timecardAccessLevel == 1 }">
+                <div ng-class="{ 'div-disabled': vm.timecardAccessLevel === 1 }">
                   <h3 ng-bind="t.startTime | timeSpan:t.finishTime:'sm'"></h3>
                 </div>
-                <div ng-class="{ 'div-disabled': vm.timecardAccessLevel == 1 }" ng-if="
+                <!-- <div ng-class="{ 'div-disabled': vm.timecardAccessLevel == 1 }" ng-if="
                     t.finishTime &&
                     t.jobCode === 5001 &&
                     (vm.data.approvalStatus == 0 || vm.data.approvalStatus == 2)
                   ">
                   <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
                     ng-click="vm.data.events.onClockInOutActionClicked(t)"></a>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
