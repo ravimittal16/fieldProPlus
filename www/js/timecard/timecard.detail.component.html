@@ -1,19 +1,22 @@
-<div class="card">
+<div class="card expanded-radius-{{vm.isExpanded}}" style="padding-top: 0px;padding-bottom: 0px;">
   <!-- TIME PICKER -->
   <!-- ============================================================================== -->
   <input ng-model="vm.timePicker.currentTime" mobiscroll-datetime="vm.timePicker.settings"
     ng-change="vm.timePicker.onTimeNewPicked()" mobiscroll-instance="vm.timePicker.instance" class="hidden" />
   <!-- ============================================================================== -->
 
-  <div style="border-bottom: 2px solid #ddd; background-color: #f9f9f9;">
+  <div style="border-bottom: 2px solid #d4d4d4; background-color: #f9f9f9;">
     <div class="row" style="
         background-color: #d4d4d4;
         color: #404040 !important;
         font-size: 16px;
-        border-radius: 5px 5px 0 0;
-      ">
+              ">
       <div class="col">
         TIMECARD
+      </div>
+      <div class="col content-right card-actions m-r-10">
+        <a on-tap="vm.isExpanded = !vm.isExpanded"><i class="icon"
+            ng-class="vm.isExpanded ? 'ion-minus' : 'ion-plus'"></i></a>
       </div>
       <!-- <div class="col">
         <strong ng-bind="vm.userName" style="margin-left: 5px;"></strong>
@@ -55,7 +58,7 @@
         </div>
       </div>
     </div> -->
-    <div class="row">
+    <div class="row" ng-if="vm.isExpanded">
       <div class="col center center-element" ng-if="!vm.data.isClockedIn">
         <button class="button icon-center ion-clock button-block button-positive button-small"
           on-tap="vm.data.events.clockInClick()"
@@ -96,7 +99,7 @@
         </button>
       </div>
     </div> -->
-    <div class="list">
+    <div class="list" ng-if="vm.isExpanded">
       <!-- <div class="alert" ng-if="vm.data.approvalStatus !== 0" ng-class="{
           'alert-info':
             vm.data.approvalStatus === 1 || vm.data.approvalStatus === 5,

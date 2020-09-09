@@ -292,7 +292,11 @@
     var onTimespanSeletionChangedTimer = null;
 
     function onActualTimesChanged(isStartTime) {
+      // ==========================================================
+      // INFO: We need to run checkout logic for integrity
+      // ==========================================================
       if (vm.uiSettings.billingOption === 0 && vm.schedule) {
+        var __isForFirstCheckout = !isStartTime && !vm.schedule.checkOutStatus && __forIntegrityCustomer;
         if (
           vm.schedule.actualStartDateTime &&
           vm.schedule.actualFinishDateTime
@@ -308,15 +312,20 @@
               "Finish time cannot be less than start time"
             );
           } else {
-            findTimeDiff(
-              vm.schedule.actualStartDateTime,
-              vm.schedule.actualFinishDateTime
-            ).then(function (totalMins) {
-              if (!vm.schedule.approve) {
-                updateSchduleTotalTime();
-
-              }
-            });
+            if (__isForFirstCheckout) {
+              $timeout(function () {
+                _processScheduleCheckout(false);
+              }, 50);
+            } else {
+              findTimeDiff(
+                vm.schedule.actualStartDateTime,
+                vm.schedule.actualFinishDateTime
+              ).then(function (totalMins) {
+                if (!vm.schedule.approve) {
+                  updateSchduleTotalTime();
+                }
+              });
+            }
           }
         } else {
           updateSchduleTotalTime();
@@ -506,6 +515,7 @@
       __customerNumber = vm.user.customerNumber;
       __skipTimecardClockInValidationOnCheckInOut = __skipTimecardCheckFor.indexOf(__customerNumber) > -1;
       __forIntegrityCustomer = __integrityCustomers.indexOf(__customerNumber) > -1;
+      vm.forIntegrityCustomer = __forIntegrityCustomer;
       // ==========================================================
       if (!$rootScope.isInDevMode) {
         _getCurrentUserLocation();
@@ -794,7 +804,6 @@
           })
           .then(function () {
             vm.schedule.checkInStatus = true;
-            //TODO: REFEESH BOTH COMPONENTS
             $rootScope.$broadcast("$workOrder.refreshTimecardUI");
           })
           .finally(function () {
@@ -873,29 +882,35 @@
       content: ""
     };
 
-    function _processScheduleCheckout() {
-      vm.schedule.actualFinishDateTime = new Date();
-      vm.scheduleTimeSpan.onEndDateTimeChanged();
-      workOrderFactory
-        .updateJobStatus({
-          scheduleButton: jobStatus.CheckOut,
-          scheduleNum: vm.schedule.num,
-          actualEndTime: fpmUtilities.toStringDate(
-            vm.schedule.actualFinishDateTime
-          ),
-          Barcode: vm.barcode,
-          clientTime: kendo.toString(new Date(), "g")
-        })
-        .then(function () {
-          vm.schedule.checkOutStatus = true;
-          $rootScope.$broadcast("$workOrder.refreshTimecardUI");
-          // ==========================================================
-          // WORK COMPLETE WILL BE SET TO TRUE FOR INTEGRITY
-          // ==========================================================
-          if (__forIntegrityCustomer && (vm.schedule.workComplete === null || !vm.schedule.workComplete)) {
-            vm.schedule.workComplete = true;
-          }
-        });
+    function _processScheduleCheckout(__callSetTime) {
+      if (__callSetTime) {
+        vm.schedule.actualFinishDateTime = new Date();
+        vm.scheduleTimeSpan.onEndDateTimeChanged();
+      }
+      fpmUtilities.showLoading().then(function () {
+        workOrderFactory
+          .updateJobStatus({
+            scheduleButton: jobStatus.CheckOut,
+            scheduleNum: vm.schedule.num,
+            actualEndTime: fpmUtilities.toStringDate(
+              vm.schedule.actualFinishDateTime
+            ),
+            Barcode: vm.barcode,
+            clientTime: kendo.toString(new Date(), "g")
+          })
+          .then(function () {
+            vm.schedule.checkOutStatus = true;
+            $rootScope.$broadcast("$workOrder.refreshTimecardUI");
+            // ==========================================================
+            // WORK COMPLETE WILL BE SET TO TRUE FOR INTEGRITY
+            // ==========================================================
+            if (__forIntegrityCustomer && (vm.schedule.workComplete === null || !vm.schedule.workComplete)) {
+              vm.schedule.workComplete = true;
+            }
+          }).finally(function () {
+            fpmUtilities.hideLoading();
+          });
+      });
     }
 
     function __checkoutPendingTask(_e) {
@@ -1344,7 +1359,7 @@
                   alerts.alert("Warning", "Please check in first");
                   return false;
                 }
-                _processScheduleCheckout();
+                _processScheduleCheckout(true);
               }
             }
           },

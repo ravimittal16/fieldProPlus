@@ -14,6 +14,7 @@
     vm.assgiendToSameUser = false;
     vm.currentDate = new Date();
     vm.dateFormat = $rootScope.dateFormat;
+    vm.isExpanded = false;
 
     function __toDate(dateString) {
       return kendo.parseDate(dateString);

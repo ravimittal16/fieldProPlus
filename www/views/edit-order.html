@@ -332,7 +332,8 @@
                 </label> -->
 
 
-                <div class="padding text-center" ng-if="vm.uiSettings.isTimeCardModuleEnabled">
+                <div class="padding text-center"
+                  ng-if="vm.uiSettings.isTimeCardModuleEnabled && !vm.forIntegrityCustomer">
                   <button class="button button-small button-block button-calm" ng-disabled="vm.schedule.approve"
                     ng-click="vm.tabs.sch.events.pushToTimecard()">
                     <i class="ion ion-clock"></i>&nbsp;Push to Timecard

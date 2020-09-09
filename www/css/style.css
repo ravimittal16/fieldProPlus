@@ -769,3 +769,31 @@ select[readonly] {
 .n-m-b {
   margin-bottom: 0px;
 }
+
+.expanded-radius-true {
+  border-radius: 5px 5px 0 0;
+}
+
+.expanded-radius-false {
+  border-radius: 5px 5px 5px 5px;
+}
+
+.content-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.card-actions {
+  color: black;
+}
+
+.card-actions a {
+  color: black;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.m-r-10 {
+  margin-right: 10px;
+}

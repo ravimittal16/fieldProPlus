@@ -543,7 +543,6 @@
                 return t.jobCode === jobCodes.CLOCK_IN && t.finishTime === null;
               })
               if (_pendingClockout.length > 0) {
-                // TODO : NEED TO CHANGE THE MESSAGE
                 hideSheet();
                 alerts.alert("Warning", "You cannot have multiple Clock Out.");
                 return false;
