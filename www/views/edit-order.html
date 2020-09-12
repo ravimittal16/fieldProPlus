@@ -456,7 +456,7 @@
             <div class="item item-divider header-dark">
               OTHER SCHEDULES IN THIS WORK ORDER
             </div>
-            <div class="padding-left padding-right">
+            <div class="padding-left padding-right" ng-if="!vm.forIntegrityCustomer">
               <button class="button button-block button-small button-positive"
                 ng-click="vm.tabs.sch.events.onSchedulesListButtonClicked()">
                 <i class="ion ion-plus"></i>&nbsp;Add New Schedule
@@ -496,7 +496,7 @@
           </div>
         </ion-content>
       </ion-tab>
-      <ion-tab title="PRODUCTS" icon-on="ion-ios-list" icon-off="ion-ios-list-outline">
+      <ion-tab title="PRODUCTS" icon-on="ion-ios-list" icon-off="ion-ios-list-outline" ng-if="!vm.forIntegrityCustomer">
         <ion-content direction="y">
           <div class="card">
             <div class="item item-divider">
@@ -554,7 +554,7 @@
           </div>
         </ion-content>
       </ion-tab>
-      <ion-tab title="COMPONENTS" icon-on="ion-ios-cog" icon-off="ion-ios-cog-outline">
+      <ion-tab title="COMPONENTS" icon-on="ion-ios-cog" icon-off="ion-ios-cog-outline" ng-if="!vm.forIntegrityCustomer">
         <ion-content direction="y">
           <jobtype-list-component barcode="vm.barcode" jobtype="vm.barCodeData.barcodeDetails.excptns">
           </jobtype-list-component>
@@ -567,7 +567,7 @@
       </ion-tab>
       <ion-tab title="SUMMARY" icon-on="ion-ios-calculator" icon-off="ion-ios-calculator-outline">
         <ion-content direction="y">
-          <ion-list>
+          <ion-list ng-if="!vm.forIntegrityCustomer">
             <div class="card">
               <div class="item item-divider header-dark">
                 <strong>INVOICE DETAILS</strong>
@@ -609,7 +609,7 @@
               </div>
             </div>
           </ion-list>
-          <div class="row" ng-if="vm.user.showPrice">
+          <div class="row" ng-if="vm.user.showPrice && !vm.forIntegrityCustomer">
             <div class="col" style="padding-left: 10px;padding-right: 15px;">
               <p>
                 <h5>Subtotal
@@ -664,7 +664,7 @@
               WORK STATUS
             </div>
             <div class="list">
-              <div class="item item-input item-select">
+              <div class="item item-input item-select" ng-if="!vm.forIntegrityCustomer">
                 <div class="input-label">
                   Secondary Status
                 </div>

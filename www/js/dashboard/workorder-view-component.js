@@ -160,7 +160,10 @@
             }
           }
         };
+        var __integrityCustomers = ["97713", "97719"];
         vm.$onInit = function () {
+          var __forIntegrityCustomer = __integrityCustomers.indexOf(vm.userInfo.customerNumber) > -1;
+          vm.forIntegrityCustomer = __forIntegrityCustomer;
           vm.serviceProviders = dashboardFactory.serviceProviders;
           vm.allowedForSp = dashboardFactory.isServiceProvider && dashboardFactory.showEditDeleteForServiceProvider;
         }
