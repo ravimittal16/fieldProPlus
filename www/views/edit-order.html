@@ -496,7 +496,7 @@
           </div>
         </ion-content>
       </ion-tab>
-      <ion-tab title="PRODUCTS" icon-on="ion-ios-list" icon-off="ion-ios-list-outline" ng-if="!vm.forIntegrityCustomer">
+      <ion-tab title="PRODUCTS" icon-on="ion-ios-list" icon-off="ion-ios-list-outline" hidden="{{vm.forIntegrityCustomer}}">
         <ion-content direction="y">
           <div class="card">
             <div class="item item-divider">
@@ -554,7 +554,7 @@
           </div>
         </ion-content>
       </ion-tab>
-      <ion-tab title="COMPONENTS" icon-on="ion-ios-cog" icon-off="ion-ios-cog-outline" ng-if="!vm.forIntegrityCustomer">
+      <ion-tab title="COMPONENTS" icon-on="ion-ios-cog" icon-off="ion-ios-cog-outline" hidden="{{vm.forIntegrityCustomer}}">
         <ion-content direction="y">
           <jobtype-list-component barcode="vm.barcode" jobtype="vm.barCodeData.barcodeDetails.excptns">
           </jobtype-list-component>

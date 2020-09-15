@@ -297,7 +297,7 @@
       // INFO: We need to run checkout logic for integrity
       // ==========================================================
       if (vm.uiSettings.billingOption === 0 && vm.schedule) {
-        var __isForFirstCheckout = !isStartTime && !vm.schedule.checkOutStatus && __forIntegrityCustomer;
+        var __isForFirstCheckout = !isStartTime && !vm.schedule.checkOutStatus;
         if (
           vm.schedule.actualStartDateTime &&
           vm.schedule.actualFinishDateTime
