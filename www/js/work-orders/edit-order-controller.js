@@ -884,9 +884,12 @@
     };
 
     function _processScheduleCheckout(__callSetTime) {
+      var __clientTime = new Date();
       if (__callSetTime) {
         vm.schedule.actualFinishDateTime = new Date();
         vm.scheduleTimeSpan.onEndDateTimeChanged();
+      } else {
+        __clientTime = vm.schedule.actualFinishDateTime
       }
       fpmUtilities.showLoading().then(function () {
         workOrderFactory
@@ -897,7 +900,7 @@
               vm.schedule.actualFinishDateTime
             ),
             Barcode: vm.barcode,
-            clientTime: kendo.toString(new Date(), "g")
+            clientTime: fpmUtilities.toStringDate(__clientTime)
           })
           .then(function () {
             vm.schedule.checkOutStatus = true;
@@ -1465,12 +1468,15 @@
     function _getTodaysTimeCardEntries(runCheckin) {
       if (vm.user.timeCard) {
         var cdt = __forIntegrityCustomer ? kendo.parseDate(vm.schedule.scheduledStartDateTime) : new Date();
-
+        var __userEmail = "";
+        if (__forIntegrityCustomer && vm.schedule) {
+          __userEmail = vm.schedule.technicianNum;
+        }
         var dt = fpmUtilities.toStringDate(
           new Date(cdt.getFullYear(), cdt.getMonth(), cdt.getDate(), 0, 0, 0, 0)
         );
         timecardFactory
-          .getTimeCardByDate(dt)
+          .getTimeCardByDate(dt, __userEmail)
           .then(function (response) {
             if (response) {
               timeCardInfo.currentDetails = response.timeCardDetails;

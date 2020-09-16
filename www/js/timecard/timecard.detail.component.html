@@ -100,38 +100,12 @@
       </div>
     </div> -->
     <div class="list" ng-if="vm.isExpanded">
-      <!-- <div class="alert" ng-if="vm.data.approvalStatus !== 0" ng-class="{
-          'alert-info':
-            vm.data.approvalStatus === 1 || vm.data.approvalStatus === 5,
-          'alert-success': vm.data.approvalStatus === 3,
-          'alert-danger':
-            vm.data.approvalStatus === 4 || vm.data.approvalStatus === 2
-        }">
-        <span ng-switch="vm.data.approvalStatus">
-          <span ng-switch-when="1" class="">
-            <strong>Waiting for approval</strong>
-          </span>
-          <span ng-switch-when="2">Time card has been rejected due to following reason :
-            {{ vm.data.timecard.timeCardSummary.messageText }}
-            <button class="button button-block button-small button-positive"
-              ng-click="vm.data.events.sendForApproval(5)">
-              Re-submit for Approval
-            </button>
-          </span>
-          <span ng-switch-when="3">
-            <i class="fa fa-check"></i>&nbsp;Time card has been approved
-          </span>
-          <span ng-switch-when="4">Time card has been unapproved due to following reason :
-            {{ vm.data.timecard.timeCardSummary.messageText }}
-            <button class="button button-block button-small button-positive"
-              ng-click="vm.data.events.sendForApproval(5)">
-              Re-submit for Approval
-            </button>
-          </span>
-          <span ng-switch-when="5">Time card has been resent for approval
-          </span>
+      <div class="alert alert-info" ng-if="vm.data.approvalStatus !== 0 && vm.data.approvalStatus !== 4">
+        <span>
+          <strong>This timecard is/being approved and cannot be edited.
+          </strong>
         </span>
-      </div> -->
+      </div>
       <div class="card" ng-repeat="(key,t) in vm.data.timecard.timeCardDetails">
         <div class="item item-divider" ng-if="t.jobCode !== 5001" style="
             display: flex;

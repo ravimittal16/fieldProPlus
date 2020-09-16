@@ -134,7 +134,9 @@
     }
 
     function updateJobStatus(sch) {
-      sch.clientTime = kendo.toString(new Date(), "g");
+      if (sch.clientTime === undefined || sch.clientTime === null) {
+        sch.clientTime = kendo.toString(new Date(), "g");
+      }
       sch = _attachLocationCoordinates(sch);
       return apiBaseFactory.post(apibaseurl + "UpdateJobStatus", sch);
     }

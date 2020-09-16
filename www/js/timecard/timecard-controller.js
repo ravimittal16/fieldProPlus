@@ -200,6 +200,7 @@
     }
 
     function _calculateTotalPayableTime() {
+      vm.hideTotalRow = false;
       vm.ui.data.totalTime = "0";
       vm.ui.data.totalCheckinTime = [];
       //JobCode: jobCodes.CLOCK_IN
@@ -215,6 +216,7 @@
       if (checkins.length > 0) {
         var clockinNums = _.pluck(checkins, 'clockInNum');
         var distinctClockInNums = _.uniq(clockinNums);
+        if (distinctClockInNums.length == 1 && distinctClockInNums[0] == null) vm.hideTotalRow = true;
         angular.forEach(distinctClockInNums, function (cn, i) {
           var totalCheckinsMins = 0;
           angular.forEach(checkins, function (e, i) {
