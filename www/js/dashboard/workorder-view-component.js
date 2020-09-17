@@ -160,7 +160,7 @@
             }
           }
         };
-        var __integrityCustomers = ["97713", "97719"];
+        var __integrityCustomers = ["97713", "97719", "193514633790019"];
         vm.$onInit = function () {
           var __forIntegrityCustomer = __integrityCustomers.indexOf(vm.userInfo.customerNumber) > -1;
           vm.forIntegrityCustomer = __forIntegrityCustomer;

@@ -73,7 +73,7 @@
       },
       onTimeClicked: function (t, isForStartTime) {
         var __status = vm.data.approvalStatus;
-        if (__status === __statusTypes.SEND_FOR_APPROVAL || __status === __statusTypes.APPROVED || __status === __statusTypes.RESENT_FOR_APPROVAL) {
+        if (__status === __statusTypes.SEND_FOR_APPROVAL || __status === __statusTypes.APPROVED || __status === __statusTypes.RESENT_FOR_APPROVAL || !t.isUserDefined) {
           return false;
         }
         var __isClockout = t.jobCode === __jobCodes.CLOCK_IN && !isForStartTime && t.finishTime === null;

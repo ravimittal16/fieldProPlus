@@ -28,7 +28,7 @@
     var __skipTimecardCheckFor = [];
     var __skipTimecardClockInValidationOnCheckInOut = false;
     var __forIntegrityCustomer = false;
-    var __integrityCustomers = ["97713", "97719"];
+    var __integrityCustomers = ["97713", "97719", "193514633790019"];
     vm.forIntegrityCustomer = false;
     var jobStatus = {
       AcceptJob: 0,
@@ -1216,7 +1216,10 @@
               if (checkAuthorizationIfServiceProvider(null, null, true)) {
                 var isBeongToCurrentUser =
                   vm.schedule.technicianNum === vm.user.userEmail;
-                if (vm.user.timeCard && isBeongToCurrentUser && !__skipTimecardClockInValidationOnCheckInOut) {
+                // ==========================================================
+                // INFO: We will be checking for Integrity
+                // ==========================================================
+                if (vm.user.timeCard && ((!__forIntegrityCustomer && isBeongToCurrentUser && !__skipTimecardClockInValidationOnCheckInOut) || (__forIntegrityCustomer))) {
                   var runningClockIn = _.where(timeCardInfo.currentDetails, {
                     jobCode: jobCodes.CLOCK_IN,
                     finishTime: null
@@ -1478,6 +1481,7 @@
         timecardFactory
           .getTimeCardByDate(dt, __userEmail)
           .then(function (response) {
+            timeCardInfo.currentDetails = [];
             if (response) {
               timeCardInfo.currentDetails = response.timeCardDetails;
             }

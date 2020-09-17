@@ -117,16 +117,19 @@
               <span ng-if="t.jobCode != 5001" style="font-size: 14px; font-weight: 500;">{{ t.jobCodeName }}</span>
             </div>
             <div class="col p-0">
-              <span ng-if="!t.isPtoType && t.jobCode != 5001 && t.barcode != 0"
-                style="font-size: 14px; font-weight: 500;">{{ t.barcodeName }}</span>
+              <div style="display: flex;
+              justify-content: flex-end;
+              margin-right: 30px;">
+                <span ng-if="!t.isPtoType && t.jobCode != 5001 && t.barcode != 0"
+                  style="font-size: 14px; font-weight: 500;">{{ t.barcodeName }}</span>
+              </div>
             </div>
-            <div class="col p-0 col-25">
+            <div class="col p-0 col-20">
               <span style="font-size: 14px;"
                 ng-if="t.scheduleDisplayNum && t.scheduleDisplayNum !== 0">#{{::t.scheduleDisplayNum}}</span>
               <a class="button pull-right button-small button-icon icon ion-android-more-vertical button-small item-divider-left-buttion"
                 ng-click="vm.data.events.onCardActionClicked(t)" ng-if="
-                  vm.data.approvalStatus === 0 || vm.data.approvalStatus === 2
-                "></a>
+                  (vm.data.approvalStatus === 0 || vm.data.approvalStatus === 2) && t.isUserDefined"></a>
             </div>
           </div>
         </div>
@@ -162,8 +165,8 @@
               </a>
             </div>
             <div class="col col-33 col-center">
-              <button ng-if="!t.finishTime && t.jobCode != 5001" class="button button-small button-calm"
-                ng-click="vm.timePicker.onTimeClicked(t,false)">
+              <button ng-if="!t.finishTime && t.jobCode != 5001 && t.isUserDefined"
+                class="button button-small button-calm" ng-click="vm.timePicker.onTimeClicked(t,false)">
                 Check out
               </button>
               <button ng-if="!t.finishTime && t.jobCode === 5001" class="button button-small button-clock-out"
