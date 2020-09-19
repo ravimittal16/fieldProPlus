@@ -441,10 +441,6 @@
       });
     }
 
-    var __customPushToTimecardCustomers = ["97713"]
-
-    function __customPushToTimecard() {}
-
     function pushToTimecard() {
       var model = {
         num: 0,
@@ -655,7 +651,8 @@
         workOrderFactory
           .updateWorkOrderMobile({
             barcodeAssay: vm.barCodeData.barcodeDetails,
-            fromMobile: true
+            fromMobile: true,
+            secondaryStatusUpdatedDateTime: kendo.toString(new Date(), "g")
           })
           .then(function (response) {
             if (response && angular.isArray(response) && response.length > 0) {
@@ -1493,6 +1490,16 @@
           });
       }
     }
+
+    $scope.$on("$timecard.onclocked-out-fromComponent", function (evt, args) {
+      _getTodaysTimeCardEntries(false);
+    });
+    $scope.$on("$timecard.onClockedInCompleted", function (evt, args) {
+      _getTodaysTimeCardEntries(false);
+    });
+    $scope.$on("$timecard.onclocked-out-fromHeader", function (evt, args) {
+      _getTodaysTimeCardEntries(false);
+    });
 
     $scope.$on("$fpm:closeEditProductModal", function () {
       if (vm.productModal) {

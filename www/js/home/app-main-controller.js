@@ -126,13 +126,20 @@
         });
       }
     });
-
+    var __integrityCustomers = ["97713", "97719", "193514633790019"];
     vm.events = {
       checkMenuItemVisibility: function (menu) {
+        if (menu && menu.state === "app.timecard" && __integrityCustomers.indexOf(userData.customerNumber) > -1) {
+          // ==========================================================
+          // WE ARE NOT SHOWING TIMECARD MENU FOR INTEGRITY
+          // ==========================================================
+          return false;
+        }
         if (angular.isDefined(menu.basedOn)) {
           var basedOn = userData[menu.basedOn];
           return basedOn;
         }
+
         if (userData.isAdministrator) return true;
         if (
           angular.isDefined(menu.isConfigurationBased) &&

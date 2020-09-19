@@ -172,7 +172,9 @@
       </ion-tab>
       <ion-tab title="SCHEDULE" icon-on="ion-ios-clock" icon-off="ion-ios-clock-outline">
         <ion-content>
-          <timecard-clock-in-header based-on="workorder" schedule="vm.schedule"></timecard-clock-in-header>
+          <timecard-clock-in-header based-on="workorder" schedule="vm.schedule"
+            ng-if="vm.user.timeCard && vm.user.timecardAccessLevel === 3 && vm.forIntegrityCustomer">
+          </timecard-clock-in-header>
           <div class="card">
             <div class="item item-divider header-dark">
               <div class="row p-0">
@@ -450,7 +452,7 @@
               </button>
             </div>
           </div>
-          <timecard-details ng-if="vm.uiSettings.isTimeCardModuleEnabled && vm.user.timecardAccessLevel === 3"
+          <timecard-details ng-if="vm.user.timeCard && vm.user.timecardAccessLevel === 3 && vm.forIntegrityCustomer"
             based-on="workorder" schedule="vm.schedule"></timecard-details>
           <div class="card">
             <div class="item item-divider header-dark">
@@ -496,7 +498,8 @@
           </div>
         </ion-content>
       </ion-tab>
-      <ion-tab title="PRODUCTS" icon-on="ion-ios-list" icon-off="ion-ios-list-outline" hidden="{{vm.forIntegrityCustomer}}">
+      <ion-tab title="PRODUCTS" icon-on="ion-ios-list" icon-off="ion-ios-list-outline"
+        hidden="{{vm.forIntegrityCustomer}}">
         <ion-content direction="y">
           <div class="card">
             <div class="item item-divider">
@@ -554,7 +557,8 @@
           </div>
         </ion-content>
       </ion-tab>
-      <ion-tab title="COMPONENTS" icon-on="ion-ios-cog" icon-off="ion-ios-cog-outline" hidden="{{vm.forIntegrityCustomer}}">
+      <ion-tab title="COMPONENTS" icon-on="ion-ios-cog" icon-off="ion-ios-cog-outline"
+        hidden="{{vm.forIntegrityCustomer}}">
         <ion-content direction="y">
           <jobtype-list-component barcode="vm.barcode" jobtype="vm.barCodeData.barcodeDetails.excptns">
           </jobtype-list-component>
@@ -656,15 +660,17 @@
           <order-signature-component barcode="vm.barcode" is-estimate="false"></order-signature-component>
           <order-email-card-component barcode="vm.barcode" taxrate="vm.barCodeData.taxRate"
             default-emails="vm.barCodeData.barcodeDetails.address2_Group" show-price="vm.showPrice"
-            hide-email-button="vm.uiSettings.hideEmailButton" is-estimate="false"></order-email-card-component>
+            hide-email-button="vm.uiSettings.hideEmailButton" is-estimate="false">
+          </order-email-card-component>
           <order-images-list-component barcode="vm.barcode" is-estimate="false"></order-images-list-component>
-          <order-documents-list-component barcode="vm.barcode"></order-documents-list-component>
-          <div class="card">
+          <order-documents-list-component barcode="vm.barcode" ng-if="!vm.forIntegrityCustomer">
+          </order-documents-list-component>
+          <div class="card" ng-if="!vm.forIntegrityCustomer">
             <div class="item item-divider header-dark">
               WORK STATUS
             </div>
             <div class="list">
-              <div class="item item-input item-select" ng-if="!vm.forIntegrityCustomer">
+              <div class="item item-input item-select">
                 <div class="input-label">
                   Secondary Status
                 </div>

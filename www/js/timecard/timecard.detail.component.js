@@ -73,10 +73,10 @@
       },
       onTimeClicked: function (t, isForStartTime) {
         var __status = vm.data.approvalStatus;
-        if (__status === __statusTypes.SEND_FOR_APPROVAL || __status === __statusTypes.APPROVED || __status === __statusTypes.RESENT_FOR_APPROVAL || !t.isUserDefined) {
+        var __isClockout = t.jobCode === __jobCodes.CLOCK_IN && !isForStartTime && t.finishTime === null;
+        if (__status === __statusTypes.SEND_FOR_APPROVAL || __status === __statusTypes.APPROVED || __status === __statusTypes.RESENT_FOR_APPROVAL || (!t.isUserDefined && t.jobCode !== __jobCodes.CLOCK_IN)) {
           return false;
         }
-        var __isClockout = t.jobCode === __jobCodes.CLOCK_IN && !isForStartTime && t.finishTime === null;
         if (__isClockout) {
           var __notCheckInDetails = _.filter(vm.data.timeCards, function (tc) {
             return tc.finishTime === null && tc.jobCode !== __jobCodes.CLOCK_IN;

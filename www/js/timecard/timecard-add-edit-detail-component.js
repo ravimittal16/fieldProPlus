@@ -270,7 +270,7 @@
           }
           vm.timecardPermissions.isFromAddingPto = fromPto;
           if (fromPto) {
-            vm.timecardPermissions.timePickerVisibility = fromPto;
+            vm.timecardPermissions.timePickerVisibility = true;
           }
         }
 
@@ -350,7 +350,7 @@
           vm.userInfo = authenticationFactory.getLoggedInUserInfo();
           if (vm.userInfo) {
             vm.timecardPermissions.allowPushTime = vm.userInfo.allowPushTime;
-            vm.timecardPermissions.timePickerVisibility = vm.userInfo.allowPushTime;
+            vm.timecardPermissions.timePickerVisibility = true;
           }
         }
         $scope.$on("timecard:addEditDetailsModal:open", function ($event, params) {

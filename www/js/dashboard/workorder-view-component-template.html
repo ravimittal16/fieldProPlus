@@ -44,16 +44,12 @@
       ng-click="vm.events.acceptJob()">
       Accept
     </button>
-    <button class="button button-small button-assertive" type="button"
-      ng-if="!vm.forIntegrityCustomer && vm.odr.JobAcceptanceStatus && vm.trackJobStatus && !vm.odr.WorkComplete &&
-      vm.odr.TechnicianNum == vm.userInfo.userEmail"
-      ng-click="vm.events.unAcceptJob()">
+    <button class="button button-small button-assertive" type="button" ng-if="vm.odr.JobAcceptanceStatus && vm.trackJobStatus && !vm.odr.WorkComplete &&
+      vm.odr.TechnicianNum == vm.userInfo.userEmail" ng-click="vm.events.unAcceptJob()">
       un-Accept
     </button>
-    <button class="button button-small button-calm" type="button" ng-disabled="vm.odr.InRoute"
-      ng-if="!vm.forIntegrityCustomer && vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum ==
-      vm.userInfo.userEmail"
-      ng-click="vm.events.inRouteClicked()">
+    <button class="button button-small button-calm" type="button" ng-disabled="vm.odr.InRoute" ng-if="!vm.forIntegrityCustomer && vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum ==
+      vm.userInfo.userEmail" ng-click="vm.events.inRouteClicked()">
       In Route
     </button>
     <!-- <button ng-if="vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
