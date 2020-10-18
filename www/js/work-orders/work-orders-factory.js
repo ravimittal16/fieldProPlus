@@ -60,11 +60,11 @@
     function searchProduct(searchValue, alphabet) {
       return apiBaseFactory.get(
         apibaseurl +
-        "GetProductsLists?searchPattern=" +
-        searchValue +
-        "&alphabet=" +
-        alphabet +
-        "&fromMobile=true"
+          "GetProductsLists?searchPattern=" +
+          searchValue +
+          "&alphabet=" +
+          alphabet +
+          "&fromMobile=true"
       );
     }
 
@@ -217,10 +217,10 @@
     function addProductFromBarcodeScanner(skuCode, barcode) {
       return apiBaseFactory.get(
         apibaseurl +
-        "AddProductFromBarcodeScanner?skuCode=" +
-        skuCode +
-        "&barcode=" +
-        barcode
+          "AddProductFromBarcodeScanner?skuCode=" +
+          skuCode +
+          "&barcode=" +
+          barcode
       );
     }
 
@@ -229,7 +229,9 @@
     }
 
     function checkIfBarcodeClosed(barcode) {
-      return apiBaseFactory.get(apibaseurl + "CheckIfBarcodeClosed?barcode=" + barcode);
+      return apiBaseFactory.get(
+        apibaseurl + "CheckIfBarcodeClosed?barcode=" + barcode
+      );
     }
 
     function getBarcodePayments(barcode) {
@@ -243,31 +245,49 @@
     }
 
     function deletePayment(num) {
-      return apiBaseFactory.get(
-        apibaseurl + "DeletePayment?num=" + num
-      );
+      return apiBaseFactory.get(apibaseurl + "DeletePayment?num=" + num);
     }
 
     function updateTaxRate(barcode, taxRate) {
-      return apiBaseFactory.get(apibaseurl + "UpdateTaxRate?barcode=" + barcode + "&taxRate=" + taxRate);
-    }
-
-    function submitPayment(model) {
-      return apiBaseFactory.post(
-        "api/Checkout/SubmitPayment",
-        model
+      return apiBaseFactory.get(
+        apibaseurl + "UpdateTaxRate?barcode=" + barcode + "&taxRate=" + taxRate
       );
     }
 
+    function submitPayment(model) {
+      return apiBaseFactory.post("api/Checkout/SubmitPayment", model);
+    }
+
     function deleteSchedule(num) {
-      return apiBaseFactory.deleteReq(apibaseurl + "DeleteSchedule?num=" + num + "&fromMobile=true");
+      return apiBaseFactory.deleteReq(
+        apibaseurl + "DeleteSchedule?num=" + num + "&fromMobile=true"
+      );
     }
 
     function getScheduleById(num) {
-      return apiBaseFactory.get(apibaseurl + "GetScheduleById?scheduleId=" + num + "&fromMobile=true");
+      return apiBaseFactory.get(
+        apibaseurl + "GetScheduleById?scheduleId=" + num + "&fromMobile=true"
+      );
+    }
+
+    function getSchedulesWithSameDateTime(
+      barcode,
+      currentSchedule,
+      checkForStatus
+    ) {
+      return apiBaseFactory.get(
+        apibaseurl +
+          "GetSchedulesWithSameDateTime?barcode=" +
+          encodeURIComponent(barcode) +
+          "&currentSchedule=" +
+          encodeURIComponent(currentSchedule) +
+          "&checkForStatus=" +
+          encodeURIComponent(checkForStatus)
+      );
     }
 
     return {
+      getSchedulesWithSameDateTime: getSchedulesWithSameDateTime,
       getScheduleById: getScheduleById,
       submitPayment: submitPayment,
       checkIfBarcodeClosed: checkIfBarcodeClosed,
@@ -305,14 +325,14 @@
       addUpdatePayment: addUpdatePayment,
       deletePayment: deletePayment,
       updateTaxRate: updateTaxRate,
-      deleteSchedule: deleteSchedule
+      deleteSchedule: deleteSchedule,
     };
   }
   initFactory.$inject = [
     "$q",
     "$rootScope",
     "$cacheFactory",
-    "api-base-factory"
+    "api-base-factory",
   ];
   angular.module("fpm").factory("work-orders-factory", initFactory);
 })();

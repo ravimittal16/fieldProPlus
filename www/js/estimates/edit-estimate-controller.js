@@ -206,7 +206,7 @@
           goourl += d.wosStreet.replace("::", " ");
         }
         goourl += " " + d.wosCity + ", " + d.wosState + " " + d.wosZip;
-        $window.open(goourl, "_blank", "location=yes");
+        cordova.InAppBrowser.open(goourl, "_blank", "location=yes");
       }
     };
 

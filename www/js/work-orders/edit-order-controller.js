@@ -34,7 +34,7 @@
       AcceptJob: 0,
       InRoute: 1,
       CheckIn: 2,
-      CheckOut: 3
+      CheckOut: 3,
     };
     var jobCodes = timecardFactory.statics.jobCodes;
     vm.invoiceOpen = true;
@@ -53,7 +53,7 @@
       customField2Label: "Custom 2",
       customField3Label: "Custom 3",
       expenseTrackingEnabled: true,
-      paymentOn: false
+      paymentOn: false,
     };
 
     // TAX RATE CODE CHANGES
@@ -81,7 +81,7 @@
           }
           calculateTotals();
         }
-      }
+      },
     };
 
     //==================================================
@@ -92,7 +92,7 @@
       vm.gettingBarcodeDetails = true;
       $ionicLoading
         .show({
-          template: "loading work order..."
+          template: "loading work order...",
         })
         .then(function () {
           workOrderFactory
@@ -111,7 +111,7 @@
                 ) {
                   vm.schedule = angular.copy(
                     _.findWhere(response.schedules, {
-                      num: parseInt($stateParams.technicianNum, 10)
+                      num: parseInt($stateParams.technicianNum, 10),
                     })
                   );
                   if (angular.isDefined(vm.schedule)) {
@@ -170,15 +170,25 @@
                 $timeout(function () {
                   var cdt = new Date();
                   var dt = fpmUtilities.toStringDate(
-                    new Date(cdt.getFullYear(), cdt.getMonth(), cdt.getDate(), 0, 0, 0, 0)
+                    new Date(
+                      cdt.getFullYear(),
+                      cdt.getMonth(),
+                      cdt.getDate(),
+                      0,
+                      0,
+                      0,
+                      0
+                    )
                   );
                   if (vm.schedule) {
-                    timecardFactory.checkPreviousDateClockIn({
-                      timecardDate: dt,
-                      userEmail: vm.schedule.technicianNum
-                    }).then(function (response) {
-                      vm.timecardClockinStat = response;
-                    });
+                    timecardFactory
+                      .checkPreviousDateClockIn({
+                        timecardDate: dt,
+                        userEmail: vm.schedule.technicianNum,
+                      })
+                      .then(function (response) {
+                        vm.timecardClockinStat = response;
+                      });
                   }
                 }, 100);
               },
@@ -197,7 +207,7 @@
                 if (__forIntegrityCustomer) {
                   _getTodaysTimeCardEntries(false);
                 }
-              }, 100)
+              }, 100);
             });
         });
     }
@@ -308,9 +318,9 @@
           ) {
             alerts.alert(
               "Warning",
-              isStartTime ?
-              "Start time cannot be greater than finish time." :
-              "Finish time cannot be less than start time"
+              isStartTime
+                ? "Start time cannot be greater than finish time."
+                : "Finish time cannot be less than start time"
             );
           } else {
             if (__isForFirstCheckout) {
@@ -367,7 +377,7 @@
       onEndDateTimeChanged: function () {
         onActualTimesChanged(false);
       },
-      clearAllDateTimeSelection: function () {}
+      clearAllDateTimeSelection: function () {},
     };
 
     function checkAuthorizationIfServiceProvider(co, cb, fromAddSchedule) {
@@ -384,13 +394,17 @@
           fromAddSchedule === true
         ) {
           var checkifBelongToAssinedUser = _.findWhere(vm.serviceProviders, {
-            userId: vm.schedule.technicianNum
+            userId: vm.schedule.technicianNum,
           });
           if (angular.isDefined(checkifBelongToAssinedUser)) {
             return true;
           }
         }
-        if (vm.isServiceProvider && !isBeongToCurrentUser && vm.user.timecardAccessLevel !== 3) {
+        if (
+          vm.isServiceProvider &&
+          !isBeongToCurrentUser &&
+          vm.user.timecardAccessLevel !== 3
+        ) {
           alerts.alert(
             "Oops!",
             "you are not authorized to perform this action",
@@ -430,15 +444,18 @@
         vm.schedule.actualFinishDateTime,
         "g"
       );
-      workOrderFactory.updateSchduleTotalTime(sch).then(function (response) {
-        if (response) {
-          vm.barCodeData.schedules = response.schedule;
-          vm.barCodeData.invoice = response.invoice;
-          calculateTotals();
-        }
-      }).finally(function () {
-        $rootScope.$broadcast("$workOrder.refreshTimecardUI");
-      });
+      workOrderFactory
+        .updateSchduleTotalTime(sch)
+        .then(function (response) {
+          if (response) {
+            vm.barCodeData.schedules = response.schedule;
+            vm.barCodeData.invoice = response.invoice;
+            calculateTotals();
+          }
+        })
+        .finally(function () {
+          $rootScope.$broadcast("$workOrder.refreshTimecardUI");
+        });
     }
 
     function pushToTimecard() {
@@ -454,7 +471,7 @@
         notes: "",
         barcode: vm.barcode,
         isUserDefined: true,
-        scheduleId: vm.schedule.num
+        scheduleId: vm.schedule.num,
       };
       if (vm.schedule.actualStartDateTime) {
         timecardFactory.pushCheckInOutTimes(model).then(function (response) {
@@ -467,7 +484,7 @@
             // ==========================================================
             if (vm.user.timecardAccessLevel === 3) {
               $scope.$broadcast("$timecard.refreshTimecard.pushToTimecard", {
-                scheduleNum: vm.schedule.num
+                scheduleNum: vm.schedule.num,
               });
             }
           }
@@ -502,16 +519,15 @@
     vm.dateTimeFormat = vm.user.dateFormat;
     vm.placeholder = "tap here to select...";
 
-
-
-
     function activateController() {
       // ==========================================================
       // WE NEED TO SKIP THE CLOCK IN CHECK FOR SOME CUSTOMERS
       // ==========================================================
       __customerNumber = vm.user.customerNumber;
-      __skipTimecardClockInValidationOnCheckInOut = __skipTimecardCheckFor.indexOf(__customerNumber) > -1;
-      __forIntegrityCustomer = __integrityCustomers.indexOf(__customerNumber) > -1;
+      __skipTimecardClockInValidationOnCheckInOut =
+        __skipTimecardCheckFor.indexOf(__customerNumber) > -1;
+      __forIntegrityCustomer =
+        __integrityCustomers.indexOf(__customerNumber) > -1;
       vm.forIntegrityCustomer = __forIntegrityCustomer;
       // ==========================================================
       if (!$rootScope.isInDevMode) {
@@ -597,7 +613,7 @@
         subtotal: 0,
         totalqty: 0,
         totalcost: 0,
-        totaltax: 0
+        totaltax: 0,
       };
       if (vm.barCodeData.invoice && vm.barCodeData.invoice.length > 0) {
         var taxRate = vm.barCodeData.taxRate || 0;
@@ -613,10 +629,10 @@
               angular.isNumber(parseInt(pro.qty, 10))
             ) {
               if (pro.markup > 0) {
-                var newPrice = pro.newPriceCalculated ?
-                  pro.price :
-                  parseFloat(pro.price) +
-                  parseFloat(((pro.markup || 0) / 100) * pro.price);
+                var newPrice = pro.newPriceCalculated
+                  ? pro.price
+                  : parseFloat(pro.price) +
+                    parseFloat(((pro.markup || 0) / 100) * pro.price);
                 pro.price = newPrice;
                 pro.newPriceCalculated = true;
                 totalPrice = newPrice * pro.qty;
@@ -625,9 +641,9 @@
               }
               pro.totalPrice = totalPrice;
               var taxAmt = parseFloat(
-                parseFloat(taxRate) > 0 ?
-                parseFloat((taxRate / 100) * totalPrice) :
-                0
+                parseFloat(taxRate) > 0
+                  ? parseFloat((taxRate / 100) * totalPrice)
+                  : 0
               );
               totals.subtotal += parseFloat(totalPrice);
               totals.totalqty += parseInt(pro.qty, 10);
@@ -652,7 +668,7 @@
           .updateWorkOrderMobile({
             barcodeAssay: vm.barCodeData.barcodeDetails,
             fromMobile: true,
-            secondaryStatusUpdatedDateTime: kendo.toString(new Date(), "g")
+            secondaryStatusUpdatedDateTime: kendo.toString(new Date(), "g"),
           })
           .then(function (response) {
             if (response && angular.isArray(response) && response.length > 0) {
@@ -743,21 +759,22 @@
       }
     }
 
-    var actions = [{
-        text: '<span class="text-assertive">Clear All</span>'
+    var actions = [
+      {
+        text: '<span class="text-assertive">Clear All</span>',
       },
       {
-        text: '<span class="text-assertive">Clear Checkout Time</span>'
+        text: '<span class="text-assertive">Clear Checkout Time</span>',
       },
       {
-        text: "Update Schedule"
-      }
+        text: "Update Schedule",
+      },
     ];
 
     function restoreSchedule(o) {
       if (vm.uiSettings.woData) {
         var s = _.findWhere(vm.uiSettings.woData.schedules, {
-          num: o.num
+          num: o.num,
         });
         if (angular.isDefined(s)) {
           for (var prop in s) {
@@ -772,7 +789,7 @@
     function restoreInvoice(o) {
       if (vm.uiSettings.woData) {
         var s = _.findWhere(vm.uiSettings.woData.invoice, {
-          num: o.num
+          num: o.num,
         });
         if (angular.isDefined(s)) {
           for (var prop in s) {
@@ -798,7 +815,7 @@
             ),
             barcode: vm.barcode,
             timerStartAt: fpmUtilities.toStringDate(new Date()),
-            clientTime: kendo.toString(new Date(), "g")
+            clientTime: kendo.toString(new Date(), "g"),
           })
           .then(function () {
             vm.schedule.checkInStatus = true;
@@ -863,13 +880,13 @@
           currentLoc.coords.longitude +
           "&daddr=";
         goourl += daddr;
-        $window.open(goourl, "_system", "location=yes").then(
+        cordova.InAppBrowser.open(goourl, "_system", "location=yes").then(
           function () {},
           function (event) {}
         );
       } else {
         goourl = "https://maps.google.com?daddr=" + daddr;
-        $window.open(goourl, "_system", "location=yes");
+        cordova.InAppBrowser.open(goourl, "_system", "location=yes");
       }
     }
     vm.popupDescriptionBoxType = "";
@@ -877,7 +894,7 @@
       type: "DESCRIPTION",
       modal: null,
       placeholder: "enter here...",
-      content: ""
+      content: "",
     };
 
     function _processScheduleCheckout(__callSetTime) {
@@ -886,7 +903,7 @@
         vm.schedule.actualFinishDateTime = new Date();
         vm.scheduleTimeSpan.onEndDateTimeChanged();
       } else {
-        __clientTime = vm.schedule.actualFinishDateTime
+        __clientTime = vm.schedule.actualFinishDateTime;
       }
       fpmUtilities.showLoading().then(function () {
         workOrderFactory
@@ -897,7 +914,7 @@
               vm.schedule.actualFinishDateTime
             ),
             Barcode: vm.barcode,
-            clientTime: fpmUtilities.toStringDate(__clientTime)
+            clientTime: fpmUtilities.toStringDate(__clientTime),
           })
           .then(function () {
             vm.schedule.checkOutStatus = true;
@@ -905,10 +922,14 @@
             // ==========================================================
             // WORK COMPLETE WILL BE SET TO TRUE FOR INTEGRITY
             // ==========================================================
-            if (__forIntegrityCustomer && (vm.schedule.workComplete === null || !vm.schedule.workComplete)) {
+            if (
+              __forIntegrityCustomer &&
+              (vm.schedule.workComplete === null || !vm.schedule.workComplete)
+            ) {
               vm.schedule.workComplete = true;
             }
-          }).finally(function () {
+          })
+          .finally(function () {
             fpmUtilities.hideLoading();
           });
       });
@@ -926,14 +947,9 @@
                     .updateJobStatus({
                       scheduleButton: jobStatus.CheckOut,
                       scheduleNum: _e.scheduleId,
-                      actualEndTime: fpmUtilities.toStringDate(
-                        new Date()
-                      ),
+                      actualEndTime: fpmUtilities.toStringDate(new Date()),
                       barcode: vm.barcode,
-                      clientTime: kendo.toString(
-                        new Date(),
-                        "g"
-                      )
+                      clientTime: kendo.toString(new Date(), "g"),
                     })
                     .then(function () {
                       alerts.alert(
@@ -972,7 +988,177 @@
       });
     }
 
+    function onCheckInClicked() {
+      if (vm.schedule.approve || vm.schedule.checkInStatus) {
+        alerts.alert("Alert", "Not allowed to checkin");
+      } else {
+        if (checkAuthorizationIfServiceProvider(null, null, true)) {
+          var isBeongToCurrentUser =
+            vm.schedule.technicianNum === vm.user.userEmail;
+          // ==========================================================
+          // INFO: We will be checking for Integrity
+          // ==========================================================
+          if (
+            vm.user.timeCard &&
+            ((!__forIntegrityCustomer &&
+              isBeongToCurrentUser &&
+              !__skipTimecardClockInValidationOnCheckInOut) ||
+              __forIntegrityCustomer)
+          ) {
+            var runningClockIn = _.where(timeCardInfo.currentDetails, {
+              jobCode: jobCodes.CLOCK_IN,
+              finishTime: null,
+            });
+            var checkins = _.reject(timeCardInfo.currentDetails, {
+              jobCode: jobCodes.CLOCK_IN,
+            });
+            var cdt = new Date();
+            var dt = fpmUtilities.toStringDate(
+              new Date(
+                cdt.getFullYear(),
+                cdt.getMonth(),
+                cdt.getDate(),
+                0,
+                0,
+                0,
+                0
+              )
+            );
 
+            if (runningClockIn.length === 0) {
+              var __shcStartDate = kendo.parseDate(
+                vm.schedule.scheduledStartDateTime
+              );
+              // ==========================================================
+              // CHECKING PREVIOUS DAY CLOCK OUT
+              // ==========================================================
+              timecardFactory
+                .checkPreviousDateClockIn({
+                  timecardDate: __forIntegrityCustomer ? __shcStartDate : dt,
+                  userEmail: vm.schedule.technicianNum,
+                  previousDayCheck: true,
+                })
+                .then(function (response) {
+                  if (
+                    response &&
+                    response.previousDayCheck &&
+                    response.lastClockOut === null &&
+                    response.hasPendingClockIn
+                  ) {
+                    // ==========================================================
+                    // USER HAS NOT CLOCKED OUT FOR YESTERDAY
+                    // ==========================================================
+                    alerts.confirm(
+                      "Confirmation!",
+                      "You have not clocked out for yesterday. \n\n Are you sure?",
+                      function () {
+                        processCheckIn(true);
+                      },
+                      function () {}
+                    );
+                  } else {
+                    // ==========================================================
+                    // USER HAS NOT CLOCKED IN FOR TODAY
+                    // ==========================================================
+                    alerts.confirm(
+                      "Confirmation!",
+                      "You have not clocked in yet. You will be clocked in automattically \n\n Are you sure?",
+                      function () {
+                        processCheckIn(true);
+                      },
+                      function () {}
+                    );
+                  }
+                });
+            } else {
+              if (checkins.length > 0) {
+                var runningCheckIn = _.where(checkins, {
+                  finishTime: null,
+                  jobCodeName: "On Job",
+                });
+                if (runningCheckIn.length > 0) {
+                  var _defaultActions = [
+                    {
+                      text: "Check-out the pending task",
+                    },
+                    {
+                      text: "Open pending schedule",
+                    },
+                    {
+                      text: "Goto Timecard",
+                    },
+                  ];
+                  $ionicActionSheet.show({
+                    buttons: _defaultActions,
+                    titleText: "Pending Check-out Actions",
+                    cancelText: "Cancel",
+                    cancel: function () {
+                      // add cancel code..
+                    },
+                    buttonClicked: function (index) {
+                      var _e = angular.copy(runningCheckIn[0]);
+                      if (index === 0) {
+                        alerts.confirm(
+                          "Confirmation!",
+                          "Are you sure to check-out?",
+                          function () {
+                            __checkoutPendingTask(_e);
+                          }
+                        );
+                      }
+                      if (index === 1) {
+                        if (_e.scheduleId && _e.scheduleId > 0) {
+                          workOrderFactory
+                            .checkIfBarcodeClosed(_e.barcode)
+                            .then(function (isClosed) {
+                              if (isClosed !== null && !isClosed) {
+                                $state.go(
+                                  "app.editOrder",
+                                  {
+                                    barCode: _e.barcode,
+                                    technicianNum: _e.scheduleId,
+                                    src: "main",
+                                    _i: 1,
+                                  },
+                                  {
+                                    reload: true,
+                                  }
+                                );
+                              } else {
+                                alerts.alert(
+                                  "Alert",
+                                  "Work order has been closed. Please go to timecard and check-out manually."
+                                );
+                              }
+                            });
+                        } else {
+                          $state.go("app.timecard", {
+                            refresh: true,
+                          });
+                        }
+                      }
+                      if (index === 2) {
+                        $state.go("app.timecard", {
+                          refresh: true,
+                        });
+                      }
+                      return true;
+                    },
+                  });
+                } else {
+                  processCheckIn(true);
+                }
+              } else {
+                processCheckIn(true);
+              }
+            }
+          } else {
+            processCheckIn(true);
+          }
+        }
+        return false;
+      }
+    }
 
     vm.tabs = {
       events: {
@@ -1050,7 +1236,7 @@
                 vm.popModal.modal.show();
               });
           }
-        }
+        },
       },
       desc: {
         events: {
@@ -1112,8 +1298,8 @@
               }
             }
             updateOrder(type);
-          }
-        }
+          },
+        },
       },
       sch: {
         events: {
@@ -1128,7 +1314,7 @@
               updateSchedule(true, true, function () {
                 $timeout(function () {
                   $state.go("app.dashboard", {
-                    refresh: true
+                    refresh: true,
                   });
                 }, 200);
               });
@@ -1164,7 +1350,7 @@
             if (vm.schedule.startMiles && vm.schedule.endMiles) {
               vm.schedule.totalMiles = parseFloat(
                 parseFloat(vm.schedule.endMiles) -
-                parseFloat(vm.schedule.startMiles)
+                  parseFloat(vm.schedule.startMiles)
               ).toFixed(2);
             }
             updateSchedule(false, false);
@@ -1185,7 +1371,7 @@
                     barCode: vm.barcode,
                     technicianNum: sch.num,
                     src: "main",
-                    _i: 1
+                    _i: 1,
                   });
                 }
               );
@@ -1204,162 +1390,29 @@
             }
           },
           checkIn: function () {
-            if (
-              vm.schedule.approve ||
-              vm.schedule.checkInStatus
-            ) {
-              alerts.alert("Alert", "Not allowed to checkin");
-            } else {
-              if (checkAuthorizationIfServiceProvider(null, null, true)) {
-                var isBeongToCurrentUser =
-                  vm.schedule.technicianNum === vm.user.userEmail;
-                // ==========================================================
-                // INFO: We will be checking for Integrity
-                // ==========================================================
-                if (vm.user.timeCard && ((!__forIntegrityCustomer && isBeongToCurrentUser && !__skipTimecardClockInValidationOnCheckInOut) || (__forIntegrityCustomer))) {
-                  var runningClockIn = _.where(timeCardInfo.currentDetails, {
-                    jobCode: jobCodes.CLOCK_IN,
-                    finishTime: null
-                  });
-                  var checkins = _.reject(timeCardInfo.currentDetails, {
-                    jobCode: jobCodes.CLOCK_IN
-                  });
-                  var cdt = new Date();
-                  var dt = fpmUtilities.toStringDate(
-                    new Date(cdt.getFullYear(), cdt.getMonth(), cdt.getDate(), 0, 0, 0, 0)
-                  );
-
-                  if (runningClockIn.length === 0) {
-                    var __shcStartDate = kendo.parseDate(vm.schedule.scheduledStartDateTime)
-                    // ==========================================================
-                    // CHECKING PREVIOUS DAY CLOCK OUT
-                    // ==========================================================
-                    timecardFactory.checkPreviousDateClockIn({
-                      timecardDate: __forIntegrityCustomer ? __shcStartDate : dt,
-                      userEmail: vm.schedule.technicianNum,
-                      previousDayCheck: true
-                    }).then(function (response) {
-                      if (response && response.previousDayCheck && response.lastClockOut === null && response.hasPendingClockIn) {
-                        // ==========================================================
-                        // USER HAS NOT CLOCKED OUT FOR YESTERDAY 
-                        // ==========================================================
-                        alerts.confirm(
-                          "Confirmation!",
-                          "You have not clocked out for yesterday. \n\n Are you sure?",
-                          function () {
-                            processCheckIn(true);
-                          },
-                          function () {}
-                        );
-                      } else {
-                        // ==========================================================
-                        // USER HAS NOT CLOCKED IN FOR TODAY
-                        // ==========================================================
-                        alerts.confirm(
-                          "Confirmation!",
-                          "You have not clocked in yet. You will be clocked in automattically \n\n Are you sure?",
-                          function () {
-                            processCheckIn(true);
-                          },
-                          function () {}
-                        );
-                      }
-                    });
+            if (__forIntegrityCustomer) {
+              workOrderFactory
+                .getSchedulesWithSameDateTime(vm.barcode, vm.schedule.num, 1)
+                .then(function (response) {
+                  if (response === null || response.length <= 1) {
+                    onCheckInClicked();
                   } else {
-                    if (checkins.length > 0) {
-                      var runningCheckIn = _.where(checkins, {
-                        finishTime: null,
-                        jobCodeName: "On Job"
-                      });
-                      if (runningCheckIn.length > 0) {
-                        var _defaultActions = [{
-                            text: "Check-out the pending task"
-                          },
-                          {
-                            text: "Open pending schedule"
-                          },
-                          {
-                            text: "Goto Timecard"
-                          }
-                        ];
-                        $ionicActionSheet.show({
-                          buttons: _defaultActions,
-                          titleText: "Pending Check-out Actions",
-                          cancelText: "Cancel",
-                          cancel: function () {
-                            // add cancel code..
-                          },
-                          buttonClicked: function (index) {
-                            var _e = angular.copy(runningCheckIn[0]);
-                            if (index === 0) {
-                              alerts.confirm(
-                                "Confirmation!",
-                                "Are you sure to check-out?",
-                                function () {
-                                  __checkoutPendingTask(_e);
-                                }
-                              );
-                            }
-                            if (index === 1) {
-                              if (_e.scheduleId && _e.scheduleId > 0) {
-                                workOrderFactory
-                                  .checkIfBarcodeClosed(_e.barcode)
-                                  .then(function (isClosed) {
-                                    if (isClosed !== null && !isClosed) {
-                                      $state.go(
-                                        "app.editOrder", {
-                                          barCode: _e.barcode,
-                                          technicianNum: _e.scheduleId,
-                                          src: "main",
-                                          _i: 1
-                                        }, {
-                                          reload: true
-                                        }
-                                      );
-                                    } else {
-                                      alerts.alert(
-                                        "Alert",
-                                        "Work order has been closed. Please go to timecard and check-out manually."
-                                      );
-                                    }
-                                  });
-                              } else {
-                                $state.go("app.timecard", {
-                                  refresh: true
-                                });
-                              }
-                            }
-                            if (index === 2) {
-                              $state.go("app.timecard", {
-                                refresh: true
-                              });
-                            }
-                            return true;
-                          }
-                        });
-                      } else {
-                        processCheckIn(true);
-                      }
-                    } else {
-                      processCheckIn(true);
-                    }
+                    //TODO : Open Schedule Modal
                   }
-                } else {
-                  processCheckIn(true);
-                }
-              }
-              return false;
+                });
+            } else {
+              onCheckInClicked();
             }
           },
           checkOut: function () {
-            if (
-              vm.schedule.approve ||
-              vm.schedule.checkOutStatus
-            ) {
+            if (vm.schedule.approve || vm.schedule.checkOutStatus) {
               alerts.alert("Alert", "Not allowed to checkout");
             } else {
               if (checkAuthorizationIfServiceProvider(null, null, false)) {
-                if (vm.schedule.actualStartDateTime === null || !vm.schedule.checkInStatus) {
+                if (
+                  vm.schedule.actualStartDateTime === null ||
+                  !vm.schedule.checkInStatus
+                ) {
                   alerts.alert("Warning", "Please check in first");
                   return false;
                 }
@@ -1393,10 +1446,10 @@
                   pushToTimecard();
                 }
                 return true;
-              }
+              },
             });
-          }
-        }
+          },
+        },
       },
       smry: {
         events: {
@@ -1412,8 +1465,8 @@
                 workOrderFactory.updateOrderProduct(i);
               }, 200);
             }
-          }
-        }
+          },
+        },
       },
       prod: {
         events: {
@@ -1440,13 +1493,13 @@
                   }
                 });
             });
-          }
-        }
-      }
+          },
+        },
+      },
     };
 
     var timeCardInfo = {
-      currentDetails: []
+      currentDetails: [],
     };
 
     vm.onBarcodeScanned = function (skuCode) {
@@ -1467,7 +1520,9 @@
 
     function _getTodaysTimeCardEntries(runCheckin) {
       if (vm.user.timeCard) {
-        var cdt = __forIntegrityCustomer ? kendo.parseDate(vm.schedule.scheduledStartDateTime) : new Date();
+        var cdt = __forIntegrityCustomer
+          ? kendo.parseDate(vm.schedule.scheduledStartDateTime)
+          : new Date();
         var __userEmail = "";
         if (__forIntegrityCustomer && vm.schedule) {
           __userEmail = vm.schedule.technicianNum;
@@ -1579,7 +1634,7 @@
     "fpm-utilities-factory",
     "shared-data-factory",
     "authenticationFactory",
-    "timecard-factory"
+    "timecard-factory",
   ];
   angular.module("fpm").controller("edit-order-controller", initController);
 })();
