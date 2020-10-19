@@ -1,0 +1,37 @@
+<ion-header-bar>
+  <h1 class="title">
+    <span ng-if="vm.actionType === 1">Check In</span>
+    <span ng-if="vm.actionType === 2">Check Out</span>
+    <span ng-if="vm.actionType === 3">Clock Out</span>
+  </h1>
+  <button class="button" data-ng-click="vm.events.closeProductEditModal()">
+    Cancel
+  </button>
+</ion-header-bar>
+<ion-content>
+  <div>
+    <div>
+      <ion-list>
+        <!-- <ion-checkbox ng-model="filter.yellow"
+          >Check In only for the selected user
+        </ion-checkbox>
+        <ion-checkbox ng-model="filter.pink"
+          >Check In for the selected user and all other users
+        </ion-checkbox> -->
+        <ion-radio
+          ng-model="vm.selectedOption"
+          ng-value="0"
+          ng-change="vm.events.onSelectedOptionChanged()"
+          >Check In only for the selected user</ion-radio
+        >
+        <ion-radio
+          ng-model="vm.selectedOption"
+          ng-value="1"
+          ng-change="vm.events.onSelectedOptionChanged()"
+          >Check In for the selected user and all other users</ion-radio
+        >
+      </ion-list>
+      <div ng-if="vm.showOtherSchedules">HELLO WORLD</div>
+    </div>
+  </div>
+</ion-content>

@@ -38,7 +38,7 @@
     };
     var jobCodes = timecardFactory.statics.jobCodes;
     vm.invoiceOpen = true;
-
+    vm.scheduleActionType = 1;
     vm.uiSettings = {
       isTimeCardModuleEnabled: false,
       milageTrackingEnabled: false,
@@ -55,7 +55,7 @@
       expenseTrackingEnabled: true,
       paymentOn: false,
     };
-
+    vm.multipleScheduleCheckInModal = null;
     // TAX RATE CODE CHANGES
     //==================================================
 
@@ -1397,7 +1397,18 @@
                   if (response === null || response.length <= 1) {
                     onCheckInClicked();
                   } else {
-                    //TODO : Open Schedule Modal
+                    vm.scheduleActionType = 1;
+                    if (vm.multipleScheduleCheckInModal === null) {
+                      console.log(vm.multipleScheduleCheckInModal);
+                      fpmUtilities
+                        .getModal("checkInMultipleSchedulesModal.html", $scope)
+                        .then(function (__modal) {
+                          vm.multipleScheduleCheckInModal = __modal;
+                          vm.multipleScheduleCheckInModal.show();
+                        });
+                    } else {
+                      vm.multipleScheduleCheckInModal.show();
+                    }
                   }
                 });
             } else {
@@ -1588,6 +1599,12 @@
     });
 
     var uProductTimer = null;
+
+    $scope.$on("$wo.multipleScheduleModalCancel", function ($event, agrs) {
+      vm.multipleScheduleCheckInModal.hide();
+      vm.multipleScheduleCheckInModal.remove();
+      vm.multipleScheduleCheckInModal = null;
+    });
 
     $scope.$on("$fpm:operation:updateProduct", function ($event, agrs) {
       uProductTimer = $timeout(function () {
