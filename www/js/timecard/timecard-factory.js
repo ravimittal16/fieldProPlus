@@ -7,12 +7,20 @@
 
     var jobCodes = {
       CLOCK_IN: 5001,
-      CLOCK_OUT: 5002
+      CLOCK_OUT: 5002,
     };
+
+    var clockOutDetails = { clockInDateTime: null, details: null, data: null };
 
     function getTimeCardByDate(date, userEmail) {
       var __userEmail = userEmail ? userEmail : "";
-      return apicontext.get(baseUrl + "GetTimeCardByDate?date=" + encodeURIComponent(date) + "&userEmail=" + encodeURIComponent(__userEmail));
+      return apicontext.get(
+        baseUrl +
+          "GetTimeCardByDate?date=" +
+          encodeURIComponent(date) +
+          "&userEmail=" +
+          encodeURIComponent(__userEmail)
+      );
     }
 
     function _attachLocationCoordinates(postObj) {
@@ -43,10 +51,12 @@
       if (angular.isDefined(jobCodes) && jobCodes) {
         return $q.when(jobCodes);
       } else {
-        return apicontext.get(baseUrl + "GetJobCodes").then(function (response) {
-          cache.put("jobCodes", response);
-          return response;
-        });
+        return apicontext
+          .get(baseUrl + "GetJobCodes")
+          .then(function (response) {
+            cache.put("jobCodes", response);
+            return response;
+          });
       }
     }
 
@@ -59,10 +69,12 @@
       if (angular.isDefined(orders) && orders) {
         return $q.when(orders);
       } else {
-        return apicontext.get(baseUrl + "GetWorkOrdersList").then(function (response) {
-          cache.put("workorders", response);
-          return response;
-        });
+        return apicontext
+          .get(baseUrl + "GetWorkOrdersList")
+          .then(function (response) {
+            cache.put("workorders", response);
+            return response;
+          });
       }
     }
 
@@ -72,15 +84,29 @@
     }
 
     function clearCheckedOutTime(detailId, summaryId) {
-      return apicontext.get(baseUrl + "ClearCheckedOutTime?detailId=" + detailId + "&summaryId=" + summaryId);
+      return apicontext.get(
+        baseUrl +
+          "ClearCheckedOutTime?detailId=" +
+          detailId +
+          "&summaryId=" +
+          summaryId
+      );
     }
 
     function sendForApproval(summaryId, status) {
-      return apicontext.get(baseUrl + "SendForApproval?summaryId=" + summaryId + "&status=" + status);
+      return apicontext.get(
+        baseUrl + "SendForApproval?summaryId=" + summaryId + "&status=" + status
+      );
     }
 
     function deleteTimeCardDetails(detailId, summaryId) {
-      return apicontext.get(baseUrl + "DeleteTimeCardDetails?detailId=" + detailId + "&summaryId=" + summaryId);
+      return apicontext.get(
+        baseUrl +
+          "DeleteTimeCardDetails?detailId=" +
+          detailId +
+          "&summaryId=" +
+          summaryId
+      );
     }
 
     function clearTimeCard(summaryId) {
@@ -114,7 +140,13 @@
     }
 
     function clearClockOutTime(detailId, fromDeleteClockIn) {
-      return apicontext.get(baseUrl + "ClearClockOutTime?detailNum=" + detailId + "&fromDeleteClockIn=" + fromDeleteClockIn);
+      return apicontext.get(
+        baseUrl +
+          "ClearClockOutTime?detailNum=" +
+          detailId +
+          "&fromDeleteClockIn=" +
+          fromDeleteClockIn
+      );
     }
 
     function clearTimecardFactoryData() {
@@ -122,39 +154,59 @@
         details: [],
         jobCodes: {
           CLOCK_IN: 5001,
-          CLOCK_OUT: 5002
+          CLOCK_OUT: 5002,
         },
-        summary: null
+        summary: null,
       };
     }
     var data = {
       details: [],
       jobCodes: {
         CLOCK_IN: 5001,
-        CLOCK_OUT: 5002
+        CLOCK_OUT: 5002,
       },
-      summary: null
+      summary: null,
     };
-
 
     function checkoutPending(details) {
       var defer = $q.defer();
       var _e = details;
       var tcd = kendo.parseDate(details.timeCardDate);
-      var _ft = moment(new Date(tcd.getFullYear(), tcd.getMonth(), tcd.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0));
+      var _ft = moment(
+        new Date(
+          tcd.getFullYear(),
+          tcd.getMonth(),
+          tcd.getDate(),
+          new Date().getHours(),
+          new Date().getMinutes(),
+          0,
+          0
+        )
+      );
       var _st = kendo.parseDate(_e.startTime);
       if (_ft.isBefore(_st)) {
         defer.resolve({
           success: false,
-          reason: -1
+          reason: -1,
         });
       } else {
-        _e.finishTime = kendo.toString(new Date(tcd.getFullYear(), tcd.getMonth(), tcd.getDate(), new Date().getHours(), new Date().getMinutes(), 0, 0), "g");
+        _e.finishTime = kendo.toString(
+          new Date(
+            tcd.getFullYear(),
+            tcd.getMonth(),
+            tcd.getDate(),
+            new Date().getHours(),
+            new Date().getMinutes(),
+            0,
+            0
+          ),
+          "g"
+        );
         addNewDetails(_e).then(function (response) {
           if (response) {
             defer.resolve({
               success: true,
-              reason: 0
+              reason: 0,
             });
           }
         });
@@ -166,20 +218,32 @@
       return apicontext.post(baseUrl + "CheckPreviousDateClockIn", model);
     }
 
+    function setClockinData(clockInDateTime, details, data) {
+      clockOutDetails.clockInDateTime = clockInDateTime;
+      clockOutDetails.details = details;
+      clockOutDetails.data = data;
+    }
+
+    function getClockinData() {
+      return clockOutDetails;
+    }
     var statusTypes = {
       NONE: 0,
       SEND_FOR_APPROVAL: 1,
       CANCELLED: 2,
       APPROVED: 3,
       UNAPPROVED: 4,
-      RESENT_FOR_APPROVAL: 5
+      RESENT_FOR_APPROVAL: 5,
     };
 
     var factory = {};
     factory.statics = {
       jobCodes: jobCodes,
-      statusTypes: statusTypes
+      statusTypes: statusTypes,
     };
+
+    factory.setClockinData = setClockinData;
+    factory.getClockinData = getClockinData;
     factory.checkPreviousDateClockIn = checkPreviousDateClockIn;
     factory.clearClockOutTime = clearClockOutTime;
     factory.checkoutPending = checkoutPending;
@@ -205,6 +269,11 @@
     return factory;
   }
 
-  initFactory.$inject = ["api-base-factory", "$rootScope", "$q", "$cacheFactory"];
+  initFactory.$inject = [
+    "api-base-factory",
+    "$rootScope",
+    "$q",
+    "$cacheFactory",
+  ];
   angular.module("fpm").factory("timecard-factory", initFactory);
 })();

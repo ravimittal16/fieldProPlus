@@ -1,17 +1,21 @@
 <div class="card">
   <div class="row">
-    <div class="col" ng-if="vm.data.loading">
-      Checking Timecard...
-    </div>
-    <div class="col"
-      ng-if="!vm.data.loading && ((vm.data.timeCards.length === 0) || (vm.data.isClockedOut && !vm.data.isClockedIn))">
+    <div class="col" ng-if="vm.data.loading">Checking Timecard...</div>
+    <div
+      class="col"
+      ng-if="
+        !vm.data.loading &&
+        (vm.data.timeCards.length === 0 ||
+          (vm.data.isClockedOut && !vm.data.isClockedIn))
+      "
+    >
       <!-- <span ng-if="vm.assgiendToSameUser">
         -
       </span>
       <span ng-if="!vm.assgiendToSameUser">
         {{vm.userName}} not clocked-in yet.
       </span> -->
-      <div style="display: flex;justify-content: center;">
+      <div style="display: flex; justify-content: center">
         <span>-</span>
       </div>
     </div>
@@ -19,7 +23,11 @@
       <span class="font-bold">
         <div ng-if="vm.data.isClockedIn">
           <span class="icon-center ion-clock"></span>
-          <fp-date-time-renderer model-val="vm.data.clockInDateTime " type="date" format="'MM/dd h:mm a'">
+          <fp-date-time-renderer
+            model-val="vm.data.clockInDateTime "
+            type="date"
+            format="'MM/dd h:mm a'"
+          >
           </fp-date-time-renderer>
         </div>
         <div>
@@ -29,11 +37,28 @@
         </div>
       </span>
     </div>
-    <div class="col" ng-if="!vm.data.loading && !vm.data.isClockedOut && vm.data.timeCards.length > 0">
-      <div style="display: flex;justify-content: flex-end;align-items: center;height: 100%;">
-        <button ng-if="!vm.data.isClockedOut && vm.data.timeCards.length > 0"
+    <div
+      class="col"
+      ng-if="
+        !vm.data.loading &&
+        !vm.data.isClockedOut &&
+        vm.data.timeCards.length > 0
+      "
+    >
+      <div
+        style="
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          height: 100%;
+        "
+      >
+        <button
+          ng-if="!vm.data.isClockedOut && vm.data.timeCards.length > 0"
+          ng-disabled="vm.pleaseWait"
           class="button button-positive button-small button-block n-m-t n-m-b"
-          on-tap="vm.data.events.clockOutClick(null, null)">
+          on-tap="vm.data.events.clockOutClick(null, null)"
+        >
           Clock Out
         </button>
       </div>

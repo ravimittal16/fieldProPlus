@@ -516,6 +516,7 @@
     }
     //================================================================================================
     vm.user = authenticationFactory.getLoggedInUserInfo();
+
     vm.dateTimeFormat = vm.user.dateFormat;
     vm.placeholder = "tap here to select...";
 
@@ -913,7 +914,7 @@
             actualEndTime: fpmUtilities.toStringDate(
               vm.schedule.actualFinishDateTime
             ),
-            Barcode: vm.barcode,
+            barcode: vm.barcode,
             clientTime: fpmUtilities.toStringDate(__clientTime),
           })
           .then(function () {
@@ -986,6 +987,23 @@
           )
           .finally(function () {});
       });
+    }
+
+    function onCheckOutClicked() {
+      if (vm.schedule.approve || vm.schedule.checkOutStatus) {
+        alerts.alert("Alert", "Not allowed to checkout");
+      } else {
+        if (checkAuthorizationIfServiceProvider(null, null, false)) {
+          if (
+            vm.schedule.actualStartDateTime === null ||
+            !vm.schedule.checkInStatus
+          ) {
+            alerts.alert("Warning", "Please check in first");
+            return false;
+          }
+          _processScheduleCheckout(true);
+        }
+      }
     }
 
     function onCheckInClicked() {
@@ -1399,7 +1417,6 @@
                   } else {
                     vm.scheduleActionType = 1;
                     if (vm.multipleScheduleCheckInModal === null) {
-                      console.log(vm.multipleScheduleCheckInModal);
                       fpmUtilities
                         .getModal("checkInMultipleSchedulesModal.html", $scope)
                         .then(function (__modal) {
@@ -1416,19 +1433,32 @@
             }
           },
           checkOut: function () {
-            if (vm.schedule.approve || vm.schedule.checkOutStatus) {
-              alerts.alert("Alert", "Not allowed to checkout");
+            if (__forIntegrityCustomer) {
+              vm.scheduleActionType = 2;
+              workOrderFactory
+                .getSchedulesWithSameDateTime(
+                  vm.barcode,
+                  vm.schedule.num,
+                  vm.scheduleActionType
+                )
+                .then(function (response) {
+                  if (response === null || response.length <= 1) {
+                    onCheckOutClicked();
+                  } else {
+                    if (vm.multipleScheduleCheckInModal === null) {
+                      fpmUtilities
+                        .getModal("checkInMultipleSchedulesModal.html", $scope)
+                        .then(function (__modal) {
+                          vm.multipleScheduleCheckInModal = __modal;
+                          vm.multipleScheduleCheckInModal.show();
+                        });
+                    } else {
+                      vm.multipleScheduleCheckInModal.show();
+                    }
+                  }
+                });
             } else {
-              if (checkAuthorizationIfServiceProvider(null, null, false)) {
-                if (
-                  vm.schedule.actualStartDateTime === null ||
-                  !vm.schedule.checkInStatus
-                ) {
-                  alerts.alert("Warning", "Please check in first");
-                  return false;
-                }
-                _processScheduleCheckout(true);
-              }
+              onCheckOutClicked();
             }
           },
           clearAllDateTimeSelection: function (clearAll) {
@@ -1600,10 +1630,16 @@
 
     var uProductTimer = null;
 
+    function __hideMultipleScheduleModal() {
+      if (vm.multipleScheduleCheckInModal) {
+        vm.multipleScheduleCheckInModal.hide();
+        vm.multipleScheduleCheckInModal.remove();
+        vm.multipleScheduleCheckInModal = null;
+      }
+    }
+
     $scope.$on("$wo.multipleScheduleModalCancel", function ($event, agrs) {
-      vm.multipleScheduleCheckInModal.hide();
-      vm.multipleScheduleCheckInModal.remove();
-      vm.multipleScheduleCheckInModal = null;
+      __hideMultipleScheduleModal();
     });
 
     $scope.$on("$fpm:operation:updateProduct", function ($event, agrs) {
@@ -1612,6 +1648,16 @@
           getBarcodeProducts(true);
         });
       }, 300);
+    });
+
+    $scope.$on("$wo.multipleScheduleModalCancel.reloadAll", function (
+      $event,
+      agrs
+    ) {
+      if (agrs.closeModal) {
+        __hideMultipleScheduleModal();
+      }
+      getBarcodeDetails();
     });
 
     $scope.$on("$destroy", function () {

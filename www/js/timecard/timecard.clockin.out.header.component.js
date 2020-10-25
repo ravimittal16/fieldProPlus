@@ -1,12 +1,26 @@
 (function () {
   "use strict";
 
-  function __detailController($rootScope, $scope, $timeout, workOrdersFactory,
-    fpmUtilitiesFactory, sharedDataFactory, authenticationFactory, timecardFactory, $ionicPopover, $ionicModal, $ionicActionSheet) {
+  function __detailController(
+    $rootScope,
+    $scope,
+    $timeout,
+    workOrdersFactory,
+    fpmUtilitiesFactory,
+    sharedDataFactory,
+    authenticationFactory,
+    timecardFactory,
+    $ionicPopover,
+    $ionicModal,
+    $ionicActionSheet
+  ) {
     var vm = this;
+    vm.pleaseWait = false;
     var __isForWorkOrder = false;
     var __jobCodes = timecardFactory.statics.jobCodes;
     var __statusTypes = timecardFactory.statics.statusTypes;
+    var __integrityCustomers = ["97713", "97719", "193514633790019"];
+    var __forIntegrityCustomer = false;
     var __userEmail = "";
     var alerts = fpmUtilitiesFactory.alerts;
     vm.assgiendToSameUser = false;
@@ -19,10 +33,18 @@
 
     function __toDateObj(dateFrom, timeFrom) {
       var __timeDate = timeFrom || new Date();
-      return new Date(dateFrom.getFullYear(), dateFrom.getMonth(), dateFrom.getDate(), __timeDate.getHours(), __timeDate.getMinutes(), 0, 0)
+      return new Date(
+        dateFrom.getFullYear(),
+        dateFrom.getMonth(),
+        dateFrom.getDate(),
+        __timeDate.getHours(),
+        __timeDate.getMinutes(),
+        0,
+        0
+      );
     }
 
-    function __processClockOutUser(clockInDateTime, __details) {
+    function __processClockOutUser(clockInDateTime, __details, scheduleNums) {
       var tcd = null;
       if (vm.data.summary && vm.data.summary.timeCardDate) {
         tcd = moment(vm.data.summary.timeCardDate).toDate();
@@ -34,6 +56,7 @@
       var __num = __details ? __details.num : 0;
       var details = {
         num: __num,
+        scheduleNums: scheduleNums,
         startTime: __toDateString(clockOutTime),
         jobCode: __jobCodes.CLOCK_OUT,
         numFromSummary: vm.data.summary.num,
@@ -49,39 +72,83 @@
         details["uniqueIdentifier"] = __details.uniqueIdentifier;
       }
       fpmUtilitiesFactory.showLoading().then(function () {
-        timecardFactory.clockInOutUser(details).then(function (response) {
-          __clearClockInData();
-          if (response && response.errors === null) {
-            __updateTimeCardBindings(response);
-            $rootScope.$broadcast("$timecard.onclocked-out-fromHeader", response);
-          } else {
-            alerts.alert("Error", "Not able to perform clock out");
-          }
-        }).finally(function () {
-          fpmUtilitiesFactory.hideLoading();
-        });
+        timecardFactory
+          .clockInOutUser(details)
+          .then(function (response) {
+            __clearClockInData();
+            if (response && response.errors === null) {
+              __updateTimeCardBindings(response);
+              $rootScope.$broadcast(
+                "$timecard.onclocked-out-fromHeader",
+                response
+              );
+            } else {
+              alerts.alert("Error", "Not able to perform clock out");
+            }
+          })
+          .finally(function () {
+            fpmUtilitiesFactory.hideLoading();
+          });
       });
     }
+
+    function __onClockoutClicked(clockInDate, detail, scheduleNums) {
+      var notCheckInDetails = _.filter(vm.data.timeCards, function (tc) {
+        return tc.finishTime === null && tc.jobCode !== __jobCodes.CLOCK_IN;
+      });
+      if (notCheckInDetails.length > 0) {
+        alerts.confirm(
+          "Confirmation!",
+          "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?",
+          function () {
+            $timeout(function () {
+              __processClockOutUser(clockInDate, detail, scheduleNums);
+            }, 10);
+          }
+        );
+      } else {
+        alerts.confirm("Confirmation!", "Are you sure?", function () {
+          $timeout(function () {
+            __processClockOutUser(clockInDate, detail, scheduleNums);
+          }, 10);
+        });
+      }
+    }
+    vm.multipleScheduleCheckInModal = null;
     vm.data = {
       events: {
         clockOutClick: function (clockInDate, detail) {
-          var notCheckInDetails = _.filter(vm.data.timeCards, function (tc) {
-            return tc.finishTime === null && tc.jobCode !== __jobCodes.CLOCK_IN;
+          timecardFactory.setClockinData(clockInDate, detail, {
+            data: vm.data,
           });
-          if (notCheckInDetails.length > 0) {
-            alerts.confirm("Confirmation!", "You have a task pending to check out. \n\n Previously pending tasks will be checked out automattically. \n\n Are you sure?", function () {
-              $timeout(function () {
-                __processClockOutUser(clockInDate, detail);
-              }, 10);
-            });
+          if (__forIntegrityCustomer) {
+            vm.scheduleActionType = 3;
+            vm.pleaseWait = true;
+            workOrdersFactory
+              .getSchedulesWithSameDateTime(
+                vm.barcode,
+                vm.schedule.num,
+                vm.scheduleActionType
+              )
+              .then(function (response) {
+                if (response === null || response.length <= 1) {
+                  __onClockoutClicked(clockInDate, detail);
+                } else {
+                  fpmUtilitiesFactory
+                    .getModal("checkInMultipleSchedulesModal.html", $scope)
+                    .then(function (__modal) {
+                      vm.multipleScheduleCheckInModal = __modal;
+                      vm.multipleScheduleCheckInModal.show();
+                    });
+                }
+              })
+              .finally(function () {
+                vm.pleaseWait = false;
+              });
           } else {
-            alerts.confirm("Confirmation!", "Are you sure?", function () {
-              $timeout(function () {
-                __processClockOutUser(clockInDate, detail);
-              }, 10);
-            });
+            __onClockoutClicked(clockInDate, detail);
           }
-        }
+        },
       },
       currentClockedIn: null,
       clockInDateTime: null,
@@ -89,7 +156,7 @@
       isClockedIn: false,
       timeCards: [],
       clockedInDate: null,
-      loading: false
+      loading: false,
     };
 
     function __toDateString(dateString) {
@@ -110,7 +177,7 @@
       vm.data.summary = details.timeCardSummary;
       vm.data.currentClockedIn = _.findWhere(details.timeCardDetails, {
         jobCode: __jobCodes.CLOCK_IN,
-        finishTime: null
+        finishTime: null,
       });
 
       if (angular.isDefined(vm.data.currentClockedIn)) {
@@ -119,7 +186,8 @@
         vm.data.isClockedIn = true;
         vm.data.isClockedOut = __clockIn.finishTime !== null;
       } else {
-        vm.data.isClockedOut = vm.data.timeCards && vm.data.timeCards.length > 0;
+        vm.data.isClockedOut =
+          vm.data.timeCards && vm.data.timeCards.length > 0;
       }
     }
 
@@ -127,45 +195,66 @@
       var __dt = __toDateString(vm.currentDate);
       vm.data.loading = true;
       __clearClockInData();
-      timecardFactory.getTimeCardByDate(__dt, __userEmail).then(function (__res) {
-        if (__res) {
-          __updateTimeCardBindings(__res);
-        }
-      }).finally(function () {
-        vm.data.loading = false;
-      });
+      timecardFactory
+        .getTimeCardByDate(__dt, __userEmail)
+        .then(function (__res) {
+          if (__res) {
+            __updateTimeCardBindings(__res);
+          }
+        })
+        .finally(function () {
+          vm.data.loading = false;
+        });
     }
 
     function __ensureScheduleNotAssgiendToCurrentUser(initLoad) {
       if (vm.schedule) {
-        vm.assgiendToSameUser = vm.schedule && vm.schedule.technicianNum === vm.user.userEmail;
+        vm.barcode = vm.schedule.barcode;
+        vm.assgiendToSameUser =
+          vm.schedule && vm.schedule.technicianNum === vm.user.userEmail;
         vm.currentDate = __toDate(vm.schedule.scheduledStartDateTime);
-        vm.userName = __isForWorkOrder ? vm.schedule.technicianName : vm.user.userName;
-        __userEmail = vm.assgiendToSameUser ? vm.user.userEmail : vm.schedule.technicianNum;
+        vm.userName = __isForWorkOrder
+          ? vm.schedule.technicianName
+          : vm.user.userName;
+        __userEmail = vm.assgiendToSameUser
+          ? vm.user.userEmail
+          : vm.schedule.technicianNum;
         $timeout(function () {
           __getUserTimeCardByDate();
         }, 50);
       }
     }
 
-
-
     vm.$onChanges = function () {
       $timeout(function () {
         __ensureScheduleNotAssgiendToCurrentUser(false);
       }, 100);
-    }
+    };
 
     vm.$onInit = function () {
       vm.user = authenticationFactory.getLoggedInUserInfo();
+      var __customerNumber = vm.user.customerNumber;
+      __forIntegrityCustomer =
+        __integrityCustomers.indexOf(__customerNumber) > -1;
       __isForWorkOrder = vm.basedOn === "workorder";
       vm.canChangeTimecardDate = vm.basedOn === "timecard";
       $timeout(function () {
         __ensureScheduleNotAssgiendToCurrentUser(true);
       }, 100);
+    };
+
+    function __hideMultipleScheduleModal() {
+      if (vm.multipleScheduleCheckInModal) {
+        vm.multipleScheduleCheckInModal.hide();
+        vm.multipleScheduleCheckInModal.remove();
+        vm.multipleScheduleCheckInModal = null;
+      }
     }
 
-    $scope.$on("$timecard.onclocked-out-fromComponent", function (evnt, __resopnse) {
+    $scope.$on("$timecard.onclocked-out-fromComponent", function (
+      evnt,
+      __resopnse
+    ) {
       $timeout(function () {
         vm.data.isClockedOut = true;
         vm.data.isClockedIn = false;
@@ -175,6 +264,27 @@
         vm.data.summary = __resopnse.timeCardSummary;
         __updateTimeCardBindings(__resopnse);
       }, 100);
+    });
+
+    $scope.$on("$wo.multipleScheduleModalCancel", function ($event, agrs) {
+      __hideMultipleScheduleModal();
+    });
+
+    $scope.$on("$wo.multipleScheduleModalCancel.clockout", function (
+      evnt,
+      args
+    ) {
+      __hideMultipleScheduleModal();
+      var __data = timecardFactory.getClockinData();
+      if (!args.multiple) {
+        __onClockoutClicked(__data.clockInDate, __data.detail, null);
+      } else {
+        __onClockoutClicked(
+          __data.clockInDate,
+          __data.detail,
+          args.checkedSchedules
+        );
+      }
     });
 
     $scope.$on("$timecard.onClockedInCompleted", function (evnt, args) {
@@ -187,7 +297,6 @@
         __getUserTimeCardByDate();
       }, 100);
     });
-
   }
 
   var __componentConfig = {
@@ -200,10 +309,18 @@
     templateUrl: "js/timecard/timecard.clockin.out.header.component.html",
   };
 
-  __detailController.$inject = ["$rootScope", "$scope", "$timeout", "work-orders-factory",
+  __detailController.$inject = [
+    "$rootScope",
+    "$scope",
+    "$timeout",
+    "work-orders-factory",
     "fpm-utilities-factory",
     "shared-data-factory",
-    "authenticationFactory", "timecard-factory", "$ionicPopover", "$ionicModal", "$ionicActionSheet"
+    "authenticationFactory",
+    "timecard-factory",
+    "$ionicPopover",
+    "$ionicModal",
+    "$ionicActionSheet",
   ];
   angular.module("fpm").component("timecardClockInHeader", __componentConfig);
 })();

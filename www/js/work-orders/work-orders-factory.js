@@ -286,7 +286,19 @@
       );
     }
 
+    function updateJobStatusMultiple(sch) {
+      if (sch.clientTime === undefined || sch.clientTime === null) {
+        sch.clientTime = kendo.toString(new Date(), "g");
+      }
+      sch = _attachLocationCoordinates(sch);
+      return apiBaseFactory.post(
+        apibaseurl + "UpdateJobStatusMultipleSchedulesAsync",
+        sch
+      );
+    }
+
     return {
+      updateJobStatusMultiple: updateJobStatusMultiple,
       getSchedulesWithSameDateTime: getSchedulesWithSameDateTime,
       getScheduleById: getScheduleById,
       submitPayment: submitPayment,

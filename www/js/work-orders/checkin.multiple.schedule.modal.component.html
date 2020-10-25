@@ -22,16 +22,92 @@
           ng-model="vm.selectedOption"
           ng-value="0"
           ng-change="vm.events.onSelectedOptionChanged()"
-          >Check In only for the selected user</ion-radio
+        >
+          <span ng-if="vm.actionType === 1">Check In</span>
+          <span ng-if="vm.actionType === 2">Check Out</span>
+          <span ng-if="vm.actionType === 3">Clock Out</span> only for the
+          selected user</ion-radio
         >
         <ion-radio
           ng-model="vm.selectedOption"
           ng-value="1"
           ng-change="vm.events.onSelectedOptionChanged()"
-          >Check In for the selected user and all other users</ion-radio
+        >
+          <span ng-if="vm.actionType === 1">Check In</span>
+          <span ng-if="vm.actionType === 2">Check Out</span>
+          <span ng-if="vm.actionType === 3">Clock Out</span> for the selected
+          user and all other users</ion-radio
         >
       </ion-list>
-      <div ng-if="vm.showOtherSchedules">HELLO WORLD</div>
+      <div ng-if="!vm.showOtherSchedules" class="padding">
+        <ion-list style="max-height: 350px; overflow: auto">
+          <div class="item padding-vertical">
+            <button
+              class="button button-small button-block"
+              ng-class="{
+                'button-positive': vm.actionType === 3,
+                'button-calm': vm.actionType !== 3
+              }"
+              ng-click="vm.events.onSubmitButtonClicked(false)"
+            >
+              <span ng-if="vm.actionType === 1"
+                ><i class="ion ion-clock"></i>&nbsp;Check In</span
+              >
+              <span ng-if="vm.actionType === 2"
+                ><i class="ion ion-clock"></i>&nbsp;Check Out</span
+              >
+              <span ng-if="vm.actionType === 3">Clock Out</span>
+            </button>
+          </div>
+        </ion-list>
+      </div>
+      <div ng-if="vm.showOtherSchedules" class="padding">
+        <ion-list style="max-height: 350px; overflow: auto">
+          <div class="item item-divider">Other Schedules</div>
+
+          <ion-checkbox
+            ng-model="sch.isChecked"
+            ng-repeat="sch in vm.schedules"
+          >
+            <h4>
+              <p>
+                <span>Schedule Date :</span>
+                <fp-date-time-renderer
+                  model-val="sch.scheduledStartDateTime"
+                  type="datetime"
+                  format="vm.dateTimeFormat"
+                ></fp-date-time-renderer>
+                <span
+                  ng-if="sch.workComplete"
+                  class="icon-center ion-checkmark-circled"
+                  style="color: #25ad45; font-size: 16px"
+                ></span>
+              </p>
+              <p>
+                Service Provider : <strong>{{::sch.technicianName}}</strong>
+              </p>
+            </h4>
+          </ion-checkbox>
+          <div class="item padding-vertical">
+            <button
+              class="button button-small button-block"
+              ng-class="{
+                'button-positive': vm.actionType === 3,
+                'button-calm': vm.actionType !== 3
+              }"
+              ng-click="vm.events.onSubmitButtonClicked(true)"
+            >
+              <span ng-if="vm.actionType === 1"
+                ><i class="ion ion-clock"></i>&nbsp;Check In</span
+              >
+              <span ng-if="vm.actionType === 2"
+                ><i class="ion ion-clock"></i>&nbsp;Check Out</span
+              >
+              <span ng-if="vm.actionType === 3">Clock Out</span>
+            </button>
+          </div>
+        </ion-list>
+      </div>
     </div>
   </div>
 </ion-content>
