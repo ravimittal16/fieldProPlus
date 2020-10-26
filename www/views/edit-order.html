@@ -245,8 +245,8 @@
                   <span class="input-label">
                     <span>Actual Start</span></span>
                 </div>
-                <div class="item" style="border-top:0px !important;padding-top: 0px !important;">
-                  <div style="width: 65%;float: left;">
+                <div class="item" style="border-top:0px !important;padding-top: 0px !important;padding-right: 0px;">
+                  <div style="width: 63%;float: left;">
                     <!-- <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onStartDateTimeChaged}"
                       ng-model="vm.schedule.actualStartDateTime" placeholder="tap here to select..." /> -->
                     <fp-date-time-component ng-if="!vm.schedule.approve" is-disabled="!vm.schedule.checkInStatus"
@@ -258,7 +258,7 @@
                     <fp-date-time-renderer ng-if="vm.schedule.approve" model-val="vm.schedule.actualStartDateTimeString"
                       format='vm.dateTimeFormat' type="datetime"></fp-date-time-renderer>
                   </div>
-                  <div style="width: 35%;float: left;">
+                  <div style="width: 37%;float: left;">
                     <button class="button button-small button-assertive" ng-disabled="vm.schedule.approve"
                       ng-click="vm.tabs.sch.events.clearAllDateTimeSelection(true)">
                       <i class="icon ion-ios-trash-outline"></i>
@@ -273,8 +273,8 @@
                 <div class="item item-input item-stacked-label" style="border-bottom: 0px !important;">
                   <span class="input-label"><span>Actual Finish</span></span>
                 </div>
-                <div class="item" style="border-top:0px !important;padding-top: 0px !important;">
-                  <div style="width: 65%;float: left;">
+                <div class="item" style="border-top:0px !important;padding-top: 0px !important;padding-right: 0px;">
+                  <div style="width: 63%;float: left;">
                     <!-- <input type="text" ng-if="!vm.schedule.approve" class="transparent-background" mobiscroll-datetime="{display: 'bottom', dateFormat: 'mm/dd/yy', timeFormat: 'hh:ii A',onSelect:vm.scheduleTimeSpan.onEndDateTimeChanged}"
                       ng-model="vm.schedule.actualFinishDateTime" placeholder="tap here to select..." /> -->
                     <fp-date-time-component ng-if="!vm.schedule.approve" is-disabled="!vm.schedule.checkInStatus"
@@ -287,7 +287,7 @@
                       model-val="vm.schedule.actualFinishDateTimeString" format='vm.dateTimeFormat' type="datetime">
                     </fp-date-time-renderer>
                   </div>
-                  <div style="width: 35%;float: left;">
+                  <div style="width: 37%;float: left;">
                     <button class="button button-small button-assertive" ng-disabled="vm.schedule.approve"
                       ng-click="vm.tabs.sch.events.clearAllDateTimeSelection(false)">
                       <i class="icon ion-ios-trash-outline"></i>

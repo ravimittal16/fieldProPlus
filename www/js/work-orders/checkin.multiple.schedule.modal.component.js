@@ -18,7 +18,12 @@
       CheckIn: 2,
       CheckOut: 3,
     };
+    vm.checked = true;
     vm.events = {
+      onCheckboxClicked: function (sch) {
+        var __checkedCount = _.where(vm.schedules, { isChecked: true });
+        vm.checked = __checkedCount.length > 0;
+      },
       onSubmitButtonClicked: function (multiple) {
         var __checkedSchedules = _.pluck(
           _.where(vm.schedules, { isChecked: true }),

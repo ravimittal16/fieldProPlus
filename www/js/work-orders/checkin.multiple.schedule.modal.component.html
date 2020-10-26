@@ -67,6 +67,7 @@
 
           <ion-checkbox
             ng-model="sch.isChecked"
+            ng-click="vm.events.onCheckboxClicked(sch)"
             ng-repeat="sch in vm.schedules"
           >
             <h4>
@@ -95,6 +96,7 @@
                 'button-positive': vm.actionType === 3,
                 'button-calm': vm.actionType !== 3
               }"
+              ng-disabled="!vm.checked"
               ng-click="vm.events.onSubmitButtonClicked(true)"
             >
               <span ng-if="vm.actionType === 1"
