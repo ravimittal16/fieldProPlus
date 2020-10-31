@@ -26,16 +26,15 @@
       type: "DESCRIPTION",
       modal: null,
       placeholder: "enter here...",
-      content: ""
+      content: "",
     };
-
 
     function calculateTotals() {
       vm.totals = {
         subtotal: 0,
         totalqty: 0,
         totalcost: 0,
-        totaltax: 0
+        totaltax: 0,
       };
       if (vm.est.invoice && vm.est.invoice.length > 0) {
         var taxRate = vm.est.estimate.woTaxRate || 0;
@@ -59,9 +58,9 @@
               vm.totals.totalqty += parseInt(pro.qty, 10);
               if ((pro.isTaxable || false) === true) {
                 var taxAmt = parseFloat(
-                  parseFloat(taxRate) > 0 ?
-                  parseFloat((taxRate / 100) * totalPrice) :
-                  0
+                  parseFloat(taxRate) > 0
+                    ? parseFloat((taxRate / 100) * totalPrice)
+                    : 0
                 );
                 vm.totals.totaltax += parseFloat(taxAmt);
               }
@@ -88,7 +87,6 @@
     vm.sendingEmail = false;
 
     function updateEstimate(showSuccessAlert) {
-
       estimatesFactory
         .updateWorkOrderEstimate(vm.est.estimate)
         .then(function (response) {
@@ -111,21 +109,17 @@
         },
         closePopoutModal: function () {
           vm.popModal.modal.hide();
-        }
-      }
-    }
+        },
+      },
+    };
     vm.events = {
       popoutTextBox: function (type) {
         switch (type) {
-          case 'DESCRIPTION':
-            vm.popModal.content = angular.copy(
-              vm.est.estimate.woDescription
-            );
+          case "DESCRIPTION":
+            vm.popModal.content = angular.copy(vm.est.estimate.woDescription);
             break;
-          case 'NOTES':
-            vm.popModal.content = angular.copy(
-              vm.est.estimate.woNotes
-            );
+          case "NOTES":
+            vm.popModal.content = angular.copy(vm.est.estimate.woNotes);
             break;
         }
         vm.popModal.type = type;
@@ -147,16 +141,22 @@
           var model = {
             estimateId: vm.estimateId,
             selectedImages: selectedImagesForMail,
-            emailAddresses: mails
-          }
-          estimatesFactory.emailEstimateAsPdf(model).then(function (response) {
-            if (response) {
-              alerts.alert("Success", "Estimate mail has been sent.");
-            }
-          }, function () {}).finally(function () {
-            vm.sendingEmail = false;
-            fpmUtilities.hideLoading();
-          })
+            emailAddresses: mails,
+          };
+          estimatesFactory
+            .emailEstimateAsPdf(model)
+            .then(
+              function (response) {
+                if (response) {
+                  alerts.alert("Success", "Estimate mail has been sent.");
+                }
+              },
+              function () {}
+            )
+            .finally(function () {
+              vm.sendingEmail = false;
+              fpmUtilities.hideLoading();
+            });
         }
       },
       refreshOnPullDown: function () {
@@ -206,8 +206,8 @@
           goourl += d.wosStreet.replace("::", " ");
         }
         goourl += " " + d.wosCity + ", " + d.wosState + " " + d.wosZip;
-        cordova.InAppBrowser.open(goourl, "_blank", "location=yes");
-      }
+        cordova.InAppBrowser.open(goourl, "_system", "location=yes");
+      },
     };
 
     function openProductSearchModal() {
@@ -304,7 +304,7 @@
     "$timeout",
     "estimates-factory",
     "fpm-utilities-factory",
-    "authenticationFactory"
+    "authenticationFactory",
   ];
   angular.module("fpm").controller("edit-estimate-controller", _initController);
 })();

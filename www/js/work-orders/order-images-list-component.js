@@ -5,7 +5,7 @@
       barcode: "<",
       isEstimate: "<",
       showDeleteImageOnModal: "<",
-      allowSelection: "<"
+      allowSelection: "<",
     },
     templateUrl: "js/work-orders/order-images-list-component.template.html",
     controller: [
@@ -45,7 +45,7 @@
             var model = {
               barcode: vm.barcode,
               estimateId: estimateId,
-              rotate: (isIos === true && take === true)
+              rotate: false,
             };
             if (files && files.length > 0) {
               fpmUtilitiesFactory.showLoading("Uploading");
@@ -74,14 +74,14 @@
               image: rawImage,
               name: imageName,
               estimateId: estimateId,
-              rotate: (isIos === true && take === true)
+              rotate: false,
             };
             fpmUtilitiesFactory
               .showLoading(
                 "Uploading " +
-                (currentIndex + 1) +
-                " of " +
-                (take ? 1 : selectedFiles.length)
+                  (currentIndex + 1) +
+                  " of " +
+                  (take ? 1 : selectedFiles.length)
               )
               .then(function () {
                 workOrdersFactory
@@ -97,10 +97,10 @@
                             estimateId: estimateId,
                             isChecked: false,
                             imageURL: "/" + imageName + (take ? ".jpg" : ""),
-                            num: response.entity.newIdentity
+                            num: response.entity.newIdentity,
                           });
                           vm.selectedImagesCount = 0;
-                        }, 20)
+                        }, 20);
                       }
                       defer.resolve();
                       if (isLast) {
@@ -124,7 +124,7 @@
             multiple: true,
             showFileList: false,
             localization: {
-              select: "Upload images"
+              select: "Upload images",
             },
             select: function (e) {
               e.isDefaultPrevented = true;
@@ -142,15 +142,15 @@
               selectedFiles = e.files;
               vm.upload.uploadImages(e.files, false);
               e.preventDefault();
-            }
-          }
+            },
+          },
         };
         vm.selectedImagesCount = 0;
         vm.currentImage = null;
 
         function updateSelctedImagesCount() {
           var images = _.where(vm.barcodeImages, {
-            isChecked: true
+            isChecked: true,
           });
           vm.selectedImagesCount = images.length;
           var imagesNums = _.pluck(images, "num");
@@ -159,9 +159,12 @@
 
         vm.events = {
           onImageTapped: function ($event, image) {
-            if ($event.target && $event.target.toString().toLowerCase().indexOf('button') <= -1) {
+            if (
+              $event.target &&
+              $event.target.toString().toLowerCase().indexOf("button") <= -1
+            ) {
               if (vm.allowSelection) {
-                if (image['isChecked'] === undefined) {
+                if (image["isChecked"] === undefined) {
                   image.isChecked = true;
                 } else {
                   image.isChecked = !image.isChecked;
@@ -185,9 +188,14 @@
                     .then(
                       function (response) {
                         if (response) {
-                          vm.upload.uploadImages([{
-                            rawFile: response
-                          }], true);
+                          vm.upload.uploadImages(
+                            [
+                              {
+                                rawFile: response,
+                              },
+                            ],
+                            true
+                          );
                         }
                       },
                       function () {}
@@ -228,7 +236,7 @@
           },
           closeImageViewModal: function () {
             vm.imageViewerModel.hide();
-          }
+          },
         };
 
         function _getImages() {
@@ -264,14 +272,14 @@
         $ionicModal
           .fromTemplateUrl("imageViewerModal.html", {
             scope: $scope,
-            animation: "slide-in-up"
+            animation: "slide-in-up",
           })
           .then(function (modal) {
             vm.imageViewerModel = modal;
           });
-      }
+      },
     ],
-    controllerAs: "vm"
+    controllerAs: "vm",
   };
   angular.module("fpm").component("orderImagesListComponent", componentConfig);
 })();
