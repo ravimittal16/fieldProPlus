@@ -17,79 +17,80 @@
     var secLevels = fieldPromaxConfig.secLevels;
     var userData = authenticationFactory.getLoggedInUserInfo();
     var configurations = localStorageService.get("configurations");
-    vm.sideMenuItems = [{
+    vm.sideMenuItems = [
+      {
         title: "Home",
         state: "app.dashboard",
-        icon: "home"
+        icon: "home",
       },
       {
         title: "Calendar",
         state: "app.calendar",
-        icon: "calendar"
+        icon: "calendar",
       },
       {
         title: "Map",
         state: "app.map",
-        icon: "location"
+        icon: "location",
       },
       {
         title: "Create Work Order",
         state: "app.createWorkOrder",
         icon: "plus-round",
         isConfigurationBased: true,
-        configProperty: "allowCreateWorkOrders"
+        configProperty: "allowCreateWorkOrders",
       },
       {
         title: "Create Customer",
         state: "app.createCustomer",
         icon: "plus-round",
         isConfigurationBased: true,
-        configProperty: "allowCreateWorkOrders"
+        configProperty: "allowCreateWorkOrders",
       },
       {
         title: "Estimates",
         state: "app.estimates",
         icon: "ios-list-outline",
         isConfigurationBased: true,
-        configProperty: "allowCreateEstimates"
+        configProperty: "allowCreateEstimates",
       },
       {
         title: "My Expense",
         state: "app.expense",
         icon: "cash",
         basedOn: "etOn",
-        specialFeature: true
+        specialFeature: true,
       },
       {
         title: "Time Card",
         state: "app.timecard",
         icon: "clock",
         basedOn: "timeCard",
-        specialFeature: true
+        specialFeature: true,
       },
       {
         title: "Custom Components",
         state: "app.customComponents",
         icon: "fork-repo",
         configProperty: "customComponentsAvail",
-        isConfigurationBased: true
+        isConfigurationBased: true,
       },
       {
         title: "Inventory",
         state: "app.inventory",
         icon: "fork-repo",
-        basedOn: "inventoryOn"
+        basedOn: "inventoryOn",
       },
       {
         title: "Change Password",
         state: "app.changePassword",
-        icon: "person"
+        icon: "person",
       },
       {
         title: "Logout",
         state: "app.logout",
-        icon: "power"
-      }
+        icon: "power",
+      },
     ];
     $scope.$on("$ionicView.beforeEnter", function (e, data) {
       $ionicNavBarDelegate.showBackButton(false);
@@ -99,7 +100,7 @@
       "app.logout",
       "login",
       "app.editOrder",
-      "app.editEstimate"
+      "app.editEstimate",
     ];
 
     $rootScope.$on("$stateChangeSuccess", function (
@@ -117,19 +118,23 @@
       ) {
         localStorageService.set("appState", {
           stateName: toState.name,
-          params: toParams
+          params: toParams,
         });
       }
       if (toState.name === "login" && fromState.name === "app.changePassword") {
         $rootScope.$broadcast("$fpm:onLoginViewLoaded", {
-          clearPassword: true
+          clearPassword: true,
         });
       }
     });
-    var __integrityCustomers = ["97713", "97719", "193514633790019"];
+    var __integrityCustomers = ["97713", "97719", "99009"];
     vm.events = {
       checkMenuItemVisibility: function (menu) {
-        if (menu && menu.state === "app.timecard" && __integrityCustomers.indexOf(userData.customerNumber) > -1) {
+        if (
+          menu &&
+          menu.state === "app.timecard" &&
+          __integrityCustomers.indexOf(userData.customerNumber) > -1
+        ) {
           // ==========================================================
           // WE ARE NOT SHOWING TIMECARD MENU FOR INTEGRITY
           // ==========================================================
@@ -155,7 +160,7 @@
       onMenuItemClicked: function (item) {
         $state.go(item.state);
       },
-      toggleLeft: function () {}
+      toggleLeft: function () {},
     };
   }
   initController.$inject = [
@@ -168,7 +173,7 @@
     "fieldPromaxConfig",
     "localStorageService",
     "authenticationFactory",
-    "fpm-utilities-factory"
+    "fpm-utilities-factory",
   ];
   angular.module("fpm").controller("app-main-controller", initController);
 })();

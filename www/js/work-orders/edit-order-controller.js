@@ -28,7 +28,7 @@
     var __skipTimecardCheckFor = [];
     var __skipTimecardClockInValidationOnCheckInOut = false;
     var __forIntegrityCustomer = false;
-    var __integrityCustomers = ["97713", "97719", "193514633790019"];
+    var __integrityCustomers = ["97713", "97719", "99009"];
     vm.forIntegrityCustomer = false;
     var jobStatus = {
       AcceptJob: 0,

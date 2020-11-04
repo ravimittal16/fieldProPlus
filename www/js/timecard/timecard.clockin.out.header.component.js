@@ -19,7 +19,7 @@
     var __isForWorkOrder = false;
     var __jobCodes = timecardFactory.statics.jobCodes;
     var __statusTypes = timecardFactory.statics.statusTypes;
-    var __integrityCustomers = ["97713", "97719", "193514633790019"];
+    var __integrityCustomers = ["97713", "97719", "99009"];
     var __forIntegrityCustomer = false;
     var __userEmail = "";
     var alerts = fpmUtilitiesFactory.alerts;
