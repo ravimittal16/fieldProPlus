@@ -1,11 +1,16 @@
 <ion-view title="Create Order" cache-view="false">
-
   <ion-nav-buttons side="left">
-    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    <button
+      menu-toggle="left"
+      class="button button-icon icon ion-navicon"
+    ></button>
   </ion-nav-buttons>
   <ion-header-bar class="bar-subheader item-input-inset">
-    <customer-search-header-component on-customer-selected="vm.events.onCustomerSelected(customer)" component-ref="vm.customerSearchComponent"
-      placeholder="Search Customer and select..."></customer-search-header-component>
+    <customer-search-header-component
+      on-customer-selected="vm.events.onCustomerSelected(customer)"
+      component-ref="vm.customerSearchComponent"
+      placeholder="Search Customer and select..."
+    ></customer-search-header-component>
   </ion-header-bar>
   <form name="formWorkOrder" id="formWorkOrder" novalidate="">
     <ion-content>
@@ -18,42 +23,68 @@
           </label>
         </div>
         <div class="card">
-          <div class="item item-divider header-dark">
-            Customer Details
-          </div>
+          <div class="item item-divider header-dark">Customer Details</div>
           <div class="padding">
             <div ng-if="vm.isCustomerSelected">
               <h4 ng-bind="vm.woEntity.displayName"></h4>
-              <p class="text-muted text-small">
-                <strong ng-bind="vm.woEntity.companyName"> </strong>
-              </p>
+              <h5 class="text-muted text-small pt-0">
+                <span ng-bind="vm.woEntity.companyName"> </span>
+                <span ng-if="vm.woEntity.isProject">
+                  <strong>(Project)</strong>
+                </span>
+              </h5>
             </div>
           </div>
           <label class="item item-input">
             <span class="input-label">Email</span>
-            <input type="text" placeholder="Email" maxlength="500" ng-model="vm.woEntity.email" />
+            <input
+              type="text"
+              placeholder="Email"
+              maxlength="500"
+              ng-model="vm.woEntity.email"
+            />
           </label>
         </div>
 
         <div class="card">
           <div class="list">
-            <div class="item item-divider header-dark">
-              Billing Address
-            </div>
+            <div class="item item-divider header-dark">Billing Address</div>
             <label class="item item-input">
-              <textarea type="text" rows="2" placeholder="Street" class="transparent-background" ng-model="vm.woEntity.bStreet"
-                readonly=""></textarea>
+              <textarea
+                type="text"
+                rows="2"
+                placeholder="Street"
+                class="transparent-background"
+                ng-model="vm.woEntity.bStreet"
+                readonly=""
+              ></textarea>
             </label>
             <label class="item item-input">
-              <input type="text" placeholder="City" class="transparent-background" ng-model="vm.woEntity.bCity"
-                readonly="" />
+              <input
+                type="text"
+                placeholder="City"
+                class="transparent-background"
+                ng-model="vm.woEntity.bCity"
+                readonly=""
+              />
             </label>
             <label class="item item-input">
-              <input type="text" placeholder="State" class="transparent-background" ng-model="vm.woEntity.bState"
-                readonly="" />
+              <input
+                type="text"
+                placeholder="State"
+                class="transparent-background"
+                ng-model="vm.woEntity.bState"
+                readonly=""
+              />
             </label>
             <label for="" class="item item-input">
-              <input type="text" placeholder="Zip" class="transparent-background" ng-model="vm.woEntity.bZip" readonly="" />
+              <input
+                type="text"
+                placeholder="Zip"
+                class="transparent-background"
+                ng-model="vm.woEntity.bZip"
+                readonly=""
+              />
             </label>
           </div>
         </div>
@@ -64,87 +95,139 @@
               Service Address
               <!--<a class="button pull-right button-small button-icon icon ion-android-more-vertical item-divider-left-buttion" ng-click="vm.events.onServiceAddressActionClicked()"></a>-->
 
-              <button type="button" class="button button-small button-assertive pull-right" style="margin-left: 5px;"
-                ng-click="vm.events.clearServiceAddress()">
+              <button
+                type="button"
+                class="button button-small button-assertive pull-right"
+                style="margin-left: 5px"
+                ng-click="vm.events.clearServiceAddress()"
+              >
                 <i class="icon ion-trash-a"></i>
               </button>
-              <button type="button" class="button button-small button-positive pull-right" ng-click="vm.events.sameAsBilling()">Same
-                as Billing</button>
+              <button
+                type="button"
+                class="button button-small button-positive pull-right"
+                ng-click="vm.events.sameAsBilling()"
+              >
+                Same as Billing
+              </button>
             </div>
             <label class="item item-input">
-              <textarea type="text" rows="2" placeholder="Street" maxlength="200" ng-model="vm.woEntity.sStreet"></textarea>
+              <textarea
+                type="text"
+                rows="2"
+                placeholder="Street"
+                maxlength="200"
+                ng-model="vm.woEntity.sStreet"
+              ></textarea>
             </label>
             <label class="item item-input">
-              <input type="text" placeholder="City" maxlength="50" ng-model="vm.woEntity.sCity" />
+              <input
+                type="text"
+                placeholder="City"
+                maxlength="50"
+                ng-model="vm.woEntity.sCity"
+              />
             </label>
             <label class="item item-input">
-              <input type="text" placeholder="State" ng-model="vm.woEntity.sState" maxlength="50" />
+              <input
+                type="text"
+                placeholder="State"
+                ng-model="vm.woEntity.sState"
+                maxlength="50"
+              />
             </label>
             <label for="" class="item item-input">
-              <input type="text" placeholder="Zip" ng-model="vm.woEntity.sZip" maxlength="20" />
+              <input
+                type="text"
+                placeholder="Zip"
+                ng-model="vm.woEntity.sZip"
+                maxlength="20"
+              />
             </label>
           </div>
         </div>
 
         <div class="card">
-          <div class="item item-divider header-dark">
-            Other Information
+          <div class="item item-divider header-dark">Other Information</div>
+          <div class="item item-input item-select">
+            <div class="input-label">Job Type</div>
+            <select
+              ng-options="job.excptns as job.excptns for job in vm.jobTypes track by job.excptns"
+              ng-model="vm.woEntity.jobType"
+            ></select>
           </div>
           <div class="item item-input item-select">
-            <div class="input-label">
-              Job Type
-            </div>
-            <select ng-options="job.excptns as job.excptns for job in vm.jobTypes track by job.excptns" ng-model="vm.woEntity.jobType"></select>
-          </div>
-          <div class="item item-input item-select">
-            <div class="input-label">
-              Service Provider
-            </div>
-            <select ng-options="pro.userId as pro.last_Name for pro in vm.serviceProviders" ng-model="vm.woEntity.serviceProvider">
-            </select>
+            <div class="input-label">Service Provider</div>
+            <select
+              ng-options="pro.userId as pro.last_Name for pro in vm.serviceProviders"
+              ng-model="vm.woEntity.serviceProvider"
+            ></select>
           </div>
           <div class="item item-input">
             <div class="input-label">
               <span ng-bind="vm.poHeading"></span>
             </div>
-            <input type="text" class="transparent-background text-right" maxlength="30" ng-model="vm.woEntity.poNumber" />
+            <input
+              type="text"
+              class="transparent-background text-right"
+              maxlength="30"
+              ng-model="vm.woEntity.poNumber"
+            />
           </div>
           <label class="item item-input">
             <span class="input-label">Schedule Start</span>
             <!-- <input type="text" class="transparent-background text-right" mobiscroll-datetime="vm.mobiscrollDateTimeConfigWithSelectEvent"
               ng-model="vm.dates.startDate" /> -->
-            <fp-date-time-component model-val="vm.dates.startDate" type="datetime" on-date-changed="vm.events.onStartDateChanged()"
-              format="vm.dateTimeFormat" align-calendar></fp-date-time-component>
+            <fp-date-time-component
+              model-val="vm.dates.startDate"
+              type="datetime"
+              on-date-changed="vm.events.onStartDateChanged()"
+              format="vm.dateTimeFormat"
+              align-calendar
+            ></fp-date-time-component>
           </label>
           <label class="item item-input">
             <span class="input-label">Schedule Finish</span>
             <!-- <input type="text" class="transparent-background text-right" mobiscroll-datetime="vm.mobiscrollDateTimeConfig"
               ng-model="vm.dates.endDate" /> -->
-            <fp-date-time-component model-val="vm.dates.endDate" type="datetime" format="vm.dateTimeFormat"
-              align-calendar></fp-date-time-component>
+            <fp-date-time-component
+              model-val="vm.dates.endDate"
+              type="datetime"
+              format="vm.dateTimeFormat"
+              align-calendar
+            ></fp-date-time-component>
           </label>
         </div>
         <div class="card">
-          <div class="item item-divider header-dark">
-            Work Description
-          </div>
+          <div class="item item-divider header-dark">Work Description</div>
           <label class="item item-input item-stacked-label">
-            <textarea cols="30" rows="6" placeholder="please add work description here..." ng-model="vm.woEntity.description"></textarea>
+            <textarea
+              cols="30"
+              rows="6"
+              placeholder="please add work description here..."
+              ng-model="vm.woEntity.description"
+            ></textarea>
           </label>
         </div>
       </div>
     </ion-content>
     <ion-footer-bar align-title="left" class="bar-light">
       <div class="buttons">
-        <button class="button" type="button" ng-click="vm.events.onBackToDashboardClicked()">
+        <button
+          class="button"
+          type="button"
+          ng-click="vm.events.onBackToDashboardClicked()"
+        >
           Go back to Dashboard
         </button>
       </div>
-      <h1 class="title">
-        &nbsp;
-      </h1>
+      <h1 class="title">&nbsp;</h1>
       <div class="buttons">
-        <button type="submit" class="button button-balanced" ng-click="vm.events.onSubmitButtonClicked(formWorkOrder.$valid)">
+        <button
+          type="submit"
+          class="button button-balanced"
+          ng-click="vm.events.onSubmitButtonClicked(formWorkOrder.$valid)"
+        >
           Create Work Order
         </button>
       </div>

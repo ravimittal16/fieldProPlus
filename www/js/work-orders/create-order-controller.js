@@ -1,4 +1,4 @@
-(function() {
+(function () {
   "use strict";
 
   function initController(
@@ -18,7 +18,7 @@
     function getBarcodeNumber() {
       workOrderFactory
         .getBarCodeNumber()
-        .then(function(response) {
+        .then(function (response) {
           vm.woEntity.barCode = response.barcode;
           vm.woEntity.barCodeName = response.barcodeName;
         })
@@ -37,14 +37,14 @@
     }
 
     function createEntity() {
-      fpmUtilitiesFactory.showLoading().then(function() {
+      fpmUtilitiesFactory.showLoading().then(function () {
         workOrderFactory
           .createEntity()
-          .then(function(response) {
+          .then(function (response) {
             vm.woEntity = angular.copy(response);
             vm.woEntity.fromMobile = true;
             if (vm.isServiceProvider === true) {
-              var timer = $timeout(function() {
+              var timer = $timeout(function () {
                 vm.woEntity.serviceProvider = vm.userInfo.userEmail;
                 $timeout.cancel(timer);
               }, 100);
@@ -64,7 +64,7 @@
       vm.errors = [];
       if (vm.isCustomerSelected === false) {
         vm.errors.push("Please select a customer first.");
-        alerts.alert("Warning", vm.errors[0], function() {
+        alerts.alert("Warning", vm.errors[0], function () {
           // taking the customer search component reference
           if (
             vm.customerSearchComponent &&
@@ -78,7 +78,7 @@
       }
       fpmUtilitiesFactory
         .showLoading("creating work order...")
-        .then(function() {
+        .then(function () {
           vm.woEntity.scheduleStart = fpmUtilitiesFactory.toStringDate(
             vm.dates.startDate
           );
@@ -92,13 +92,13 @@
               vm.woEntity.sCity,
               vm.woEntity.sStreet
             )
-            .then(function(loc) {
+            .then(function (loc) {
               vm.woEntity.longitude = loc.log;
               vm.woEntity.latitude = loc.lat;
               workOrderFactory
                 .createWorkOrder(vm.woEntity)
                 .then(
-                  function(response) {
+                  function (response) {
                     if (response) {
                       if (response.errors.length > 0) {
                         vm.errors = response.errors;
@@ -108,14 +108,14 @@
                         alerts.alert(
                           "Success",
                           "Work Order created successfully",
-                          function() {
+                          function () {
                             $state.go("app.dashboard", { refresh: true });
                           }
                         );
                       }
                     }
                   },
-                  function() {
+                  function () {
                     vm.errors = ["Error while creating work order."];
                   }
                 )
@@ -127,7 +127,7 @@
     function initDates() {
       vm.dates = {
         startDate: new Date(),
-        endDate: new Date(moment().add(1, "hours"))
+        endDate: new Date(moment().add(1, "hours")),
       };
       adjustScheduleFinishTime();
     }
@@ -141,30 +141,31 @@
     vm.isCustomerSelected = false;
 
     vm.events = {
-      onStartDateChanged: function() {
-        $timeout(function() {
+      onStartDateChanged: function () {
+        $timeout(function () {
           adjustScheduleFinishTime();
         }, 100);
       },
-      sameAsBilling: function() {
+      sameAsBilling: function () {
         vm.woEntity.sStreet = vm.woEntity.bStreet;
         vm.woEntity.sState = vm.woEntity.bState;
         vm.woEntity.sCity = vm.woEntity.bCity;
         vm.woEntity.sZip = vm.woEntity.bZip;
       },
-      clearServiceAddress: function() {
+      clearServiceAddress: function () {
         vm.woEntity.sStreet = "";
         vm.woEntity.sState = "";
         vm.woEntity.sCity = "";
         vm.woEntity.sZip = "";
       },
-      onCustomerSelected: function(customer) {
+      onCustomerSelected: function (customer) {
         vm.isCustomerSelected = true;
         vm.woEntity.firstName = customer.firstName;
         vm.woEntity.lastName = customer.lastName;
         vm.woEntity.companyName = customer.company;
         vm.woEntity.displayName = customer.name;
         vm.woEntity.bCity = customer.addressCity;
+        vm.woEntity.isProject = customer.isProject || false;
         vm.woEntity.bState = customer.addressCountrySubDivCode;
         vm.woEntity.bStreet =
           customer.street == null ? null : customer.street.replace("::", "\n");
@@ -183,13 +184,13 @@
         vm.woEntity.sZip = customer.shipZIP;
       },
       onSubmitButtonClicked: onSubmitButtonClicked,
-      onBackToDashboardClicked: onBackToDashboardClicked
+      onBackToDashboardClicked: onBackToDashboardClicked,
     };
 
     function activateController() {
       sharedDataFactory
         .getIniitialData()
-        .then(function(response) {
+        .then(function (response) {
           if (response) {
             vm.poHeading = "PO Number";
             vm.jobTypes = response.jobTypes;
@@ -223,7 +224,7 @@
     "work-orders-factory",
     "shared-data-factory",
     "fpm-utilities-factory",
-    "authenticationFactory"
+    "authenticationFactory",
   ];
   angular.module("fpm").controller("create-order-controller", initController);
 })();
