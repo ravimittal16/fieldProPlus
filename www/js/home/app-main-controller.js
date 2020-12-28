@@ -103,31 +103,31 @@
       "app.editEstimate",
     ];
 
-    $rootScope.$on("$stateChangeSuccess", function (
-      event,
-      toState,
-      toParams,
-      fromState,
-      fromParams
-    ) {
-      if (
-        toState.name !== "app.logout" &&
-        toState.name !== "login" &&
-        toState !== "app.editOrder" &&
-        toState !== "app.editEstimate"
-      ) {
-        localStorageService.set("appState", {
-          stateName: toState.name,
-          params: toParams,
-        });
+    $rootScope.$on(
+      "$stateChangeSuccess",
+      function (event, toState, toParams, fromState, fromParams) {
+        if (
+          toState.name !== "app.logout" &&
+          toState.name !== "login" &&
+          toState !== "app.editOrder" &&
+          toState !== "app.editEstimate"
+        ) {
+          localStorageService.set("appState", {
+            stateName: toState.name,
+            params: toParams,
+          });
+        }
+        if (
+          toState.name === "login" &&
+          fromState.name === "app.changePassword"
+        ) {
+          $rootScope.$broadcast("$fpm:onLoginViewLoaded", {
+            clearPassword: true,
+          });
+        }
       }
-      if (toState.name === "login" && fromState.name === "app.changePassword") {
-        $rootScope.$broadcast("$fpm:onLoginViewLoaded", {
-          clearPassword: true,
-        });
-      }
-    });
-    var __integrityCustomers = ["97713", "97719", "99009"];
+    );
+    var __integrityCustomers = ["97713", "97719", "99009", "97678", "97636"];
     vm.events = {
       checkMenuItemVisibility: function (menu) {
         if (

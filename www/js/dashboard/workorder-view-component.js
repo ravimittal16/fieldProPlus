@@ -230,7 +230,13 @@
             }
           },
         };
-        var __integrityCustomers = ["97713", "97719", "99009"];
+        var __integrityCustomers = [
+          "97713",
+          "97719",
+          "99009",
+          "97678",
+          "97636",
+        ];
         vm.$onInit = function () {
           var __forIntegrityCustomer =
             __integrityCustomers.indexOf(vm.userInfo.customerNumber) > -1;

@@ -8,7 +8,7 @@
 //"http://localhost/FieldPromaxApi/"
 var isInDevMode = true;
 var prodReady = false;
-
+var useStagingApi = true;
 var runningOnEmulator = false;
 if (runningOnEmulator) {
   isInDevMode = false;
@@ -17,17 +17,20 @@ if (runningOnEmulator) {
 
 var constants = {
   devEnv: isInDevMode,
-  fieldPromaxApi: isInDevMode ?
-    "http://localhost:51518/" : "https://fieldpromax-stagging1.azurewebsites.net/",
+  fieldPromaxApi: isInDevMode
+    ? useStagingApi
+      ? "https://fieldpromax-stagging1.azurewebsites.net/"
+      : "http://localhost:51518/"
+    : "https://fieldpromax-stagging1.azurewebsites.net/",
   localStorageKeys: {
     authorizationDataKey: "authorizationData",
     initialData: "initialData",
     storageKeyName: "authorizationData",
     configKeyName: "configurations",
     settingsKeyName: "userSettings",
-    userCredentials: "userCredentials"
+    userCredentials: "userCredentials",
   },
-  mapApiUrl: "https://dataservicefp.azurewebsites.net/"
+  mapApiUrl: "https://dataservicefp.azurewebsites.net/",
 };
 //https://fieldpromax-stagging1.azurewebsites.net/
 //https://fieldpromax-culture.azurewebsites.net/
@@ -47,7 +50,7 @@ var fpm = angular
     "mobiscroll-timespan",
     "mobiscroll-numpad",
     "ui.rCalendar",
-    "fpm.realtime"
+    "fpm.realtime",
   ])
   .config([
     "$stateProvider",
@@ -69,14 +72,15 @@ var fpm = angular
       fpmUtilitiesFactoryProvider
     ) {
       fpmUtilitiesFactoryProvider.setApplicationModel(isInDevMode);
-      var routes = [{
+      var routes = [
+        {
           state: "login",
           config: {
             url: "/",
             controller: "login-controller",
             controllerAs: "vm",
-            templateUrl: "views/login.html"
-          }
+            templateUrl: "views/login.html",
+          },
         },
         {
           state: "app",
@@ -84,8 +88,8 @@ var fpm = angular
             abstract: true,
             controller: "app-main-controller",
             controllerAs: "vm",
-            templateUrl: "views/app-main.html"
-          }
+            templateUrl: "views/app-main.html",
+          },
         },
         {
           state: "app.estimates",
@@ -93,8 +97,8 @@ var fpm = angular
             url: "/estimates",
             controller: "estimates-view-controller",
             controllerAs: "vm",
-            templateUrl: "views/estimates.html"
-          }
+            templateUrl: "views/estimates.html",
+          },
         },
         {
           state: "app.createEstimate",
@@ -102,8 +106,8 @@ var fpm = angular
             url: "/newEstimate",
             controller: "create-estimate-controller",
             controllerAs: "vm",
-            templateUrl: "views/create-estimate.html"
-          }
+            templateUrl: "views/create-estimate.html",
+          },
         },
         {
           state: "app.editEstimate",
@@ -111,8 +115,8 @@ var fpm = angular
             url: "/editest/:id",
             controller: "edit-estimate-controller",
             controllerAs: "vm",
-            templateUrl: "views/edit-estimate.html"
-          }
+            templateUrl: "views/edit-estimate.html",
+          },
         },
         {
           state: "app.dashboard",
@@ -120,8 +124,8 @@ var fpm = angular
             url: "/home?refresh",
             controller: "dashboard-controller",
             controllerAs: "vm",
-            templateUrl: "views/dashboard.html"
-          }
+            templateUrl: "views/dashboard.html",
+          },
         },
         {
           state: "app.calendar",
@@ -129,8 +133,8 @@ var fpm = angular
             url: "/calendar",
             controller: "calendar-controller",
             controllerAs: "vm",
-            templateUrl: "views/calendar.html"
-          }
+            templateUrl: "views/calendar.html",
+          },
         },
         {
           state: "app.map",
@@ -138,8 +142,8 @@ var fpm = angular
             url: "/map",
             controller: "map-controller",
             controllerAs: "vm",
-            templateUrl: "views/map.html"
-          }
+            templateUrl: "views/map.html",
+          },
         },
         {
           state: "app.createWorkOrder",
@@ -147,8 +151,8 @@ var fpm = angular
             url: "/createorder",
             controller: "create-order-controller",
             controllerAs: "vm",
-            templateUrl: "views/create-order.html"
-          }
+            templateUrl: "views/create-order.html",
+          },
         },
         {
           state: "app.editOrder",
@@ -157,8 +161,8 @@ var fpm = angular
             url: "/editOrder?barCode&technicianNum&src&_i",
             controller: "edit-order-controller",
             controllerAs: "vm",
-            templateUrl: "views/edit-order.html"
-          }
+            templateUrl: "views/edit-order.html",
+          },
         },
         {
           state: "app.editOrderOffline",
@@ -166,8 +170,8 @@ var fpm = angular
             url: "/editOrder_offline?barCode&technicianNum&src&_i",
             controller: "edit-order-page-offline-controller",
             controllerAs: "vm",
-            templateUrl: "js/offline/edit.order.page.controller.html"
-          }
+            templateUrl: "js/offline/edit.order.page.controller.html",
+          },
         },
         {
           state: "app.createCustomer",
@@ -175,8 +179,8 @@ var fpm = angular
             url: "/createcustomer",
             controller: "create-customer-controller",
             controllerAs: "vm",
-            templateUrl: "views/create-customer.html"
-          }
+            templateUrl: "views/create-customer.html",
+          },
         },
         {
           state: "app.customComponents",
@@ -184,8 +188,8 @@ var fpm = angular
             url: "/customcomponents",
             controller: "custom-components-controller",
             controllerAs: "vm",
-            templateUrl: "views/custom-components.html"
-          }
+            templateUrl: "views/custom-components.html",
+          },
         },
         {
           state: "app.inventory",
@@ -193,8 +197,8 @@ var fpm = angular
             url: "/inventory",
             controller: "inventory-controller",
             controllerAs: "vm",
-            templateUrl: "views/inventory.html"
-          }
+            templateUrl: "views/inventory.html",
+          },
         },
         {
           state: "app.expense",
@@ -202,8 +206,8 @@ var fpm = angular
             url: "/expanses",
             controller: "expanses-controller",
             controllerAs: "vm",
-            templateUrl: "views/expanses.html"
-          }
+            templateUrl: "views/expanses.html",
+          },
         },
         {
           state: "app.timecard",
@@ -211,8 +215,8 @@ var fpm = angular
             url: "/timecard",
             controller: "timecard-controller",
             controllerAs: "vm",
-            templateUrl: "views/timecard.html"
-          }
+            templateUrl: "views/timecard.html",
+          },
         },
         {
           state: "app.settings",
@@ -220,8 +224,8 @@ var fpm = angular
             url: "/settings",
             controller: "settings-controller",
             controllerAs: "vm",
-            templateUrl: "views/settings.html"
-          }
+            templateUrl: "views/settings.html",
+          },
         },
         {
           state: "app.changePassword",
@@ -229,8 +233,8 @@ var fpm = angular
             url: "/changePassword",
             controller: "change-password-controller",
             controllerAs: "vm",
-            templateUrl: "views/change-password.html"
-          }
+            templateUrl: "views/change-password.html",
+          },
         },
         {
           state: "app.logout",
@@ -238,8 +242,8 @@ var fpm = angular
             url: "/logout",
             controller: "logout-controller",
             controllerAs: "vm",
-            templateUrl: "views/logout.html"
-          }
+            templateUrl: "views/logout.html",
+          },
         },
         {
           state: "app.checkout",
@@ -247,15 +251,15 @@ var fpm = angular
             url: "/checkout",
             params: {
               amount: 0,
-              barcode: '',
-              src: 'checkout',
-              technicianNum: 0
+              barcode: "",
+              src: "checkout",
+              technicianNum: 0,
             },
             controller: "checkout-page-controller",
             controllerAs: "vm",
-            templateUrl: "views/checkout-page.html"
-          }
-        }
+            templateUrl: "views/checkout-page.html",
+          },
+        },
       ];
 
       angular.forEach(routes, function (route) {
@@ -284,14 +288,14 @@ var fpm = angular
           "Sept",
           "Oct",
           "Nov",
-          "Dec"
+          "Dec",
         ],
         templateType: "popup",
         from: new Date(2012, 8, 1),
         to: new Date(2025, 8, 1),
         showTodayButton: true,
         dateFormat: "dd MMMM yyyy",
-        closeOnSelect: false
+        closeOnSelect: false,
       };
       ionicDatePickerProvider.configDatePicker(datePickerObj);
 
@@ -307,7 +311,7 @@ var fpm = angular
             var data = {
               type: "angular",
               url: window.location.hash,
-              localtime: Date.now()
+              localtime: Date.now(),
             };
             if (cause) {
               data.cause = cause;
@@ -325,9 +329,9 @@ var fpm = angular
             }
             if (isInDevMode) console.log("EXCPTION", data);
           };
-        }
+        },
       ]);
-    }
+    },
   ])
   .run([
     "$ionicPlatform",
@@ -370,15 +374,15 @@ var fpm = angular
         var _dbName = sqlStorageFactory.FP_DB_NAME + ".db";
         if (!isInDevMode && window.cordova && window.SQLitePlugin) {
           try {
-            db = fpmUtilitiesFactory.device.isIOS() ?
-              $cordovaSQLite.openDB({
-                name: _dbName,
-                iosDatabaseLocation: "Library"
-              }) :
-              $cordovaSQLite.openDB({
-                name: _dbName,
-                location: "default"
-              });
+            db = fpmUtilitiesFactory.device.isIOS()
+              ? $cordovaSQLite.openDB({
+                  name: _dbName,
+                  iosDatabaseLocation: "Library",
+                })
+              : $cordovaSQLite.openDB({
+                  name: _dbName,
+                  location: "default",
+                });
           } catch (error) {
             window.alert("ERROR WHILE CREATING DATABASE" + error);
           }
@@ -489,7 +493,7 @@ var fpm = angular
           logLevel: runningOnEmulator ? bgGeo.LOG_LEVEL_VERBOSE : 0, // Verbose logging.  0: NONE
           startOnBoot: true,
           autoSync: false,
-          stopOnTerminate: false
+          stopOnTerminate: false,
         };
         var iosConfig = {
           desiredAccuracy: 0,
@@ -503,7 +507,7 @@ var fpm = angular
           logLevel: 0, // Verbose logging.  0: NONE
           startOnBoot: true,
           autoSync: false,
-          stopOnTerminate: false
+          stopOnTerminate: false,
         };
         var locationConfig = androidLocationConfig;
         if (!isandr) {
@@ -542,7 +546,7 @@ var fpm = angular
         }
         document.addEventListener("native.keyboardshow", onKeyboardshow, false);
       });
-    }
+    },
   ]);
 
 fpm.constant("fieldPromaxConfig", constants);

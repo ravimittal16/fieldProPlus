@@ -19,7 +19,7 @@
     var __isForWorkOrder = false;
     var __jobCodes = timecardFactory.statics.jobCodes;
     var __statusTypes = timecardFactory.statics.statusTypes;
-    var __integrityCustomers = ["97713", "97719", "99009"];
+    var __integrityCustomers = ["97713", "97719", "99009", "97678", "97636"];
     var __forIntegrityCustomer = false;
     var __userEmail = "";
     var alerts = fpmUtilitiesFactory.alerts;
@@ -251,41 +251,41 @@
       }
     }
 
-    $scope.$on("$timecard.onclocked-out-fromComponent", function (
-      evnt,
-      __resopnse
-    ) {
-      $timeout(function () {
-        vm.data.isClockedOut = true;
-        vm.data.isClockedIn = false;
-        vm.data.disableClockOutButton = true;
-        vm.data.addTimeVisibility = false;
-        vm.data.ptoButtonVisibility = true;
-        vm.data.summary = __resopnse.timeCardSummary;
-        __updateTimeCardBindings(__resopnse);
-      }, 100);
-    });
+    $scope.$on(
+      "$timecard.onclocked-out-fromComponent",
+      function (evnt, __resopnse) {
+        $timeout(function () {
+          vm.data.isClockedOut = true;
+          vm.data.isClockedIn = false;
+          vm.data.disableClockOutButton = true;
+          vm.data.addTimeVisibility = false;
+          vm.data.ptoButtonVisibility = true;
+          vm.data.summary = __resopnse.timeCardSummary;
+          __updateTimeCardBindings(__resopnse);
+        }, 100);
+      }
+    );
 
     $scope.$on("$wo.multipleScheduleModalCancel", function ($event, agrs) {
       __hideMultipleScheduleModal();
     });
 
-    $scope.$on("$wo.multipleScheduleModalCancel.clockout", function (
-      evnt,
-      args
-    ) {
-      __hideMultipleScheduleModal();
-      var __data = timecardFactory.getClockinData();
-      if (!args.multiple) {
-        __onClockoutClicked(__data.clockInDate, __data.detail, null);
-      } else {
-        __onClockoutClicked(
-          __data.clockInDate,
-          __data.detail,
-          args.checkedSchedules
-        );
+    $scope.$on(
+      "$wo.multipleScheduleModalCancel.clockout",
+      function (evnt, args) {
+        __hideMultipleScheduleModal();
+        var __data = timecardFactory.getClockinData();
+        if (!args.multiple) {
+          __onClockoutClicked(__data.clockInDate, __data.detail, null);
+        } else {
+          __onClockoutClicked(
+            __data.clockInDate,
+            __data.detail,
+            args.checkedSchedules
+          );
+        }
       }
-    });
+    );
 
     $scope.$on("$timecard.onClockedInCompleted", function (evnt, args) {
       $timeout(function () {

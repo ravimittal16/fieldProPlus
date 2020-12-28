@@ -28,7 +28,7 @@
     var __skipTimecardCheckFor = [];
     var __skipTimecardClockInValidationOnCheckInOut = false;
     var __forIntegrityCustomer = false;
-    var __integrityCustomers = ["97713", "97719", "99009"];
+    var __integrityCustomers = ["97713", "97719", "99009", "97678", "97636"];
     vm.forIntegrityCustomer = false;
     var jobStatus = {
       AcceptJob: 0,
@@ -1650,15 +1650,15 @@
       }, 300);
     });
 
-    $scope.$on("$wo.multipleScheduleModalCancel.reloadAll", function (
-      $event,
-      agrs
-    ) {
-      if (agrs.closeModal) {
-        __hideMultipleScheduleModal();
+    $scope.$on(
+      "$wo.multipleScheduleModalCancel.reloadAll",
+      function ($event, agrs) {
+        if (agrs.closeModal) {
+          __hideMultipleScheduleModal();
+        }
+        getBarcodeDetails();
       }
-      getBarcodeDetails();
-    });
+    );
 
     $scope.$on("$destroy", function () {
       if (uProductTimer) $timeout.cancel(uProductTimer);
