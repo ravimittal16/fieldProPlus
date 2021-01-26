@@ -528,6 +528,7 @@
     vm.placeholder = "tap here to select...";
 
     function activateController() {
+      vm.currencySymbol = $rootScope.currencySymbol;
       // ==========================================================
       // WE NEED TO SKIP THE CLOCK IN CHECK FOR SOME CUSTOMERS
       // ==========================================================
@@ -584,6 +585,9 @@
               if (vm.isServiceProvider) {
                 vm.uiSettings.allowServiceProviderMarkNonBillable =
                   configurations.AllowServiceProviderMarkNonBillable || false;
+                if (!vm.user.showPrice) {
+                  vm.uiSettings.allowServiceProviderMarkNonBillable = false;
+                }
               }
               vm.uiSettings.hideEmailButton =
                 configurations.HideEmailButtonOnMobile || false;
@@ -1370,24 +1374,32 @@
             }, 100);
           },
           onBillableChanged: function () {
-            $timeout(function () {
-              if (vm.schedule && !vm.schedule.isBillable) {
-                alerts.confirm(
-                  "Confirmation",
-                  "Exclude this schedule from invoice?",
-                  function () {
-                    processScheduleBillableChange();
-                  },
-                  function () {
-                    $timeout(function () {
-                      vm.schedule.isBillable = true;
-                    }, 100);
-                  }
-                );
-              } else {
-                processScheduleBillableChange();
-              }
-            }, 100);
+            if (
+              checkAuthorizationIfServiceProvider(
+                vm.schedule,
+                restoreSchedule,
+                false
+              )
+            ) {
+              $timeout(function () {
+                if (vm.schedule && !vm.schedule.isBillable) {
+                  alerts.confirm(
+                    "Confirmation",
+                    "Exclude this schedule from invoice?",
+                    function () {
+                      processScheduleBillableChange();
+                    },
+                    function () {
+                      $timeout(function () {
+                        vm.schedule.isBillable = true;
+                      }, 100);
+                    }
+                  );
+                } else {
+                  processScheduleBillableChange();
+                }
+              }, 100);
+            }
           },
           workCompleteChanged: function () {
             if (

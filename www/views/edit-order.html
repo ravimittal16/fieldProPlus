@@ -318,18 +318,18 @@
                     justify-content: start;
                     align-items: center;max-width: 40%;">
                       
-                      <ion-checkbox class="checkbox-energized" style="padding-top: 5px;
+                      <ion-checkbox class="checkbox-energized" style="padding-top: 5px; 
                       padding-bottom: 5px;font-size: 13px;
-    font-weight: 500;" ng-change="vm.tabs.sch.events.onBillableChanged()" ng-model="vm.schedule.isBillable">Billable</ion-checkbox>
+    font-weight: 500;" ng-disabled="vm.schedule.approve" ng-change="vm.tabs.sch.events.onBillableChanged()" ng-model="vm.schedule.isBillable">Billable</ion-checkbox>
                     </div>
                     <div class="col" style="display: flex;
                     justify-content: start;
                     align-items: center;">
                      <div class="item item-input">
                       <span class="input-label" style="width:80px;">
-                        $ Rate
+                        <span ng-bind="vm.currencySymbol"></span> Rate
                       </span> <input type="text" ng-if="!vm.schedule.approve" class="transparent-background text-right"  ng-disabled="vm.schedule.approve"
-                      placeholder="$ Rate"
+                      placeholder="{{vm.currencySymbol}} Rate"
                       mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal',onSelect:vm.tabs.sch.events.onLabourCostChanged}"
                       ng-model="vm.schedule.laborCostPerHour" />
                      </div>
