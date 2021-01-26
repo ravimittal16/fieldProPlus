@@ -8,7 +8,7 @@
 //"http://localhost/FieldPromaxApi/"
 var isInDevMode = true;
 var prodReady = false;
-var useStagingApi = true;
+var useStagingApi = false;
 var runningOnEmulator = false;
 if (runningOnEmulator) {
   isInDevMode = false;

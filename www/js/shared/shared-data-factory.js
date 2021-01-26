@@ -13,9 +13,7 @@
     var pushapi = "api/NotificationsHub/";
     var locationapi = "api/Location/";
 
-    function updateLocationServiceStatus(userEmail) {
-
-    }
+    function updateLocationServiceStatus(userEmail) {}
 
     function updateSettings(settings) {
       return apiBaseFactory.post("api/User/UpdateUserSettings", settings);
@@ -43,10 +41,10 @@
     function saveLocationCordinates(p) {
       return apiBaseFactory.get(
         apibaseurl +
-        "SaveLocationCoordinates?lat=" +
-        p.latitude +
-        "&lng=" +
-        p.longitude
+          "SaveLocationCoordinates?lat=" +
+          p.latitude +
+          "&lng=" +
+          p.longitude
       );
     }
 
@@ -79,25 +77,28 @@
       if (window.google) {
         var geocoder = new google.maps.Geocoder();
         var addressf = address + " " + city + " " + state + " " + zip;
-        geocoder.geocode({
-          address: addressf
-        }, function (results, status) {
-          if (status === google.maps.GeocoderStatus.OK) {
-            defer.resolve({
-              log: results[0].geometry.location.lng(),
-              lat: results[0].geometry.location.lat()
-            });
-          } else {
-            defer.resolve({
-              log: 0,
-              lat: 0
-            });
+        geocoder.geocode(
+          {
+            address: addressf,
+          },
+          function (results, status) {
+            if (status === google.maps.GeocoderStatus.OK) {
+              defer.resolve({
+                log: results[0].geometry.location.lng(),
+                lat: results[0].geometry.location.lat(),
+              });
+            } else {
+              defer.resolve({
+                log: 0,
+                lat: 0,
+              });
+            }
           }
-        });
+        );
       } else {
         defer.resolve({
           log: 0,
-          lat: 0
+          lat: 0,
         });
       }
       return defer.promise;
@@ -116,7 +117,9 @@
       var totalLoopLength = Math.floor(byteCharacters.length / sliceSize) + 1;
       var loopCount = 0;
       for (
-        var offset = 0; offset < byteCharacters.length; offset += sliceSize
+        var offset = 0;
+        offset < byteCharacters.length;
+        offset += sliceSize
       ) {
         loopCount += 1;
         var slice = byteCharacters.slice(offset, offset + sliceSize);
@@ -130,12 +133,11 @@
         if (loopCount === totalLoopLength) {
           var file = new File(byteArrays, name, {
             type: contentType,
-            lastModified: new Date()
+            lastModified: new Date(),
           });
           defer.resolve(file);
         }
       }
-
       return defer.promise;
     }
 
@@ -152,7 +154,7 @@
       registerUserTemplateForPushNotifications: registerUserTemplateForPushNotifications,
       updateSettings: updateSettings,
       getIniitialData: getIniitialData,
-      saveLocationCordinates: saveLocationCordinates
+      saveLocationCordinates: saveLocationCordinates,
     };
   }
   initFactory.$inject = [
@@ -161,7 +163,7 @@
     "api-base-factory",
     "localStorageService",
     "fieldPromaxConfig",
-    "fpm-utilities-factory"
+    "fpm-utilities-factory",
   ];
   angular.module("fpm").factory("shared-data-factory", initFactory);
 })();

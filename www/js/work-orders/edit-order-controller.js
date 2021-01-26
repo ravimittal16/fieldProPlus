@@ -29,6 +29,10 @@
     var __skipTimecardClockInValidationOnCheckInOut = false;
     var __forIntegrityCustomer = false;
     var __integrityCustomers = ["97713", "97719", "99009", "97678", "97636"];
+    // ==========================================================
+    // ADD SCHEDULE ALLOWED FOR "97678", "97636"
+    // ==========================================================
+    var __integrityCustomersOld = ["97713", "97719", "99009"];
     vm.forIntegrityCustomer = false;
     var jobStatus = {
       AcceptJob: 0,
@@ -54,6 +58,7 @@
       customField3Label: "Custom 3",
       expenseTrackingEnabled: true,
       paymentOn: false,
+      allowServiceProviderMarkNonBillable: false,
     };
     vm.multipleScheduleCheckInModal = null;
     // TAX RATE CODE CHANGES
@@ -87,7 +92,7 @@
     //==================================================
     vm.errors = [];
     vm.gettingBarcodeDetails = true;
-
+    var schedule = null;
     function getBarcodeDetails() {
       vm.gettingBarcodeDetails = true;
       $ionicLoading
@@ -109,11 +114,13 @@
                   angular.isArray(response.schedules) &&
                   response.schedules.length > 0
                 ) {
-                  vm.schedule = angular.copy(
+                  var __sche = angular.copy(
                     _.findWhere(response.schedules, {
                       num: parseInt($stateParams.technicianNum, 10),
                     })
                   );
+                  vm.schedule = __sche;
+                  schedule = angular.copy(__sche);
                   if (angular.isDefined(vm.schedule)) {
                     if (vm.schedule.actualStartDateTime) {
                       vm.schedule.actualStartDateTime = kendo.parseDate(
@@ -530,6 +537,8 @@
       __forIntegrityCustomer =
         __integrityCustomers.indexOf(__customerNumber) > -1;
       vm.forIntegrityCustomer = __forIntegrityCustomer;
+      vm.forIntegrityCustomerOld =
+        __integrityCustomersOld.indexOf(__customerNumber) > -1;
       // ==========================================================
       if (!$rootScope.isInDevMode) {
         _getCurrentUserLocation();
@@ -571,6 +580,11 @@
               var configurations = JSON.parse(
                 response.customerNumberEntity.configurationJson
               );
+              vm.uiSettings.allowServiceProviderMarkNonBillable = true;
+              if (vm.isServiceProvider) {
+                vm.uiSettings.allowServiceProviderMarkNonBillable =
+                  configurations.AllowServiceProviderMarkNonBillable || false;
+              }
               vm.uiSettings.hideEmailButton =
                 configurations.HideEmailButtonOnMobile || false;
               if (configurations && configurations.PoBoxLabel) {
@@ -1177,6 +1191,35 @@
         return false;
       }
     }
+    // ==========================================================
+    // SCHEDULE BILLABLE BLOCK
+    function processScheduleBillableChange() {
+      fpmUtilities.showLoading().then(function () {
+        workOrderFactory
+          .updateScheduleBillableState(vm.schedule.num, vm.schedule.isBillable)
+          .then(function (repsonse) {
+            if (vm.schedule.isBillable && repsonse && repsonse.length > 0) {
+              var invoiceRows = angular.copy(vm.barCodeData.invoice);
+              for (var i = 0; i < repsonse.length; i++) {
+                invoiceRows.push(repsonse[i]);
+              }
+              vm.barCodeData.invoice = invoiceRows;
+            } else {
+              var filterRows = angular.copy(
+                _.filter(vm.barCodeData.invoice, function (e) {
+                  return e.numFromSchedule !== vm.schedule.num;
+                })
+              );
+              vm.barCodeData.invoice = filterRows;
+            }
+          })
+          .finally(function () {
+            calculateTotals();
+            fpmUtilities.hideLoading();
+          });
+      });
+    }
+    // ==========================================================
 
     vm.tabs = {
       events: {
@@ -1321,6 +1364,31 @@
       },
       sch: {
         events: {
+          onLabourCostChanged: function () {
+            $timeout(function () {
+              updateSchedule(true, true);
+            }, 100);
+          },
+          onBillableChanged: function () {
+            $timeout(function () {
+              if (vm.schedule && !vm.schedule.isBillable) {
+                alerts.confirm(
+                  "Confirmation",
+                  "Exclude this schedule from invoice?",
+                  function () {
+                    processScheduleBillableChange();
+                  },
+                  function () {
+                    $timeout(function () {
+                      vm.schedule.isBillable = true;
+                    }, 100);
+                  }
+                );
+              } else {
+                processScheduleBillableChange();
+              }
+            }, 100);
+          },
           workCompleteChanged: function () {
             if (
               checkAuthorizationIfServiceProvider(

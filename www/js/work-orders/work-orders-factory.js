@@ -297,7 +297,18 @@
       );
     }
 
+    function updateScheduleBillableState(scheduleNum, isBillable) {
+      return apiBaseFactory.get(
+        apibaseurl +
+          "UpdateScheduleBillableState?scheduleNum=" +
+          scheduleNum +
+          "&isBillable=" +
+          isBillable
+      );
+    }
+
     return {
+      updateScheduleBillableState: updateScheduleBillableState,
       updateJobStatusMultiple: updateJobStatusMultiple,
       getSchedulesWithSameDateTime: getSchedulesWithSameDateTime,
       getScheduleById: getScheduleById,
