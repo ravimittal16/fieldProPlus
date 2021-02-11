@@ -328,10 +328,11 @@
                      <div class="item item-input">
                       <span class="input-label" style="width:80px;">
                         <span ng-bind="vm.currencySymbol"></span> Rate
-                      </span> <input type="text" ng-if="!vm.schedule.approve" class="transparent-background text-right"  ng-disabled="vm.schedule.approve"
+                      </span> <input type="text"  class="transparent-background text-right"
                       placeholder="{{vm.currencySymbol}} Rate"
-                      mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal',onSelect:vm.tabs.sch.events.onLabourCostChanged}"
+                      mobiscroll-numpad="{display: 'bottom',min:0,scale: 2,max:99999.99,preset:'decimal',onSelect:vm.tabs.sch.events.onLabourCostChanged,disabled:vm.schedule.approve}"
                       ng-model="vm.schedule.laborCostPerHour" />
+                      
                      </div>
                    
                     </div>

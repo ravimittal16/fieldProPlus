@@ -1369,9 +1369,22 @@
       sch: {
         events: {
           onLabourCostChanged: function () {
-            $timeout(function () {
-              updateSchedule(true, true);
-            }, 100);
+            if (vm.schedule.approve) {
+              alerts.alert(
+                "Warning",
+                "This schedule has been approved and cannot be edited."
+              );
+              $timeout(function () {
+                vm.schedule.laborCostPerHour = schedule.laborCostPerHour;
+              }, 10);
+            } else {
+              $timeout(function () {
+                schedule.laborCostPerHour = angular.copy(
+                  vm.schedule.laborCostPerHour
+                );
+                updateSchedule(true, true);
+              }, 100);
+            }
           },
           onBillableChanged: function () {
             if (

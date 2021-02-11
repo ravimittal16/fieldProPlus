@@ -367,6 +367,7 @@ var fpm = angular
         }
         if (window.StatusBar) {
           StatusBar.styleDefault();
+          StatusBar.overlaysWebView(false);
         }
         var isandr = fpmUtilitiesFactory.device.isAndroid();
         //=======================================================================
