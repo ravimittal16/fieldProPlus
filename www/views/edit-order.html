@@ -692,7 +692,7 @@
             hide-email-button="vm.uiSettings.hideEmailButton" is-estimate="false">
           </order-email-card-component>
           <order-images-list-component barcode="vm.barcode" is-estimate="false"></order-images-list-component>
-          <order-documents-list-component barcode="vm.barcode" ng-if="!vm.forIntegrityCustomer">
+          <order-documents-list-component barcode="vm.barcode" ng-if="!vm.forIntegrityCustomerOld">
           </order-documents-list-component>
           <div class="card" ng-if="!vm.forIntegrityCustomer">
             <div class="item item-divider header-dark">

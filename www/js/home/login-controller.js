@@ -17,11 +17,11 @@
     var vm = this;
     vm.user = {
       userName: "",
-      password: ""
+      password: "",
     };
     vm.showError = false;
     vm.data = {
-      model: ""
+      model: "",
     };
 
     var alerts = fpmUtilitiesFactory.alerts;
@@ -35,12 +35,13 @@
           title: "Forgot Password",
           subTitle: "Please enter your registered email address",
           scope: $scope,
-          buttons: [{
+          buttons: [
+            {
               text: "Cancel",
               onTap: function () {
                 vm.data.model = "";
                 return null;
-              }
+              },
             },
             {
               text: "Send password",
@@ -55,9 +56,9 @@
                 } else {
                   return vm.data.model;
                 }
-              }
-            }
-          ]
+              },
+            },
+          ],
         });
         myPopup.then(function (res) {
           if ($.trim(vm.data.model) !== "") {
@@ -85,7 +86,7 @@
       },
       loginTestClick: function (isValid) {
         vm.user.userName = "ravimittal1604@gmail.com";
-        vm.user.password = "a4887248";
+        vm.user.password = "test@12345";
         vm.events.loginClick(true);
       },
       loginClick: function (isValid) {
@@ -97,7 +98,7 @@
         }
         $ionicLoading
           .show({
-            template: "authenticating you..."
+            template: "authenticating you...",
           })
           .then(function () {
             authenticationFactory.login(vm.user).then(
@@ -110,18 +111,24 @@
                       );
                       sharedDataFactory.registerUserTemplateForPushNotifications();
                     }
-                    var userConfig = localStorageService.get("authorizationData");
+                    var userConfig = localStorageService.get(
+                      "authorizationData"
+                    );
                     if (userConfig != null) {
                       // we don't need to save the token into sqlite database, hence making it null
                       userConfig.token = null;
-                      sqlStorageFactory.insertUserLoginInfo(vm.user.userName, vm.user.password, JSON.stringify(userConfig));
+                      sqlStorageFactory.insertUserLoginInfo(
+                        vm.user.userName,
+                        vm.user.password,
+                        JSON.stringify(userConfig)
+                      );
                     }
                     var previousState = localStorageService.get("appState");
                     if (previousState && angular.isDefined(previousState)) {
                       if (previousState.stateName === "app.editOrder") {
                         //Sometimes after minimizing the app and reopen it, the upper section of WO screen is not getting dipslyaed properly.
                         $state.go("app.dashboard", {
-                          refresh: true
+                          refresh: true,
                         });
                       } else if (
                         previousState.params &&
@@ -136,7 +143,7 @@
                       }
                     } else {
                       $state.go("app.dashboard", {
-                        refresh: true
+                        refresh: true,
                       });
                     }
                   }
@@ -153,7 +160,7 @@
               }
             );
           });
-      }
+      },
     };
 
     function tryUserLoginFromStorage() {
@@ -191,7 +198,7 @@
     "fpm-utilities-factory",
     "shared-data-factory",
     "localStorageService",
-    "sqlStorageFactory"
+    "sqlStorageFactory",
   ];
   angular.module("fpm").controller("login-controller", initController);
 })();

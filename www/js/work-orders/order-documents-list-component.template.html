@@ -1,17 +1,45 @@
 <div class="card">
-	<div class="item item-divider header-dark">
-		DOCUMENTS
-		<span class="badge badge-dark">{{vm.barcodeDocuments.length}}</span>
-	</div>
-	<ion-list>
-		<ion-item class="item-text-wrap" data-ng-repeat="p in vm.barcodeDocuments | filter:{extension:'.pdf'}" data-ng-click="vm.events.onDocumentClicked(p)">
-			{{::p.fleName}}
-		</ion-item>
+  <div class="item item-divider header-dark flex-container">
+    <div class="flex-item flex-content-start">DOCUMENTS</div>
+    <div class="flex-item flex-content-end">
+      <span class="badge badge-dark">{{vm.barcodeDocuments.length}}</span>
+    </div>
+  </div>
+  <ion-list>
+    <ion-item class="item-text-wrap">
+      <!-- <button
+        class="button button-small button-block button-stable"
+        ng-click="vm.events.uploadDocumentsClicked()"
+      >
+        <i class="icon ion-upload"></i> Upload Document
+      </button> -->
+      <input
+        type="file"
+        kendo-upload="vm.upload.control"
+        k-options="vm.upload.options"
+      />
+    </ion-item>
+    <ion-item
+      class="item-text-wrap"
+      data-ng-repeat="p in vm.barcodeDocuments | filter:{extension:'.pdf'}"
+      data-ng-click="vm.events.onDocumentClicked(p)"
+    >
+      {{::p.fleName}}
+      <button
+        type="button"
+        class="button icon ion-trash-b button-small text-assertive pull-right"
+        style="margin-top: -5px"
+        ng-click="vm.events.onDeleteDocumentClicked($event,p,$index)"
+      ></button>
+    </ion-item>
 
-		<ion-item class="item item-text-wrap text-center" data-ng-if="!vm.gettinDocuments && vm.barcodeDocuments.length == 0">
-			<h3 class="text-muted">
-				<strong>No Documents uploaded</strong>
-			</h3>
-		</ion-item>
-	</ion-list>
+    <!-- <ion-item
+      class="item item-text-wrap text-center"
+      data-ng-if="!vm.gettinDocuments && vm.barcodeDocuments.length == 0"
+    >
+      <h3 class="text-muted">
+        <strong>No Documents uploaded</strong>
+      </h3>
+    </ion-item> -->
+  </ion-list>
 </div>

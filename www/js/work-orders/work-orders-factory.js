@@ -307,7 +307,14 @@
       );
     }
 
+    function deleteDocument(docNum) {
+      return apiBaseFactory.deleteReq(
+        apibaseurl + "DeleteDocument?num=" + docNum + "&fromMobile=true"
+      );
+    }
+
     return {
+      deleteDocument: deleteDocument,
       updateScheduleBillableState: updateScheduleBillableState,
       updateJobStatusMultiple: updateJobStatusMultiple,
       getSchedulesWithSameDateTime: getSchedulesWithSameDateTime,

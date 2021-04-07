@@ -811,3 +811,21 @@ margin-top: 0px;
   padding:5px;
 }
 
+/* flex container with two columns */
+.flex-container{
+  display: flex;
+  flex-flow: row wrap;
+}
+.flex-item{
+ 
+    flex: 1 calc(50% - 20px); /* changed */
+    box-sizing: border-box;
+    flex-direction: column;
+    display: flex;
+}
+.flex-content-start{
+  align-items: flex-start;
+}
+.flex-content-end{
+  align-items: flex-end;
+}
