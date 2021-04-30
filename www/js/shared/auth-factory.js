@@ -17,7 +17,7 @@
     var localStorageKeys = fieldPromaxConfig.localStorageKeys;
     var authentication = {
       isAuth: false,
-      userName: ""
+      userName: "",
     };
 
     function login(loginModel) {
@@ -39,10 +39,13 @@
             showPrice: response.showPrice === "True",
             havingGroupsAssigned: response.havingGroups === "True",
             inventoryOn: response.inventoryOn === "True",
-            allowUserToEditWoDescription: response.allowUserToEditWoDescription === "True",
+            allowUserToEditWoDescription:
+              response.allowUserToEditWoDescription === "True",
             currencySymbol: response.currencySymbol,
             dateFormat: response.dateFormat,
-            timecardAccessLevel: +(response.timecardAccessLevel || 1)
+            timecardAccessLevel: +(response.timecardAccessLevel || 1),
+            allowUserToViewOtherSchedules:
+              response.allowUserToViewOtherSchedules === "True",
           };
           $rootScope.currencySymbol = response.currencySymbol;
           $rootScope.dateFormat = response.dateFormat;
@@ -85,8 +88,8 @@
       $http
         .post(serviceBase + "token", data, {
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          }
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
         })
         .success(onLoginSuccess)
         .error(onLoginError);
@@ -155,7 +158,7 @@
       logout: logout,
       sendPassword: sendPassword,
       authentication: authentication,
-      changePassword: changePassword
+      changePassword: changePassword,
     };
     return factory;
   }
@@ -170,7 +173,7 @@
     "fieldPromaxConfig",
     "api-base-factory",
     "work-orders-factory",
-    "timecard-factory"
+    "timecard-factory",
   ];
   angular.module("fpm").factory("authenticationFactory", initFactory);
 })();

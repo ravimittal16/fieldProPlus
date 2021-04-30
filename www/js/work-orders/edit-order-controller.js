@@ -1223,6 +1223,23 @@
           });
       });
     }
+
+    function __loadScheduleData(sch) {
+      if (sch.num !== vm.schedule.num) {
+        alerts.confirm(
+          "Confirmation",
+          "Do you want to load this schedule?",
+          function () {
+            $state.go("app.editOrder", {
+              barCode: vm.barcode,
+              technicianNum: sch.num,
+              src: "main",
+              _i: 1,
+            });
+          }
+        );
+      }
+    }
     // ==========================================================
 
     vm.tabs = {
@@ -1473,19 +1490,12 @@
             updateSchedule(true, true);
           },
           onListScheduleItemTap: function (sch) {
-            if (sch.num !== vm.schedule.num) {
-              alerts.confirm(
-                "Confirmation",
-                "Do you want to load this schedule?",
-                function () {
-                  $state.go("app.editOrder", {
-                    barCode: vm.barcode,
-                    technicianNum: sch.num,
-                    src: "main",
-                    _i: 1,
-                  });
-                }
-              );
+            if (vm.isServiceProvider) {
+              if (vm.user.havingGroupsAssigned) {
+                __loadScheduleData(sch);
+              }
+            } else {
+              __loadScheduleData(sch);
             }
           },
           onSchedulesListButtonClicked: function () {
