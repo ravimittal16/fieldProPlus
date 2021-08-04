@@ -177,7 +177,7 @@
           <ion-refresher pulling-text="Pull to refresh..." on-refresh="vm.tabs.desc.events.refreshOnPullDown()">
           </ion-refresher>
           <timecard-clock-in-header based-on="workorder" schedule="vm.schedule"
-            ng-if="vm.user.timeCard && vm.user.timecardAccessLevel === 3 && vm.forIntegrityCustomer">
+            ng-if="vm.user.timeCard && vm.user.timecardAccessLevel === 3 && (vm.forIntegrityCustomer || vm.isTrafficControllerCustomer)">
           </timecard-clock-in-header>
           <div class="card">
             <div class="item item-divider header-dark">
@@ -265,9 +265,9 @@
                   <div style="width: 37%;float: left;">
                     <button class="button button-small button-assertive" ng-disabled="vm.schedule.approve"
                       ng-click="vm.tabs.sch.events.clearAllDateTimeSelection(true)">
-                      <i class="icon ion-ios-trash-outline"></i>
+                      <i class="icon ion-ios-trash"></i>
                     </button>
-                    <button type="button" class="button button-small button-calm" style="width: 79px;"
+                    <button type="button" class="button button-small button-positive" style="width: 79px;"
                       ng-disabled="vm.schedule.approve || vm.schedule.checkInStatus"
                       ng-click="vm.tabs.sch.events.checkIn()">
                       <i class="ion ion-clock"></i>&nbsp;Check In
@@ -294,9 +294,9 @@
                   <div style="width: 37%;float: left;">
                     <button class="button button-small button-assertive" ng-disabled="vm.schedule.approve"
                       ng-click="vm.tabs.sch.events.clearAllDateTimeSelection(false)">
-                      <i class="icon ion-ios-trash-outline"></i>
+                      <i class="icon ion-ios-trash"></i>
                     </button>
-                    <button type="button" class="button button-small button-calm"
+                    <button type="button" class="button button-small button-positive"
                       ng-disabled="vm.schedule.approve || vm.schedule.checkOutStatus || !vm.schedule.checkInStatus"
                       ng-click="vm.tabs.sch.events.checkOut()">
                       <i class="ion ion-clock"></i>&nbsp;Check Out
@@ -349,7 +349,7 @@
                 <!-- <label style="display: flex;justify-content: center;"
                   ng-if="vm.schedule.technicianNum === vm.user.userEmail && vm.timecardClockinStat">
                   <div style="font-weight: normal;padding: 5px;margin-top: 5px;font-size: 12px;">
-                    <span class="label label-warning" ng-if="vm.timecardClockinStat.lastClockOut === null"
+                    <span class="label label-warning" ng-if="vm.timecardClockinStat.lastClockOut === null"  
                       style="font-weight: normal;font-size: 13px;"><span class="ion-alert"></span>&nbsp;Last
                       Clock In
                       {{vm.timecardClockinStat.lastClockIn | date:'MM/dd h:mm a'}} and no Clock out.</span>
@@ -364,8 +364,8 @@
 
 
                 <div class="padding text-center"
-                  ng-if="vm.uiSettings.isTimeCardModuleEnabled && !vm.forIntegrityCustomer">
-                  <button class="button button-small button-block button-calm" ng-disabled="vm.schedule.approve"
+                  ng-if="vm.uiSettings.isTimeCardModuleEnabled && !vm.forIntegrityCustomer && !vm.isTrafficControllerCustomer">
+                  <button class="button button-small button-block button-positive" ng-disabled="vm.schedule.approve"
                     ng-click="vm.tabs.sch.events.pushToTimecard()">
                     <i class="ion ion-clock"></i>&nbsp;Push to Timecard
                   </button>
@@ -476,12 +476,12 @@
               </label>
             </div>
             <div class="padding">
-              <button class="button button-block button-small button-dark" ng-click="vm.tabs.sch.events.updateMilage()">
+              <button class="button button-block button-small button-positive" ng-click="vm.tabs.sch.events.updateMilage()">
                 Update Mileage
               </button>
             </div>
           </div>
-          <timecard-details ng-if="vm.user.timeCard && vm.user.timecardAccessLevel === 3 && vm.forIntegrityCustomer"
+          <timecard-details ng-if="vm.user.timeCard && vm.user.timecardAccessLevel === 3 && (vm.forIntegrityCustomer || vm.isTrafficControllerCustomer)"
             based-on="workorder" schedule="vm.schedule"></timecard-details>
           <div class="card">
             <div class="item item-divider header-dark">
@@ -578,7 +578,7 @@
         </ion-content>
       </ion-tab>
       <ion-tab title="COMPONENTS" icon-on="ion-ios-cog" icon-off="ion-ios-cog-outline"
-        hidden="{{vm.forIntegrityCustomer}}">
+        hidden="{{vm.forIntegrityCustomer || vm.isTrafficControllerCustomer}}">
         <ion-content direction="y">
           <jobtype-list-component barcode="vm.barcode" jobtype="vm.barCodeData.barcodeDetails.excptns">
           </jobtype-list-component>
@@ -589,7 +589,7 @@
           </expanse-expander-component>
         </ion-content>
       </ion-tab>
-      <ion-tab title="SUMMARY" icon-on="ion-ios-calculator" icon-off="ion-ios-calculator-outline">
+      <ion-tab title="SUMMARY" icon-on="ion-ios-calculator" on-select="vm.onSummaryTabSelected()" icon-off="ion-ios-calculator-outline">
         <ion-content direction="y">
           <ion-list ng-if="!vm.forIntegrityCustomer">
             <div class="card">
@@ -685,7 +685,7 @@
           <order-images-list-component barcode="vm.barcode" is-estimate="false"></order-images-list-component>
           <order-documents-list-component barcode="vm.barcode" ng-if="!vm.forIntegrityCustomerOld">
           </order-documents-list-component>
-          <div class="card" ng-if="!vm.forIntegrityCustomer">
+          <div class="card" ng-if="!vm.forIntegrityCustomer && !vm.isTrafficControllerCustomer">
             <div class="item item-divider header-dark">
               WORK STATUS
             </div>

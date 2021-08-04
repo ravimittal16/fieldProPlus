@@ -1,0 +1,5 @@
+<a class="button button-icon icon ion-chatbox-working counter-button" ng-click="vm.events.onHeaderButtonClicked()" ></a>
+<div class="message-count-container" ng-if="vm.uiData.newMessageCount > 0">
+    <span ng-bind="vm.uiData.newMessageCount"></span>
+    <span ng-if="vm.uiData.newMessageCount > 10">+</span>
+</div>

@@ -1,0 +1,83 @@
+<ion-view title="Message Hub" cache-view="false" align-title="center">
+    <ion-nav-buttons side="left">
+        <button
+            menu-toggle="left"
+            class="button button-icon icon ion-navicon"
+        ></button>
+        <div class="h1 title">Message Hub</div>
+        <button
+            class="button button-clear button-positive"
+            ng-click="vm.events.onBackButtonClicked()"
+        >
+            Back
+        </button>
+    </ion-nav-buttons>
+    <ion-content scroll="false">
+        <ion-content
+            class="has-footer"
+            id="chat-content"
+            direction="y"
+            style="bottom: 60px"
+        >
+            <div class="messages-container">
+                <div class="chat-body">
+                    <div class="chat-messages-container">
+                        <div
+                            ng-if="vm.messages.length > 0 && !vm.isLoading"
+                            ng-repeat="message in vm.messages track by message.messageId"
+                            class="chat-message-main"
+                            ng-class="{ 'chat-position-left': message.fromMe }"
+                        >
+                            <div
+                                class="chat-message-body"
+                                ng-class="{ 'chat-position-left': message.fromMe }"
+                            >
+                                <div
+                                    class="chat-message chat-left-{{ ::!message.fromMe }}"
+                                >
+                                    <div message-content-formatter="{{$last}}">
+                                        {{ ::message.content }}
+                                    </div>
+                                    <div
+                                        class="chat-message-time"
+                                        uib-tooltip="{{ ::message.clientDateTime | date }}"
+                                    >
+                                        {{::message.clientDateTime | date:'hh:mm
+                                        a'}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ion-content>
+
+        <ion-footer-bar style="height: 60px; background-color: #f7f7f7">
+            <form
+                name="messageForm"
+                novalidate="novalidate"
+                style="width: 100%"
+            >
+                <div class="footer-controls-container">
+                    <div>
+                        <input
+                            type="text"
+                            required
+                            ng-model="vm.messageContent"
+                            maxlength="200"
+                        />
+                    </div>
+                    <div>
+                        <button
+                            type="button"
+                            ng-disabled="messageForm.$invalid"
+                            class="button button-icon icon ion-paper-airplane"
+                            ng-click="vm.events.onSendMessageClicked()"
+                        ></button>
+                    </div>
+                </div>
+            </form>
+        </ion-footer-bar>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,53 @@
+<ion-view title="Message Hub" cache-view="false" align-title="center">
+    <ion-nav-buttons side="left">
+        <button
+            menu-toggle="left"
+            class="button button-icon icon ion-navicon"
+        ></button>
+    </ion-nav-buttons>
+    <ion-content scroll="false">
+        <div class="messages-container">
+            <div class="chat-header">
+                <div class="header-buttons">
+                    <button
+                        class="
+                            button button-icon
+                            icon
+                            ion-compose
+                            counter-button
+                        "
+                        on-tap="vm.events.onHeaderButtonClicked()"
+                    ></button>
+                </div>
+            </div>
+            <ion-content class="has-header">
+                <div class="chat-body full-height">
+                    <div
+                        class="list"
+                        ng-if="!vm.isLoading && vm.chatHistoryList.length > 0"
+                    >
+                        <a
+                            class="item"
+                            ng-repeat="user in vm.chatHistoryList track by user.userId"
+                            ng-click="vm.events.onUserItemClicked(user)"
+                        >
+                            <div>
+                                <h2>{{::user.userName}}</h2>
+                                <p>{{::user.lastMessageContent}}</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div
+                        ng-if="!vm.isLoading && vm.chatHistoryList.length === 0"
+                        class="center-container"
+                    >
+                        No new Messages!
+                    </div>
+                    <div ng-if="vm.isLoading" class="center-container">
+                        Checking new messages...
+                    </div>
+                </div>
+            </ion-content>
+        </div>
+    </ion-content>
+</ion-view>

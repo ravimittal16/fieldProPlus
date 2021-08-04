@@ -26,15 +26,17 @@ var paths = {
     "./www/js/work-orders/*.js",
     "./www/js/dashboard/*.js",
     "./www/js/home/*.js",
-    "./www/js/realtime.module/*.js"
+    "./www/js/message-hub/*.js",
+    "./www/js/realtime.module/*.js",
   ]
 };
 
 gulp.task("default", ["sass", "scripts"]);
 
+var scssFiles = ["./scss/ionic.app.scss", "./scss/message.hub.styles.scss", "./scss/app.styles.scss"]
 gulp.task("sass", function (done) {
   gulp
-    .src("./scss/ionic.app.scss")
+    .src(scssFiles)
     .pipe(sass())
     .on("error", sass.logError)
     .pipe(gulp.dest("./www/css/"))

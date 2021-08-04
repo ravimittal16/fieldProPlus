@@ -1,31 +1,70 @@
-<div class="card" ng-if="!vm.showingSignaturePad">
-  <div class="item item-divider header-dark">
-    SIGNATURE
-    <button class="button button-small button-positive pull-right" type="button" style="padding: 0px;" ng-click="vm.events.onSignatureActionButtonClicked()">
-      Add Signature
-    </button>
-  </div>
-  <div class="item item-text-wrap text-center" id="noImageMessageContainer" ng-if="vm.showEmptySignatureMessage">
-    <h3 class="text-muted"><strong>No Signature attached</strong></h3>
-  </div>
-  <div class="item item-body">
-    <img class="full-image" style="height:180px !important;" ng-src="{{vm.imageUrl}}" alt="signature" image-src-check="" />
-  </div>
-</div>
-<div class="card" ng-if="vm.showingSignaturePad">
-  <div class="item item-divider header-dark">
-    SIGNATURE
-    <!--
-      <a class="button pull-right button-small button-icon icon ion-android-more-vertical item-divider-left-buttion" data-ng-click="vm.events.onSignaturePadActionButtonClicked()"></a>
-    -->
-    <button type="button" class="button button-small button-assertive pull-right" style="margin-left: 5px;" ng-click="vm.events.closeSignaturePad()">
-      <i class="icon ion-close-round"></i>
-    </button>
-    <button type="button" class="button button-small button-positive pull-right" ng-click="vm.events.saveSignature()">
-      Save Signature
-    </button>
-  </div>
-  <div class="item item-body">
-    <order-signature-pad data-pad-events-ref="vm.signPadEvents" is-estimate="vm.isEstimate"></order-signature-pad>
-  </div>
+<div>
+    <div class="card no-m-t" ng-if="vm.showNextWorkdayApppointmentCheckbox">
+        <div class="list">
+            <ion-checkbox
+                class="nextWorkdayAppointmentBox"
+                ng-model="vm.nextWorkdayAppointmentConfirmed"
+                >Check to confirm Appointment for next workday</ion-checkbox
+            >
+        </div>
+    </div>
+    <div class="card" ng-if="!vm.showingSignaturePad">
+        <div class="item item-divider header-dark">
+            SIGNATURE
+            <button
+                class="button button-small button-positive pull-right"
+                type="button"
+                style="padding: 0px; padding-left: 5px; padding-right: 5px"
+                ng-click="vm.events.onSignatureActionButtonClicked()"
+            >
+                Add Signature
+            </button>
+        </div>
+        <div
+            class="item item-text-wrap text-center"
+            id="noImageMessageContainer"
+            ng-if="vm.showEmptySignatureMessage"
+        >
+            <h3 class="text-muted"><strong>No Signature attached</strong></h3>
+        </div>
+        <div class="item item-body">
+            <img
+                class="full-image"
+                style="height: 180px !important"
+                ng-src="{{vm.imageUrl}}"
+                alt="signature"
+                image-src-check=""
+            />
+        </div>
+    </div>
+    <div class="card" ng-if="vm.showingSignaturePad">
+        <div class="item item-divider header-dark">
+            SIGNATURE
+            <!--
+        <a class="button pull-right button-small button-icon icon ion-android-more-vertical item-divider-left-buttion" data-ng-click="vm.events.onSignaturePadActionButtonClicked()"></a>
+      -->
+            <button
+                type="button"
+                class="button button-small button-assertive pull-right"
+                style="margin-left: 5px"
+                ng-click="vm.events.closeSignaturePad()"
+            >
+                <i class="icon ion-close-round"></i>
+            </button>
+            <button
+                type="button"
+                class="button button-small button-positive pull-right"
+                ng-click="vm.events.saveSignature()"
+            >
+                Save Signature
+            </button>
+        </div>
+        <div class="item item-body">
+            <order-signature-pad
+                data-pad-events-ref="vm.signPadEvents"
+                next-workday-appointment="vm.nextWorkdayAppointmentConfirmed"
+                is-estimate="vm.isEstimate"
+            ></order-signature-pad>
+        </div>
+    </div>
 </div>
