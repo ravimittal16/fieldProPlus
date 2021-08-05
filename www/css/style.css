@@ -840,6 +840,9 @@ select[readonly] {
 .font-color-fp {
     color: #f38c19;
 }
+.font-color-fp-dark {
+    color: #273b41;
+}
 .title {
     font-weight: 600 !important;
 }
@@ -862,4 +865,12 @@ button.button-fieldpro i:before {
 }
 .ion-ios-trash:before {
     font-size: 20px !important;
+}
+.title-prefix {
+    font-weight: bold;
+    color: #273b41;
+}
+.title-suffix {
+    font-weight: bold;
+    color: #f38c19;
 }

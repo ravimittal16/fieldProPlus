@@ -1658,7 +1658,11 @@
                         updateSchedule(true, true);
                     },
                     onListScheduleItemTap: function (sch) {
-                        if (vm.isServiceProvider && !vm.forIntegrityCustomer) {
+                        if (
+                            vm.isServiceProvider &&
+                            !vm.forIntegrityCustomer &&
+                            !vm.isTrafficControllerCustomer
+                        ) {
                             if (
                                 vm.user.havingGroupsAssigned ||
                                 sch.technicianNum === vm.user.userEmail

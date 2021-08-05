@@ -1,4 +1,9 @@
-<ion-view title="FIELD PROMAX" id="dashboardView" cache-view="false">
+<ion-view id="dashboardView" cache-view="false">
+    <ion-nav-title>
+        <span class="title-prefix"
+            >FIELD <span class="title-suffix">PROMAX</span></span
+        >
+    </ion-nav-title>
     <ion-nav-buttons side="left">
         <button
             menu-toggle="left"
@@ -62,7 +67,7 @@
                                 ng-class="{active: item.isOpen}"
                             >
                                 <i
-                                    class="icon font-color-fp"
+                                    class="icon font-color-fp-dark"
                                     ng-click="vm.events.onChildGroupClicked(item,'AD','parent')"
                                     ng-class="item.isOpen ? 'ion-minus' : 'ion-plus'"
                                 ></i>
@@ -112,7 +117,7 @@
                         ng-class="{active: group.isOpen}"
                     >
                         <i
-                            class="icon"
+                            class="icon font-color-fp"
                             ng-click="vm.events.onChildGroupClicked(group,'SP','mainparent')"
                             ng-class="group.isOpen ? 'ion-minus' : 'ion-plus'"
                         ></i>
@@ -123,7 +128,7 @@
                         >
                         <span
                             class="badge child-badge-right"
-                            ng-class="{'badge-balanced':group.count > 0,'badge-dark':group.count == 0}"
+                            ng-class="{'badge-balanced-fp':group.count > 0,'badge-dark':group.count == 0}"
                             >{{group.count}}</span
                         >
                         <button
