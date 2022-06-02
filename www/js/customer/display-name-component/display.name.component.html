@@ -1,0 +1,9 @@
+<a style="font-weight: 600" ng-click="vm.events.onDisplayNameLinkClicked()">
+    {{ vm.displayName }} <i class="icon ion-arrow-left-a"></i>
+</a>
+<script id="customerNotesModal.html" type="text/ng-template">
+    <ion-modal-view>
+      <customer-notes-modal display-name="vm.displayName" notes-modal="vm.customerNotesModal">
+        </customer-notes-modal>
+    </ion-modal-view>
+</script>

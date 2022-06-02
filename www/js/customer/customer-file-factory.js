@@ -1,20 +1,69 @@
 (function () {
-  "use strict";
+    "use strict";
 
-  function initFactory(apiBaseFactory, fieldPromaxConfig) {
-    var apibaseurl = "api/CustomerFile/";
+    function initFactory(apiBaseFactory, $rootScope) {
+        var apibaseurl = "api/CustomerFile/";
+        var selectedNote = null;
+        var attachmentsModal = null;
+        var addEditModal = null;
+        var selectedCustomer = null;
 
-    function searchCustomers(searchPattern) {
-      return apiBaseFactory.get(apibaseurl + "SearchCustomers?searchPattern=" + searchPattern);
+        function searchCustomers(searchPattern) {
+            return apiBaseFactory.get(
+                apibaseurl + "SearchCustomers?searchPattern=" + searchPattern
+            );
+        }
+        function createCustomer(customerModel) {
+            return apiBaseFactory.post(
+                apibaseurl + "CreateCustomer?fromMobile=true",
+                customerModel
+            );
+        }
+        function getNotesByDisplayName(displayName) {
+            return apiBaseFactory.get(
+                apibaseurl +
+                    "GetNotesByDisplayName?displayName=" +
+                    encodeURIComponent(displayName)
+            );
+        }
+        function deleteNote(num) {
+            return apiBaseFactory.deleteReq(
+                apibaseurl + "DeleteNote?num=" + num
+            );
+        }
+
+        function onAddEditNoteModalClosed(response) {
+            $rootScope.$broadcast("$fp:onAddEditNoteModalClosed", response);
+        }
+
+        function addUpdateNote(note) {
+            return apiBaseFactory.post(apibaseurl + "AddUpdateNote", note);
+        }
+
+        function tryUploadFile(files, model, customerFileNum) {
+            return apiBaseFactory.upload(
+                apibaseurl +
+                    "TryUploadNoteImage?customerFileNum=" +
+                    customerFileNum,
+                files,
+                model
+            );
+        }
+
+        return {
+            tryUploadFile: tryUploadFile,
+            onAddEditNoteModalClosed: onAddEditNoteModalClosed,
+            addUpdateNote: addUpdateNote,
+            selectedCustomer: selectedCustomer,
+            selectedNote: selectedNote,
+            addEditModal: addEditModal,
+            attachmentsModal: attachmentsModal,
+            deleteNote: deleteNote,
+            getNotesByDisplayName: getNotesByDisplayName,
+            createCustomer: createCustomer,
+            searchCustomers: searchCustomers
+        };
     }
-    function createCustomer(customerModel) {
-      return apiBaseFactory.post(apibaseurl + "CreateCustomer?fromMobile=true", customerModel);
-    }
-    return {
-      createCustomer: createCustomer,
-      searchCustomers: searchCustomers
-    };
-  }
-  initFactory.$inject = ["api-base-factory", "fieldPromaxConfig"];
-  angular.module("fpm").factory("customers-file-factory", initFactory);
+    initFactory.$inject = ["api-base-factory", "$rootScope"];
+    angular.module("fpm").factory("customers-file-factory", initFactory);
 })();

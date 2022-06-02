@@ -239,6 +239,15 @@ var fpm = angular
                     }
                 },
                 {
+                    state: "app.privacy",
+                    config: {
+                        url: "/privacy",
+                        controller: "privacy-controller",
+                        controllerAs: "vm",
+                        templateUrl: "views/privacy.html"
+                    }
+                },
+                {
                     state: "app.messageHub",
                     config: {
                         url: "/messageHub",

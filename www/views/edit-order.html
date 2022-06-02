@@ -26,7 +26,9 @@
                   <div class="item">
                     <span class="label label-success">{{::vm.barCodeData.barcodeDetails.barcodeName}}</span>
                     <div class="padding-top">
-                      <h2 class="n-m-b">{{::vm.barCodeData.barcodeDetails.displayName}}  <span ng-if="vm.barCodeData.barcodeDetails.isProject">
+                      <h2 class="n-m-b">
+                        <display-name display-name="::vm.barCodeData.barcodeDetails.displayName"></display-name>
+                        <span ng-if="vm.barCodeData.barcodeDetails.isProject">
                         <span>(Project)</span>
                       </span></h2>
                       <address>

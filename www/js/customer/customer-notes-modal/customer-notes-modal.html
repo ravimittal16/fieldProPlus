@@ -1,0 +1,81 @@
+<ion-header-bar>
+    <button class="button" data-ng-click="vm.events.closeNotesModal()">
+        Cancel
+    </button>
+    <h1 class="title">Notes</h1>
+    <button
+        class="button button-positive"
+        data-ng-click="vm.events.openAddNoteModal()"
+    >
+        Add Note
+    </button>
+</ion-header-bar>
+<ion-content>
+    <div class="hide">
+        <input
+            type="file"
+            id="upload-notes-image"
+            kendo-upload="vm.upload.control"
+            k-options="vm.upload.options"
+        />
+    </div>
+    <div class="list customer-notes-list">
+        <div
+            class="item item-body item-text-center"
+            ng-if="!vm.isRunning && vm.notes.length === 0"
+        >
+            No notes found!
+        </div>
+        <div
+            class="item item-body"
+            ng-repeat="note in vm.notes track by note.num"
+        >
+            {{note.note}}
+            <p
+                ng-if="note.notesImagesIds.length > 0"
+                class="attachments-header"
+            >
+                <a ng-click="vm.events.showAllAttachements(note)"
+                    >show all attachments</a
+                >
+            </p>
+            <div class="note-footer">
+                <div class="note-footer-info">
+                    <p>
+                        By <strong>{{::note.last_Name}}</strong> on
+                        <fp-date-time-renderer
+                            model-val="note.addedOn"
+                            type="date"
+                        ></fp-date-time-renderer>
+                    </p>
+                </div>
+                <div class="note-footer-actions">
+                    <a
+                        class="button button-icon icon trash ion-trash-a"
+                        ng-click="vm.events.deleteNote(note,$index)"
+                    ></a>
+                    <a
+                        class="button button-icon icon ion-edit"
+                        ng-click="vm.events.editNote(note)"
+                    ></a>
+                    <a
+                        class="button button-icon icon ion-paperclip"
+                        ng-click="vm.events.uploadImage(note)"
+                    ></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</ion-content>
+<script id="customerNotesAttachmentsModal.html" type="text/ng-template">
+    <ion-modal-view>
+      <customer-notes-images-modal>
+        </customer-notes-images-modal>
+    </ion-modal-view>
+</script>
+<script id="customerAddNoteModal.html" type="text/ng-template">
+    <ion-modal-view>
+      <customer-note-add-modal>
+        </customer-note-add-modal>
+    </ion-modal-view>
+</script>

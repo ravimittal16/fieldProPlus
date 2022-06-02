@@ -87,6 +87,11 @@
                 icon: "person"
             },
             {
+                title: "Privacy",
+                state: "app.privacy",
+                icon: "person"
+            },
+            {
                 title: "Logout",
                 state: "app.logout",
                 icon: "power"

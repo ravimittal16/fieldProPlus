@@ -1,0 +1,54 @@
+<ion-header-bar>
+    <h1 class="title">Note Images</h1>
+    <button class="button" data-ng-click="vm.events.closeNotesModal()">
+        Cancel
+    </button>
+</ion-header-bar>
+<ion-content>
+    <div class="list">
+        <a
+            class="item item-thumbnail-left"
+            ng-repeat="id in vm.note.notesImagesIds track by id"
+        >
+            <img
+                id="note_image_{{ id }}"
+                image-el-id="note_image_{{ id }}"
+                blob-image
+                image-id="id"
+                download-thumb="false"
+                loading="lazy"
+                ng-click="vm.events.onImageClicked(id)"
+            />
+            <h2>Note Image {{id}}</h2>
+        </a>
+    </div>
+    <!-- <div class="note-images-containers">
+        
+       <div class="notes-images">
+            <div class="notes-images-gallery">
+                <div ng-repeat="id in vm.note.notesImagesIds track by id">
+                    <img
+                        id="note_image_{{ id }}"
+                        image-el-id="note_image_{{ id }}"
+                        blob-image
+                        image-id="id"
+                        download-thumb="true"
+                        loading="lazy"
+                        ng-click="vm.events.onImageClicked(id)"
+                    />
+                </div>
+
+                <div
+                    class="upload-button-container"
+                    ng-click="vm.events.openImageUploadBox(note)"
+                    ng-if="
+              note.notesImagesIds === null ||
+              note.notesImagesIds.length <= 14
+            "
+                >
+                    <a class="fa fa-plus fa-2x"></a>
+                </div>
+            </div>
+        </div> 
+    </div>-->
+</ion-content>

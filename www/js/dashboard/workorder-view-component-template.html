@@ -23,7 +23,9 @@
   <div class="item item-text-wrap">
     <span class="label label-success">{{::vm.odr.BarcodeName}}</span>
     <div class="padding-top">
-      <h3>{{::vm.odr.DisplayName}}</h3>
+      <h3>
+      <display-name display-name="::vm.odr.DisplayName"></display-name>
+      </h3>
       <address>
         <p>
           <strong>{{::vm.odr.Company_Name}}</strong>

@@ -874,3 +874,101 @@ button.button-fieldpro i:before {
     font-weight: bold;
     color: #f38c19;
 }
+.customer-notes-list {
+    color: black;
+}
+.customer-notes-list .item-body {
+    font-size: 13px;
+}
+.customer-notes-list p {
+    margin-bottom: 0px;
+    margin-top: 5px;
+    font-size: 11px;
+    font-weight: 100;
+    color: rgb(143, 143, 143);
+}
+.customer-notes-list p.attachments-header {
+    font-size: 12px;
+    color: #387ef5;
+    font-weight: 600;
+}
+.note-images-containers {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.notes-images {
+    margin-top: 10px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+}
+.notes-images .notes-images-list ul {
+    display: list-item;
+}
+
+.notes-images-gallery {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 80px);
+    grid-template-rows: 80px;
+    gap: 5px;
+}
+
+.notes-images-gallery div:not(.upload-button-container) {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    min-height: 80px;
+    max-height: 80px;
+    vertical-align: middle;
+    -webkit-animation: animatezoom 600ms;
+    animation: animatezoom 600ms;
+    border: 2px solid #5a81a7;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.notes-images-gallery div:not(.upload-button-container):hover {
+    border: 2px solid #4bb86c;
+}
+.notes-images-gallery div:not(.upload-button-container) img {
+    width: 100%;
+    max-height: 76px;
+}
+.note-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.note-footer-info {
+    flex: 6;
+}
+
+.note-footer-actions {
+    flex: 3;
+    justify-content: flex-end;
+    justify-items: flex-end;
+    display: flex;
+}
+
+.note-footer-actions .button {
+    min-width: 30px;
+}
+
+.note-footer-actions .button::before {
+    font-size: 24px !important;
+}
+.trash {
+    color: #da251c !important;
+}
+#upload-notes-image {
+    display: none;
+}
+.item-text-center {
+    display: flex;
+    justify-content: center;
+    border-bottom: none;
+    color: darkgrey;
+    font-size: 14px;
+}
