@@ -36,7 +36,7 @@
                 class="attachments-header"
             >
                 <a ng-click="vm.events.showAllAttachements(note)"
-                    >show all attachments</a
+                    >show all attachments ({{note.notesImagesIds.length}})</a
                 >
             </p>
             <div class="note-footer">
@@ -60,6 +60,10 @@
                     ></a>
                     <a
                         class="button button-icon icon ion-paperclip"
+                        ng-if="
+                        note.notesImagesIds === null ||
+                        note.notesImagesIds.length <= 14
+                      "
                         ng-click="vm.events.uploadImage(note)"
                     ></a>
                 </div>

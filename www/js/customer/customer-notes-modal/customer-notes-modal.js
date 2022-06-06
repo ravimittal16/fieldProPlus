@@ -119,7 +119,8 @@
 
                 vm.events = {
                     openAddNoteModal: function () {
-                        isEditMode = true;
+                        isEditMode = false;
+                        customerFileFactory.selectedNote = null;
                         __openNoteAddEditModal();
                     },
                     deleteNote: function (note, index) {

@@ -5,7 +5,29 @@
     </button>
 </ion-header-bar>
 <ion-content>
-    <div class="list">
+    <ion-list>
+        <ion-item
+            ng-repeat="id in vm.note.notesImagesIds track by id"
+            class="item-thumbnail-left"
+        >
+            <img
+                id="note_image_{{ id }}"
+                image-el-id="note_image_{{ id }}"
+                blob-image
+                image-id="id"
+                download-thumb="false"
+                loading="lazy"
+                ng-click="vm.events.onImageClicked(id)"
+            />
+            <h2>Note Image {{id}}</h2>
+            <ion-option-button
+                class="button-assertive"
+                ng-click="vm.events.deleteImage(id)"
+                >Delete</ion-option-button
+            >
+        </ion-item>
+    </ion-list>
+    <!-- <div class="list">
         <a
             class="item item-thumbnail-left"
             ng-repeat="id in vm.note.notesImagesIds track by id"
@@ -20,8 +42,11 @@
                 ng-click="vm.events.onImageClicked(id)"
             />
             <h2>Note Image {{id}}</h2>
+            <ion-option-button class="button-info" ng-click="edit(item)">
+                Edit
+            </ion-option-button>
         </a>
-    </div>
+    </div> -->
     <!-- <div class="note-images-containers">
         
        <div class="notes-images">

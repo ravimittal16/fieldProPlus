@@ -3,6 +3,7 @@
 
     function initFactory(apiBaseFactory, $rootScope) {
         var apibaseurl = "api/CustomerFile/";
+        var woController = "api/WorkOrders/";
         var selectedNote = null;
         var attachmentsModal = null;
         var addEditModal = null;
@@ -50,7 +51,18 @@
             );
         }
 
+        function deleteImage(barcode, num) {
+            return apiBaseFactory.deleteReq(
+                woController +
+                    "DeleteImage?barcode=" +
+                    encodeURIComponent(barcode) +
+                    "&imageId=" +
+                    num
+            );
+        }
+
         return {
+            deleteImage: deleteImage,
             tryUploadFile: tryUploadFile,
             onAddEditNoteModalClosed: onAddEditNoteModalClosed,
             addUpdateNote: addUpdateNote,
