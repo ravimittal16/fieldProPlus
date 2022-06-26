@@ -179,8 +179,9 @@
           <ion-refresher pulling-text="Pull to refresh..." on-refresh="vm.tabs.desc.events.refreshOnPullDown()">
           </ion-refresher>
           <timecard-clock-in-header based-on="workorder" schedule="vm.schedule"
-            ng-if="vm.user.timeCard && vm.user.timecardAccessLevel === 3 && (vm.forIntegrityCustomer || vm.isTrafficControllerCustomer)">
+            ng-if="vm.user.timeCard && vm.user.timecardAccessLevel === 3 && (vm.forIntegrityCustomer || vm.isTrafficControllerCustomer) && !vm.timecardKioskEnabled">
           </timecard-clock-in-header>
+          
           <div class="card">
             <div class="item item-divider header-dark">
               <div class="row p-0">
@@ -483,7 +484,7 @@
               </button>
             </div>
           </div>
-          <timecard-details ng-if="vm.user.timeCard && vm.user.timecardAccessLevel === 3 && (vm.forIntegrityCustomer || vm.isTrafficControllerCustomer)"
+          <timecard-details ng-if="vm.user.timeCard && vm.user.timecardAccessLevel === 3 && (vm.forIntegrityCustomer || vm.isTrafficControllerCustomer) && !vm.timecardKioskEnabled"
             based-on="workorder" schedule="vm.schedule"></timecard-details>
           <div class="card">
             <div class="item item-divider header-dark">

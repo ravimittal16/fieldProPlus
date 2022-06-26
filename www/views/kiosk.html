@@ -1,0 +1,42 @@
+<ion-view view-title="Kiosk" class="kiosk-view-container" cache-view="false">
+    <ion-nav-buttons side="right">
+        <button
+            class="button button-assertive"
+            ng-if="vm.viewType === 0"
+            ng-click="vm.events.exitKioskClicked()"
+        >
+            Exit Kiosk
+        </button>
+        <button
+            class="button button-positive"
+            ng-if="vm.viewType === 1"
+            ng-click="vm.events.backKioskClicked()"
+        >
+            Back
+        </button>
+    </ion-nav-buttons>
+    <ion-content class="has-header kiosk-ion-content" direction="none">
+        <div
+            class="kiosk-main-container"
+            ng-if="vm.kioskFeatureEnabled && !vm.checkingFeatureAccess"
+        >
+            <kiosk-keypad ng-if="vm.viewType === 0"></kiosk-keypad>
+            <kiosk-actions
+                kiosk-user="vm.kioskUser"
+                ng-if="vm.viewType === 1"
+            ></kiosk-actions>
+        </div>
+        <div
+            class="kiosk-main-container kiosk-feature-disabled"
+            ng-if="!vm.kioskFeatureEnabled && !vm.checkingFeatureAccess"
+        >
+            Timecard Kiosk Feature is not enabled.
+        </div>
+    </ion-content>
+    <script id="kioskExitModal.html" type="text/ng-template">
+        <ion-modal-view>
+          <kiosk-exit-modal>
+            </kiosk-exit-modal>
+        </ion-modal-view>
+    </script>
+</ion-view>

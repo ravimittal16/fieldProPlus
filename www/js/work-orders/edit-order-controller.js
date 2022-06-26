@@ -33,7 +33,9 @@
             "97719",
             "99009",
             "97678",
-            "97636"
+            "97636",
+            "9130353757702476",
+            "9130353905042506"
         ];
         vm.onSummaryTabSelected = function () {
             workOrderFactory
@@ -61,7 +63,12 @@
         // ==========================================================
         // ADD SCHEDULE ALLOWED FOR "97678", "97636"
         // ==========================================================
-        var __integrityCustomersOld = ["97713", "97719", "99009"];
+        var __integrityCustomersOld = [
+            "97713",
+            "97719",
+            "99009",
+            "9130353757702476"
+        ];
         vm.forIntegrityCustomer = false;
         var jobStatus = {
             AcceptJob: 0,
@@ -600,8 +607,13 @@
 
         vm.dateTimeFormat = vm.user.dateFormat;
         vm.placeholder = "tap here to select...";
-
+        vm.timecardKioskEnabled = false;
         function activateController() {
+            timecardFactory
+                .checkifKioskEnabled(true)
+                .then(function (kioskEnabled) {
+                    vm.timecardKioskEnabled = kioskEnabled;
+                });
             vm.currencySymbol = $rootScope.currencySymbol;
             vm.isTrafficControllerCustomer =
                 vm.user.isTrafficControllerCustomer || false;

@@ -20,6 +20,7 @@ var paths = {
         "./www/js/**/*.js"
     ],
     codeFilesPath: [
+        "!./www/js/build/*.js",
         "./www/js/estimates/*.js",
         "./www/js/shared-components/**/*.js",
         "./www/js/shared/*.js",
@@ -28,17 +29,15 @@ var paths = {
         "./www/js/dashboard/*.js",
         "./www/js/home/*.js",
         "./www/js/message-hub/*.js",
+        "./www/js/kiosk/**/*.js",
+        "./www/js/timecard/**/*.js",
         "./www/js/realtime.module/*.js"
     ]
 };
 
 gulp.task("default", ["sass", "scripts"]);
 
-var scssFiles = [
-    "./scss/ionic.app.scss",
-    "./scss/message.hub.styles.scss",
-    "./scss/app.styles.scss"
-];
+var scssFiles = ["./scss/**/*.scss"];
 gulp.task("sass", function (done) {
     gulp.src(scssFiles)
         .pipe(sass())

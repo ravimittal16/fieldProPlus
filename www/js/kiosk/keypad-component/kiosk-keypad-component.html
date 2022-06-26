@@ -1,0 +1,25 @@
+<div class="keypad-container">
+    <div class="pin-input">
+        <div class="pin-label">Enter your PIN</div>
+        <div class="pin-dots-masked">
+            <div id="pin-0"></div>
+            <div id="pin-1"></div>
+            <div id="pin-2"></div>
+            <div id="pin-3"></div>
+        </div>
+    </div>
+    <div class="pin-keypad">
+        <div
+            ng-repeat="item in ::vm.pinItems"
+            data-content="{{item.item}}"
+            ng-click="vm.events.onItemClicked(item)"
+        >
+            <a ng-if="!item.hasIcon">{{item.item}}</a>
+
+            <a
+                ng-if="item.hasIcon"
+                class="button button-icon icon {{item.icon}}"
+            ></a>
+        </div>
+    </div>
+</div>

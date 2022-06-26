@@ -92,6 +92,11 @@
                 icon: "person"
             },
             {
+                title: "Timecard Kiosk",
+                state: "app.timecardKiosk",
+                icon: "clock"
+            },
+            {
                 title: "Logout",
                 state: "app.logout",
                 icon: "power"
@@ -140,7 +145,9 @@
             "97719",
             "99009",
             "97678",
-            "97636"
+            "97636",
+            "9130353757702476",
+            "9130353905042506"
         ];
         vm.events = {
             checkMenuItemVisibility: function (menu) {
@@ -169,13 +176,22 @@
                 ) {
                     return false;
                 }
-
                 if (angular.isDefined(menu.basedOn)) {
                     var basedOn = userData[menu.basedOn];
                     return basedOn;
                 }
+                /**
+                 * TIMECARD KIOSK FOR ADMINS ONLY
+                 */
+                if (
+                    menu &&
+                    menu.state === "app.timecardKiosk" &&
+                    !userData.isAdminstrator
+                ) {
+                    return false;
+                }
 
-                if (userData.isAdministrator) return true;
+                if (userData.isAdminstrator) return true;
                 if (
                     angular.isDefined(menu.isConfigurationBased) &&
                     menu.isConfigurationBased === true &&

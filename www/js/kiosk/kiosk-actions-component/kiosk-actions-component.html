@@ -1,0 +1,43 @@
+<div class="keypad-actions-container">
+    <!-- <div class="hide">
+        <input
+            type="file"
+            id="upload-notes-image"
+            kendo-upload="vm.upload.control"
+            k-options="vm.upload.options"
+        />
+    </div> -->
+    <div class="kiosk-user-info" ng-if="vm.kioskUser">
+        <p class="kiosk-hello">Hello</p>
+        <p>{{::vm.kioskUser.fullName}}</p>
+        <div ng-if="!vm.buttonViewType.clockInButton">
+            <p class="kiosk-clocked-in">
+                <span>Clocked In:</span>
+                <span
+                    ng-bind="vm.userClockInDetails.startTime | date :'h:mm a'"
+                ></span>
+            </p>
+        </div>
+    </div>
+    <div class="kiosk-actions-container">
+        <div class="kiosk-buttons">
+            <button
+                class="button button-block button-fieldpromax"
+                ng-if="vm.buttonViewType.clockInButton"
+                ng-click="vm.events.clockInOutUser(true)"
+            >
+                TAKE PICTURE AND CLOCK-IN
+            </button>
+            <button
+                class="button button-block button-fieldpromax"
+                ng-if="vm.buttonViewType.clockOutButton"
+                ng-click="vm.events.clockInOutUser(false)"
+            >
+                TAKE PICTURE AND CLOCK-OUT
+            </button>
+        </div>
+        <div>
+            <span ng-bind="vm.currentDate | date :'h:mm a EEEE MMM dd'"></span>
+        </div>
+    </div>
+</div>

@@ -248,6 +248,15 @@ var fpm = angular
                     }
                 },
                 {
+                    state: "app.timecardKiosk",
+                    config: {
+                        url: "/timecardKiosk",
+                        controller: "kiosk-controller",
+                        controllerAs: "vm",
+                        templateUrl: "views/kiosk.html"
+                    }
+                },
+                {
                     state: "app.messageHub",
                     config: {
                         url: "/messageHub",
