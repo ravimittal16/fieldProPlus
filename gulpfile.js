@@ -27,10 +27,10 @@ var paths = {
         "./www/js/customer/**/*.js",
         "./www/js/work-orders/*.js",
         "./www/js/dashboard/*.js",
-        "./www/js/home/*.js",
         "./www/js/message-hub/*.js",
         "./www/js/kiosk/**/*.js",
         "./www/js/timecard/**/*.js",
+        "./www/js/home/**/*.js",
         "./www/js/realtime.module/*.js"
     ]
 };

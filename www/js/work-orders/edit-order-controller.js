@@ -35,7 +35,9 @@
             "97678",
             "97636",
             "9130353757702476",
-            "9130353905042506"
+            "9130354538598316",
+            "9130353905042506",
+            "9130354539121516"
         ];
         vm.onSummaryTabSelected = function () {
             workOrderFactory
@@ -607,13 +609,7 @@
 
         vm.dateTimeFormat = vm.user.dateFormat;
         vm.placeholder = "tap here to select...";
-        vm.timecardKioskEnabled = false;
         function activateController() {
-            timecardFactory
-                .checkifKioskEnabled(true)
-                .then(function (kioskEnabled) {
-                    vm.timecardKioskEnabled = kioskEnabled;
-                });
             vm.currencySymbol = $rootScope.currencySymbol;
             vm.isTrafficControllerCustomer =
                 vm.user.isTrafficControllerCustomer || false;

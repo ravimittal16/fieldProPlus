@@ -116,6 +116,19 @@
         $rootScope.$on(
             "$stateChangeSuccess",
             function (event, toState, toParams, fromState, fromParams) {
+                setTimeout(function () {
+                    var $menuButton = document.querySelector(
+                        "button[menu-toggle]"
+                    );
+                    if ($menuButton) {
+                        if (toState.name === "app.timecardKiosk") {
+                            $($menuButton).hide();
+                        } else {
+                            $($menuButton).show();
+                        }
+                    }
+                }, 1000);
+
                 if (
                     toState.name !== "app.logout" &&
                     toState.name !== "login" &&
@@ -147,7 +160,9 @@
             "97678",
             "97636",
             "9130353757702476",
-            "9130353905042506"
+            "9130353905042506",
+            "9130354538598316",
+            "9130354539121516"
         ];
         vm.events = {
             checkMenuItemVisibility: function (menu) {
