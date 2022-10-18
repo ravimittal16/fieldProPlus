@@ -15,6 +15,7 @@
             "fieldPromaxConfig",
             "fpm-utilities-factory",
             "$timeout",
+            "shared-data-factory",
             function (
                 $scope,
                 $state,
@@ -23,13 +24,14 @@
                 workOrderFactory,
                 fieldPromaxConfig,
                 fpmUtilities,
-                $timeout
+                $timeout,
+                sharedDataFactory
             ) {
                 var vm = this;
                 var baseUrl = fieldPromaxConfig.fieldPromaxApi;
                 var user = authenticationFactory.getLoggedInUserInfo();
                 vm.showList = false;
-                vm.paymentModal = null;
+                vm.addEditPaymentModal = null;
                 var alerts = fpmUtilities.alerts;
                 var paymentSchema = {
                     paymentMode: "",
@@ -88,13 +90,14 @@
                 function openAddEditPaymentModal() {
                     vm.modalType = 1;
                     vm.currentPayment = angular.copy(paymentSchema);
-                    if (vm.paymentModal) {
-                        vm.paymentModal.show();
+                    if (vm.addEditPaymentModal) {
+                        vm.addEditPaymentModal.show();
                     } else if (vm.balanceDue > 0) {
                         fpmUtilities
                             .getModal("addEditPaymentModal.html", $scope)
                             .then(function (modal) {
-                                __closePaymentModal();
+                                vm.addEditPaymentModal = modal;
+                                vm.addEditPaymentModal.show();
                             });
                     } else {
                         alerts.alert(
@@ -182,6 +185,21 @@
                 };
 
                 vm.$onInit = function () {
+                    sharedDataFactory
+                        .getIniitialData()
+                        .then(function (response) {
+                            if (response) {
+                                if (
+                                    response.customerNumberEntity
+                                        .configurationJson
+                                ) {
+                                    vm.companyConfiguration = JSON.parse(
+                                        response.customerNumberEntity
+                                            .configurationJson
+                                    );
+                                }
+                            }
+                        });
                     getBarcodePayments();
                 };
             }

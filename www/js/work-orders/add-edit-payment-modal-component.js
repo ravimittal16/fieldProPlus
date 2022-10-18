@@ -43,7 +43,19 @@
                                 vm.balanceDue.toFixed(2)
                             ) {
                                 vm.errors.push(
-                                    "Amount received can not be more than balance due"
+                                    "Amount received can not be more than balance due."
+                                );
+                                vm.showError = true;
+                                return false;
+                            }
+                            if (vm.payment.paymentMode == "") {
+                                vm.errors.push("Please select a payment mode.");
+                                vm.showError = true;
+                                return false;
+                            }
+                            if (vm.payment.amountReceived == 0) {
+                                vm.errors.push(
+                                    "Payment amount can not be zero"
                                 );
                                 vm.showError = true;
                                 return false;
