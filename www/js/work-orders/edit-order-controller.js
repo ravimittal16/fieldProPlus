@@ -43,6 +43,7 @@
             workOrderFactory
                 .getBarcodeInvoiceAndScheduleDetails(vm.barcode)
                 .then(function (response) {
+                    console.log(response);
                     if (response && response.invoice) {
                         vm.barCodeData.invoice = response.invoice;
                         calculateTotals();
@@ -132,6 +133,26 @@
         vm.errors = [];
         vm.gettingBarcodeDetails = true;
         var schedule = null;
+        vm.mobile = {
+            sendToQuickBooks: false
+        }
+        function getCustomerConfigurations() {
+            sharedDataFactory
+                .getCustomerConfigurations()
+                .then(function (__config) {
+                    if (__config !== null) {
+                        $timeout(function () {
+                            var item = _.filter(__config, function (e) {
+                                return e.configKey === "SEND_INVOICE_TO_QUICKBOOKS_MOBILE";
+                            });
+                            if (item != null && item[0].configValue === "True") {
+                                vm.mobile.sendToQuickBooks = true;
+                            }
+                        }, 50);
+                    }
+                });
+        }
+
         function getBarcodeDetails() {
             vm.gettingBarcodeDetails = true;
             $ionicLoading
@@ -452,7 +473,7 @@
             onEndDateTimeChanged: function () {
                 onActualTimesChanged(false);
             },
-            clearAllDateTimeSelection: function () {}
+            clearAllDateTimeSelection: function () { }
         };
 
         function checkAuthorizationIfServiceProvider(co, cb, fromAddSchedule) {
@@ -639,6 +660,10 @@
                 .getIniitialData(true)
                 .then(function (response) {
                     if (response) {
+                        vm.includeWoDesc =
+                            response.customerNumberEntity.includeWorkOrderDescription || false;
+                        vm.includeWoRes =
+                            response.customerNumberEntity.includeWorkOrderResolution || false;
                         vm.uiSettings.milageTrackingEnabled =
                             response.customerNumberEntity
                                 .milageTrackingEnabled || false;
@@ -745,9 +770,9 @@
                                 var newPrice = pro.newPriceCalculated
                                     ? pro.price
                                     : parseFloat(pro.price) +
-                                      parseFloat(
-                                          ((pro.markup || 0) / 100) * pro.price
-                                      );
+                                    parseFloat(
+                                        ((pro.markup || 0) / 100) * pro.price
+                                    );
                                 pro.price = newPrice;
                                 pro.newPriceCalculated = true;
                                 totalPrice = newPrice * pro.qty;
@@ -1016,8 +1041,8 @@
                     "_system",
                     "location=yes"
                 ).then(
-                    function () {},
-                    function (event) {}
+                    function () { },
+                    function (event) { }
                 );
             } else {
                 goourl = "https://maps.google.com?daddr=" + daddr;
@@ -1127,7 +1152,7 @@
                             fpmUtilities.hideLoading();
                         }
                     )
-                    .finally(function () {});
+                    .finally(function () { });
             });
         }
 
@@ -1203,7 +1228,7 @@
                                 .checkPreviousDateClockIn({
                                     timecardDate:
                                         __forIntegrityCustomer ||
-                                        vm.isTrafficControllerCustomer
+                                            vm.isTrafficControllerCustomer
                                             ? __shcStartDate
                                             : dt,
                                     userEmail: vm.schedule.technicianNum,
@@ -1225,7 +1250,7 @@
                                             function () {
                                                 processCheckIn(true);
                                             },
-                                            function () {}
+                                            function () { }
                                         );
                                     } else {
                                         // ==========================================================
@@ -1237,7 +1262,7 @@
                                             function () {
                                                 processCheckIn(true);
                                             },
-                                            function () {}
+                                            function () { }
                                         );
                                     }
                                 });
@@ -1295,7 +1320,7 @@
                                                         ) {
                                                             if (
                                                                 isClosed !==
-                                                                    null &&
+                                                                null &&
                                                                 !isClosed
                                                             ) {
                                                                 $state.go(
@@ -1404,7 +1429,18 @@
             }
         }
         // ==========================================================
-
+        function __hidePopupModal() {
+            vm.popModal.modal.hide();
+            vm.popModal.modal.remove();
+            vm.popModal.modal = null;
+        }
+        function __hideScheduleAddModal(callHide) {
+            if (callHide) {
+                vm.scheduleAddModal.hide();
+            }
+            vm.scheduleAddModal.remove();
+            vm.scheduleAddModal = null;
+        }
         vm.tabs = {
             events: {
                 updateClicked: function () {
@@ -1451,10 +1487,11 @@
                     updateOrder(
                         vm.popModal.type === "DESCRIPTION" ? "desc" : null
                     );
-                    vm.popModal.modal.hide();
+
+                    __hidePopupModal();
                 },
                 closePopoutModal: function () {
-                    vm.popModal.modal.hide();
+                    __hidePopupModal();
                 },
                 popoutTextBox: function (type) {
                     vm.popupDescriptionBoxType = type;
@@ -1521,6 +1558,8 @@
                         isMapLoaded = false;
                         if (workOrderMapModal) {
                             workOrderMapModal.hide();
+                            workOrderMapModal.remove();
+                            workOrderMapModal = null;
                         }
                     },
                     onAddressTapped: function () {
@@ -1635,6 +1674,7 @@
                     onAddScheduleCompleted: function (o) {
                         if (o) {
                             vm.scheduleAddModal.hide().then(function () {
+                                __hideScheduleAddModal(false);
                                 alerts.alert(
                                     "Success",
                                     "Schedule added successfully",
@@ -1648,13 +1688,13 @@
                         }
                     },
                     onModalCancelClicked: function () {
-                        vm.scheduleAddModal.hide();
+                        __hideScheduleAddModal(true);
                     },
                     updateMilage: function () {
                         if (vm.schedule.startMiles && vm.schedule.endMiles) {
                             vm.schedule.totalMiles = parseFloat(
                                 parseFloat(vm.schedule.endMiles) -
-                                    parseFloat(vm.schedule.startMiles)
+                                parseFloat(vm.schedule.startMiles)
                             ).toFixed(2);
                         }
                         updateSchedule(false, false);
@@ -1810,6 +1850,36 @@
             },
             smry: {
                 events: {
+                    sendToQuickBooks: function () {
+                        vm.postnclose = false;
+                        alerts.confirm(
+                            "Confirmation!",
+                            "Are you sure you want to send the work order to QuickBooks?",
+                            function () {
+                                fpmUtilities.showLoading().then(function () {
+                                    vm.postnclose = true;
+                                    workOrderFactory.sendToQuickBooks(vm.barcode, vm.includeWoDesc, vm.includeWorkOrderResolution, [], true)
+                                        .then(function (response) {
+                                            if (
+                                                angular.isArray(response.errors) &&
+                                                response.errors.length > 0
+                                            ) {
+                                                vm.errors = response.errors;
+                                                vm.quickbooksResponse = response.quickBooksResponse;
+                                            } else {
+                                                alerts.alert(
+                                                    "Success!",
+                                                    "Invoice processed succesfully.",
+                                                    function () {
+
+                                                    });
+                                            }
+                                        }).finally(function () {
+                                            fpmUtilities.hideLoading();
+                                        });
+                                });
+                            });
+                    },
                     onEditTaxRateClicked: function () {
                         $timeout(function () {
                             vm.numpad.show();
@@ -1836,9 +1906,9 @@
                         openProductSearchModal();
                     },
                     closeProductEditModal: function () {
-                        vm.productModal.hide();
+                        __closeProductModal();
                     },
-                    openProductSearchModal: function () {},
+                    openProductSearchModal: function () { },
                     onEditProductClicked: function (product) {
                         vm.currentProduct = angular.copy(product);
                         openEditProductModal();
@@ -1943,32 +2013,45 @@
 
         $scope.$on("$fpm:closeEditProductModal", function () {
             if (vm.productModal) {
-                vm.productModal.hide();
+                __closeProductModal();
             }
         });
+        function __closeProductModal() {
+            vm.productModal.hide();
+            vm.productModal.remove();
+            vm.productModal = null;
+        }
+
+        function __closeProductSearchModal() {
+            vm.productSearchModal.hide();
+            vm.productSearchModal.remove();
+            vm.productSearchModal = null;
+        }
 
         function getBarcodeProducts(closeModal) {
-            workOrderFactory
-                .getBarcodeInvoiceAndProductDetails(vm.barcode)
-                .then(function (response) {
-                    vm.barCodeData.products = response.products;
-                    vm.barCodeData.invoice = response.invoice;
-                    calculateTotals();
-                })
-                .finally(function () {
-                    if (closeModal) {
+            if (closeModal) {
+                __closeProductModal();
+            }
+            fpmUtilities.showLoading().then(function () {
+                workOrderFactory
+                    .getBarcodeInvoiceAndProductDetails(vm.barcode)
+                    .then(function (response) {
+                        vm.barCodeData.products = response.products;
+                        vm.barCodeData.invoice = response.invoice;
+                        calculateTotals();
+                    })
+                    .finally(function () {
                         fpmUtilities.hideLoading();
-                        vm.productModal.hide();
-                    }
-                });
+                    });
+            });
         }
 
         $scope.$on("$fpm:closeProductSearchModal", function ($event, args) {
             if (vm.productSearchModal) {
-                if (args && args.fromProductAdd === true) {
+                if (args && args.fromProductAdd) {
                     getBarcodeProducts(false);
                 }
-                vm.productSearchModal.hide();
+                __closeProductSearchModal();
             }
         });
 
@@ -1988,10 +2071,8 @@
 
         $scope.$on("$fpm:operation:updateProduct", function ($event, agrs) {
             uProductTimer = $timeout(function () {
-                fpmUtilities.showLoading().then(function () {
-                    getBarcodeProducts(true);
-                });
-            }, 300);
+                getBarcodeProducts(true);
+            }, 100);
         });
 
         $scope.$on(
@@ -2016,6 +2097,7 @@
             isMapLoaded = false;
         });
         vm.selectedIndex = 0;
+        getCustomerConfigurations();
         getBarcodeDetails();
         activateController();
         var $indexTimeout = $timeout(function () {

@@ -641,7 +641,11 @@
                 }
             );
         }
-
+        function _closeAddEditModal() {
+            vm.ui.data.addEditDetailsModal.hide();
+            vm.ui.data.addEditDetailsModal.remove();
+            vm.ui.data.addEditDetailsModal = null;
+        }
         var timeoutvar = null;
         vm.ui = {
             errors: [],
@@ -804,6 +808,8 @@
                 },
                 onSummaryModalCancel: function () {
                     vm.ui.data.timeCardSummaryModal.hide();
+                    vm.ui.data.timeCardSummaryModal.remove();
+                    vm.ui.data.timeCardSummaryModal = null;
                 },
                 checkSummaryClick: function () {
                     showSummaryModal();
@@ -823,13 +829,13 @@
                             o.timeCardSummary.approveStatus || 0;
                     }
                     _updateTimeCardsArray(o.timeCardDetails);
-                    vm.ui.data.addEditDetailsModal.hide();
+                    _closeAddEditModal();
                 },
                 onModalCancelClicked: function () {
                     vm.ui.data.isInEditMode = false;
                     vm.ui.data.isFromPto = false;
                     vm.ui.data.currentDetails = null;
-                    vm.ui.data.addEditDetailsModal.hide();
+                    _closeAddEditModal();
                 },
                 addTimeClick: function (isFromPto) {
                     $timeout(function () {

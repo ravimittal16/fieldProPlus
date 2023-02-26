@@ -14,7 +14,7 @@
           ng-if="(vm.userInfo.isAdminstrator && !vm.odr.WorkComplete) || (!vm.odr.WorkComplete && vm.allowedForSp)"
           style="margin-right:10px" ng-click="vm.events.onEditButtonClicked()"></button>
         <button class="button button-icon icon ion-trash-b button-font-small"
-          ng-if="vm.userInfo.isAdminstrator || vm.allowedForSp"
+          ng-if="!vm.odr.BarcodeComplete && (vm.userInfo.isAdminstrator || vm.allowedForSp)"
           ng-click="vm.events.onDeleteButtonClicked()"></button>
 
       </div>
@@ -54,13 +54,13 @@
       vm.userInfo.userEmail" ng-click="vm.events.inRouteClicked()">
       In Route
     </button>
-    <!-- <button ng-if="vm.trackJobStatus && !vm.odr.WorkComplete && vm.odr.TechnicianNum == vm.userInfo.userEmail"
-      class="button button-small button-dark" ng-click="vm.events.saveOrderRefOffline()">
-      <i class="icon ion-android-download"></i>
-    </button> -->
-    <button class="button  button-small button-fieldpro pull-right" ng-click="vm.events.onOrderClicked()">
+    
+    <button ng-if="!vm.odr.BarcodeComplete" class="button  button-small button-fieldpro pull-right" ng-click="vm.events.onOrderClicked()">
       <i class="icon ion-arrow-right-a"></i>
     </button>
+    <button ng-if="vm.odr.BarcodeComplete"  ng-disabled="vm.reopeningBarcode" class="button  button-small button-fieldpro pull-right" ng-click="vm.events.onReopenOrderClicked()">
+      Reopen Work Order
+     </button>
   </div>
   </ion-card>
 </div>

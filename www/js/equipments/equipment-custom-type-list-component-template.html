@@ -1,36 +1,86 @@
 <div class="list equipment-customtypes">
     <div data-ng-repeat="ct in vm.customTypes.data" data-ng-switch="ct.type">
-        <label class="item item-input item-stacked-label" data-ng-switch-when="1">
+        <label
+            class="item item-input item-stacked-label"
+            data-ng-switch-when="1"
+        >
             <span class="input-label" data-ng-bind="ct.title"></span>
-            <input type="text" data-ng-model="ct.value" maxlength="100" placeholder="enter text here" data-ng-change="vm.events.onValueChanged(ct)"
-                data-ng-model-options="{debounce:500}" />
+            <input
+                type="text"
+                data-ng-model="ct.value"
+                maxlength="100"
+                placeholder="enter text here"
+                data-ng-change="vm.events.onValueChanged(ct)"
+                data-ng-model-options="{debounce:500}"
+            />
         </label>
         <ion-list data-ng-switch-when="2">
             <div class="item custom-type-radio">
                 <span data-ng-bind="ct.title"></span>
             </div>
-            <ion-radio name="{{ct.title}}" ng-model="ct.value" data-ng-change="vm.events.onValueChanged(ct)" ng-value="'Yes'">Yes</ion-radio>
-            <ion-radio name="{{ct.title}}" ng-model="ct.value" data-ng-change="vm.events.onValueChanged(ct)" ng-value="'No'">No</ion-radio>
+            <ion-radio
+                name="{{ct.title}}"
+                ng-model="ct.value"
+                data-ng-change="vm.events.onValueChanged(ct)"
+                ng-value="'Yes'"
+                >Yes</ion-radio
+            >
+            <ion-radio
+                name="{{ct.title}}"
+                ng-model="ct.value"
+                data-ng-change="vm.events.onValueChanged(ct)"
+                ng-value="'No'"
+                >No</ion-radio
+            >
         </ion-list>
         <span data-ng-switch-when="3">
-            <ion-toggle toggle-class="toggle-balanced" data-ng-model="ct.value" data-ng-change="vm.events.onValueChanged(ct)">
+            <ion-toggle
+                toggle-class="toggle-balanced"
+                data-ng-model="ct.value"
+                data-ng-change="vm.events.onValueChanged(ct)"
+            >
                 <span class="input-label" data-ng-bind="ct.title"></span>
             </ion-toggle>
         </span>
-        <label class="item item-input item-stacked-label" data-ng-switch-when="4">
+        <label
+            class="item item-input item-stacked-label"
+            data-ng-switch-when="4"
+        >
             <span class="input-label" data-ng-bind="ct.title"></span>
-            <!-- <input type="text" placeholder="select date" readonly="" class="transparent-background" data-ng-change="vm.events.onValueChanged(ct,true)"
-                data-mobiscroll-date="{display: 'bottom', dateFormat: 'mm/dd/yy'}" data-ng-model="ct.value" /> -->
-                <fp-date-component  model-val="ct.value" readonly="" type="date" format="vm.dateFormat" default-text="Select Date" on-date-changed="vm.events.onValueChanged(ct,true)"></fp-date-component>
+
+            <fp-date-component
+                model-val="ct.value"
+                readonly=""
+                type="date"
+                format="vm.dateFormat"
+                default-text="Select Date"
+                on-date-changed="vm.events.onValueChanged(ct,true)"
+            ></fp-date-component>
         </label>
-        <label class="item item-input item-stacked-label" data-ng-switch-when="5">
+        <label
+            class="item item-input item-stacked-label"
+            data-ng-switch-when="5"
+        >
             <span class="input-label" data-ng-bind="ct.title"></span>
-            <jobtype-upload-component data-ct-entity="ct" from-equipments="true" use-entity-id="vm.entityId"></jobtype-upload-component>
+            <jobtype-upload-component
+                data-ct-entity="ct"
+                from-equipments="true"
+                use-entity-id="vm.entityId"
+            ></jobtype-upload-component>
         </label>
-        <label class="item item-input item-stacked-label" data-ng-switch-when="6">
+        <label
+            class="item item-input item-stacked-label"
+            data-ng-switch-when="6"
+        >
             <span class="input-label" data-ng-bind="ct.title"></span>
-            <textarea data-ng-model="ct.value" maxlength="100" placeholder="{{ct.title}}" rows="3" data-ng-change="vm.events.onValueChanged(ct)"
-                data-ng-model-options="{debounce:500}"></textarea>
+            <textarea
+                data-ng-model="ct.value"
+                maxlength="100"
+                placeholder="{{ct.title}}"
+                rows="3"
+                data-ng-change="vm.events.onValueChanged(ct)"
+                data-ng-model-options="{debounce:500}"
+            ></textarea>
         </label>
     </div>
 </div>

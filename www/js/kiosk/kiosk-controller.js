@@ -34,18 +34,24 @@
                 __openKioskKeypadView();
             },
             exitKioskClicked: function () {
-                fpmUtilities.alerts.confirm(
-                    "Exit Kiosk",
-                    "Are you sure?",
-                    function () {
-                        fpmUtilities
-                            .getModal("kioskExitModal.html", $scope)
-                            .then(function (modal) {
-                                KioskExitModal = modal;
-                                KioskExitModal.show();
-                            });
-                    }
-                );
+                if (vm.checkingFeatureAccess) {
+                    fpmUtilities.alerts.confirm(
+                        "Exit Kiosk",
+                        "Are you sure?",
+                        function () {
+                            fpmUtilities
+                                .getModal("kioskExitModal.html", $scope)
+                                .then(function (modal) {
+                                    KioskExitModal = modal;
+                                    KioskExitModal.show();
+                                });
+                        }
+                    );
+                } else {
+                    $state.go("app.dashboard", {
+                        refresh: true
+                    });
+                }
             }
         };
 

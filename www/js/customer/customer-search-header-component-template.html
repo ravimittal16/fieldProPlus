@@ -1,48 +1,48 @@
 <label class="item-input-wrapper">
-  <i class="icon ion-search placeholder-icon"></i>
-  <input
-    type="search"
-    placeholder="{{vm.placeholder}}"
-    readonly=""
-    on-tap="vm.events.onSearchBoxTapped()"
-  />
+    <i class="icon ion-search placeholder-icon"></i>
+    <input
+        type="search"
+        placeholder="{{vm.placeholder}}"
+        readonly=""
+        on-tap="vm.events.onSearchBoxTapped()"
+    />
 </label>
 <script id="customerSearchModal.html" type="text/ng-template">
-  <ion-modal-view>
-  	<ion-header-bar>
-  		<h1 class="title">Search Customer</h1>
-  	</ion-header-bar>
-  	<ion-header-bar class="bar-subheader item-input-inset">
-  		<label class="item-input-wrapper" focus-me>
-  			<i class="icon ion-search placeholder-icon"></i>
-  			<input type="search" name="searchBox" autofocus="" placeholder="Search customer..."
-  			ng-model-options="{debounce:500}" ng-change="vm.searchApplied = false" ng-model="vm.searchValue" />
-  		</label>
-  		<!-- <button class="button" ng-click="vm.events.closeSearchModal()">
-  			Cancel
-  		</button> -->
-  		<button class="button button-positive" style="margin-right:60px;" ng-disabled="vm.runningSearch" ng-click="vm.events.applySearch(true)">
-  				Search
-  			</button>
-  			<button class="button" ng-click="vm.events.closeSearchModal()">
-  				Cancel
-  			</button>
-  	</ion-header-bar>
-  	<ion-content>
-  		<div class="text-center padding-top" ng-if="vm.runningSearch">
-  			<ion-spinner icon="ripple"></ion-spinner>
-  		</div>
-  		<div class="list" ng-if="vm.customers.length > 0">
-  			<li class="item item-text-wrap" ng-repeat="c in vm.customers" on-tap="vm.events.onCustomerSelected(c)">
-  				<h2>{{::c.name}} <span ng-if="c.isProject"><strong>&nbsp;(Project)</strong></span></h2>
-  				<p><span ng-if="c.shipStreet">{{::c.shipStreet}},</span><strong ng-if="p.shipCity">{{::p.shipCity}},</strong><strong ng-if="p.shipState">{{::p.shipState}}&nbsp;</strong>{{::p.shipZIP}}</p>
-  			</li>
-  		</div>
-  		<div class="list" ng-if="vm.customers.length == 0 && vm.searchApplied && vm.searchValue != ''">
-  			<li class="item item-text-wrap text-center">
-  				<small class="text-muted">no customer found with <strong ng-bind="vm.searchValue"></strong></small>
-  			</li>
-  		</div>
-  	</ion-content>
-  </ion-modal-view>
+    <ion-modal-view>
+    	<ion-header-bar>
+    		<h1 class="title">Search Customer</h1>
+    	</ion-header-bar>
+    	<ion-header-bar class="bar-subheader item-input-inset">
+    		<label class="item-input-wrapper" focus-me>
+    			<i class="icon ion-search placeholder-icon"></i>
+    			<input type="search" name="searchBox" autofocus="" placeholder="Search customer..."
+    			ng-model-options="{debounce:500}" ng-change="vm.searchApplied = false" ng-model="vm.searchValue" />
+    		</label>
+    		<!-- <button class="button" ng-click="vm.events.closeSearchModal()">
+    			Cancel
+    		</button> -->
+    		<button class="button button-positive" style="margin-right:60px;" ng-disabled="vm.runningSearch" ng-click="vm.events.applySearch(true)">
+    				Search
+    			</button>
+    			<button class="button" ng-click="vm.events.closeSearchModal()">
+    				Cancel
+    			</button>
+    	</ion-header-bar>
+    	<ion-content>
+    		<div class="text-center padding-top" ng-if="vm.runningSearch">
+    			<ion-spinner icon="ripple"></ion-spinner>
+    		</div>
+    		<div class="list" ng-if="vm.customers.length > 0">
+    			<li class="item item-text-wrap" ng-repeat="c in vm.customers" on-tap="vm.events.onCustomerSelected(c)">
+    				<h2>{{::c.name}} <span ng-if="c.isProject"><strong>&nbsp;(Project)</strong></span></h2>
+    				<p><span ng-if="c.shipStreet">{{::c.shipStreet}} </span><strong ng-if="c.shipCity">{{::c.shipCity}},</strong><strong ng-if="c.shipState">&nbsp;{{::c.shipState}}&nbsp;</strong>{{::c.shipZIP}}</p>
+    			</li>
+    		</div>
+    		<div class="list" ng-if="vm.customers.length == 0 && vm.searchApplied && vm.searchValue != ''">
+    			<li class="item item-text-wrap text-center">
+    				<small class="text-muted">no customer found with <strong ng-bind="vm.searchValue"></strong></small>
+    			</li>
+    		</div>
+    	</ion-content>
+    </ion-modal-view>
 </script>

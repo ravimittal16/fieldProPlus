@@ -359,8 +359,30 @@
                     "&loadSchedules=false"
             );
         }
+        function reopenOrder(model) {
+            return apiBaseFactory.post(apibaseurl + "ReopenWorkOrder", model);
+          }
+
+          function sendToQuickBooks(
+            barcode,
+            includeWoDescriptionAsItem,
+            workResolution,
+            checkedItemsForBilling,
+            allItemsChecked
+          ) {
+            var model = {
+              barcode: barcode,
+              includeWoDescriptionAsItem: includeWoDescriptionAsItem,
+              includeResolutionAsItem: workResolution,
+              checkedItemsForBilling: checkedItemsForBilling,
+              allItemsCheckedForBilling: allItemsChecked,
+            };
+            return apiBaseFactory.post(apibaseurl + "PostAndClose", model);
+          }
 
         return {
+            sendToQuickBooks:sendToQuickBooks,
+            reopenOrder:reopenOrder,
             deleteDocument: deleteDocument,
             updateScheduleBillableState: updateScheduleBillableState,
             updateJobStatusMultiple: updateJobStatusMultiple,

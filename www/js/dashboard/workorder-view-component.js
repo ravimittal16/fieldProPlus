@@ -270,6 +270,30 @@
                                 src: "main"
                             });
                         }
+                    },
+                    onReopenOrderClicked: function () {
+                        fpmUtilitiesFactory.alerts.confirm(
+                            "Confirmation!",
+                            "Are you sure you want to reopen the order?",
+                            function () {
+                                vm.reopeningBarcode = true;
+                                var reopenModel = { barcode: vm.odr.Barcode, location: vm.odr.Barcode };
+                                workOrdersFactory.reopenOrder(reopenModel).then(function (response) {
+                                    if (response) {
+                                        fpmUtilitiesFactory.alerts.alert(
+                                            "Success!",
+                                            "Work Order reopened succesfully",
+                                            function () {
+                                                $scope.$emit("$fpm:scheduleChanged", {
+                                                    scheduleId: 0
+                                                });
+                                            });
+                                    }
+                                });
+                            }).finally(function () {
+                                vm.reopeningBarcode = false;
+                            });
+
                     }
                 };
                 var __integrityCustomers = [

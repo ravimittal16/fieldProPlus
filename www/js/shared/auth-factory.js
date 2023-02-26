@@ -32,6 +32,7 @@
                         secLevel: response.secLevel,
                         isAdminstrator: response.isAdminstrator === "True",
                         isIntuitUser: response.isIntuitUser === "True",
+                        intuitServiceType:response.intuitServiceType,
                         userEmail: response.userEmail,
                         etOn: response.etOn === "True",
                         timeCard: response.timeCard === "True",

@@ -12,6 +12,7 @@
         var apibaseurl = "api/Shared/";
         var pushapi = "api/NotificationsHub/";
         var locationapi = "api/Location/";
+        var __customerConfiguration={};
 
         function updateLocationServiceStatus(userEmail) {}
 
@@ -163,6 +164,18 @@
             );
         }
 
+        function getCustomerConfigurations() {
+            return apiBaseFactory
+                .get(apibaseurl + "GetCustomerConfigurations")
+                .then(function (__config) {
+                    setCustomerConfigurations(__config);
+                    return __config;
+                });
+        }
+
+        function setCustomerConfigurations(config) {
+            __customerConfiguration = config;
+        }
         return {
             downloadImageFromBlob: downloadImageFromBlob,
             submitQuestion: submitQuestion,
@@ -175,7 +188,9 @@
             updateSettings: updateSettings,
             getIniitialData: getIniitialData,
             saveLocationCordinates: saveLocationCordinates,
-            clearLocationData: clearLocationData
+            clearLocationData: clearLocationData,
+            getCustomerConfigurations:getCustomerConfigurations,
+            setCustomerConfigurations:setCustomerConfigurations
         };
     }
     initFactory.$inject = [

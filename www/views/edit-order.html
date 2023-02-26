@@ -596,8 +596,15 @@
         <ion-content direction="y">
           <ion-list ng-if="!vm.forIntegrityCustomer">
             <div class="card">
-              <div class="item item-divider header-dark">
+              <div class="item item-divider header-dark center-header">
                 <strong>INVOICE DETAILS</strong>
+                <!-- <button
+                type="button"
+                class="button button-small button-balanced pull-right"
+                ng-if="vm.mobile.sendToQuickBooks && vm.user.intuitServiceType=='QBO' && vm.user.isAdminstrator"
+                ng-click="vm.tabs.smry.events.sendToQuickBooks()"
+                ng-disabled=" vm.postnclose"
+                >Send to QuickBooks</button> -->
               </div>
               <div>
                 <div class="list">
